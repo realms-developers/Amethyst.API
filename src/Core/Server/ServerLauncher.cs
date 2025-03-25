@@ -237,9 +237,9 @@ internal static class ServerLauncher
     {
         var profile = AmethystSession.Profile;
 
-        for (int i = 0; i < Main.maxTilesX; i++)
-        for (int j = 0; j < Main.maxTilesY; j++)
-            Main.tile.Tiles[i, j] = new TileData();
+        for (int x = 0; x < Main.maxTilesX; x++)
+        for (int y = 0; y < Main.maxTilesY; y++)
+            Main.tile.Tiles[y * 8401 + x] = new TileData();
 
         Main.maxTilesX = profile.GenerationRules.Width ?? 8400;
         Main.maxTilesY = profile.GenerationRules.Height ?? 2400;
