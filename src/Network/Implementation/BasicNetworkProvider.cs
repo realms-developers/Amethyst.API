@@ -119,7 +119,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             {
                 try
                 {
-                    handler(packet, result);
+                    handler(in packet, result);
                 }
                 catch (Exception ex)
                 {
@@ -138,7 +138,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         var replace = NetworkManager.Instance.incomingReplace[packetId];
         if (replace != null)
         {
-            replace(packet, result);
+            replace(in packet, result);
             result.Log();
             return true;
         }
@@ -160,7 +160,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             {
                 try
                 {
-                    handler(packet, result);
+                    handler(in packet, result);
                 }
                 catch (Exception ex)
                 {
@@ -179,7 +179,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         var replace = NetworkManager.Instance.incomingModuleReplace[packetId];
         if (replace != null)
         {
-            replace(packet, result);
+            replace(in packet, result);
             result.Log();
             return true;
         }

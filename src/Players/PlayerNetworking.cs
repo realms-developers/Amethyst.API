@@ -42,7 +42,7 @@ internal static class PlayerNetworking
             NetworkManager.Binding.AddInPacket(PacketTypes.PlayerSpawn, OnPlayerSpawn);
         }
 
-        private static void OnPlayerSpawn(IncomingPacket packet, PacketHandleResult result)
+        private static void OnPlayerSpawn(in IncomingPacket packet, PacketHandleResult result)
         {
             if (packet.Player._sentSpawnPacket) return;
 
@@ -53,7 +53,7 @@ internal static class PlayerNetworking
             packet.Player._wasSpawned = true;
         }
 
-        private static void OnRequestWorldInfo(IncomingPacket packet, PacketHandleResult result)
+        private static void OnRequestWorldInfo(in IncomingPacket packet, PacketHandleResult result)
         {
             packet.Player.Character!.SyncCharacter();
             packet.Player.Character.SetLife(SSC.Enums.SyncType.Broadcast, packet.Player.Character.LifeMax, null);
@@ -61,15 +61,15 @@ internal static class PlayerNetworking
             packet.Player.Character.IsReadonly = false;
         }
 
-        private static void OnPlayerQuests(IncomingPacket packet, PacketHandleResult result) => packet.Player.Character!.ReceiveQuests(packet);
+        private static void OnPlayerQuests(in IncomingPacket packet, PacketHandleResult result) => packet.Player.Character!.ReceiveQuests(packet);
 
-        private static void OnPlayerMana(IncomingPacket packet, PacketHandleResult result) => packet.Player.Character!.ReceiveSetMana(packet);
+        private static void OnPlayerMana(in IncomingPacket packet, PacketHandleResult result) => packet.Player.Character!.ReceiveSetMana(packet);
 
-        private static void OnPlayerHp(IncomingPacket packet, PacketHandleResult result) => packet.Player.Character!.ReceiveSetLife(packet);
+        private static void OnPlayerHp(in IncomingPacket packet, PacketHandleResult result) => packet.Player.Character!.ReceiveSetLife(packet);
 
-        private static void OnPlayerSlot(IncomingPacket packet, PacketHandleResult result) => packet.Player.Character!.ReceiveSlot(packet);
+        private static void OnPlayerSlot(in IncomingPacket packet, PacketHandleResult result) => packet.Player.Character!.ReceiveSlot(packet);
 
-        private static void OnPlayerInfo(IncomingPacket packet, PacketHandleResult result)
+        private static void OnPlayerInfo(in IncomingPacket packet, PacketHandleResult result)
         {
             var reader = packet.GetReader();
 
@@ -97,7 +97,7 @@ internal static class PlayerNetworking
             packet.Player.Character?.ReceivePlayerInfo(packet);
         }
 
-        private static void OnPlayerUUID(IncomingPacket packet, PacketHandleResult result)
+        private static void OnPlayerUUID(in IncomingPacket packet, PacketHandleResult result)
         {
             if (packet.Player.UUID != "")
             {
@@ -126,7 +126,7 @@ internal static class PlayerNetworking
             NetworkManager.Binding.ReplaceOutPacket(PacketTypes.WorldInfo, OnWorldInfoSSC);
         }
 
-        private static void OnWorldInfoSSC(OutcomingPacket packet, PacketHandleResult result)
+        private static void OnWorldInfoSSC(in OutcomingPacket packet, PacketHandleResult result)
         {
             Main.ServerSideCharacter = AmethystSession.Profile.SSCMode;
 
@@ -306,10 +306,11 @@ internal static class PlayerNetworking
             }
             binaryWriter.Write(Sandstorm.IntendedSeverity);
 
+            var ignoreClient = packet.IgnoreClient;
             var bytes = writer.BuildPacket();
             if (packet.RemoteClient != -1)
                 PlayerManager.Tracker[packet.RemoteClient].Socket.SendPacket(bytes);
-            else PlayerUtilities.BroadcastPacket(bytes, p => p.Index != packet.IgnoreClient);
+            else PlayerUtilities.BroadcastPacket(bytes, p => p.Index != ignoreClient);
         }
     }
 
@@ -320,7 +321,7 @@ internal static class PlayerNetworking
             NetworkManager.Binding.AddInModule(ModuleTypes.NetText, OnPlayerCommands);
         }
 
-        private static void OnPlayerCommands(IncomingModule packet, PacketHandleResult result)
+        private static void OnPlayerCommands(in IncomingModule packet, PacketHandleResult result)
         {
             if (!packet.Player.IsCapable)
             {
