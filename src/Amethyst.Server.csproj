@@ -11,7 +11,6 @@
     <Description>Amethyst API for Terraria Server.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/realms-developers/Amethyst.API</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/realms-developers/Amethyst.API</RepositoryUrl>
     <RootNamespace>Amethyst</RootNamespace>
     <LangVersion>preview</LangVersion>
@@ -19,6 +18,11 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
+  
+    <None Include="..\deps\FNA.dll" Pack="true" PackagePath="lib/net40/" />
+    <None Include="..\deps\TerrariaAPI.Hooks.dll" Pack="true" PackagePath="lib/net7.0/" />
+    <None Include="..\deps\TerrariaAPI.dll" Pack="true" PackagePath="lib/net7.0/" />
+
     <Reference Include="TerrariaAPI">
       <HintPath>..\deps\TerrariaAPI.dll</HintPath>
     </Reference>
