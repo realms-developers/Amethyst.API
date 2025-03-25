@@ -5,10 +5,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>7.12.1.0</AssemblyVersion>
     <Title>Amethyst</Title>
     <Product>Amethyst</Product>
     <Description>Amethyst API for Terraria Server.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/realms-developers/Amethyst.API</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/realms-developers/Amethyst.API</RepositoryUrl>
