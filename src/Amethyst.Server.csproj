@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Title>Amethyst</Title>
+    <Product>Amethyst</Product>
+    <Description>Amethyst API for Terraria Server.</Description>
+    <PackageProjectUrl>https://github.com/realms-developers/Amethyst.API</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/realms-developers/Amethyst.API</RepositoryUrl>
+    <RootNamespace>Amethyst</RootNamespace>
+    <LangVersion>preview</LangVersion>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="TerrariaAPI">
+      <HintPath>..\deps\TerrariaAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="TerrariaAPI.Hooks">
+      <HintPath>..\deps\TerrariaAPI.Hooks.dll</HintPath>
+    </Reference>
+    <Reference Include="FNA">
+      <HintPath>..\deps\FNA.dll</HintPath>
+    </Reference>
+
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+    <PackageReference Include="MonoMod.RuntimeDetour.HookGen" Version="22.7.31.1"/>
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.0.2"/>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
+    <PackageReference Include="MongoDB.Driver" Version="2.24.0"/>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.119"/>
+    <PackageReference Include="MySql.Data"/>
+  </ItemGroup>
+</Project>

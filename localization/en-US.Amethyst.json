@@ -1,0 +1,31 @@
+{
+    "amethyst.serverPrefix": "Server",
+
+    // network
+    "packet.invalidLength": "Invalid packet length!",
+    "network.invalidUUID": "Invalid UUID!",
+    "network.invalidNameChange": "Failed to change name!",
+    
+    "commands.noAvailablePages": "No available pages.",
+    "commands.commandNotFound": "Command not found. Type /cmds to see a list of available commands.",
+    "commands.ingameOnly": "This command can only be executed ingame.",
+    "commands.noPermission": "You do not have permission to execute this command.",
+    "commands.commandFailed": "Command failed to execute.",
+    "commands.commandIsDisabled": "Command disabled.",
+    "commands.notEnoughArguments": "Invalid arguments! Use: {0}",
+    "commands.validSyntaxIs": "Incorrect syntax! Use: {0}",
+    "commands.emptyArgument": "Empty argument! Use: {0}",
+    "commands.tooManyVariants": "Found more than one variant:",
+    "commands.objectNotFound": "Object not found!",
+    "commands.noParser": "Parser not found!",
+    "commands.noDebugMode": "This command is only executable in debug mode.",
+
+    // /grantroot
+    "commands.desc.grantRoot": "Grants root permissions.",
+    "commands.text.rootPermissionsGranted": "Root permissions granted!",
+    "commands.text.rootPermissionsRemoved": "Root permissions revoked!",
+    
+    // /commands
+    "commands.desc.showCommands": "Shows a list of available commands.",
+    "commands.text.availableCommands": "Available commands:",
+}
