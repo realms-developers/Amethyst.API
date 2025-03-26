@@ -9,6 +9,7 @@ namespace Amethyst.Commands.Implementations;
 
 public static class ExtensionsCommands
 {
+    #region Plugins
     [ServerCommand(CommandType.Shared, "plugins list", "$LOCALIZE commands.desc.pluginsList", "amethyst.management.extensions")]
     [CommandsSyntax("[page]")]
     public static void PluginsList(CommandInvokeContext ctx, int page = 0)
@@ -47,7 +48,7 @@ public static class ExtensionsCommands
         else       ctx.Sender.ReplySuccess("$LOCALIZE commands.text.extensionWasDisallowed");
     }
 
-    [ServerCommand(CommandType.Shared, "plugins unload", "$LOCALIZE commands.desc.unload", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins unload", "$LOCALIZE commands.desc.unloadPlugin", "amethyst.management.extensions")]
     public static void PluginsUnload(CommandInvokeContext ctx)
     {
         var containers = PluginLoader.Containers;
@@ -56,14 +57,14 @@ public static class ExtensionsCommands
         ctx.Sender.ReplySuccess("$LOCALIZE commands.text.pluginsWasUnloaded");
     }
 
-    [ServerCommand(CommandType.Shared, "plugins load", "$LOCALIZE commands.desc.load", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins load", "$LOCALIZE commands.desc.loadPlugins", "amethyst.management.extensions")]
     public static void PluginsLoad(CommandInvokeContext ctx)
     {
         PluginLoader.LoadPlugins();
         ctx.Sender.ReplySuccess("$LOCALIZE commands.text.pluginsWasLoaded");
     }
 
-    [ServerCommand(CommandType.Shared, "plugins reload", "$LOCALIZE commands.desc.reload", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins reload", "$LOCALIZE commands.desc.reloadPlugins", "amethyst.management.extensions")]
     public static void PluginsReload(CommandInvokeContext ctx)
     {
         var containers = PluginLoader.Containers;
@@ -72,6 +73,9 @@ public static class ExtensionsCommands
         ctx.Sender.ReplySuccess("$LOCALIZE commands.text.pluginsWasReloaded");
     }
 
+    #endregion
+
+    #region Modules
     [ServerCommand(CommandType.Shared, "modules list", "$LOCALIZE commands.desc.moduleList", "amethyst.management.extensions")]
     [CommandsSyntax("[page]")]
     public static void ModulesList(CommandInvokeContext ctx, int page = 0)
@@ -109,4 +113,6 @@ public static class ExtensionsCommands
 
         ctx.Sender.ReplyWarning("$LOCALIZE commands.text.pleaseRebootServer");
     }
+
+    #endregion
 }

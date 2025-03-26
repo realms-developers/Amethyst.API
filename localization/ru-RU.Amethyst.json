@@ -29,4 +29,35 @@
     // /commands
     "commands.desc.showCommands": "показать доступные команды.",
     "commands.text.availableCommands": "Доступные команды:",
+    
+    // /help
+    "commands.desc.showHelp": "показать основную информацию по серверу.",
+    "commands.text.commands.text.help": "Помощь по серверу:",
+
+    // /plugins ...
+    "commands.desc.pluginsList": "показать список загруженных плагинов.",
+    "commands.desc.allowedPluginsList": "показать список разрешенных плагинов.",
+    "commands.desc.setallowPlugin": "разрешить плагин или наоборот.",
+    "commands.desc.unloadPlugins": "выгрузить плагины.",
+    "commands.desc.loadPlugins": "загрузить плагины.",
+    "commands.desc.reloadPlugins": "перезагрузить плагины.",
+
+    "commands.text.loadedPlugins": "Загруженные плагины:",
+    "commands.text.allowedPlugins": "Разрешенные плагины:",
+    "commands.text.pluginsWasUnloaded": "Плагины выгружены.",
+    "commands.text.pluginsWasLoaded": "Плагины загружены.",
+    "commands.text.pluginsWasReloaded": "Плагины перезагружены.",
+
+    // modules ...
+    "commands.desc.moduleList": "показать список загруженных модулей.",
+    "commands.text.allowedModulesList": "показать список разрешенных модулей.",
+    "commands.desc.setallowModule": "разрешить модуль или наоборот.",
+
+    "commands.text.loadedPlugins": "Загруженные модули:",
+    "commands.text.allowedPlugins": "Разрешенные модули:",
+
+    // extensions (plugins + modules)
+    "commands.text.pleaseRebootServer": "Перезагрузите сервер для применения изменений.",
+    "commands.text.extensionWasAllowed": "Расширение разрешено.",
+    "commands.text.extensionWasDisallowed": "Расширение запрещено.",
 }
