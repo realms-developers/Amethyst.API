@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Amethyst.Storages.Mongo;
@@ -18,6 +19,11 @@ public sealed class MongoModels<TModel> where TModel : DataModel
     public TModel? Find(string name)
     {
         return Find(m => m.Name == name);
+    }
+
+    public TModel? Find(ObjectId id)
+    {
+        return Find(m => m.Id == id);
     }
 
     public TModel? Find(Expression<Func<TModel, bool>> predicate)
@@ -51,7 +57,7 @@ public sealed class MongoModels<TModel> where TModel : DataModel
     public void Save(TModel model)
     {
         if (Find(model.Name) != null)
-            InternalCollection.ReplaceOne(m => m.Name == model.Name, model);
+            InternalCollection.ReplaceOne(m => m.Id == model.Id || m.Name == model.Name, model);
         else
             InternalCollection.InsertOne(model);
     }

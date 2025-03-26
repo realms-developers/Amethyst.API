@@ -28,6 +28,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         _extensions = new Dictionary<Type, IPlayerExtension>();
 
         PlayerExtensions.LoadExtensions(this);
+
+        Utils = new LocalPlayerUtils(this);
     }
 
     private string _playerName;
@@ -49,6 +51,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
     public INetworkClient Socket => NetworkManager.Provider.GetClient(Index)!;
 
     public ICharacterWrapper? Character { get; internal set; }
+
+    public LocalPlayerUtils Utils { get; }
 
     /// <summary>
     /// Indicates that player is connected to server

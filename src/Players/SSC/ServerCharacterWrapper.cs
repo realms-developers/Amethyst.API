@@ -2,6 +2,7 @@ using Amethyst.Network;
 using Amethyst.Network.Packets;
 using Amethyst.Players.SSC.Enums;
 using Amethyst.Players.SSC.Interfaces;
+using MongoDB.Bson;
 using Terraria;
 
 namespace Amethyst.Players.SSC;
@@ -12,6 +13,7 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
     {
         _owner = player;
         _model = PlayerManager.SSCProvider.GetModel(player.Name);
+        _modelId = _model.Id;
     }
 
     private CharacterModel _model;
@@ -53,9 +55,12 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
 
     public byte SkinVariant => _model.SkinVariant;
 
+    private ObjectId _modelId;
+
     public void LoadCharacter(CharacterModel model, bool sync)
     {
         _model = model;
+        _modelId = _model.Id;
         if (sync) SyncCharacter();
     }
 
