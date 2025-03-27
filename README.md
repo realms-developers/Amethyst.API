@@ -34,7 +34,7 @@
 
 Run multiple server instances with isolated configurations using profiles. All data is stored in `/data/<profile>`.
 
-Create a new profile:
+Create and run a profile:
 
 ```bash
 ./start.sh -profile MyAwesomeServer
