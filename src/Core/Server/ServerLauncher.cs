@@ -36,6 +36,8 @@ internal static class ServerLauncher
 		LanguageManager.Instance.SetLanguage(GameCulture.DefaultCulture);
 		Lang.InitializeLegacyLocalization();
 
+        Localization.Items.Initialize();
+
         // On.Terraria.Netplay.StartBroadCasting += (orig) => {};
         // On.Terraria.Netplay.StopBroadCasting += (orig) => {};
 

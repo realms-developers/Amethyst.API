@@ -1,4 +1,8 @@
+using System.Data.Entity.Infrastructure.Design;
 using System.Globalization;
+using System.Transactions;
+using Amethyst.Commands.Arguments;
+using Amethyst.Players;
 
 namespace Amethyst.Commands.Parsing;
 
@@ -45,6 +49,41 @@ public static class ParsingNode
                 return ParseResult.Success(value);
 
             return ParseResult.InvalidSyntax("$ParsingNode.InvalidSyntax");
+        });
+
+        Parsers.Add(typeof(PlayerReference), (sender, input) => {
+            if (input.StartsWith("$me", StringComparison.InvariantCultureIgnoreCase) && sender is NetPlayer)
+                return ParseResult.Success(new PlayerReference((sender as NetPlayer)!.Index));
+
+            if (input.StartsWith('$') && byte.TryParse(input.AsSpan(1), out byte index))
+                return ParseResult.Success(index);
+
+            var plr = PlayerManager.Tracker.FirstOrDefault((p) => p != null && p.IsActive && p.Name.Equals(input, StringComparison.OrdinalIgnoreCase)) ?? 
+                      PlayerManager.Tracker.FirstOrDefault((p) => p != null && p.IsActive && p.Name.StartsWith(input, StringComparison.InvariantCultureIgnoreCase) == true);
+
+            if (plr != null)
+                return ParseResult.Success(new PlayerReference(plr.Index));
+
+            return ParseResult.ObjectNotFound();
+        });
+
+        Parsers.Add(typeof(ItemReference), (sender, input) => {
+            if (input.StartsWith("$held", StringComparison.InvariantCultureIgnoreCase) && sender is NetPlayer)
+                return ParseResult.Success(new ItemReference((sender as NetPlayer)!.Utils.HeldItem.type));
+
+            var enList = Localization.Items.FindItem(false, input);
+            if (enList.Count == 1)
+                return ParseResult.Success(new ItemReference(enList[0].ItemID));
+            else if (enList.Count > 1)
+                return ParseResult.TooManyVariants(enList.Select(p => p.Name).ToList());
+
+            var ruList = Localization.Items.FindItem(true, input);
+            if (ruList.Count == 1)
+                return ParseResult.Success(new ItemReference(ruList[0].ItemID));
+            else if (ruList.Count > 1)
+                return ParseResult.TooManyVariants(ruList.Select(p => p.Name).ToList());
+
+            return ParseResult.ObjectNotFound();
         });
     }
     

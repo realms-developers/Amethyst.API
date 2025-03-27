@@ -1,4 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+using Amethyst.Network;
+using Newtonsoft.Json;
+using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
 
 namespace Amethyst;
 
@@ -89,4 +95,96 @@ public static class Localization
     public static string Get(string key, string culture) =>
         _localizationData.TryGetValue(culture, out Dictionary<string, string>? cultureDict) &&
         cultureDict.TryGetValue(key, out string? value) ? value : key;
+
+    public static class Items
+    {
+        internal static string[] RussianNames = new string[ItemID.Count];
+        internal static string[] EnglishNames = new string[ItemID.Count];
+        internal static bool IsInitialized = false;
+
+        internal static void Initialize()
+        {
+            if (IsInitialized) return;
+            IsInitialized = true;
+
+            LanguageManager.Instance.SetLanguage(GameCulture.FromLegacyId((byte)GameCulture.CultureName.English));
+
+            RussianNames = new string[ItemID.Count];
+            EnglishNames = new string[ItemID.Count];
+
+            for (int i = 0; i < ItemID.Count; i++)
+                EnglishNames[i] = Lang.GetItemNameValue(i);
+
+            LanguageManager.Instance.SetLanguage(GameCulture.FromLegacyId((byte)GameCulture.CultureName.Russian));
+
+            for (int i = 0; i < ItemID.Count; i++)
+                RussianNames[i] = Lang.GetItemNameValue(i);
+
+            LanguageManager.Instance.SetLanguage(GameCulture.FromLegacyId((byte)GameCulture.CultureName.English));
+        }
+
+        public static List<ItemFindData> FindItem(bool isRussian, string input)
+        {
+            string[] names = isRussian ? RussianNames : EnglishNames;
+
+            if (int.TryParse(input, out int itemIndex))
+            {
+                return new List<ItemFindData>(1)
+                {
+                    new ItemFindData(itemIndex, names[itemIndex])
+                };
+            }
+
+            if (input.StartsWith('['))
+            {
+                NetItem? item = GetItemFromTag(input);
+                if (item != null)
+                {
+                    return new List<ItemFindData>(1)
+                    {
+                        new ItemFindData(item.Value.ID, names[item.Value.ID])
+                    };
+                }
+            }
+
+            List<ItemFindData> startsResult = new List<ItemFindData>();
+            List<ItemFindData> containsResult = new List<ItemFindData>();
+
+            for (int i = 0; i < names.Length; i++)
+            {
+                if (input.Equals(names[i], StringComparison.OrdinalIgnoreCase))
+                    return new List<ItemFindData>(1)
+                    {
+                        new ItemFindData(i, names[i])
+                    };
+
+                if (names[i].StartsWith(input, StringComparison.OrdinalIgnoreCase))
+                    startsResult.Add(new ItemFindData(i, names[i]));
+            }
+
+            if (startsResult.Count > 0)
+                return startsResult;
+
+            return containsResult;
+        }
+
+        public static NetItem? GetItemFromTag(string tag)
+        {
+            Regex regex = new Regex(@"\[i(tem)?(?:\/s(?<Stack>\d{1,4}))?(?:\/p(?<Prefix>\d{1,3}))?:(?<NetID>-?\d{1,4})\]");
+            Match match = regex.Match(tag);
+            if (!match.Success)
+                return null;
+
+            return new NetItem(
+                id: int.Parse(match.Groups["NetID"].Value, CultureInfo.InvariantCulture),
+
+                stack: string.IsNullOrWhiteSpace(match.Groups["Stack"].Value) ? (short)1 :
+                    short.Parse(match.Groups["Stack"].Value, CultureInfo.InvariantCulture),
+
+                prefix: string.IsNullOrWhiteSpace(match.Groups["Prefix"].Value) ? byte.MinValue :
+                    byte.Parse(match.Groups["Prefix"].Value, CultureInfo.InvariantCulture));
+        }
+    }
+
+    public sealed record ItemFindData(int ItemID, string Name);
 }

@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>7.12.2.2</AssemblyVersion>
-    <Version>7.12.2.2</Version>
+    <AssemblyVersion>7.12.3</AssemblyVersion>
+    <Version>7.12.3</Version>
     <Title>Amethyst</Title>
     <Product>Amethyst</Product>
     <Description>Amethyst API for Terraria Server.</Description>
