@@ -24,6 +24,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         _playerName = "";
         _extensions = new Dictionary<Type, IPlayerExtension>();
 
+        Language = AmethystSession.Profile.DefaultLanguage;
+
         PlayerExtensions.LoadExtensions(this);
 
         Utils = new LocalPlayerUtils(this);

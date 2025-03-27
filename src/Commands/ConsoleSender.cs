@@ -11,7 +11,7 @@ public sealed class ConsoleSender : ICommandSender
 
     public string Name => "Console";
 
-    public string Language => AmethystSession.Profile.DefaultLanguage;
+    public string Language { get; set; } = AmethystSession.Profile.DefaultLanguage;
 
     public bool HasPermission(string permission) => true;
     public bool HasChestPermission(int x, int y) => true;

@@ -38,6 +38,20 @@ public static class BasicCommands
         }
     }
 
+    [ServerCommand(CommandType.Shared, "lang ru", "установить русский язык.", null)]
+    public static void LangRU(CommandInvokeContext ctx)
+    {
+        ctx.Sender.Language = "ru-RU";
+        ctx.Sender.ReplySuccess("Язык успешно изменен!");
+    }
+
+    [ServerCommand(CommandType.Shared, "lang en", "set english language.", null)]
+    public static void LangEN(CommandInvokeContext ctx)
+    {
+        ctx.Sender.Language = "en-US";
+        ctx.Sender.ReplySuccess("Language was successfully changed!");
+    }
+
     /*
     [ServerCommand(CommandType.Shared, "help", "commands.desc.showHelp", null)]
     [CommandsSyntax("[page]")]

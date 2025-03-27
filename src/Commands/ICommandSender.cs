@@ -7,7 +7,7 @@ public interface ICommandSender : IPermissionable
 {
     public SenderType Type { get; }
 
-    public string Language { get; }
+    public string Language { get; set; }
 
     public void ReplySuccess(string text, params object[] args);
     public void ReplyInfo(string text, params object[] args);
