@@ -20,7 +20,7 @@
   </PropertyGroup>
   <ItemGroup>
   
-    <None Include="..\README.md" Pack="true"/>
+    <None Include="..\README.md" Pack="true" />
     <None Include="..\deps\FNA.dll" Pack="true" PackagePath="lib/net7.0/" />
     <None Include="..\deps\TerrariaAPI.Hooks.dll" Pack="true" PackagePath="lib/net7.0/" />
     <None Include="..\deps\TerrariaAPI.dll" Pack="true" PackagePath="lib/net7.0/" />
@@ -35,12 +35,12 @@
       <HintPath>..\deps\FNA.dll</HintPath>
     </Reference>
 
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-    <PackageReference Include="MonoMod.RuntimeDetour.HookGen" Version="22.7.31.1"/>
-    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.0.2"/>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
-    <PackageReference Include="MongoDB.Driver" Version="2.24.0"/>
-    <PackageReference Include="System.Data.SQLite" Version="1.0.119"/>
-    <PackageReference Include="MySql.Data"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="MonoMod.RuntimeDetour.HookGen" Version="22.7.31.1" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.0.2" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
+    <PackageReference Include="MySql.Data" />
   </ItemGroup>
 </Project>

@@ -32,7 +32,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         var handlers = NetworkManager.Instance.outcoming[packetId];
         if (handlers != null && handlers.Count > 0)
         {
-            handlers.ForEach(handler => 
+            handlers.ForEach(handler =>
             {
                 try
                 {
@@ -59,7 +59,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             result.Log();
             return;
         }
-        
+
         orig(packetId, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7);
     }
 
@@ -76,7 +76,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
         if (length < 1 || length > 999)
         {
-            player.Kick("$LOCALIZE packet.invalidLength");
+            player.Kick(Localization.Get("packet.invalidLength", player.Language));
             return;
         }
 
@@ -106,7 +106,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     // TODO: refactor OnGetPacket and OnGetModule (because its just two copies)
 
     private static bool OnGetPacket(byte packetId, NetPlayer player, int start, int length)
-    {   
+    {
         var buffer = NetMessage.buffer[player.Index].readBuffer;
         IncomingPacket packet = new IncomingPacket(packetId, buffer, (byte)player.Index, start + 1, length - 1);
 
@@ -115,7 +115,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         var handlers = NetworkManager.Instance.incoming[packetId];
         if (handlers != null && handlers.Count > 0)
         {
-            handlers.ForEach(handler => 
+            handlers.ForEach(handler =>
             {
                 try
                 {
@@ -147,7 +147,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
 
     private static bool OnGetModule(byte packetId, NetPlayer player, int start, int length)
-    {   
+    {
         var buffer = NetMessage.buffer[player.Index].readBuffer;
         IncomingModule packet = new IncomingModule(packetId, buffer, (byte)player.Index, start + 3, length - 3);
 
@@ -156,7 +156,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         var handlers = NetworkManager.Instance.incomingModules[packetId];
         if (handlers != null && handlers.Count > 0)
         {
-            handlers.ForEach(handler => 
+            handlers.ForEach(handler =>
             {
                 try
                 {
@@ -194,7 +194,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             AmethystLog.Network.Error("Network", $"Failed to start server! Be sure that you use different port for this server!");
     }
 
-    private void OnConnected(ISocket client) 
+    private void OnConnected(ISocket client)
     {
         var ip = client.GetRemoteAddress()!.ToString()!.Split(':')[0];
         var index = Netplay.FindNextOpenClientSlot();

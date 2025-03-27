@@ -77,8 +77,8 @@ internal static class PlayerNetworking
             string name = reader.ReadString();
             if (packet.Player.Name != "" && packet.Player.Name != name)
             {
-                packet.Player.Kick("$LOCALIZE network.invalidNameChange");
-                result.Ignore("network.invalidNameChange");
+                packet.Player.Kick(Localization.Get("network.invalidNameChange", packet.Player.Language));
+                result.Ignore(Localization.Get("network.invalidNameChange", "en"));
                 return;
             }
 
@@ -101,7 +101,7 @@ internal static class PlayerNetworking
         {
             if (packet.Player.UUID != "")
             {
-                result.Ignore("network.invalidUuidChange");
+                result.Ignore(Localization.Get("network.invalidUuidChange", "en"));
                 return;
             }
 
@@ -110,8 +110,8 @@ internal static class PlayerNetworking
             string uuid = reader.ReadString();
             if (Guid.TryParse(uuid, out var guidResult) == false)
             {
-                packet.Player.Kick("$LOCALIZE network.invalidUUID");
-                result.Ignore("network.invalidUUID");
+                packet.Player.Kick(Localization.Get("network.invalidUUID", packet.Player.Language));
+                result.Ignore(Localization.Get("network.invalidUUID", "en"));
                 return;
             }
 

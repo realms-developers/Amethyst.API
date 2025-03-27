@@ -1,12 +1,10 @@
 using System.Globalization;
 using Amethyst.Commands;
 using Amethyst.Core;
-using Amethyst.Localization;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Permissions;
 using Amethyst.Players.Extensions;
-using Amethyst.Players.SSC;
 using Amethyst.Players.SSC.Interfaces;
 using Amethyst.Text;
 using Microsoft.Xna.Framework;
@@ -19,7 +17,6 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
     internal NetPlayer(int index)
     {
         Index = index;
-        Language = LocalizationManager.FindLanguage(AmethystSession.Profile.DefaultLanguage) ?? throw new InvalidOperationException($"Cannot load '{AmethystSession.Profile.DefaultLanguage}' language.");
 
         IP = "0.0.0.0";
         UUID = "";
@@ -44,8 +41,6 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
     public SenderType Type => SenderType.RealPlayer;
 
-    public Language Language { get; set; }
-
     public Player TPlayer => Main.player[Index];
 
     public INetworkClient Socket => NetworkManager.Provider.GetClient(Index)!;
@@ -66,6 +61,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
     public bool IsRootGranted { get; set; }
 
+    public string Language { get; set; }
+
     private Dictionary<Type, IPlayerExtension> _extensions;
 
     internal bool _wasSpawned;
@@ -82,7 +79,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
         var ext = builder.Build(this);
         ext.Load();
-        
+
         _extensions.Add(type, ext);
     }
 
@@ -140,20 +137,20 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
     public void ReplyMessage(string text, Color color)
     {
-        SendMessage($"[c/303030:{Language.LocalizeDirect("$LOCALIZE amethyst.serverPrefix")}:] {text}", color);
+        SendMessage($"[c/303030:{Localization.Get("amethyst.serverPrefix", AmethystSession.Profile.DefaultLanguage)}:] {text}", color);
     }
 
     public void ReplyError(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Language.LocalizeDirect(text), args), new Color(201, 71, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(201, 71, 71));
 
     public void ReplyInfo(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Language.LocalizeDirect(text), args), new Color(191, 201, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(191, 201, 71));
 
     public void ReplySuccess(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Language.LocalizeDirect(text), args), new Color(71, 201, 75));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(71, 201, 75));
 
     public void ReplyWarning(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Language.LocalizeDirect(text), args), new Color(201, 125, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(201, 125, 71));
 
     public void ReplyPage(PagesCollection pages, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
         => pages.SendPage(this, header, footer, footerArgs, showPageName, page);
@@ -171,6 +168,6 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
     {
         AmethystLog.Network.Error("Players", $"Player '{Name}' was kicked for reason: {reason}");
 
-        Socket.Disconnect(string.Format(CultureInfo.InvariantCulture, Language.LocalizeDirect(reason), args ?? Array.Empty<object>()));
+        Socket.Disconnect(string.Format(CultureInfo.InvariantCulture, Localization.Get(reason, AmethystSession.Profile.DefaultLanguage), args ?? Array.Empty<object>()));
     }
 }

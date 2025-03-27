@@ -46,13 +46,13 @@ public sealed class PagesCollection : IEnumerable<TextPage>
         foreach (string line in lines)
         {
             if (pages.Count == currentPage)
-                pages.Add(new TextPage($"#{currentPage + 1}", new (), null, false));
-            
+                pages.Add(new TextPage($"#{currentPage + 1}", new(), null, false));
+
             pages[currentPage].Add(line);
 
             if (i > 0 && i % linesPerPage == 0)
                 currentPage++;
-            
+
             i++;
         }
 
@@ -79,7 +79,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
         if (pages.Length == 0)
         {
-            sender.ReplyError("$LOCALIZE commands.noAvailablePages");
+            sender.ReplyError(Localization.Get("commands.noAvailablePages", sender.Language));
             return;
         }
 
@@ -87,7 +87,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
         if (header != null)
         {
-            sender.ReplySuccess($"[c/094729:===] [c/35875f:[][c/43d990:{page + 1}] [c/35875f:|] [c/43d990:{pages.Length}][c/35875f:]] [c/11d476:{sender.Language.LocalizeDirect(header)}]");
+            sender.ReplySuccess($"[c/094729:===] [c/35875f:[][c/43d990:{page + 1}] [c/35875f:|] [c/43d990:{pages.Length}][c/35875f:]] [c/11d476:{Localization.Get(header, sender.Language)}]");
         }
 
         foreach (var text in pages[page]._lines)
@@ -97,7 +97,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
         if (footer != null)
         {
-            string footerText = string.Format(CultureInfo.InvariantCulture, sender.Language.LocalizeDirect(footer), args: footerArgs ?? Array.Empty<object>());
+            string footerText = string.Format(CultureInfo.InvariantCulture, Localization.Get(footer, sender.Language), args: footerArgs ?? Array.Empty<object>());
             sender.ReplySuccess($"[c/094729:===] {(showPageName ? $"[c/3d8562:{pages[page].Name}] [c/11633c:|] " : "")}{footerText}");
         }
     }

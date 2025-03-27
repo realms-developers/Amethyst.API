@@ -10,30 +10,30 @@ public static class PlayerUtilities
 {
     public static void BroadcastPacket(byte[] data)
     {
-        foreach (var plr in PlayerManager.Tracker) 
+        foreach (var plr in PlayerManager.Tracker)
             plr.Socket.SendPacket(data);
     }
 
     public static void BroadcastPacket(byte[] data, Predicate<NetPlayer> predicate)
     {
-        foreach (var plr in PlayerManager.Tracker) 
+        foreach (var plr in PlayerManager.Tracker)
             if (predicate(plr))
                 plr.Socket.SendPacket(data);
     }
 
     public static void BroadcastText(string text, Color color, Predicate<NetPlayer>? predicate = null)
     {
-        foreach (var plr in PlayerManager.Tracker) 
+        foreach (var plr in PlayerManager.Tracker)
             if (predicate == null || predicate(plr))
                 plr.SendMessage(text, color);
     }
 
     public static void BroadcastLocalizedText(string text, object[] args, Color color, Predicate<NetPlayer>? predicate = null)
     {
-        foreach (var plr in PlayerManager.Tracker) 
+        foreach (var plr in PlayerManager.Tracker)
             if (predicate == null || predicate(plr))
             {
-                plr.SendMessage(string.Format(CultureInfo.InvariantCulture, plr.Language.LocalizeDirect(text), args), color);
+                plr.SendMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, plr.Language), args), color);
             }
     }
 
