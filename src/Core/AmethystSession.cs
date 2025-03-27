@@ -4,7 +4,6 @@ using Amethyst.Core.Server;
 using Amethyst.Extensions.Modules;
 using Amethyst.Extensions.Plugins;
 using Amethyst.Permissions;
-using Amethyst.Localization;
 using Amethyst.Players;
 
 namespace Amethyst.Core;
@@ -48,7 +47,8 @@ public static class AmethystSession
 
         AmethystHooks.Initialize();
 
-        LocalizationManager.Initialize();
+        Localization.Load();
+
         CommandsManager.Initialize();
         PlayerManager.Initialize();
 
@@ -85,9 +85,9 @@ public static class AmethystSession
 
     private static ExtensionsConfiguration SetupExtensionsConfiguration(ExtensionsConfiguration configuration)
     {
-        configuration.AllowedModules ??= new () { "Amethyst.Environment.dll" };
+        configuration.AllowedModules ??= new() { "Amethyst.Environment.dll" };
 
-        configuration.AllowedPlugins ??= new () { string.Empty };
+        configuration.AllowedPlugins ??= new() { string.Empty };
 
         return configuration;
     }

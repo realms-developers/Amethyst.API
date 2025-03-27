@@ -2,7 +2,6 @@ using Amethyst.Core;
 using Amethyst.Core.Server;
 using Amethyst.Extensions.Modules;
 using Amethyst.Extensions.Plugins;
-using Amethyst.Players;
 using Amethyst.Text;
 
 namespace Amethyst.Commands.Implementations;
@@ -10,7 +9,7 @@ namespace Amethyst.Commands.Implementations;
 public static class ExtensionsCommands
 {
     #region Plugins
-    [ServerCommand(CommandType.Shared, "plugins list", "$LOCALIZE commands.desc.pluginsList", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins list", "commands.desc.pluginsList", "amethyst.management.extensions")]
     [CommandsSyntax("[page]")]
     public static void PluginsList(CommandInvokeContext ctx, int page = 0)
     {
@@ -18,19 +17,19 @@ public static class ExtensionsCommands
             .Where(p => p.PluginInstance != null)
             .Select(p => $"{p.PluginInstance!.Name} ({p.LoadID})"));
 
-        ctx.Sender.ReplyPage(pages, "$LOCALIZE commands.text.loadedPlugins", null, null, false, page);
+        ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.loadedPlugins", ctx.Sender.Language), null, null, false, page);
     }
 
-    [ServerCommand(CommandType.Shared, "plugins allowlist", "$LOCALIZE commands.desc.allowedPluginsList", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins allowlist", "commands.desc.allowedPluginsList", "amethyst.management.extensions")]
     [CommandsSyntax("[page]")]
     public static void PluginsAllowList(CommandInvokeContext ctx, int page = 0)
     {
         var pages = PagesCollection.CreateFromList(AmethystSession.ExtensionsConfiguration.AllowedPlugins);
 
-        ctx.Sender.ReplyPage(pages, "$LOCALIZE commands.text.allowedPlugins", null, null, false, page);
+        ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.allowedPlugins", ctx.Sender.Language), null, null, false, page);
     }
 
-    [ServerCommand(CommandType.Shared, "plugins setallow", "$LOCALIZE commands.desc.setallowPlugin", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins setallow", "commands.desc.setallowPlugin", "amethyst.management.extensions")]
     [CommandsSyntax("<name with .dll>", "<true | false>")]
     public static void PluginsAllow(CommandInvokeContext ctx, string name, bool value)
     {
@@ -44,57 +43,57 @@ public static class ExtensionsCommands
             return p;
         }, true);
 
-        if (value) ctx.Sender.ReplySuccess("$LOCALIZE commands.text.extensionWasAllowed");
-        else       ctx.Sender.ReplySuccess("$LOCALIZE commands.text.extensionWasDisallowed");
+        if (value) ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasAllowed", ctx.Sender.Language));
+        else ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasDisallowed", ctx.Sender.Language));
     }
 
-    [ServerCommand(CommandType.Shared, "plugins unload", "$LOCALIZE commands.desc.unloadPlugin", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins unload", "commands.desc.unloadPlugin", "amethyst.management.extensions")]
     public static void PluginsUnload(CommandInvokeContext ctx)
     {
         var containers = PluginLoader.Containers;
         containers.ForEach(p => p.Dispose());
 
-        ctx.Sender.ReplySuccess("$LOCALIZE commands.text.pluginsWasUnloaded");
+        ctx.Sender.ReplySuccess(Localization.Get("commands.text.pluginsWasUnloaded", ctx.Sender.Language));
     }
 
-    [ServerCommand(CommandType.Shared, "plugins load", "$LOCALIZE commands.desc.loadPlugins", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins load", "commands.desc.loadPlugins", "amethyst.management.extensions")]
     public static void PluginsLoad(CommandInvokeContext ctx)
     {
         PluginLoader.LoadPlugins();
-        ctx.Sender.ReplySuccess("$LOCALIZE commands.text.pluginsWasLoaded");
+        ctx.Sender.ReplySuccess(Localization.Get("commands.text.pluginsWasLoaded", ctx.Sender.Language));
     }
 
-    [ServerCommand(CommandType.Shared, "plugins reload", "$LOCALIZE commands.desc.reloadPlugins", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "plugins reload", "commands.desc.reloadPlugins", "amethyst.management.extensions")]
     public static void PluginsReload(CommandInvokeContext ctx)
     {
         var containers = PluginLoader.Containers;
         containers.ForEach(p => p.Dispose());
         PluginLoader.LoadPlugins();
-        ctx.Sender.ReplySuccess("$LOCALIZE commands.text.pluginsWasReloaded");
+        ctx.Sender.ReplySuccess(Localization.Get("commands.text.pluginsWasReloaded", ctx.Sender.Language));
     }
 
     #endregion
 
     #region Modules
-    [ServerCommand(CommandType.Shared, "modules list", "$LOCALIZE commands.desc.moduleList", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "modules list", "commands.desc.moduleList", "amethyst.management.extensions")]
     [CommandsSyntax("[page]")]
     public static void ModulesList(CommandInvokeContext ctx, int page = 0)
     {
         var pages = PagesCollection.CreateFromList(ModuleLoader.Modules.Select(p => p.Name));
 
-        ctx.Sender.ReplyPage(pages, "$LOCALIZE commands.text.loadedModules", null, null, false, page);
+        ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.loadedModules", ctx.Sender.Language), null, null, false, page);
     }
 
-    [ServerCommand(CommandType.Shared, "modules allowlist", "$LOCALIZE commands.desc.allowedModulesList", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "modules allowlist", "commands.desc.allowedModulesList", "amethyst.management.extensions")]
     [CommandsSyntax("[page]")]
     public static void ModulesAllowList(CommandInvokeContext ctx, int page = 0)
     {
         var pages = PagesCollection.CreateFromList(AmethystSession.ExtensionsConfiguration.AllowedModules);
 
-        ctx.Sender.ReplyPage(pages, "$LOCALIZE commands.text.allowedModules", null, null, false, page);
+        ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.allowedModules", ctx.Sender.Language), null, null, false, page);
     }
 
-    [ServerCommand(CommandType.Shared, "modules setallow", "$LOCALIZE commands.desc.setallowModule", "amethyst.management.extensions")]
+    [ServerCommand(CommandType.Shared, "modules setallow", "commands.desc.setallowModule", "amethyst.management.extensions")]
     [CommandsSyntax("<name with .dll>", "<true | false>")]
     public static void ModulesAllow(CommandInvokeContext ctx, string name, bool value)
     {
@@ -108,10 +107,10 @@ public static class ExtensionsCommands
             return p;
         }, true);
 
-        if (value) ctx.Sender.ReplySuccess("$LOCALIZE commands.text.extensionWasAllowed");
-        else       ctx.Sender.ReplySuccess("$LOCALIZE commands.text.extensionWasDisallowed");
+        if (value) ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasAllowed", ctx.Sender.Language));
+        else ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasDisallowed", ctx.Sender.Language));
 
-        ctx.Sender.ReplyWarning("$LOCALIZE commands.text.pleaseRebootServer");
+        ctx.Sender.ReplyWarning(Localization.Get("commands.text.pleaseRebootServer", ctx.Sender.Language));
     }
 
     #endregion

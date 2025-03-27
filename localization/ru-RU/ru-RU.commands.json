@@ -1,0 +1,15 @@
+{
+    "commands.noAvailablePages": "Нет страниц.",
+    "commands.commandNotFound": "Команда не найдена. Введите /cmds для просмотра списка команд.",
+    "commands.ingameOnly": "Команда может быть выполнена только в игре.",
+    "commands.noPermission": "Недостаточно прав для выполнения этой команды.",
+    "commands.commandFailed": "Команда завершилась сбоем.",
+    "commands.commandIsDisabled": "Команда отключена.",
+    "commands.notEnoughArguments": "Недостаточно аргументов! Используйте: {0}",
+    "commands.validSyntaxIs": "Неправильный синтаксис! Используйте: {0}",
+    "commands.emptyArgument": "Пустой аргумент! Используйте: {0}",
+    "commands.tooManyVariants": "Найдено больше одного варианта:",
+    "commands.objectNotFound": "Объект не найден!",
+    "commands.noParser": "Парсер не найден!",
+    "commands.noDebugMode": "Команда может быть выполнена только в режиме отладки."
+}

@@ -23,7 +23,7 @@ public static class CommandsManager
         ConsoleInput.OnConsoleInput += OnConsoleInput;
     }
 
-    private static void OnConsoleInput(string input, ref bool handled) 
+    private static void OnConsoleInput(string input, ref bool handled)
     {
         if (RequestRun(ConsoleSender, input))
         {
@@ -40,7 +40,7 @@ public static class CommandsManager
 
         if (runner == null)
         {
-            sender.ReplyError("$LOCALIZE commands.commandNotFound");
+            sender.ReplyError(Localization.Get("commands.commandNotFound", sender.Language));
             return false;
         }
 
@@ -53,19 +53,19 @@ public static class CommandsManager
 
         if (runner.Data.Type == CommandType.Debug && AmethystSession.Profile.DebugMode == false)
         {
-            sender.ReplyError("$LOCALIZE commands.noDebugMode");
+            sender.ReplyError(Localization.Get("commands.noDebugMode", sender.Language));
             return true;
         }
 
         if (runner.Data.Settings.HasFlag(CommandSettings.IngameOnly) && sender.Type != SenderType.RealPlayer)
         {
-            sender.ReplyError("$LOCALIZE commands.ingameOnly");
+            sender.ReplyError(Localization.Get("commands.ingameOnly", sender.Language));
             return true;
         }
 
         if (runner.Data.Permission != null && !sender.HasPermission(runner.Data.Permission))
         {
-            sender.ReplyError("$LOCALIZE commands.noPermission");
+            sender.ReplyError(Localization.Get("commands.noPermission", sender.Language));
             return true;
         }
 
@@ -75,7 +75,7 @@ public static class CommandsManager
         }
         catch (Exception ex)
         {
-            sender.ReplyError("$LOCALIZE commands.commandFailed");
+            sender.ReplyError(Localization.Get("commands.commandFailed", sender.Language));
 
             AmethystLog.System.Critical("Commands", $"Failed in running command '{text}' from {sender.Name} ({sender.Type}):");
             AmethystLog.System.Critical("Commands", ex.ToString());

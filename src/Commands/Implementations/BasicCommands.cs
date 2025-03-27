@@ -5,16 +5,16 @@ namespace Amethyst.Commands.Implementations;
 
 public static class BasicCommands
 {
-    [ServerCommand(CommandType.Shared, "cmds", "$LOCALIZE commands.desc.showCommands", null)]
+    [ServerCommand(CommandType.Shared, "cmds", "commands.desc.showCommands", null)]
     [CommandsSyntax("[page]", "[-r(aw)]")]
     public static void Commands(CommandInvokeContext ctx, int page = 0, string args = "")
     {
-        Func<CommandRunner, bool> whereExpression = (p) => 
+        Func<CommandRunner, bool> whereExpression = (p) =>
         {
-            return  p.IsDisabled == false && 
+            return p.IsDisabled == false &&
                     p.Data.Settings.HasFlag(CommandSettings.Hidden) == false &&
-                    (p.Data.Permission == null || ctx.Sender.HasPermission(p.Data.Permission)) && 
-                    (p.Data.Type == CommandType.Console ? ctx.Sender.Type == SenderType.Console : true) && 
+                    (p.Data.Permission == null || ctx.Sender.HasPermission(p.Data.Permission)) &&
+                    (p.Data.Type == CommandType.Console ? ctx.Sender.Type == SenderType.Console : true) &&
                     (p.Data.Type == CommandType.Debug ? AmethystSession.Profile.DebugMode : true);
         };
 
@@ -24,25 +24,27 @@ public static class BasicCommands
                     .Where(whereExpression)
                     .Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")}"));
 
-            ctx.Sender.ReplyPage(pages, "$LOCALIZE commands.text.availableCommands", null, null, false, page);
+            ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.availableCommands", ctx.Sender.Language), null, null, false, page);
             return;
         }
         else
         {
             var pages = PagesCollection.SplitByPages(CommandsManager.Commands
                     .Where(whereExpression)
-                    .Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")} - {ctx.Sender.Language.LocalizeDirect(p.Data.Description)}"));
+                    .Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")} - {Localization.Get(p.Data.Description, ctx.Sender.Language)}"));
 
-            ctx.Sender.ReplyPage(pages, "$LOCALIZE commands.text.availableCommands", null, null, false, page);
+            ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.availableCommands", ctx.Sender.Language), null, null, false, page);
             return;
         }
     }
 
-    [ServerCommand(CommandType.Shared, "help", "$LOCALIZE commands.desc.showHelp", null)]
+    /*
+    [ServerCommand(CommandType.Shared, "help", "commands.desc.showHelp", null)]
     [CommandsSyntax("[page]")]
     public static void Help(CommandInvokeContext ctx, int page = 0)
     {
         var pages = ctx.Sender.Language.HelpPages;
-        ctx.Sender.ReplyPage(pages, "$LOCALIZE commands.text.help", null, null, true, 0);
+        ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.help", ctx.Sender.Language), null, null, true, 0);
     }
+    */
 }

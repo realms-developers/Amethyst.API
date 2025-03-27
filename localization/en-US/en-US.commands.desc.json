@@ -1,0 +1,13 @@
+{
+    "commands.desc.grantRoot": "Grants root permissions.",
+    "commands.desc.showCommands": "Shows a list of available commands.",
+    "commands.desc.showHelp": "Show basic server information.",
+    "commands.desc.pluginsList": "Display the list of loaded plugins.",
+    "commands.desc.allowedPluginsList": "Display the list of allowed plugins.",
+    "commands.desc.setallowPlugin": "Allow or disallow a plugin.",
+    "commands.desc.unloadPlugins": "Unload plugins.",
+    "commands.desc.loadPlugins": "Load plugins.",
+    "commands.desc.reloadPlugins": "reload plugins.",
+    "commands.desc.moduleList": "display the list of loaded modules.",
+    "commands.desc.setallowModule": "Allow or disallow a module."
+}

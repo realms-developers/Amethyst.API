@@ -3,7 +3,7 @@ namespace Amethyst.Core.Profiles;
 public sealed class ServerProfile
 {
     internal ServerProfile(string name)
-    {   
+    {
         Name = name;
         DefaultLanguage = "en-US";
         Config = new ProfileConfigContainer();
