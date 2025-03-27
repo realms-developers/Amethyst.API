@@ -18,6 +18,13 @@ public static class PluginLoader
 
     internal static void LoadPlugins()
     {
+        // Create the directory if it doesn't exist
+        if (!Directory.Exists(PluginsPath))
+        {
+            Directory.CreateDirectory(PluginsPath);
+            AmethystLog.Main.Info("PluginLoader", $"Created plugins directory at '{PluginsPath}'");
+        }
+      
         var files = Directory.EnumerateFiles(PluginsPath, "*.dll");
 
         foreach (var file in files)

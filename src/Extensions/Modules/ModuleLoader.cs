@@ -11,6 +11,13 @@ public static class ModuleLoader
 
     internal static void LoadModules()
     {
+        // Create the directory if it doesn't exist
+        if (!Directory.Exists(ModulesPath))
+        {
+            Directory.CreateDirectory(ModulesPath);
+            AmethystLog.Main.Info("ModuleLoader", $"Created modules directory at '{ModulesPath}'");
+        }
+        
         var files = Directory.EnumerateFiles(ModulesPath, "*.dll");
 
         foreach (var file in files)
