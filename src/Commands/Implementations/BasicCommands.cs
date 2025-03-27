@@ -5,7 +5,7 @@ namespace Amethyst.Commands.Implementations;
 
 public static class BasicCommands
 {
-    [ServerCommand(CommandType.Shared, "cmds", "commands.desc.showCommands", null)]
+    [ServerCommand(CommandType.Shared, "help", "commands.desc.showCommands", null)]
     [CommandsSyntax("[page]", "[-r(aw)]")]
     public static void Commands(CommandInvokeContext ctx, int page = 0, string args = "")
     {
@@ -25,7 +25,6 @@ public static class BasicCommands
                     .Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")}"));
 
             ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.availableCommands", ctx.Sender.Language), null, null, false, page);
-            return;
         }
         else
         {
@@ -34,7 +33,6 @@ public static class BasicCommands
                     .Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")} - {Localization.Get(p.Data.Description, ctx.Sender.Language)}"));
 
             ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.availableCommands", ctx.Sender.Language), null, null, false, page);
-            return;
         }
     }
 
