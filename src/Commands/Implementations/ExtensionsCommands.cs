@@ -33,14 +33,12 @@ public static class ExtensionsCommands
     [CommandsSyntax("<name with .dll>", "<true | false>")]
     public static void PluginsAllow(CommandInvokeContext ctx, string name, bool value)
     {
-        AmethystSession.Profile.Config.Get<ExtensionsConfiguration>().Modify(p =>
+        AmethystSession.Profile.Config.Get<ExtensionsConfiguration>().Modify((ref ExtensionsConfiguration p) =>
         {
             if (p.AllowedPlugins.Contains(name) && value == false)
                 p.AllowedPlugins.Remove(name);
             else if (p.AllowedPlugins.Contains(name) == false && value)
                 p.AllowedPlugins.Add(name);
-
-            return p;
         }, true);
 
         if (value) ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasAllowed", ctx.Sender.Language));
@@ -97,14 +95,12 @@ public static class ExtensionsCommands
     [CommandsSyntax("<name with .dll>", "<true | false>")]
     public static void ModulesAllow(CommandInvokeContext ctx, string name, bool value)
     {
-        AmethystSession.Profile.Config.Get<ExtensionsConfiguration>().Modify(p =>
+        AmethystSession.Profile.Config.Get<ExtensionsConfiguration>().Modify((ref ExtensionsConfiguration p) =>
         {
             if (p.AllowedModules.Contains(name) && value == false)
                 p.AllowedModules.Remove(name);
             else if (p.AllowedModules.Contains(name) == false && value)
                 p.AllowedModules.Add(name);
-
-            return p;
         }, true);
 
         if (value) ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasAllowed", ctx.Sender.Language));

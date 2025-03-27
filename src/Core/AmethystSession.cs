@@ -67,7 +67,7 @@ public static class AmethystSession
         Profile.Config.Get<ExtensionsConfiguration>().Modify(SetupExtensionsConfiguration, true);
     }
 
-    private static StorageConfiguration SetupStorageConfiguration(StorageConfiguration configuration)
+    private static void SetupStorageConfiguration(ref StorageConfiguration configuration)
     {
         // MongoDB
         configuration.MongoConnection ??= "mongodb://localhost:27017/";
@@ -79,16 +79,12 @@ public static class AmethystSession
         configuration.MySQLDatabase ??= Profile.Name;
         configuration.MySQLUid ??= "root";
         configuration.MySQLPwd ??= string.Empty;
-
-        return configuration;
     }
 
-    private static ExtensionsConfiguration SetupExtensionsConfiguration(ExtensionsConfiguration configuration)
+    private static void SetupExtensionsConfiguration(ref ExtensionsConfiguration configuration)
     {
         configuration.AllowedModules ??= new() { "Amethyst.Environment.dll" };
 
         configuration.AllowedPlugins ??= new() { string.Empty };
-
-        return configuration;
     }
 }

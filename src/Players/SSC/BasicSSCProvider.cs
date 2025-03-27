@@ -17,7 +17,7 @@ public sealed class BasicSSCProvider : ISSCProvider
         AmethystSession.Profile.Config.Get<SSCConfiguration>().Modify(SetupConfiguration, true);
     }
 
-    private SSCConfiguration SetupConfiguration(SSCConfiguration configuration)
+    private static void SetupConfiguration(ref SSCConfiguration configuration)
     {
         configuration.StartItems ??= new List<NetItem>()
         {
@@ -28,8 +28,6 @@ public sealed class BasicSSCProvider : ISSCProvider
 
         configuration.StartLife = configuration.StartLife == 0 ? 120 : configuration.StartLife;
         configuration.StartMana = configuration.StartMana == 0 ? 60 : configuration.StartMana;
-
-        return configuration;
     }
 
     public CharacterModel GetModel(string name)
