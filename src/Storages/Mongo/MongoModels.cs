@@ -6,13 +6,14 @@ namespace Amethyst.Storages.Mongo;
 
 public sealed class MongoModels<TModel> where TModel : DataModel
 {
-    internal MongoModels(MongoDatabase db)
+    internal MongoModels(MongoDatabase db, string? name = null)
     {
+        CollectionName = name ?? $"{typeof(TModel).Name}Collection";
         Database = db;
         InternalCollection = Database.InternalDb.GetCollection<TModel>(CollectionName);
     }
 
-    public string CollectionName => $"{typeof(TModel).Name}Collection";
+    public string CollectionName { get; }
     public MongoDatabase Database { get; }
     public IMongoCollection<TModel> InternalCollection { get; }
 
