@@ -24,9 +24,9 @@ public sealed class MongoDatabase
     public MongoClient Client { get; }
     public IMongoDatabase InternalDb { get; }
     
-    public MongoModels<TModel> Get<TModel>() where TModel : DataModel
+    public MongoModels<TModel> Get<TModel>(string? name = null) where TModel : DataModel
     {
-        MongoModels<TModel> storage = new(this);
+        MongoModels<TModel> storage = new(this, name);
         return storage;
     }
 
