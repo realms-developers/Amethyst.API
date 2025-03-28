@@ -17,6 +17,7 @@
     <LangVersion>preview</LangVersion>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <RepositoryType>git</RepositoryType>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings> 
   </PropertyGroup>
   <ItemGroup>
   
