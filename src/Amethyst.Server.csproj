@@ -9,7 +9,7 @@
     <Version>7.12.3</Version>
     <Title>Amethyst</Title>
     <Product>Amethyst</Product>
-    <Description>Amethyst API for Terraria Server.</Description>
+    <Description>Amethyst is a modern, high-performance API for Terraria servers, offering complete control and customization over every aspect of your server.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/realms-developers/Amethyst.API</PackageProjectUrl>
     <RepositoryUrl>https://github.com/realms-developers/Amethyst.API</RepositoryUrl>
@@ -41,6 +41,6 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
-    <PackageReference Include="MySql.Data" />
+    <PackageReference Include="MySql.Data" Version="*"/>
   </ItemGroup>
 </Project>
