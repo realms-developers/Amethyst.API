@@ -1,23 +1,14 @@
 namespace Amethyst.Text;
 
-public sealed class TextPage
+public sealed class TextPage(string name, List<string> lines, string? showPermission, bool isDisabled)
 {
-    public TextPage(string name, List<string> lines, string? showPermission, bool isDisabled)
-    {
-        _lines = lines;
+    internal List<string> _lines = lines;
 
-        Name = name;
-        ShowPermission = showPermission;
-        IsDisabled = isDisabled;
-    }
+    public string Name { get; } = name;
 
-    internal List<string> _lines;
+    public string? ShowPermission { get; set; } = showPermission;
 
-    public string Name { get; }
-
-    public string? ShowPermission { get; set; }
-
-    public bool IsDisabled { get; set; }
+    public bool IsDisabled { get; set; } = isDisabled;
 
     public IReadOnlyList<string> Lines => _lines.AsReadOnly();
 
