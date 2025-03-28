@@ -6,25 +6,30 @@ namespace Amethyst.Commands;
 
 public sealed class CommandRunner
 {
-    internal CommandRunner(CommandData data) => Data = data;
+    private readonly ParameterInfo[] _methodParameters;
+
+    internal CommandRunner(CommandData data)
+    {
+        Data = data;
+        _methodParameters = data.Method.GetParameters();
+    }
 
     public CommandData Data { get; }
     public bool IsDisabled { get; set; }
 
     public bool NameEquals(string text)
     {
-        string[] commandParts = Data.Name.Split();
-        string[] inputParts = text.Split();
+        string[] textLines = text.Split();
+        string[] cmdLines = Data.Name.Split();
 
-        // Replace LINQ SequenceEqual and Take with manual checks
-        if (commandParts.Length > inputParts.Length)
+        if (cmdLines.Length > textLines.Length)
         {
             return false;
         }
 
-        for (int i = 0; i < commandParts.Length; i++)
+        for (int i = 0; i < cmdLines.Length; i++)
         {
-            if (commandParts[i] != inputParts[i])
+            if (cmdLines[i] != textLines[i])
             {
                 return false;
             }
@@ -33,129 +38,116 @@ public sealed class CommandRunner
         return true;
     }
 
-    public void Run(ICommandSender sender, string arguments) =>
-        Run(new CommandInvokeContext(sender, arguments, TextUtility.SplitArguments(arguments)));
+    public void Run(ICommandSender sender, string arguments)
+    {
+        List<string> parsedArgs = TextUtility.SplitArguments(arguments);
+        Run(new(sender, arguments, parsedArgs));
+    }
 
-    public void Run(ICommandSender sender, List<string> arguments) =>
-        Run(new CommandInvokeContext(sender, string.Join(' ', arguments), arguments));
+    public void Run(ICommandSender sender, List<string> arguments)
+    {
+        Run(new(sender, string.Join(' ', arguments), arguments));
+    }
 
-    private void Run(CommandInvokeContext ctx)
+    public void Run(CommandInvokeContext ctx)
     {
         if (IsDisabled)
         {
-            SendErrorReply(ctx, "commands.commandIsDisabled");
+            ctx.Sender.ReplyError(Localization.Get("commands.commandIsDisabled", ctx.Sender.Language));
             return;
         }
 
-        ParameterInfo[] parameters = Data.Method.GetParameters();
-        object?[] invokeArgs = new object?[parameters.Length];
-
+        object?[] invokeArgs = new object?[_methodParameters.Length];
         invokeArgs[0] = ctx;
 
-        if (TryParseArguments(ctx, parameters, ref invokeArgs))
+        if (!ParseArguments(ctx.Sender, [.. ctx.Arguments], invokeArgs))
         {
-            Data.Method.Invoke(null, invokeArgs);
+            return;
         }
+
+        Data.Method.Invoke(null, invokeArgs);
     }
 
-    private bool TryParseArguments(CommandInvokeContext ctx, ParameterInfo[] parameters, ref object?[] invokeArgs)
+    private bool ParseArguments(ICommandSender sender, string[] arguments, object?[] invokeArgs)
     {
-        List<string> arguments = [.. ctx.Arguments];
-        ICommandSender sender = ctx.Sender;
+        int enteredParams = arguments.Length;
 
-        // Replace LINQ Skip(1).Select with manual loop
-        for (int i = 1; i < parameters.Length; i++)
+        for (int i = 1; i < _methodParameters.Length; i++)
         {
-            ParameterInfo parameter = parameters[i];
-            int argIndex = i - 1;
+            ParameterInfo p = _methodParameters[i];
+            int userArgIndex = i - 1;
 
-            if (argIndex >= arguments.Count)
+            if (userArgIndex >= enteredParams)
             {
-                if (!HandleMissingArgument(sender, parameter, i, ref invokeArgs))
+                if (p.HasDefaultValue)
                 {
-                    return false;
+                    invokeArgs[i] = p.DefaultValue;
+                    continue;
                 }
-                continue;
-            }
 
-            ParseResult parseResult = ParsingNode.TryParse(parameter.ParameterType, sender, arguments[argIndex]);
-
-            if (!HandleParseResult(parseResult, sender, parameter, i, ref invokeArgs))
-            {
+                sender.ReplyError(Localization.Get("commands.notEnoughArguments", sender.Language));
+                ShowSyntaxHint(sender);
                 return false;
             }
+
+            string input = arguments[userArgIndex];
+            string? paramSyntax = GetParameterSyntax(userArgIndex);
+
+            ParseResult result = ParsingNode.TryParse(p.ParameterType, sender, input);
+            if (!HandleParseResult(result, sender, paramSyntax, ref invokeArgs[i]))
+                return false;
         }
 
         return true;
     }
 
-    private bool HandleMissingArgument(ICommandSender sender, ParameterInfo parameter, int index, ref object?[] invokeArgs)
+    private string? GetParameterSyntax(int userArgIndex)
     {
-        if (!parameter.HasDefaultValue)
-        {
-            SendErrorReply(sender, "commands.notEnoughArguments");
-            ShowSyntaxHelp(sender);
-            return false;
-        }
-
-        invokeArgs[index] = parameter.DefaultValue;
-        return true;
+        return Data.Syntax != null && Data.Syntax.Length > userArgIndex
+            ? Data.Syntax[userArgIndex]
+            : null;
     }
 
-    private bool HandleParseResult(ParseResult result, ICommandSender sender, ParameterInfo parameter, int index, ref object?[] invokeArgs)
-    {
-        switch (result.Type)
-        {
-            case ParseResultType.Success:
-                invokeArgs[index] = result.Result;
-                return true;
-
-            case ParseResultType.EmptyArgument when parameter.HasDefaultValue:
-                invokeArgs[index] = parameter.DefaultValue;
-                return true;
-
-            case ParseResultType.EmptyArgument:
-                SendErrorReply(sender, "commands.emptyArgument", GetSyntaxHelp(parameter.Position - 1)!);
-                return false;
-
-            case ParseResultType.TooManyVariants:
-                ShowVariants(sender, result);
-                return false;
-
-            case ParseResultType.ObjectNotFound:
-                SendErrorReply(sender, "commands.objectNotFound");
-                return false;
-
-            case ParseResultType.NoParser:
-                SendErrorReply(sender, "commands.noParser");
-                return false;
-
-            default:
-                return false;
-        }
-    }
-
-    private static void ShowVariants(ICommandSender sender, ParseResult result) =>
-        sender.ReplyPage(
-            PagesCollection.CreateFromList(result.Variants!, 120, 10),
-            Localization.Get("commands.tooManyVariants", sender.Language),
-            null, null, false, 0);
-
-    private string? GetSyntaxHelp(int index) =>
-        Data.Syntax?[index];
-
-    private void ShowSyntaxHelp(ICommandSender sender)
+    private void ShowSyntaxHint(ICommandSender sender)
     {
         if (Data.Syntax != null)
         {
-            SendErrorReply(sender, "commands.validSyntaxIs",
+            sender.ReplyError(Localization.Get("commands.validSyntaxIs", sender.Language),
                 Data.Name, string.Join(' ', Data.Syntax));
         }
     }
 
-    private static void SendErrorReply(ICommandSender sender, string key, params object[] args) =>
-        sender.ReplyError(Localization.Get(key, sender.Language), args);
+    private static bool HandleParseResult(ParseResult result, ICommandSender sender,
+        string? paramSyntax, ref object? target)
+    {
+        switch (result.Type)
+        {
+            case ParseResultType.Success:
+                target = result.Result;
+                break;
 
-    private static void SendErrorReply(CommandInvokeContext ctx, string key) =>
-        SendErrorReply(ctx.Sender, key);
+            case ParseResultType.EmptyArgument:
+                sender.ReplyError(Localization.Get("commands.emptyArgument", sender.Language), paramSyntax!);
+                return false;
+
+            case ParseResultType.TooManyVariants:
+                sender.ReplyPage(PagesCollection.CreateFromList(result.Variants!, 120, 10),
+                    Localization.Get("commands.tooManyVariants", sender.Language), null, null, false, 0);
+                return false;
+
+            case ParseResultType.ObjectNotFound:
+                sender.ReplyError(Localization.Get("commands.objectNotFound", sender.Language));
+                return false;
+
+            case ParseResultType.NoParser:
+                sender.ReplyError(Localization.Get("commands.noParser", sender.Language));
+                return false;
+
+            default:
+                sender.ReplyError(Localization.Get("commands.invalidSyntax", sender.Language));
+                return false;
+        }
+
+        return true;
+    }
 }

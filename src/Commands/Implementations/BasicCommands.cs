@@ -7,8 +7,8 @@ namespace Amethyst.Commands.Implementations;
 public static class BasicCommands
 {
     [ServerCommand(CommandType.Shared, "help", "commands.desc.showCommands", null)]
-    [CommandsSyntax("[page]", "[-r(aw)]")]
-    public static void Commands(CommandInvokeContext ctx, int page = 0, string args = "")
+    [CommandsSyntax("[-r(aw)]", "[page]")]
+    public static void Commands(CommandInvokeContext ctx, string args = "", int page = 0)
     {
         bool whereExpression(CommandRunner p)
         {
@@ -91,29 +91,4 @@ public static class BasicCommands
 
         ctx.Sender.ReplyInfo(string.Join(", ", cultures));
     }
-
-    /*
-    [ServerCommand(CommandType.Shared, "lang ru", "установить русский язык.", null)]
-    public static void LangRU(CommandInvokeContext ctx)
-    {
-        ctx.Sender.Language = "ru-RU";
-        ctx.Sender.ReplySuccess("Язык успешно изменен!");
-    }
-
-    [ServerCommand(CommandType.Shared, "lang en", "set english language.", null)]
-    public static void LangEN(CommandInvokeContext ctx)
-    {
-        ctx.Sender.Language = "en-US";
-        ctx.Sender.ReplySuccess("Language was successfully changed!");
-    }*/
-
-    /*
-    [ServerCommand(CommandType.Shared, "help", "commands.desc.showHelp", null)]
-    [CommandsSyntax("[page]")]
-    public static void Help(CommandInvokeContext ctx, int page = 0)
-    {
-        var pages = ctx.Sender.Language.HelpPages;
-        ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.help", ctx.Sender.Language), null, null, true, 0);
-    }
-    */
 }

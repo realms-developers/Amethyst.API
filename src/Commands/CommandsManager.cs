@@ -69,7 +69,7 @@ public static class CommandsManager
 
         try
         {
-            string arguments = text.Substring(runner.Data.Name.Length);
+            string arguments = text.Substring(runner.Data.Name.Length).TrimStart();
             runner.Run(sender, arguments);
             return true;
         }
@@ -120,7 +120,7 @@ public static class CommandsManager
     {
         foreach (CommandData cmd in LoadCommands(assembly, pluginId))
         {
-            Commands.Add(new CommandRunner(cmd));
+            Commands.Add(new(cmd));
         }
     }
 
