@@ -23,7 +23,7 @@ public static class CommandsManager
     }
 
     private static void OnConsoleInput(string input, ref bool handled) =>
-        handled = RequestRun(ConsoleSender, input);
+        handled |= RequestRun(ConsoleSender, input);
 
     public static bool RequestRun(ICommandSender sender, string text)
     {
@@ -33,6 +33,7 @@ public static class CommandsManager
         if (runner is null)
         {
             sender.ReplyError(Localization.Get("commands.commandNotFound", sender.Language));
+
             return false;
         }
 
@@ -67,7 +68,7 @@ public static class CommandsManager
 
         try
         {
-            string arguments = text.Substring(runner.Data.Name.Length);
+            string arguments = text[runner.Data.Name.Length..];
             runner.Run(sender, arguments);
             return true;
         }
