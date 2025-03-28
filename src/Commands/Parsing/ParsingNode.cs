@@ -9,9 +9,12 @@ public static class ParsingNode
 
     internal static void Initialize()
     {
-        // Generic numeric parsers
-        new[] { typeof(byte), typeof(int), typeof(double), typeof(float), typeof(bool) }
-            .ForEach(t => _parsers.Add(t, CreateTryParseParser(t)));
+        // Generic numeric parsers - replaced ForEach with raw loop
+        Type[] numericTypes = [typeof(byte), typeof(int), typeof(double), typeof(float), typeof(bool)];
+        foreach (Type t in numericTypes)
+        {
+            _parsers.Add(t, CreateTryParseParser(t));
+        }
 
         // String parser
         _parsers[typeof(string)] = (sender, input) => ParseResult.Success(input);
@@ -24,7 +27,7 @@ public static class ParsingNode
     private static ArgumentParser CreateTryParseParser(Type type) => (_, input) =>
         type.GetMethod("TryParse", [typeof(string), type.MakeByRefType()]) is { } tryParse &&
         (bool)tryParse.Invoke(null, [input, null])!
-        ? ParseResult.Success(Convert.ChangeType(input, type.ReflectedType!, null))
+        ? ParseResult.Success(Convert.ChangeType(input, type, null))
         : ParseResult.InvalidSyntax("$ParsingNode.InvalidSyntax");
 
     private static ParseResult ParsePlayerReference(ICommandSender sender, string input)
@@ -39,12 +42,30 @@ public static class ParsingNode
             return ParseResult.Success(new PlayerReference(index));
         }
 
-        NetPlayer? player = PlayerManager.Tracker
-            .Where(p => p?.IsActive == true)
-            .FirstOrDefault(p => p.Name.Equals(input, StringComparison.OrdinalIgnoreCase)) ??
-            PlayerManager.Tracker
-            .FirstOrDefault(p => p?.IsActive == true && p.Name.StartsWith(input, StringComparison.OrdinalIgnoreCase));
+        // Manual player search without LINQ
+        NetPlayer? exactMatch = null;
+        NetPlayer? prefixMatch = null;
 
+        foreach (NetPlayer p in PlayerManager.Tracker)
+        {
+            if (p?.IsActive != true)
+            {
+                continue;
+            }
+
+            if (exactMatch == null && p.Name.Equals(input, StringComparison.OrdinalIgnoreCase))
+            {
+                exactMatch = p;
+                break; // Found exact match, exit early
+            }
+
+            if (prefixMatch == null && p.Name.StartsWith(input, StringComparison.OrdinalIgnoreCase))
+            {
+                prefixMatch = p;
+            }
+        }
+
+        NetPlayer? player = exactMatch ?? prefixMatch;
         return player != null
             ? ParseResult.Success(new PlayerReference(player.Index))
             : ParseResult.ObjectNotFound();
@@ -63,12 +84,23 @@ public static class ParsingNode
     {
         List<Localization.ItemFindData> items = Localization.Items.FindItem(isRussian, input);
 
-        return items.Count switch
+        if (items.Count == 1)
         {
-            1 => ParseResult.Success(new ItemReference(items[0].ItemID)),
-            > 1 => ParseResult.TooManyVariants([.. items.Select(p => p.Name)]),
-            _ => null
-        };
+            return ParseResult.Success(new ItemReference(items[0].ItemID));
+        }
+
+        if (items.Count > 1)
+        {
+            // Manual variant collection without LINQ Select
+            List<string> variantNames = new(items.Count);
+            foreach (Localization.ItemFindData item in items)
+            {
+                variantNames.Add(item.Name);
+            }
+            return ParseResult.TooManyVariants(variantNames);
+        }
+
+        return null;
     }
 
     internal static ParseResult TryParse(Type type, ICommandSender sender, string input) =>
@@ -78,16 +110,4 @@ public static class ParsingNode
 
     public static void AddParser(Type type, ArgumentParser parser) => _parsers.TryAdd(type, parser);
     public static void RemoveParser(Type type) => _parsers.Remove(type);
-}
-
-// Extension method for ForEach on IEnumerable<T>
-public static class EnumerableExtensions
-{
-    public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
-    {
-        foreach (T? item in source)
-        {
-            action(item);
-        }
-    }
 }

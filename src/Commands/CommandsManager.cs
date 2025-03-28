@@ -33,12 +33,10 @@ public static class CommandsManager
         if (runner is null)
         {
             sender.ReplyError(Localization.Get("commands.commandNotFound", sender.Language));
-
             return false;
         }
 
         LogCommandExecution(sender, commandText, runner);
-
         return ValidateAndExecuteCommand(sender, commandText, runner);
     }
 
@@ -60,15 +58,18 @@ public static class CommandsManager
             ValidatePermissions(sender, runner)
         ];
 
-        if (validationResults.Any(result => !result.IsValid))
+        for (int i = 0; i < validationResults.Length; i++)
         {
-            validationResults.First(result => !result.IsValid).HandleError();
-            return true;
+            if (!validationResults[i].IsValid)
+            {
+                validationResults[i].HandleError();
+                return true;
+            }
         }
 
         try
         {
-            string arguments = text[runner.Data.Name.Length..];
+            string arguments = text.Substring(runner.Data.Name.Length);
             runner.Run(sender, arguments);
             return true;
         }
@@ -97,8 +98,17 @@ public static class CommandsManager
         AmethystLog.System.Critical("Commands", $"Command failure '{text}' from {sender.Name} ({sender.Type}):\n{ex}");
     }
 
-    public static CommandRunner? FindCommand(string name) =>
-        Commands.FirstOrDefault(cmd => cmd.NameEquals(name));
+    public static CommandRunner? FindCommand(string name)
+    {
+        foreach (CommandRunner cmd in Commands)
+        {
+            if (cmd.NameEquals(name))
+            {
+                return cmd;
+            }
+        }
+        return null;
+    }
 
     private static void OnPluginUnload(PluginContainer container) =>
         Commands.RemoveAll(p => p.Data.PluginID == container.LoadID);
@@ -106,23 +116,47 @@ public static class CommandsManager
     private static void OnPluginLoad(PluginContainer container) =>
         ImportCommands(container.Assembly, container.LoadID);
 
-    internal static void ImportCommands(Assembly assembly, int? pluginId) =>
-        Commands.AddRange(LoadCommands(assembly, pluginId).Select(cmd => new CommandRunner(cmd)));
+    internal static void ImportCommands(Assembly assembly, int? pluginId)
+    {
+        foreach (CommandData cmd in LoadCommands(assembly, pluginId))
+        {
+            Commands.Add(new CommandRunner(cmd));
+        }
+    }
 
-    internal static IEnumerable<CommandData> LoadCommands(Assembly assembly, int? pluginId) =>
-        assembly.GetExportedTypes()
-            .SelectMany(type => type.GetMethods())
-            .Select(method => (
-                Method: method,
-                CommandAttr: method.GetCustomAttribute<ServerCommandAttribute>(),
-                SyntaxAttr: method.GetCustomAttribute<CommandsSyntaxAttribute>(),
-                SettingsAttr: method.GetCustomAttribute<CommandsSettingsAttribute>()))
-            .Where(t => t.CommandAttr != null && HasValidParameters(t.Method))
-            .Select(t => CreateCommandData(t, pluginId));
+    internal static IEnumerable<CommandData> LoadCommands(Assembly assembly, int? pluginId)
+    {
+        var commands = new List<CommandData>();
+        Type[] exportedTypes = assembly.GetExportedTypes();
 
-    private static bool HasValidParameters(MethodInfo method) =>
-        method.GetParameters() is { Length: > 0 } parameters &&
-        parameters[0].ParameterType == typeof(CommandInvokeContext);
+        foreach (Type type in exportedTypes)
+        {
+            MethodInfo[] methods = type.GetMethods();
+
+            foreach (MethodInfo method in methods)
+            {
+                ServerCommandAttribute? commandAttr = method.GetCustomAttribute<ServerCommandAttribute>();
+                CommandsSyntaxAttribute? syntaxAttr = method.GetCustomAttribute<CommandsSyntaxAttribute>();
+                CommandsSettingsAttribute? settingsAttr = method.GetCustomAttribute<CommandsSettingsAttribute>();
+
+                if (commandAttr != null && HasValidParameters(method))
+                {
+                    commands.Add(CreateCommandData(
+                        (method, commandAttr, syntaxAttr, settingsAttr),
+                        pluginId
+                    ));
+                }
+            }
+        }
+
+        return commands;
+    }
+
+    private static bool HasValidParameters(MethodInfo method)
+    {
+        ParameterInfo[] parameters = method.GetParameters();
+        return parameters.Length > 0 && parameters[0].ParameterType == typeof(CommandInvokeContext);
+    }
 
     private static CommandData CreateCommandData(
         (MethodInfo Method, ServerCommandAttribute? CommandAttr,

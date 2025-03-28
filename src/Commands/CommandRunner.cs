@@ -16,15 +16,28 @@ public sealed class CommandRunner
         string[] commandParts = Data.Name.Split();
         string[] inputParts = text.Split();
 
-        return commandParts.Length <= inputParts.Length &&
-               commandParts.SequenceEqual(inputParts.Take(commandParts.Length));
+        // Replace LINQ SequenceEqual and Take with manual checks
+        if (commandParts.Length > inputParts.Length)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < commandParts.Length; i++)
+        {
+            if (commandParts[i] != inputParts[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void Run(ICommandSender sender, string arguments) =>
         Run(new CommandInvokeContext(sender, arguments, TextUtility.SplitArguments(arguments)));
 
     public void Run(ICommandSender sender, List<string> arguments) =>
-        Run(new CommandInvokeContext(sender, string.Join(" ", arguments), arguments));
+        Run(new CommandInvokeContext(sender, string.Join(' ', arguments), arguments));
 
     private void Run(CommandInvokeContext ctx)
     {
@@ -48,26 +61,26 @@ public sealed class CommandRunner
     private bool TryParseArguments(CommandInvokeContext ctx, ParameterInfo[] parameters, ref object?[] invokeArgs)
     {
         List<string> arguments = [.. ctx.Arguments];
-
         ICommandSender sender = ctx.Sender;
 
-        foreach ((ParameterInfo parameter, int index) in parameters.Skip(1).Select((p, i) => (p, i + 1)))
+        // Replace LINQ Skip(1).Select with manual loop
+        for (int i = 1; i < parameters.Length; i++)
         {
-            int argIndex = index - 1;
+            ParameterInfo parameter = parameters[i];
+            int argIndex = i - 1;
 
             if (argIndex >= arguments.Count)
             {
-                if (!HandleMissingArgument(sender, parameter, index, ref invokeArgs))
+                if (!HandleMissingArgument(sender, parameter, i, ref invokeArgs))
                 {
                     return false;
                 }
-
                 continue;
             }
 
             ParseResult parseResult = ParsingNode.TryParse(parameter.ParameterType, sender, arguments[argIndex]);
 
-            if (!HandleParseResult(parseResult, sender, parameter, index, ref invokeArgs))
+            if (!HandleParseResult(parseResult, sender, parameter, i, ref invokeArgs))
             {
                 return false;
             }
@@ -136,7 +149,7 @@ public sealed class CommandRunner
         if (Data.Syntax != null)
         {
             SendErrorReply(sender, "commands.validSyntaxIs",
-                Data.Name, string.Join(" ", Data.Syntax));
+                Data.Name, string.Join(' ', Data.Syntax));
         }
     }
 
