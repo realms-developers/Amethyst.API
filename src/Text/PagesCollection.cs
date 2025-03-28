@@ -1,104 +1,106 @@
 using System.Collections;
 using System.Globalization;
+using System.Text;
 using Amethyst.Commands;
 
 namespace Amethyst.Text;
 
 public sealed class PagesCollection : IEnumerable<TextPage>
 {
+    private readonly List<TextPage> _pages = [];
+
+    public PagesCollection(IEnumerable<TextPage> pages) => _pages.AddRange(pages);
+    public PagesCollection() { }
+
+    public IReadOnlyList<TextPage> Pages => _pages.AsReadOnly();
+
     public static List<string> PageifyItems(IEnumerable<string> items, int maxLineLength = 80)
     {
-        List<string> lines = new List<string>() { "" };
-        int curIndex = 0;
-        int index = 0;
-        int count = items.Count();
+        List<string> lines = [string.Empty];
+        StringBuilder currentLine = new(maxLineLength);
+        List<string> itemsList = [.. items];
+        int count = itemsList.Count;
 
-        foreach (var curText in items)
+        for (int i = 0; i < count; i++)
         {
-            string curItem = curText + (index == count - 1 ? "" : ", ");
+            string item = itemsList[i];
+            string separator = i == count - 1 ? string.Empty : ", ";
 
-            if ((curText + curItem).Length > maxLineLength)
+            if (currentLine.Length + item.Length + separator.Length > maxLineLength)
             {
-                lines.Add(curItem);
-                curIndex++;
+                lines.Add(currentLine.ToString());
+                currentLine.Clear();
             }
-            else
-            {
-                lines[curIndex] += curItem;
-            }
-            index++;
+
+            currentLine.Append(item).Append(separator);
+        }
+
+        if (currentLine.Length > 0)
+        {
+            lines[^1] = currentLine.ToString();
         }
 
         return lines;
     }
 
     public static PagesCollection CreateFromList(IEnumerable<string> items, int maxLineLength = 80, int linesPerPage = 5)
-    {
-        return SplitByPages(PageifyItems(items, maxLineLength), linesPerPage);
-    }
+        => SplitByPages(PageifyItems(items, maxLineLength), linesPerPage);
 
     public static PagesCollection SplitByPages(IEnumerable<string> lines, int linesPerPage = 5)
     {
-        List<TextPage> pages = new List<TextPage>();
-        int currentPage = 0;
+        List<TextPage> pages = [];
+        List<string> lineList = [.. lines];
+        int pageCount = (int)Math.Ceiling(lineList.Count / (double)linesPerPage);
 
-        int i = 0;
-        foreach (string line in lines)
+        for (int i = 0; i < pageCount; i++)
         {
-            if (pages.Count == currentPage)
-                pages.Add(new TextPage($"#{currentPage + 1}", new(), null, false));
+            var pageLines = lineList
+                .Skip(i * linesPerPage)
+                .Take(linesPerPage)
+                .ToList();
 
-            pages[currentPage].Add(line);
-
-            if (i > 0 && i % linesPerPage == 0)
-                currentPage++;
-
-            i++;
+            pages.Add(new TextPage($"#{i + 1}", pageLines, null, false));
         }
 
-        return new PagesCollection(pages);
+#pragma warning disable IDE0306 
+        return new(pages);
+#pragma warning restore IDE0306 
     }
-
-    public PagesCollection(IEnumerable<TextPage> pages)
-    {
-        _pages = new List<TextPage>(pages);
-    }
-
-    public PagesCollection()
-    {
-        _pages = new List<TextPage>();
-    }
-
-    internal List<TextPage> _pages;
-
-    public IReadOnlyList<TextPage> Pages => _pages.AsReadOnly();
 
     public void SendPage(ICommandSender sender, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
     {
-        var pages = _pages.Where(p => p.IsDisabled == false && p.ShowPermission != null ? sender.HasPermission(p.ShowPermission) : true).ToArray();
+        var visiblePages = _pages
+            .Where(p => !p.IsDisabled && (p.ShowPermission == null || sender.HasPermission(p.ShowPermission)))
+            .ToList();
 
-        if (pages.Length == 0)
+        if (visiblePages.Count == 0)
         {
             sender.ReplyError(Localization.Get("commands.noAvailablePages", sender.Language));
             return;
         }
 
-        page = Math.Clamp(page, 1, pages.Length) - 1;
+        page = Math.Clamp(page, 1, visiblePages.Count) - 1;
+        TextPage currentPage = visiblePages[page];
 
         if (header != null)
         {
-            sender.ReplySuccess($"[c/094729:===] [c/35875f:[][c/43d990:{page + 1}] [c/35875f:|] [c/43d990:{pages.Length}][c/35875f:]] [c/11d476:{Localization.Get(header, sender.Language)}]");
+            sender.ReplySuccess(
+                $"[c/094729:===] [c/35875f:[][c/43d990:{page + 1}] [c/35875f:|] [c/43d990:{visiblePages.Count}][c/35875f:]] [c/11d476:{Localization.Get(header, sender.Language)}]");
         }
 
-        foreach (var text in pages[page]._lines)
+        foreach (string text in currentPage._lines)
         {
             sender.ReplyInfo(text);
         }
 
         if (footer != null)
         {
-            string footerText = string.Format(CultureInfo.InvariantCulture, Localization.Get(footer, sender.Language), args: footerArgs ?? Array.Empty<object>());
-            sender.ReplySuccess($"[c/094729:===] {(showPageName ? $"[c/3d8562:{pages[page].Name}] [c/11633c:|] " : "")}{footerText}");
+            string footerText = string.Format(CultureInfo.InvariantCulture,
+                Localization.Get(footer, sender.Language),
+                footerArgs ?? []);
+
+            string pageInfo = showPageName ? $"[c/3d8562:{currentPage.Name}] [c/11633c:|] " : "";
+            sender.ReplySuccess($"[c/094729:===] {pageInfo}{footerText}");
         }
     }
 
