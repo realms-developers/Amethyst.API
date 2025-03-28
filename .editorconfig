@@ -80,16 +80,6 @@ dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 dotnet_naming_style.camel_case_underscore_style.required_prefix = _
 dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
 
-# Prefer explicit initialization
-dotnet_diagnostic.CA1805.severity = silent
-
-# Declare visible instance fields
-dotnet_diagnostic.CA1051.severity = silent
-
-# Namespace does not match folder structure
-dotnet_style_namespace_match_folder = false
-dotnet_diagnostic.IDE0130.severity = silent
-
 # Code style defaults
 csharp_using_directive_placement = outside_namespace:suggestion
 dotnet_sort_system_directives_first = true
@@ -101,9 +91,6 @@ csharp_prefer_simple_using_statement = false:none
 csharp_style_prefer_switch_expression = true:suggestion
 csharp_style_prefer_explicit_object_creation = true:suggestion
 dotnet_style_readonly_field = true:suggestion
-
-# !GODOT CANNOT COMPILE THIS!
-csharp_style_prefer_primary_constructors = false
 
 # Expression-level preferences
 dotnet_style_object_initializer = true:suggestion
