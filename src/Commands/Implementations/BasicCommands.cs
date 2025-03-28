@@ -8,7 +8,7 @@ public static class BasicCommands
 {
     [ServerCommand(CommandType.Shared, "help", "commands.desc.showCommands", null)]
     [CommandsSyntax("[-r(aw)]", "[page]")]
-    public static void Commands(CommandInvokeContext ctx, string args = "", int page = 0)
+    public static void Help(CommandInvokeContext ctx, string args = "", int page = 0)
     {
         bool whereExpression(CommandRunner p)
         {
@@ -37,6 +37,10 @@ public static class BasicCommands
             ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.availableCommands", ctx.Sender.Language), null, null, false, page);
         }
     }
+
+    [ServerCommand(CommandType.Shared, "cmds", "commands.desc.showCommands", null)]
+    [CommandsSyntax("[-r(aw)]", "[page]")]
+    public static void Commands(CommandInvokeContext ctx, string args = "", int page = 0) => Help(ctx, args, page);
 
     [ServerCommand(CommandType.Shared, "lang", "commands.desc.lang", null)]
     [CommandsSyntax("<culture>")]
@@ -81,7 +85,9 @@ public static class BasicCommands
         }
 
         // No matches found
-        ctx.Sender.ReplyError(Localization.Get("commands.lang.invalid_culture", ctx.Sender.Language)); // This should tell the user to use /langs
+        ctx.Sender.ReplyError(Localization.Get("commands.lang.invalid_culture", ctx.Sender.Language));
+
+        Langs(ctx);
     }
 
     [ServerCommand(CommandType.Shared, "langs", "commands.desc.langs", null)]
@@ -89,6 +95,7 @@ public static class BasicCommands
     {
         IReadOnlyCollection<string> cultures = Localization.LoadedCultures;
 
+        ctx.Sender.ReplySuccess(Localization.Get("commands.langs", ctx.Sender.Language));
         ctx.Sender.ReplyInfo(string.Join(", ", cultures));
     }
 }
