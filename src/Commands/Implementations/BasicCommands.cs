@@ -1,3 +1,4 @@
+using Amethyst.Commands.Attributes;
 using Amethyst.Core;
 using Amethyst.Text;
 
@@ -9,14 +10,14 @@ public static class BasicCommands
     [CommandsSyntax("[page]", "[-r(aw)]")]
     public static void Commands(CommandInvokeContext ctx, int page = 0, string args = "")
     {
-        Func<CommandRunner, bool> whereExpression = (p) =>
+        bool whereExpression(CommandRunner p)
         {
             return p.IsDisabled == false &&
                     p.Data.Settings.HasFlag(CommandSettings.Hidden) == false &&
                     (p.Data.Permission == null || ctx.Sender.HasPermission(p.Data.Permission)) &&
-                    (p.Data.Type == CommandType.Console ? ctx.Sender.Type == SenderType.Console : true) &&
-                    (p.Data.Type == CommandType.Debug ? AmethystSession.Profile.DebugMode : true);
-        };
+                    (p.Data.Type != CommandType.Console || ctx.Sender.Type == SenderType.Console) &&
+                    (p.Data.Type != CommandType.Debug || AmethystSession.Profile.DebugMode);
+        }
 
         if (args == "-raw" || args == "-r")
         {
@@ -30,12 +31,68 @@ public static class BasicCommands
         {
             var pages = PagesCollection.SplitByPages(CommandsManager.Commands
                     .Where(whereExpression)
-                    .Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")} - {Localization.Get(p.Data.Description, ctx.Sender.Language)}"));
+                    .Select(p =>
+                    $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")} - {Localization.Get(p.Data.Description, ctx.Sender.Language)}"));
 
             ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.availableCommands", ctx.Sender.Language), null, null, false, page);
         }
     }
 
+    [ServerCommand(CommandType.Shared, "lang", "commands.desc.lang", null)]
+    [CommandsSyntax("<culture>")]
+    public static void Lang(CommandInvokeContext ctx, string culture)
+    {
+        culture = culture.Trim();
+
+        // First check if the exact culture is loaded (case-insensitive)
+        string? exactMatch = Localization.LoadedCultures
+            .FirstOrDefault(c => string.Equals(c, culture, StringComparison.OrdinalIgnoreCase));
+
+        if (exactMatch != null)
+        {
+            ctx.Sender.Language = exactMatch;
+            ctx.Sender.ReplySuccess(Localization.Get("commands.lang.success", exactMatch));
+            return;
+        }
+
+        // If no exact match, try matching the language part (e.g. "en" matches "en-US")
+        string? languageMatch = Localization.LoadedCultures
+            .FirstOrDefault(c => c.IndexOf('-') > 0 &&
+                               c.StartsWith(culture + "-", StringComparison.OrdinalIgnoreCase));
+
+        if (languageMatch != null)
+        {
+            ctx.Sender.Language = languageMatch;
+            ctx.Sender.ReplySuccess(Localization.Get("commands.lang.success", languageMatch));
+            return;
+        }
+
+        // If still no match, try matching just the first part of loaded cultures
+        // (e.g. "es" matches "es-ES" even if the input was "es-MX")
+        string? fallbackMatch = Localization.LoadedCultures
+            .FirstOrDefault(c => c.IndexOf('-') > 0 &&
+                               c.Split('-')[0].Equals(culture, StringComparison.OrdinalIgnoreCase));
+
+        if (fallbackMatch != null)
+        {
+            ctx.Sender.Language = fallbackMatch;
+            ctx.Sender.ReplySuccess(Localization.Get("commands.lang.success", fallbackMatch));
+            return;
+        }
+
+        // No matches found
+        ctx.Sender.ReplyError(Localization.Get("commands.lang.invalid_culture", ctx.Sender.Language)); // This should tell the user to use /langs
+    }
+
+    [ServerCommand(CommandType.Shared, "langs", "commands.desc.langs", null)]
+    public static void Langs(CommandInvokeContext ctx)
+    {
+        IReadOnlyCollection<string> cultures = Localization.LoadedCultures;
+
+        ctx.Sender.ReplyInfo(string.Join(", ", cultures));
+    }
+
+    /*
     [ServerCommand(CommandType.Shared, "lang ru", "установить русский язык.", null)]
     public static void LangRU(CommandInvokeContext ctx)
     {
@@ -48,7 +105,7 @@ public static class BasicCommands
     {
         ctx.Sender.Language = "en-US";
         ctx.Sender.ReplySuccess("Language was successfully changed!");
-    }
+    }*/
 
     /*
     [ServerCommand(CommandType.Shared, "help", "commands.desc.showHelp", null)]

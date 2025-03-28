@@ -1,18 +1,10 @@
-namespace Amethyst.Commands;
+namespace Amethyst.Commands.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class ServerCommandAttribute : Attribute
+public sealed class ServerCommandAttribute(CommandType cmdType, string name, string description, string? permission) : Attribute
 {
-    public ServerCommandAttribute(CommandType cmdType, string name, string description, string? permission)
-    {   
-        Type = cmdType;
-        Name = name;
-        Description = description;
-        Permission = permission;
-    }
-
-    public readonly CommandType Type;
-    public readonly string Name;
-    public readonly string Description;
-    public readonly string? Permission;
+    public CommandType Type { get; } = cmdType;
+    public string Name { get; } = name;
+    public string Description { get; } = description;
+    public string? Permission { get; } = permission;
 }

@@ -1,3 +1,4 @@
+using Amethyst.Commands.Attributes;
 using Amethyst.Core;
 using Amethyst.Core.Server;
 using Amethyst.Extensions.Modules;
@@ -35,20 +36,23 @@ public static class ExtensionsCommands
     {
         AmethystSession.Profile.Config.Get<ExtensionsConfiguration>().Modify((ref ExtensionsConfiguration p) =>
         {
-            if (p.AllowedPlugins.Contains(name) && value == false)
-                p.AllowedPlugins.Remove(name);
-            else if (p.AllowedPlugins.Contains(name) == false && value)
+            if (value)
+            {
                 p.AllowedPlugins.Add(name);
+            }
+            else
+            {
+                p.AllowedPlugins.Remove(name);
+            }
         }, true);
 
-        if (value) ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasAllowed", ctx.Sender.Language));
-        else ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasDisallowed", ctx.Sender.Language));
+        ctx.Sender.ReplySuccess(Localization.Get(value ? "commands.text.extensionWasAllowed" : "commands.text.extensionWasDisallowed", ctx.Sender.Language));
     }
 
     [ServerCommand(CommandType.Shared, "plugins unload", "commands.desc.unloadPlugin", "amethyst.management.extensions")]
     public static void PluginsUnload(CommandInvokeContext ctx)
     {
-        var containers = PluginLoader.Containers;
+        List<PluginContainer> containers = PluginLoader.Containers;
         containers.ForEach(p => p.Dispose());
 
         ctx.Sender.ReplySuccess(Localization.Get("commands.text.pluginsWasUnloaded", ctx.Sender.Language));
@@ -64,7 +68,7 @@ public static class ExtensionsCommands
     [ServerCommand(CommandType.Shared, "plugins reload", "commands.desc.reloadPlugins", "amethyst.management.extensions")]
     public static void PluginsReload(CommandInvokeContext ctx)
     {
-        var containers = PluginLoader.Containers;
+        List<PluginContainer> containers = PluginLoader.Containers;
         containers.ForEach(p => p.Dispose());
         PluginLoader.LoadPlugins();
         ctx.Sender.ReplySuccess(Localization.Get("commands.text.pluginsWasReloaded", ctx.Sender.Language));
@@ -97,14 +101,17 @@ public static class ExtensionsCommands
     {
         AmethystSession.Profile.Config.Get<ExtensionsConfiguration>().Modify((ref ExtensionsConfiguration p) =>
         {
-            if (p.AllowedModules.Contains(name) && value == false)
-                p.AllowedModules.Remove(name);
-            else if (p.AllowedModules.Contains(name) == false && value)
+            if (value)
+            {
                 p.AllowedModules.Add(name);
+            }
+            else
+            {
+                p.AllowedModules.Remove(name);
+            }
         }, true);
 
-        if (value) ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasAllowed", ctx.Sender.Language));
-        else ctx.Sender.ReplySuccess(Localization.Get("commands.text.extensionWasDisallowed", ctx.Sender.Language));
+        ctx.Sender.ReplySuccess(Localization.Get(value ? "commands.text.extensionWasAllowed" : "commands.text.extensionWasDisallowed", ctx.Sender.Language));
 
         ctx.Sender.ReplyWarning(Localization.Get("commands.text.pleaseRebootServer", ctx.Sender.Language));
     }

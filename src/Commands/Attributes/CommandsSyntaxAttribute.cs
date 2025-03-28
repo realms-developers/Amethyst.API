@@ -1,12 +1,7 @@
-namespace Amethyst.Commands;
+namespace Amethyst.Commands.Attributes;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public sealed class CommandsSyntaxAttribute : Attribute
+public sealed class CommandsSyntaxAttribute(params string[] syntax) : Attribute
 {
-    public CommandsSyntaxAttribute(params string[] syntax)
-    {   
-        Syntax = syntax;
-    }
-
-    public readonly string[] Syntax;
+    public string[] Syntax { get; } = syntax;
 }

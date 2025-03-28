@@ -1,5 +1,5 @@
 using System.Reflection;
-using Amethyst.Commands.Data;
+using Amethyst.Commands.Attributes;
 using Amethyst.Commands.Parsing;
 using Amethyst.Core;
 using Amethyst.Core.Server;
@@ -9,7 +9,7 @@ namespace Amethyst.Commands;
 
 public static class CommandsManager
 {
-    internal static List<CommandRunner> Commands = new List<CommandRunner>();
+    internal static List<CommandRunner> Commands = [];
     public static ICommandSender ConsoleSender { get; } = new ConsoleSender();
 
     internal static void Initialize()
@@ -47,9 +47,13 @@ public static class CommandsManager
         //var args = TextUtility.SplitArguments(text).Skip(runner.Data.Name.Split(' ').Length).ToList();
 
         if (runner.Data.Settings.HasFlag(CommandSettings.HideLog) == false)
+        {
             AmethystLog.System.Verbose("Commands", $"{sender.Name} [{sender.Type}]: $!r$!d/$!r$!b$r{text}");
+        }
         else
+        {
             AmethystLog.System.Verbose("Commands", $"{sender.Name} [{sender.Type}]: $!r$!d/$!r$!b$r{runner.Data.Name} $!r$!d(hidden log)");
+        }
 
         if (runner.Data.Type == CommandType.Debug && AmethystSession.Profile.DebugMode == false)
         {
@@ -89,8 +93,12 @@ public static class CommandsManager
         List<CommandRunner> cmds = Commands;
 
         foreach (CommandRunner cmd in cmds)
+        {
             if (cmd.NameEquals(name))
+            {
                 return cmd;
+            }
+        }
 
         return null;
     }
@@ -107,9 +115,10 @@ public static class CommandsManager
 
     internal static void ImportCommands(Assembly assembly, int? pluginId)
     {
-        foreach (var cmd in LoadCommands(assembly, pluginId))
+        foreach (CommandData cmd in LoadCommands(assembly, pluginId))
         {
-            CommandRunner runner = new CommandRunner(cmd);
+            CommandRunner runner = new(cmd);
+
             Commands.Add(runner);
         }
     }
@@ -117,10 +126,14 @@ public static class CommandsManager
     internal static IEnumerable<CommandData> LoadCommands(Assembly assembly, int? pluginId)
     {
         foreach (Type type in assembly.GetExportedTypes())
+        {
             foreach (MethodInfo methodInfo in type.GetMethods())
             {
                 ServerCommandAttribute? cmdAttr = methodInfo.GetCustomAttribute<ServerCommandAttribute>();
-                if (cmdAttr == null) continue;
+                if (cmdAttr == null)
+                {
+                    continue;
+                }
 
                 ParameterInfo[] parameters = methodInfo.GetParameters();
                 if (parameters.Length < 1 || parameters[0].ParameterType != typeof(CommandInvokeContext))
@@ -142,6 +155,7 @@ public static class CommandsManager
                     syntaxAttr?.Syntax
                 );
             }
+        }
 
         yield break;
     }
