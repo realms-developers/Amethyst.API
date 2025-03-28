@@ -9,7 +9,7 @@ namespace Amethyst.Commands;
 
 public static class CommandsManager
 {
-    internal static List<CommandRunner> Commands = [];
+    internal static List<CommandRunner> Commands { get; } = [];
     public static ICommandSender ConsoleSender { get; } = new ConsoleSender();
 
     internal static void Initialize()
@@ -19,144 +19,122 @@ public static class CommandsManager
 
         PluginLoader.OnPluginLoad += OnPluginLoad;
         PluginLoader.OnPluginUnload += OnPluginUnload;
-
         ConsoleInput.OnConsoleInput += OnConsoleInput;
     }
 
-    private static void OnConsoleInput(string input, ref bool handled)
-    {
-        if (RequestRun(ConsoleSender, input))
-        {
-            handled = true;
-        }
-    }
+    private static void OnConsoleInput(string input, ref bool handled) =>
+        handled = RequestRun(ConsoleSender, input);
 
     public static bool RequestRun(ICommandSender sender, string text)
     {
-        if (text.StartsWith('/'))
-            text = text.Substring(1);
+        string commandText = text.StartsWith('/') ? text[1..] : text;
+        CommandRunner? runner = FindCommand(commandText);
 
-        var runner = FindCommand(text);
-
-        if (runner == null)
+        if (runner is null)
         {
             sender.ReplyError(Localization.Get("commands.commandNotFound", sender.Language));
             return false;
         }
 
-        //var args = TextUtility.SplitArguments(text).Skip(runner.Data.Name.Split(' ').Length).ToList();
+        LogCommandExecution(sender, commandText, runner);
 
-        if (runner.Data.Settings.HasFlag(CommandSettings.HideLog) == false)
-        {
-            AmethystLog.System.Verbose("Commands", $"{sender.Name} [{sender.Type}]: $!r$!d/$!r$!b$r{text}");
-        }
-        else
-        {
-            AmethystLog.System.Verbose("Commands", $"{sender.Name} [{sender.Type}]: $!r$!d/$!r$!b$r{runner.Data.Name} $!r$!d(hidden log)");
-        }
+        return ValidateAndExecuteCommand(sender, commandText, runner);
+    }
 
-        if (runner.Data.Type == CommandType.Debug && AmethystSession.Profile.DebugMode == false)
-        {
-            sender.ReplyError(Localization.Get("commands.noDebugMode", sender.Language));
-            return true;
-        }
+    private static void LogCommandExecution(ICommandSender sender, string text, CommandRunner runner)
+    {
+        string logMessage = runner.Data.Settings.HasFlag(CommandSettings.HideLog)
+            ? $"{sender.Name} [{sender.Type}]: $!r$!d/$!r$!b$r{runner.Data.Name} $!r$!d(hidden log)"
+            : $"{sender.Name} [{sender.Type}]: $!r$!d/$!r$!b$r{text}";
 
-        if (runner.Data.Settings.HasFlag(CommandSettings.IngameOnly) && sender.Type != SenderType.RealPlayer)
-        {
-            sender.ReplyError(Localization.Get("commands.ingameOnly", sender.Language));
-            return true;
-        }
+        AmethystLog.System.Verbose("Commands", logMessage);
+    }
 
-        if (runner.Data.Permission != null && !sender.HasPermission(runner.Data.Permission))
+    private static bool ValidateAndExecuteCommand(ICommandSender sender, string text, CommandRunner runner)
+    {
+        (bool IsValid, Action HandleError)[] validationResults =
+        [
+            ValidateDebugMode(sender, runner),
+            ValidateIngameOnly(sender, runner),
+            ValidatePermissions(sender, runner)
+        ];
+
+        if (validationResults.Any(result => !result.IsValid))
         {
-            sender.ReplyError(Localization.Get("commands.noPermission", sender.Language));
+            validationResults.First(result => !result.IsValid).HandleError();
             return true;
         }
 
         try
         {
-            runner.Run(sender, text.Substring(runner.Data.Name.Length));
+            string arguments = text.Substring(runner.Data.Name.Length);
+            runner.Run(sender, arguments);
+            return true;
         }
         catch (Exception ex)
         {
-            sender.ReplyError(Localization.Get("commands.commandFailed", sender.Language));
-
-            AmethystLog.System.Critical("Commands", $"Failed in running command '{text}' from {sender.Name} ({sender.Type}):");
-            AmethystLog.System.Critical("Commands", ex.ToString());
+            HandleCommandException(sender, text, ex);
+            return true;
         }
-
-        return true;
     }
 
-    public static CommandRunner? FindCommand(string name)
+    private static (bool IsValid, Action HandleError) ValidateDebugMode(ICommandSender sender, CommandRunner runner) =>
+        (runner.Data.Type != CommandType.Debug || AmethystSession.Profile.DebugMode,
+        () => sender.ReplyError(Localization.Get("commands.noDebugMode", sender.Language)));
+
+    private static (bool IsValid, Action HandleError) ValidateIngameOnly(ICommandSender sender, CommandRunner runner) =>
+        (!runner.Data.Settings.HasFlag(CommandSettings.IngameOnly) || sender.Type == SenderType.RealPlayer,
+        () => sender.ReplyError(Localization.Get("commands.ingameOnly", sender.Language)));
+
+    private static (bool IsValid, Action HandleError) ValidatePermissions(ICommandSender sender, CommandRunner runner) =>
+        (runner.Data.Permission is null || sender.HasPermission(runner.Data.Permission),
+        () => sender.ReplyError(Localization.Get("commands.noPermission", sender.Language)));
+
+    private static void HandleCommandException(ICommandSender sender, string text, Exception ex)
     {
-        List<CommandRunner> cmds = Commands;
-
-        foreach (CommandRunner cmd in cmds)
-        {
-            if (cmd.NameEquals(name))
-            {
-                return cmd;
-            }
-        }
-
-        return null;
+        sender.ReplyError(Localization.Get("commands.commandFailed", sender.Language));
+        AmethystLog.System.Critical("Commands", $"Command failure '{text}' from {sender.Name} ({sender.Type}):\n{ex}");
     }
 
-    private static void OnPluginUnload(PluginContainer container)
-    {
+    public static CommandRunner? FindCommand(string name) =>
+        Commands.FirstOrDefault(cmd => cmd.NameEquals(name));
+
+    private static void OnPluginUnload(PluginContainer container) =>
         Commands.RemoveAll(p => p.Data.PluginID == container.LoadID);
-    }
 
-    private static void OnPluginLoad(PluginContainer container)
-    {
+    private static void OnPluginLoad(PluginContainer container) =>
         ImportCommands(container.Assembly, container.LoadID);
-    }
 
-    internal static void ImportCommands(Assembly assembly, int? pluginId)
-    {
-        foreach (CommandData cmd in LoadCommands(assembly, pluginId))
-        {
-            CommandRunner runner = new(cmd);
+    internal static void ImportCommands(Assembly assembly, int? pluginId) =>
+        Commands.AddRange(LoadCommands(assembly, pluginId).Select(cmd => new CommandRunner(cmd)));
 
-            Commands.Add(runner);
-        }
-    }
+    internal static IEnumerable<CommandData> LoadCommands(Assembly assembly, int? pluginId) =>
+        assembly.GetExportedTypes()
+            .SelectMany(type => type.GetMethods())
+            .Select(method => (
+                Method: method,
+                CommandAttr: method.GetCustomAttribute<ServerCommandAttribute>(),
+                SyntaxAttr: method.GetCustomAttribute<CommandsSyntaxAttribute>(),
+                SettingsAttr: method.GetCustomAttribute<CommandsSettingsAttribute>()))
+            .Where(t => t.CommandAttr != null && HasValidParameters(t.Method))
+            .Select(t => CreateCommandData(t, pluginId));
 
-    internal static IEnumerable<CommandData> LoadCommands(Assembly assembly, int? pluginId)
-    {
-        foreach (Type type in assembly.GetExportedTypes())
-        {
-            foreach (MethodInfo methodInfo in type.GetMethods())
-            {
-                ServerCommandAttribute? cmdAttr = methodInfo.GetCustomAttribute<ServerCommandAttribute>();
-                if (cmdAttr == null)
-                {
-                    continue;
-                }
+    private static bool HasValidParameters(MethodInfo method) =>
+        method.GetParameters() is { Length: > 0 } parameters &&
+        parameters[0].ParameterType == typeof(CommandInvokeContext);
 
-                ParameterInfo[] parameters = methodInfo.GetParameters();
-                if (parameters.Length < 1 || parameters[0].ParameterType != typeof(CommandInvokeContext))
-                {
-                    yield break;
-                }
-
-                CommandsSyntaxAttribute? syntaxAttr = methodInfo.GetCustomAttribute<CommandsSyntaxAttribute>();
-                CommandsSettingsAttribute? settingsAttr = methodInfo.GetCustomAttribute<CommandsSettingsAttribute>();
-
-                yield return new CommandData(
-                    pluginId,
-                    cmdAttr.Name,
-                    cmdAttr.Description,
-                    methodInfo,
-                    settingsAttr?.Settings ?? default,
-                    cmdAttr.Type,
-                    cmdAttr.Permission,
-                    syntaxAttr?.Syntax
-                );
-            }
-        }
-
-        yield break;
-    }
+    private static CommandData CreateCommandData(
+        (MethodInfo Method, ServerCommandAttribute? CommandAttr,
+         CommandsSyntaxAttribute? SyntaxAttr, CommandsSettingsAttribute? SettingsAttr) t,
+        int? pluginId) =>
+        new(
+            pluginId,
+            t.CommandAttr!.Name,
+            t.CommandAttr.Description,
+            t.Method,
+            t.SettingsAttr?.Settings ?? default,
+            t.CommandAttr.Type,
+            t.CommandAttr.Permission,
+            t.SyntaxAttr?.Syntax
+        );
 }
