@@ -1,4 +1,3 @@
-using System.Data;
 using System.Reflection;
 using Amethyst.Core.Arguments;
 using Amethyst.Core.Profiles;
@@ -12,16 +11,13 @@ internal static class AmethystKernel
 
     internal static void Main(string[] args)
     {
-		AppDomain.CurrentDomain.AssemblyResolve += delegate(object? sender, ResolveEventArgs sargs)
-		{
-			string resourceName = new AssemblyName(sargs.Name).Name + ".dll";
-            
-            if (File.Exists($"deps/{resourceName}"))
-                return Assembly.LoadFrom($"deps/{resourceName}");
+        AppDomain.CurrentDomain.AssemblyResolve += delegate (object? sender, ResolveEventArgs sargs)
+        {
+            string resourceName = new AssemblyName(sargs.Name).Name + ".dll";
 
-			return null;
-		};
-        
+            return File.Exists($"deps/{resourceName}") ? Assembly.LoadFrom($"deps/{resourceName}") : null;
+        };
+
         ArgumentsHandler.Initialize();
         ExecuteArguments(args);
 
@@ -30,33 +26,37 @@ internal static class AmethystKernel
             InitializeServer(Profile);
             return;
         }
-        
 
-        ModernConsole.WriteLine($"$!bAmethyst Terraria Server API v{typeof(AmethystKernel).Assembly.GetName().Version!.ToString()}");
+
+        ModernConsole.WriteLine($"$!bAmethyst Terraria Server API v{typeof(AmethystKernel).Assembly.GetName().Version}");
         ModernConsole.WriteLine($"$wAvailable commands:");
 
-        foreach (var kvp in ArgumentsHandler.RegisteredCommands)
+        foreach (KeyValuePair<string, ArgumentCommandInfo> kvp in ArgumentsHandler.RegisteredCommands)
+        {
             ModernConsole.WriteLine($"$!b{kvp.Key} $!r- $!d{kvp.Value.Description}");
+        }
     }
 
     private static void InitializeServer(ServerProfile profile)
     {
         if (Directory.Exists(profile.SavePath) == false)
+        {
             Directory.CreateDirectory(profile.SavePath);
+        }
 
-		AppDomain.CurrentDomain.FirstChanceException += (sender, ex) => 
-		{
+        AppDomain.CurrentDomain.FirstChanceException += (sender, ex) =>
+        {
             AmethystLog.Startup.Error("ModuleLoader", $"Caught first-chance exception:");
             AmethystLog.Startup.Error("ModuleLoader", ex.Exception.ToString() ?? "No data");
-		};
-		AppDomain.CurrentDomain.UnhandledException += (sender, ex) => 
-		{
+        };
+        AppDomain.CurrentDomain.UnhandledException += (sender, ex) =>
+        {
             AmethystLog.Startup.Critical("ModuleLoader", $"Caught unhandled exception:");
             AmethystLog.Startup.Critical("ModuleLoader", ex.ExceptionObject.ToString() ?? "No data");
             AmethystLog.Startup.Critical("ModuleLoader", $"Server is terminated.");
 
             Thread.Sleep(-1);
-		};
+        };
 
         AmethystSession.StartServer();
     }

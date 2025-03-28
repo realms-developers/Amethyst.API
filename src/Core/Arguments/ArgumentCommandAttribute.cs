@@ -1,14 +1,8 @@
 namespace Amethyst.Core.Arguments;
 
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class ArgumentCommandAttribute : Attribute
+public sealed class ArgumentCommandAttribute(string name, string description) : Attribute
 {
-    public ArgumentCommandAttribute(string name, string description)
-    {
-        Name = name;
-        Description = description;
-    }
-
-    public readonly string Name;
-    public readonly string Description;
+    public string Name { get; } = name;
+    public string Description { get; } = description;
 }

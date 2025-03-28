@@ -37,35 +37,30 @@ public static class AmethystHooks
 
         private static void ChatHelperBroadcastChatMessageAs(ChatHelper.orig_BroadcastChatMessageAs orig, byte messageAuthor, NetworkText text, Color color, int excludedPlayer)
         {
-            BroadcastArgs args = new (messageAuthor, text, color, excludedPlayer);
+            BroadcastArgs args = new(messageAuthor, text, color, excludedPlayer);
             InvokeOnBroadcast(args);
 
-            if (args.Ignore) return;
+            if (args.Ignore)
+            {
+                return;
+            }
 
             orig(args.Author, args.Text, args.Color, args.ExcludedPlayer);
         }
 
         public static event BroadcastHook? OnBroadcast;
-        public static void InvokeOnBroadcast(BroadcastArgs args) 
+        public static void InvokeOnBroadcast(BroadcastArgs args)
             => SafeInvoke("OnBroadcast", () => OnBroadcast?.Invoke(args));
 
         public delegate void BroadcastHook(BroadcastArgs args);
-        public sealed class BroadcastArgs
+        public sealed class BroadcastArgs(byte author, NetworkText text, Color color, int excludedPlayer)
         {
-            public BroadcastArgs(byte author, NetworkText text, Color color, int excludedPlayer)
-            {
-                Author = author;
-                Text = text;
-                Color = color;
-                ExcludedPlayer = excludedPlayer;
-            }
+            public byte Author { get; set; } = author;
+            public NetworkText Text { get; set; } = text;
+            public Color Color { get; set; } = color;
+            public int ExcludedPlayer { get; set; } = excludedPlayer;
 
-            public byte Author;
-            public NetworkText Text;
-            public Color Color;
-            public int ExcludedPlayer;
-
-            public bool Ignore;
+            public bool Ignore { get; set; }
         }
     }
 
@@ -92,25 +87,28 @@ public static class AmethystHooks
         private static void NetplayOnConnectionAccepted(On.Terraria.Netplay.orig_OnConnectionAccepted orig, ISocket client)
         {
             int plr = Netplay.FindNextOpenClientSlot();
-            if (plr == -1) return;
+            if (plr == -1)
+            {
+                return;
+            }
 
             PlayerManager.Tracker.CreateInstance(plr);
             InvokeOnPlayerConnected(PlayerManager.Tracker[plr]);
-            
+
             Netplay.Clients[plr].Reset();
             Netplay.Clients[plr].Socket = client;
         }
 
         public static event PlayerConnectedHook? OnPlayerConnected;
-        public static void InvokeOnPlayerConnected(NetPlayer plr) 
+        public static void InvokeOnPlayerConnected(NetPlayer plr)
             => SafeInvoke("OnPlayerConnected", () => OnPlayerConnected?.Invoke(plr));
 
         public static event PlayerDisconnectedHook? OnPlayerDisconnected;
-        public static void InvokeOnPlayerDisconnected(NetPlayer plr) 
+        public static void InvokeOnPlayerDisconnected(NetPlayer plr)
             => SafeInvoke("OnPlayerDisconnected", () => OnPlayerDisconnected?.Invoke(plr));
 
         public static event PlayerGreetHook? OnPlayerGreet;
-        public static void InvokeOnPlayerGreet(NetPlayer plr) 
+        public static void InvokeOnPlayerGreet(NetPlayer plr)
             => SafeInvoke("OnPlayerGreet", () => OnPlayerGreet?.Invoke(plr));
 
         public delegate void PlayerConnectedHook(NetPlayer player);

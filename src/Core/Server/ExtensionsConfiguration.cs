@@ -2,6 +2,6 @@ namespace Amethyst.Core.Server;
 
 public struct ExtensionsConfiguration
 {
-    public List<string> AllowedModules;
-    public List<string> AllowedPlugins;
+    public List<string> AllowedModules { get; set; }
+    public List<string> AllowedPlugins { get; set; }
 }

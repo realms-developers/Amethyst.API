@@ -83,8 +83,8 @@ public static class AmethystSession
 
     private static void SetupExtensionsConfiguration(ref ExtensionsConfiguration configuration)
     {
-        configuration.AllowedModules ??= new() { "Amethyst.Environment.dll" };
+        configuration.AllowedModules ??= ["Amethyst.Environment.dll"];
 
-        configuration.AllowedPlugins ??= new() { string.Empty };
+        configuration.AllowedPlugins ??= [string.Empty];
     }
 }
