@@ -6,7 +6,7 @@ namespace Amethyst.Extensions.Modules;
 
 public static class ModuleLoader
 {
-    internal static List<AmethystModule> Modules = new List<AmethystModule>();
+    internal static List<AmethystModule> Modules = [];
     internal static string ModulesPath = Path.Combine("extensions", "modules");
 
     internal static void LoadModules()
@@ -17,26 +17,33 @@ public static class ModuleLoader
             Directory.CreateDirectory(ModulesPath);
             AmethystLog.Main.Info("ModuleLoader", $"Created modules directory at '{ModulesPath}'");
         }
-        
-        var files = Directory.EnumerateFiles(ModulesPath, "*.dll");
 
-        foreach (var file in files)
+        IEnumerable<string> files = Directory.EnumerateFiles(ModulesPath, "*.dll");
+
+        foreach (string file in files)
         {
             if (AmethystSession.ExtensionsConfiguration.AllowedModules.Contains(file.Split('/').Last()) == false)
+            {
                 continue;
+            }
 
             AmethystLog.Main.Info("ModuleLoader", $"Loading '{file}'...");
 
             Assembly assembly = Assembly.LoadFrom(file);
-            foreach (var type in assembly.GetTypes())
+            foreach (Type type in assembly.GetTypes())
+            {
                 TryLoadModule(assembly, type);
+            }
         }
     }
 
     internal static void TryLoadModule(Assembly assembly, Type type)
     {
-        var module = CreateInstance(type);
-        if (module == null) return;
+        AmethystModule? module = CreateInstance(type);
+        if (module == null)
+        {
+            return;
+        }
 
         module.LoadDependencies();
         try
@@ -55,23 +62,32 @@ public static class ModuleLoader
 
     internal static AmethystModule? CreateInstance(Type type)
     {
-        var attribute = type.GetCustomAttribute<AmethystModuleAttribute>();
+        AmethystModuleAttribute? attribute = type.GetCustomAttribute<AmethystModuleAttribute>();
 
-        if (attribute == null) return null;
-
-        List<ModuleInitializeDelegate> initDelegates = new List<ModuleInitializeDelegate>();
-
-        foreach (var method in type.GetMethods())
+        if (attribute == null)
         {
-            var initAttribute = method.GetCustomAttribute<ModuleInitializeAttribute>();
-            if (initAttribute == null) continue;
+            return null;
+        }
 
-            if (method.ReturnType != typeof(void) || method.GetParameters().Length != 0) continue;
+        List<ModuleInitializeDelegate> initDelegates = [];
+
+        foreach (MethodInfo method in type.GetMethods())
+        {
+            ModuleInitializeAttribute? initAttribute = method.GetCustomAttribute<ModuleInitializeAttribute>();
+            if (initAttribute == null)
+            {
+                continue;
+            }
+
+            if (method.ReturnType != typeof(void) || method.GetParameters().Length != 0)
+            {
+                continue;
+            }
 
             initDelegates.Add((Delegate.CreateDelegate(typeof(ModuleInitializeDelegate), method) as ModuleInitializeDelegate)!);
         }
 
-        AmethystModule module = new AmethystModule(attribute.Name, attribute.Dependencies, initDelegates);
+        AmethystModule module = new(attribute.Name, attribute.Dependencies, initDelegates);
         return module;
     }
 }

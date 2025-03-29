@@ -17,9 +17,14 @@ internal sealed class AmethystModule
 
     internal void LoadDependencies()
     {
-        if (Dependencies == null) return;
+        if (Dependencies == null)
+        {
+            return;
+        }
 
-        foreach (var dep in Dependencies)
+        foreach (string dep in Dependencies)
+        {
             Assembly.LoadFrom(dep);
+        }
     }
 }
