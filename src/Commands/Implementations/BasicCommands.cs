@@ -1,4 +1,4 @@
-using Amethyst.Commands.Attributes;
+﻿using Amethyst.Commands.Attributes;
 using Amethyst.Core;
 using Amethyst.Text;
 
@@ -42,9 +42,25 @@ public static class BasicCommands
     [CommandsSyntax("[-r(aw)]", "[page]")]
     public static void Commands(CommandInvokeContext ctx, string args = "", int page = 0) => Help(ctx, args, page);
 
+    #region Language
+
+    [ServerCommand(CommandType.Shared, "lang ru", "установить русский язык.", null)]
+    public static void Russian(CommandInvokeContext ctx)
+    {
+        ctx.Sender.Language = "ru-RU";
+        ctx.Sender.ReplySuccess("Язык успешно изменен!");
+    }
+
+    [ServerCommand(CommandType.Shared, "lang en", "Set english language.", null)]
+    public static void English(CommandInvokeContext ctx)
+    {
+        ctx.Sender.Language = "en-US";
+        ctx.Sender.ReplySuccess("Language was successfully changed!");
+    }
+
     [ServerCommand(CommandType.Shared, "lang", "commands.desc.lang", null)]
     [CommandsSyntax("<culture>")]
-    public static void Lang(CommandInvokeContext ctx, string culture)
+    public static void Language(CommandInvokeContext ctx, string culture)
     {
         culture = culture.Trim();
 
@@ -87,15 +103,17 @@ public static class BasicCommands
         // No matches found
         ctx.Sender.ReplyError(Localization.Get("commands.lang.invalid_culture", ctx.Sender.Language));
 
-        Langs(ctx);
+        Languages(ctx);
     }
 
     [ServerCommand(CommandType.Shared, "langs", "commands.desc.langs", null)]
-    public static void Langs(CommandInvokeContext ctx)
+    public static void Languages(CommandInvokeContext ctx)
     {
         IReadOnlyCollection<string> cultures = Localization.LoadedCultures;
 
         ctx.Sender.ReplySuccess(Localization.Get("commands.langs", ctx.Sender.Language));
         ctx.Sender.ReplyInfo(string.Join(", ", cultures));
     }
+
+    #endregion
 }
