@@ -56,16 +56,16 @@ public class MySQLProvider : ISQLProvider, IDisposable
 
     public List<Dictionary<string, object>> ExecuteQuery(string query, Dictionary<string, object>? parameters = null)
     {
-        using MySqlCommand cmd = new MySqlCommand(query, _connection);
+        using MySqlCommand cmd = new(query, _connection);
         AddParameters(cmd, parameters);
 
         using MySqlDataReader reader = cmd.ExecuteReader();
 
-        List<Dictionary<string, object>> result = new ();
+        List<Dictionary<string, object>> result = [];
 
         while (reader.Read())
         {
-            Dictionary<string, object> row = new ();
+            Dictionary<string, object> row = [];
 
             for (int i = 0; i < reader.FieldCount; i++)
             {

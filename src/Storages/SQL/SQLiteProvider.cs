@@ -68,11 +68,11 @@ public class SQLiteProvider : ISQLProvider, IDisposable
 
         using SQLiteDataReader reader = cmd.ExecuteReader();
 
-        List<Dictionary<string, object>> result = new ();
+        List<Dictionary<string, object>> result = [];
 
         while (reader.Read())
         {
-            Dictionary<string, object> row = new ();
+            Dictionary<string, object> row = [];
 
             for (int i = 0; i < reader.FieldCount; i++)
             {
