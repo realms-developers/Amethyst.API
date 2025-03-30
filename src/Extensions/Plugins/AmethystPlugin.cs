@@ -1,4 +1,3 @@
-using System.Reflection;
 using Amethyst.Core;
 
 namespace Amethyst.Extensions.Plugins;
@@ -11,7 +10,7 @@ public abstract class PluginInstance
 
     public bool IsLoaded { get; private set; }
 
-    internal int LoadID;
+    //internal int LoadID;
     internal PluginContainer? Container;
 
     protected abstract void Load();
@@ -25,7 +24,7 @@ public abstract class PluginInstance
     }
 
     internal bool RequestUnload()
-    {   
+    {
         IsLoaded = false;
         PluginLoader.InvokeUnload(Container!);
         return RequestOperation("Unload", Unload);
