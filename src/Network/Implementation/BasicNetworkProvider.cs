@@ -17,20 +17,6 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     private readonly INetworkClient?[] _clients = new INetworkClient?[256];
     private readonly ISocket _socket = new RemadeTcpSocket();
 
-    // HashSet of allowed packets during pre-connection state (<10)
-    private static readonly HashSet<byte> _allowedPreState10Packets = [
-        (byte)PacketTypes.Placeholder,        // 67
-        (byte)PacketTypes.NpcName,            // 56
-        (byte)PacketTypes.LoadNetModule,      // 82
-        (byte)PacketTypes.SocialHandshake,    // 93
-        (byte)PacketTypes.PlayerHp,           // 16
-        (byte)PacketTypes.PlayerMana,         // 42
-        (byte)PacketTypes.PlayerBuff,         // 50
-        (byte)PacketTypes.PasswordSend,       // 38
-        (byte)PacketTypes.ClientUUID,         // 68
-        (byte)PacketTypes.SyncLoadout         // 147
-    ];
-
     public void Initialize(NetworkInstance instance)
     {
         On.Terraria.MessageBuffer.GetData += OnGetData;
@@ -65,6 +51,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         if (result.IsHandled == true)
         {
             result.Log();
+
             return;
         }
 
@@ -73,6 +60,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         {
             replace(packet, result);
             result.Log();
+
             return;
         }
 
@@ -83,75 +71,59 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     {
         byte[] buffer = self.readBuffer;
         packetId = buffer[start];
+
         NetPlayer player = PlayerManager.Tracker[self.whoAmI];
 
-        // Early exit for invalid or special packets
-        if (ShouldSkipPacketProcessing(packetId))
+        if (packetId == (byte)PacketTypes.SyncCavernMonsterType || packetId <= 0 || packetId >= MessageID.Count)
         {
             return;
         }
 
-        // Validate packet length
-        if (IsInvalidPacketLength(length))
+        if (length < 1 || length > 999)
         {
             player.Kick(Localization.Get("packet.invalidLength", player.Language));
             return;
         }
 
-        // Check client state restrictions
-        if (IsRestrictedClientState(self.whoAmI, packetId))
+        // terraria code asmr
+        if (Netplay.Clients[self.whoAmI].State < 10 && packetId > 12 && packetId != 67 && packetId != 56 &&
+            packetId != 82 && packetId != 93 && packetId != 16 && packetId != 42 && packetId != 50 && packetId != 38
+            && packetId != 68 && packetId != 147)
         {
             return;
         }
 
-        // Process packet based on type
-        bool handled = packetId == (byte)PacketTypes.LoadNetModule
-            ? ProcessModulePacket(buffer, start, player, length)
-            : ProcessRegularPacket(packetId, player, start, length);
-
-        if (!handled)
+        if (packetId == 82)
         {
-            orig(self, start, length, out packetId);
+            byte moduleId = (byte)BitConverter.ToUInt16(buffer, start + 1);
+            if (!OnGetModule(moduleId, player, start, length))
+            {
+                orig(self, start, length, out packetId);
+            }
+        }
+        else
+        {
+            if (!OnGetPacket((byte)packetId, player, start, length))
+            {
+                orig(self, start, length, out packetId);
+            }
         }
     }
 
+    // TODO: refactor OnGetPacket and OnGetModule (because its just two copies)
     private static bool OnGetPacket(byte packetId, NetPlayer player, int start, int length)
-        => HandleIncomingType(
-            packetId,
-            player,
-            (id, buf, sender) => new IncomingPacket(id, buf, sender, start + 1, length - 1),
-            NetworkManager.Instance.Incoming,
-            NetworkManager.Instance.IncomingReplace,
-            "IncomingPacket"
-        );
-
-    private static bool OnGetModule(byte packetId, NetPlayer player, int start, int length)
-        => HandleIncomingType(
-            packetId,
-            player,
-            (id, buf, sender) => new IncomingModule(id, buf, sender, start + 3, length - 3),
-            NetworkManager.Instance.IncomingModules,
-            NetworkManager.Instance.IncomingModuleReplace,
-            "IncomingModule"
-        );
-
-    private static bool HandleIncomingType<T>(
-        byte packetId,
-        NetPlayer player,
-        Func<byte, byte[], byte, T> createPacket,
-        List<PacketHandler<T>>[] handlersSource,
-        PacketHandler<T>?[] replaceSource,
-        string logPrefix) where T : IPacket
     {
         byte[] buffer = NetMessage.buffer[player.Index].readBuffer;
-        T packet = createPacket(packetId, buffer, (byte)player.Index);
 
-        PacketHandleResult? result = new(packet);
-        List<PacketHandler<T>> handlers = handlersSource[packetId];
+        IncomingPacket packet = new(packetId, buffer, (byte)player.Index, start + 1, length - 1);
 
-        if (handlers?.Count > 0)
+        PacketHandleResult result = new(packet);
+
+        List<PacketHandler<IncomingPacket>> handlers = NetworkManager.Instance.Incoming[packetId];
+
+        if (handlers != null && handlers.Count > 0)
         {
-            foreach (PacketHandler<T> handler in handlers)
+            handlers.ForEach(handler =>
             {
                 try
                 {
@@ -159,22 +131,69 @@ internal sealed class BasicNetworkProvider : INetworkProvider
                 }
                 catch (Exception ex)
                 {
-                    AmethystLog.Network.Critical("NetworkProvider",
-                        $"Failed to handle {logPrefix} '{packetId}': {ex}");
+                    AmethystLog.Network.Critical("NetworkProvider", $"Failed to handle IncomingPacket '{packetId}' packet :");
+                    AmethystLog.Network.Critical("NetworkProvider", ex.ToString());
                 }
-            }
+            });
         }
 
-        if (result.IsHandled)
+        if (result.IsHandled == true)
         {
             result.Log();
             return true;
         }
 
-        if (replaceSource[packetId] is { } replace)
+        PacketHandler<IncomingPacket>? replace = NetworkManager.Instance.IncomingReplace[packetId];
+
+        if (replace != null)
         {
             replace(in packet, result);
             result.Log();
+
+            return true;
+        }
+        return false;
+    }
+
+
+    private static bool OnGetModule(byte packetId, NetPlayer player, int start, int length)
+    {
+        byte[] buffer = NetMessage.buffer[player.Index].readBuffer;
+        IncomingModule packet = new(packetId, buffer, (byte)player.Index, start + 3, length - 3);
+
+        PacketHandleResult result = new(packet);
+
+        List<PacketHandler<IncomingModule>> handlers = NetworkManager.Instance.IncomingModules[packetId];
+        if (handlers != null && handlers.Count > 0)
+        {
+            handlers.ForEach(handler =>
+            {
+                try
+                {
+                    handler(in packet, result);
+                }
+                catch (Exception ex)
+                {
+                    AmethystLog.Network.Critical("NetworkProvider", $"Failed to handle IncomingModule '{packetId}' packet :");
+                    AmethystLog.Network.Critical("NetworkProvider", ex.ToString());
+                }
+            });
+        }
+
+        if (result.IsHandled == true)
+        {
+            result.Log();
+
+            return true;
+        }
+
+        PacketHandler<IncomingModule>? replace = NetworkManager.Instance.IncomingModuleReplace[packetId];
+
+        if (replace != null)
+        {
+            replace(in packet, result);
+            result.Log();
+
             return true;
         }
 
@@ -209,32 +228,6 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
         Netplay.OnConnectionAccepted(client);
     }
-
-    private static bool ShouldSkipPacketProcessing(int packetId) =>
-    packetId == (byte)PacketTypes.SyncCavernMonsterType ||
-    packetId <= 0 ||
-    packetId >= MessageID.Count;
-
-    private static bool IsInvalidPacketLength(int length) =>
-        length < 1 || length > 999;
-
-    private static bool IsRestrictedClientState(int clientId, int packetId)
-    {
-        RemoteClient client = Netplay.Clients[clientId];
-
-        return client.State < 10 &&
-               packetId > 12 &&
-               !_allowedPreState10Packets.Contains((byte)packetId);
-    }
-
-    private static bool ProcessModulePacket(byte[] buffer, int start, NetPlayer player, int length)
-    {
-        byte moduleId = (byte)BitConverter.ToUInt16(buffer, start + 1);
-        return OnGetModule(moduleId, player, start, length);
-    }
-
-    private static bool ProcessRegularPacket(int packetId, NetPlayer player, int start, int length) =>
-        OnGetPacket((byte)packetId, player, start, length);
 
     public void Broadcast(byte[] packet)
     {
