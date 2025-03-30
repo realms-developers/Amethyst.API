@@ -62,7 +62,7 @@ internal static class ServerLauncher
 
         TileFix.Initialize();
 
-        if (File.Exists(worldPath) == false || AmethystSession.Profile.WorldRecreate)
+        if (!File.Exists(worldPath) || AmethystSession.Profile.WorldRecreate)
         {
             AmethystLog.Startup.Verbose("ServerLauncher", $"Requesting world-generation {worldPath}...");
 

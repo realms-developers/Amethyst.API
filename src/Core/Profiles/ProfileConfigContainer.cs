@@ -10,7 +10,7 @@ public sealed class ProfileConfigContainer
     {
         string name = typeof(T).FullName!;
 
-        if (_configs.ContainsKey(name) == false)
+        if (!_configs.TryGetValue(name, out object? value))
         {
             var cfg = new Configuration<T>(name, default);
             cfg.Load();
@@ -21,7 +21,7 @@ public sealed class ProfileConfigContainer
         }
         else
         {
-            return (Configuration<T>)_configs[name];
+            return (Configuration<T>)value;
         }
     }
 }

@@ -22,7 +22,7 @@ public static class ModuleLoader
 
         foreach (string file in files)
         {
-            if (AmethystSession.ExtensionsConfiguration.AllowedModules.Contains(file.Split('/').Last()) == false)
+            if (!AmethystSession.ExtensionsConfiguration.AllowedModules.Contains(file.Split('/').Last()))
             {
                 continue;
             }

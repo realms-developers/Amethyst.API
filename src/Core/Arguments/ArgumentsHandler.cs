@@ -25,7 +25,7 @@ public static class ArgumentsHandler
         {
             ArgumentCommandAttribute? attribute = methodInfo.GetCustomAttribute<ArgumentCommandAttribute>();
 
-            if (methodInfo.IsStatic == false || attribute is null)
+            if (!methodInfo.IsStatic || attribute is null)
             {
                 continue;
             }

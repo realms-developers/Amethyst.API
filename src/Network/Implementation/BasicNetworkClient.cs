@@ -40,7 +40,7 @@ internal sealed class BasicNetworkClient : INetworkClient
 
     public void SendPacket(byte[] packet, int start, int length)
     {
-        if (_socket.IsConnected() && _isFrozen == false)
+        if (_socket.IsConnected() && !_isFrozen)
         {
             _socket.AsyncSend(packet, start, length, Netplay.Clients[PlayerIndex].ServerWriteCallBack);
         }

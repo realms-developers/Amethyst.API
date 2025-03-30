@@ -28,9 +28,9 @@ public static class PluginLoader
 
         foreach (string file in files)
         {
-            if (AmethystSession.ExtensionsConfiguration.AllowedPlugins.Contains(file
+            if (!AmethystSession.ExtensionsConfiguration.AllowedPlugins.Contains(file
                 .Split('/')
-                .Last()) == false)
+                .Last()))
             {
                 continue;
             }

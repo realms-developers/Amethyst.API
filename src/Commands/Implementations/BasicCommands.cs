@@ -12,8 +12,8 @@ public static class BasicCommands
     {
         bool whereExpression(CommandRunner p)
         {
-            return p.IsDisabled == false &&
-                    p.Data.Settings.HasFlag(CommandSettings.Hidden) == false &&
+            return !p.IsDisabled &&
+                    !p.Data.Settings.HasFlag(CommandSettings.Hidden) &&
                     (p.Data.Permission == null || ctx.Sender.HasPermission(p.Data.Permission)) &&
                     (p.Data.Type != CommandType.Console || ctx.Sender.Type == SenderType.Console) &&
                     (p.Data.Type != CommandType.Debug || AmethystSession.Profile.DebugMode);

@@ -39,7 +39,7 @@ internal static class AmethystKernel
 
     private static void InitializeServer(ServerProfile profile)
     {
-        if (Directory.Exists(profile.SavePath) == false)
+        if (!Directory.Exists(profile.SavePath))
         {
             Directory.CreateDirectory(profile.SavePath);
         }

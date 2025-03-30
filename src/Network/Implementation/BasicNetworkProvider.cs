@@ -48,7 +48,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             });
         }
 
-        if (result.IsHandled == true)
+        if (result.IsHandled)
         {
             result.Log();
 
@@ -137,7 +137,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             });
         }
 
-        if (result.IsHandled == true)
+        if (result.IsHandled)
         {
             result.Log();
             return true;
@@ -180,7 +180,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             });
         }
 
-        if (result.IsHandled == true)
+        if (result.IsHandled)
         {
             result.Log();
 
@@ -233,9 +233,9 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     {
         foreach (INetworkClient? client in _clients)
         {
-            if (client?.IsConnected == true && client?.IsFrozen == false)
+            if (client != null && client.IsConnected && !client.IsFrozen)
             {
-                client?.SendPacket(packet);
+                client.SendPacket(packet);
             }
         }
     }
@@ -244,9 +244,9 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     {
         foreach (INetworkClient? client in _clients)
         {
-            if (client?.IsConnected == true && client?.IsFrozen == false && predicate(client))
+            if (client != null && client.IsConnected && !client.IsFrozen && predicate(client))
             {
-                client?.SendPacket(packet);
+                client.SendPacket(packet);
             }
         }
     }
@@ -255,9 +255,10 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     {
         foreach (INetworkClient? client in _clients)
         {
-            if (client?.IsConnected == true && client?.IsFrozen == false && ignored.Contains(client.PlayerIndex) == false)
+            if (client != null &&
+                client.IsConnected && !client.IsFrozen && !ignored.Contains(client.PlayerIndex))
             {
-                client?.SendPacket(packet);
+                client.SendPacket(packet);
             }
         }
     }

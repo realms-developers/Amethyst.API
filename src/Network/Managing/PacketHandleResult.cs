@@ -27,7 +27,7 @@ public sealed class PacketHandleResult
 
     internal void Log()
     {
-        if (_reasons.Count == 0 || AmethystSession.Profile.DebugMode == false)
+        if (_reasons.Count == 0 || !AmethystSession.Profile.DebugMode)
         {
             return;
         }
