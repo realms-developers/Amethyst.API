@@ -1,9 +1,9 @@
-using Terraria.Localization;
-using Terraria;
-using Terraria.ID;
 using Amethyst.Network;
-using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.Localization;
 
 namespace Amethyst.Players;
 
@@ -28,16 +28,16 @@ public sealed class LocalPlayerUtils
 
     public bool HasBuff(int buffId) => Player.TPlayer.buffType.Any(p => p == buffId);
 
-    public void SendRectangle(int x, int y, byte size, TileChangeType changeType = TileChangeType.None) 
+    public void SendRectangle(int x, int y, byte size, TileChangeType changeType = TileChangeType.None)
         => NetMessage.SendTileSquare(Player.Index, x, y, size, changeType);
 
-    public void SendRectangle(int x, int y, byte width, byte height, TileChangeType changeType = TileChangeType.None) 
+    public void SendRectangle(int x, int y, byte width, byte height, TileChangeType changeType = TileChangeType.None)
         => NetMessage.SendTileSquare(Player.Index, x, y, width, height, changeType);
 
-    public void SendMassTiles(in Rectangle rectangle) 
+    public void SendMassTiles(in Rectangle rectangle)
         => SendMassTiles(rectangle.X, rectangle.Y, rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
 
-    public void SendMassTiles(int startX, int startY, int endX, int endY) 
+    public void SendMassTiles(int startX, int startY, int endX, int endY)
     {
         int sx = Netplay.GetSectionX(Math.Min(startX, endX));
         int sy = Netplay.GetSectionY(Math.Min(startY, endY));
@@ -45,25 +45,30 @@ public sealed class LocalPlayerUtils
         int sy2 = Netplay.GetSectionY(Math.Max(startY, endY)) + 1;
 
         for (int i = sx; i < sx2; i++)
-        for (int j = sy; j < sy2; i++)
-            SendSection(i, j);
+        {
+            for (int j = sy; j < sy2; i++)
+            {
+                SendSection(i, j);
+            }
+        }
     }
 
-    public void SendSection(int sectionX, int sectionY) 
-    {
-        NetMessage.SendSection(Player.Index, sectionX, sectionY);
-    }
+    public void SendSection(int sectionX, int sectionY) => NetMessage.SendSection(Player.Index, sectionX, sectionY);
 
-    public void RequestSendSection(int sectionX, int sectionY) 
+    public void RequestSendSection(int sectionX, int sectionY)
     {
         if (!Netplay.Clients[Player.Index].TileSections[sectionX, sectionY])
+        {
             NetMessage.SendSection(Player.Index, sectionX, sectionY);
+        }
     }
 
     public void SendStatusText(string message, bool padding)
     {
         if (padding)
+        {
             message = new string('\n', 10) + message;
+        }
 
         SendStatusText(NetworkText.FromLiteral(message));
     }
@@ -80,9 +85,9 @@ public sealed class LocalPlayerUtils
     public void GiveItem(int id, int stack, byte prefix)
     {
         int itemIndex = Item.NewItem(new EntitySource_DebugCommand(), (int)PosX, (int)PosY, 16, 16, id, stack, true, prefix, true);
-		Main.item[itemIndex].playerIndexTheItemIsReservedFor = Player.Index;
-		NetMessage.SendData(21, Player.Index, -1, NetworkText.Empty, itemIndex, 1);
-		NetMessage.SendData(22, Player.Index, -1, NetworkText.Empty, itemIndex);
+        Main.item[itemIndex].playerIndexTheItemIsReservedFor = Player.Index;
+        NetMessage.SendData(21, Player.Index, -1, NetworkText.Empty, itemIndex, 1);
+        NetMessage.SendData(22, Player.Index, -1, NetworkText.Empty, itemIndex);
     }
 
     public void TeleportTile(int x, int y, byte style = 0)
@@ -90,16 +95,16 @@ public sealed class LocalPlayerUtils
         // sends section. why not rectangle? well, it breaking beatiful buildings!
         RequestSendSection(Netplay.GetSectionX(x), Netplay.GetSectionX(x));
 
-		Player.TPlayer.position = new Vector2(x * 16, y * 16);
-		NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x * 16, y * 16, style);
+        Player.TPlayer.position = new Vector2(x * 16, y * 16);
+        NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x * 16, y * 16, style);
     }
 
     public void Teleport(float x, float y, byte style = 0)
     {
         RequestSendSection(Netplay.GetSectionX((int)x / 16), Netplay.GetSectionX((int)x / 16));
 
-		Player.TPlayer.position = new Vector2(x, y);
-		NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x, y, style);
+        Player.TPlayer.position = new Vector2(x, y);
+        NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x, y, style);
     }
 
     public void Hurt(int damage, string text, bool pvp = false)
@@ -121,8 +126,5 @@ public sealed class LocalPlayerUtils
     public void AddBuff(int buffId, TimeSpan span)
         => AddBuff(buffId, (int)span.TotalSeconds * 60); // 60 is fps
 
-    public void AddBuff(int buffId, int time)
-    {
-		NetMessage.SendData(55, -1, -1, NetworkText.Empty, Player.Index, buffId, number3: time);
-    }
+    public void AddBuff(int buffId, int time) => NetMessage.SendData(55, -1, -1, NetworkText.Empty, Player.Index, buffId, number3: time);
 }

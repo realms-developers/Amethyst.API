@@ -17,7 +17,7 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
     }
 
     private CharacterModel _model;
-    private NetPlayer _owner;
+    private readonly NetPlayer _owner;
 
     public NetItem this[int slot] => (slot >= 0 && slot < _model.Slots.Length) ? _model.Slots[slot] : default;
 
@@ -61,7 +61,11 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
     {
         _model = model;
         _modelId = _model.Id;
-        if (sync) SyncCharacter();
+
+        if (sync)
+        {
+            SyncCharacter();
+        }
     }
 
     public void SyncCharacter()
@@ -69,7 +73,9 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
         NetMessage.SendData(7, _owner.Index);
 
         for (int i = 0; i < _model.Slots.Length; i++)
+        {
             SyncSlot(SyncType.Broadcast, i);
+        }
 
         SyncPlayerInfo(SyncType.Broadcast);
         SyncAngler(SyncType.Broadcast);
@@ -79,10 +85,10 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
 
     public void ReceiveSlot(IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
         reader.ReadByte();
 
-        var slot = reader.ReadInt16();
+        short slot = reader.ReadInt16();
 
         if (IsReadonly)
         {
@@ -90,9 +96,9 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
             return;
         }
 
-		var stack = reader.ReadInt16();
-		var prefix = reader.ReadByte();
-		var id = reader.ReadInt16();
+        short stack = reader.ReadInt16();
+        byte prefix = reader.ReadByte();
+        short id = reader.ReadInt16();
 
         SetSlot(SyncType.Exclude, slot, new NetItem(id, stack, prefix));
     }
@@ -105,15 +111,15 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
             return;
         }
 
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
         reader.ReadByte();
 
-		var current = reader.ReadInt16();
-		var max = reader.ReadInt16();
+        short current = reader.ReadInt16();
+        short max = reader.ReadInt16();
 
         SetLife(SyncType.Exclude, current, max);
     }
-    
+
     public void ReceiveSetMana(IncomingPacket packet)
     {
         if (IsReadonly)
@@ -122,11 +128,11 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
             return;
         }
 
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
         reader.ReadByte();
 
-		var current = reader.ReadInt16();
-		var max = reader.ReadInt16();
+        short current = reader.ReadInt16();
+        short max = reader.ReadInt16();
 
         SetMana(SyncType.Exclude, current, max);
     }
@@ -139,30 +145,30 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
             return;
         }
 
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
         reader.ReadByte();
 
-        var skinVariant = reader.ReadByte();
-        var hair = reader.ReadByte();
-        var name = reader.ReadString();
-        var hairDye = reader.ReadByte();
+        byte skinVariant = reader.ReadByte();
+        byte hair = reader.ReadByte();
+        //string name = reader.ReadString(); // UNUSED?
+        byte hairDye = reader.ReadByte();
         MessageBuffer.ReadAccessoryVisibility(reader, _owner.TPlayer.hideVisibleAccessory);
         //var accessoryVisiblity = reader.ReadUInt16();
-        var hideMisc = reader.ReadByte();
-        var hairColor = reader.ReadNetColor();
-        var skinColor = reader.ReadNetColor();
-        var eyeColor = reader.ReadNetColor();
-        var shirtColor = reader.ReadNetColor();
-        var underShirtColor = reader.ReadNetColor();
-        var pantsColor = reader.ReadNetColor();
-        var shoesColor = reader.ReadNetColor();
-        var info1 = reader.Read<PlayerInfo1>();
-        var info2 = reader.Read<PlayerInfo2>();
-        var info3 = reader.Read<PlayerInfo3>();
+        byte hideMisc = reader.ReadByte();
+        NetColor hairColor = reader.ReadNetColor();
+        NetColor skinColor = reader.ReadNetColor();
+        NetColor eyeColor = reader.ReadNetColor();
+        NetColor shirtColor = reader.ReadNetColor();
+        NetColor underShirtColor = reader.ReadNetColor();
+        NetColor pantsColor = reader.ReadNetColor();
+        NetColor shoesColor = reader.ReadNetColor();
+        PlayerInfo1 info1 = reader.Read<PlayerInfo1>();
+        PlayerInfo2 info2 = reader.Read<PlayerInfo2>();
+        PlayerInfo3 info3 = reader.Read<PlayerInfo3>();
 
         SetSkin(null, hair, hairDye, skinVariant);
         SetHides(null, _owner.TPlayer.hideVisibleAccessory, hideMisc);
-        
+
         SetColor(null, PlayerColorType.HairColor, hairColor);
         SetColor(null, PlayerColorType.SkinColor, skinColor);
         SetColor(null, PlayerColorType.EyesColor, eyeColor);
@@ -184,7 +190,7 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
 
         SetQuests(SyncType.Exclude, _model.QuestsCompleted + 1);
     }
-    
+
 
     public bool SetSlot(SyncType? sync, int slot, NetItem item)
     {
@@ -194,7 +200,9 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
             _model.Slots[fixedSlot] = item;
 
             if (sync != null)
+            {
                 SyncSlot(sync.Value, fixedSlot);
+            }
         }
 
         _model.Slots[slot] = item;
@@ -202,7 +210,9 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
         _needsToSave = true;
 
         if (sync != null)
+        {
             SyncSlot(sync.Value, slot);
+        }
 
         return true;
     }
@@ -215,7 +225,9 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
         _needsToSave = true;
 
         if (sync != null)
+        {
             SyncLife(sync.Value);
+        }
 
         return true;
     }
@@ -228,7 +240,9 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
         _needsToSave = true;
 
         if (sync != null)
+        {
             SyncMana(sync.Value);
+        }
 
         return true;
     }
@@ -260,7 +274,9 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
         _needsToSave = true;
 
         if (sync != null)
+        {
             SyncAngler(sync.Value);
+        }
 
         return true;
     }
@@ -336,9 +352,12 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
 
     public void SyncSlot(SyncType sync, int slot)
     {
-        if (slot < 0 || slot >= _model.Slots.Length) return;
+        if (slot < 0 || slot >= _model.Slots.Length)
+        {
+            return;
+        }
 
-        var item = this[slot];
+        NetItem item = this[slot];
 
         if (slot >= 59 && slot <= 88)
         {
@@ -355,9 +374,9 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
             .PackInt16(item.Stack)
             .PackByte(item.Prefix)
             .PackInt16((short)item.ID).BuildPacket();
-        
-        var remote = sync == SyncType.Local ? _owner.Index : -1;
-        var ignore = sync == SyncType.Exclude ? _owner.Index : -1;
+
+        int remote = sync == SyncType.Local ? _owner.Index : -1;
+        int ignore = sync == SyncType.Exclude ? _owner.Index : -1;
 
         switch (sync)
         {
@@ -377,34 +396,42 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
 
     private void DirectPlayerInfoSync(SyncType? sync)
     {
-        if (sync == SyncType.Broadcast) 
+        if (sync == SyncType.Broadcast)
+        {
             NetMessage.TrySendData(4, -1, -1, Terraria.Localization.NetworkText.Empty, _owner.Index);
-        else if (sync == SyncType.Local || sync == SyncType.Exclude) 
+        }
+        else if (sync == SyncType.Local || sync == SyncType.Exclude)
+        {
             NetMessage.TrySendData(4, sync == SyncType.Local ? _owner.Index : -1, sync == SyncType.Exclude ? _owner.Index : -1, Terraria.Localization.NetworkText.Empty, _owner.Index);
+        }
     }
 
     public void SyncLife(SyncType sync)
     {
         if (IsReadonly)
+        {
             _owner.TPlayer.statLife = _model.MaxLife;
+        }
 
         _owner.TPlayer.statLifeMax = _model.MaxLife;
         _owner.TPlayer.statLifeMax2 = _model.MaxLife;
 
         NetMessage.TrySendData(16, sync == SyncType.Local ? _owner.Index : -1, sync == SyncType.Exclude ? _owner.Index : -1, Terraria.Localization.NetworkText.Empty, _owner.Index);
     }
-    
+
     public void SyncMana(SyncType sync)
     {
         if (IsReadonly)
+        {
             _owner.TPlayer.statMana = _model.MaxMana;
+        }
 
         _owner.TPlayer.statManaMax = _model.MaxMana;
         _owner.TPlayer.statManaMax2 = _model.MaxMana;
-        
+
         NetMessage.TrySendData(42, sync == SyncType.Local ? _owner.Index : -1, sync == SyncType.Exclude ? _owner.Index : -1, Terraria.Localization.NetworkText.Empty, _owner.Index);
     }
-    
+
     public void SyncPlayerInfo(SyncType sync)
     {
         _owner.TPlayer.skinVariant = _model.SkinVariant;
@@ -439,11 +466,11 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
 
         NetMessage.TrySendData(4, sync == SyncType.Local ? _owner.Index : -1, sync == SyncType.Exclude ? _owner.Index : -1, Terraria.Localization.NetworkText.Empty, _owner.Index);
     }
-    
+
     public void SyncAngler(SyncType sync)
     {
         _owner.TPlayer.anglerQuestsFinished = _model.QuestsCompleted;
-        
+
         NetMessage.TrySendData(76, sync == SyncType.Local ? _owner.Index : -1, sync == SyncType.Exclude ? _owner.Index : -1, Terraria.Localization.NetworkText.Empty, _owner.Index);
     }
 
@@ -456,5 +483,5 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
 
             _needsToSave = false;
         }
-    }   
+    }
 }

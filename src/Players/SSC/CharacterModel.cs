@@ -6,38 +6,23 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Amethyst.Players.SSC;
 
 [BsonIgnoreExtraElements]
-public sealed class CharacterModel : DataModel
+public sealed class CharacterModel(string name) : DataModel(name)
 {
-    public CharacterModel(string name) : base(name)
-    {
-        Slots = new NetItem[350];
-        MaxLife = 100;
-        MaxMana = 200;
-        HideAccessories = new bool[10];
-        Colors = new NetColor[7];
-    }
+    public NetItem[] Slots { get; set; } = new NetItem[350];
+    public int MaxLife { get; set; } = 500;
+    public int MaxMana { get; set; } = 200;
+    public PlayerInfo1 Info1 { get; set; }
+    public PlayerInfo2 Info2 { get; set; }
+    public PlayerInfo3 Info3 { get; set; }
+    public byte SkinVariant { get; set; }
+    public byte Hair { get; set; }
+    public byte HairDye { get; set; }
+    public bool[] HideAccessories { get; set; } = new bool[10];
+    public byte HideMisc { get; set; }
+    public NetColor[] Colors { get; set; } = new NetColor[7];
+    public int QuestsCompleted { get; set; }
 
-    public NetItem[] Slots;
-    public int MaxLife;
-    public int MaxMana;
-    public PlayerInfo1  Info1;
-    public PlayerInfo2 Info2;
-    public PlayerInfo3 Info3;
-    public byte SkinVariant;
-    public byte Hair;
-    public byte HairDye;
-    public bool[] HideAccessories;
-    public byte HideMisc;
-    public NetColor[] Colors;
-    public int QuestsCompleted;
+    public override void Save() => PlayerManager.Characters.Save(this);
 
-    public override void Save()
-    {
-        PlayerManager.Characters.Save(this);
-    }
-
-    public override void Remove()
-    {
-        PlayerManager.Characters.Remove(Name);
-    }
+    public override void Remove() => PlayerManager.Characters.Remove(Name);
 }

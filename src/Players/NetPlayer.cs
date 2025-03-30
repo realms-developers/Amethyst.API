@@ -22,7 +22,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         UUID = "";
 
         _playerName = "";
-        _extensions = new Dictionary<Type, IPlayerExtension>();
+        _extensions = [];
 
         Language = AmethystSession.Profile.DefaultLanguage;
 
@@ -65,21 +65,24 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
     public string Language { get; set; }
 
-    private Dictionary<Type, IPlayerExtension> _extensions;
+    private readonly Dictionary<Type, IPlayerExtension> _extensions;
 
     internal bool _wasSpawned;
     internal bool _sentSpawnPacket; // used for preventing anonymous clients
 
     public void LoadExtension<T>() where T : IPlayerExtension
     {
-        var type = typeof(T);
+        Type type = typeof(T);
 
-        if (_extensions.ContainsKey(type)) return;
+        if (_extensions.ContainsKey(type))
+        {
+            return;
+        }
 
-        var builder = PlayerExtensions.GetBuilder<T>();
-        if (builder == null) throw new InvalidOperationException($"Cannot find IPlayerExtensionBuilder<{type.Name}> in ExtensionsManager.");
+        IPlayerExtensionBuilder<T>? builder =
+            PlayerExtensions.GetBuilder<T>() ?? throw new InvalidOperationException($"Cannot find IPlayerExtensionBuilder<{type.Name}> in ExtensionsManager.");
 
-        var ext = builder.Build(this);
+        T ext = builder.Build(this);
         ext.Load();
 
         _extensions.Add(type, ext);
@@ -87,15 +90,15 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
     public void UnloadExtension<T>() where T : IPlayerExtension
     {
-        var type = typeof(T);
+        Type type = typeof(T);
         _extensions.Remove(type);
     }
 
     public T? GetExtension<T>() where T : IPlayerExtension
     {
-        var type = typeof(T);
+        Type type = typeof(T);
 
-        if (_extensions.TryGetValue(type, out var ext))
+        if (_extensions.TryGetValue(type, out IPlayerExtension? ext))
         {
             return (T)ext;
         }
@@ -126,7 +129,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
     public void SendMessage(string text, Color color)
     {
-        var packet = new PacketWriter().SetType(82)
+        byte[] packet = new PacketWriter().SetType(82)
             .PackUInt16(1) // text id
             .PackByte(255)
             .PackByte(0)
@@ -137,10 +140,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         Socket.SendPacket(packet);
     }
 
-    public void ReplyMessage(string text, Color color)
-    {
+    public void ReplyMessage(string text, Color color) =>
         SendMessage($"[c/303030:{Localization.Get("amethyst.serverPrefix", AmethystSession.Profile.DefaultLanguage)}:] {text}", color);
-    }
 
     public void ReplyError(string text, params object[] args)
         => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(201, 71, 71));
@@ -163,13 +164,16 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         _playerName = name;
 
         if (networkUpdate)
+        {
             NetMessage.TrySendData(4);
+        }
     }
 
     public void Kick(string reason, object[]? args = null)
     {
         AmethystLog.Network.Error("Players", $"Player '{Name}' was kicked for reason: {reason}");
 
-        Socket.Disconnect(string.Format(CultureInfo.InvariantCulture, Localization.Get(reason, AmethystSession.Profile.DefaultLanguage), args ?? Array.Empty<object>()));
+        Socket.Disconnect(string.Format(CultureInfo.InvariantCulture,
+            Localization.Get(reason, AmethystSession.Profile.DefaultLanguage), args ?? []));
     }
 }
