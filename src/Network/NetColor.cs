@@ -26,15 +26,15 @@ public struct NetColor
         B = (byte)(packedValue & 0xFF);
     }
 
-    public Color ToXNA() => new Color(R, G, B);
+    public readonly Color ToXNA() => new(R, G, B);
 
-    public string ToHex()
+    public readonly string ToHex()
         => R.ToString("X2", CultureInfo.InvariantCulture) + G.ToString("X2", CultureInfo.InvariantCulture) + B.ToString("X2", CultureInfo.InvariantCulture);
 
-    public int ToPackedValue() 
+    public readonly int ToPackedValue()
         => (R << 16) | (G << 8) | B;
 
-    public byte R;
-    public byte G;
-    public byte B;
+    public byte R { get; set; }
+    public byte G { get; set; }
+    public byte B { get; set; }
 }

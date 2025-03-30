@@ -2,17 +2,8 @@ using Amethyst.Players;
 
 namespace Amethyst.Network.Packets;
 
-public sealed class IncomingModule : IDisposable, IPacket
+public sealed class IncomingModule(byte packetId, byte[] buffer, byte sender, int start, int length) : IDisposable, IPacket
 {
-    public IncomingModule(byte packetId, byte[] buffer, byte sender, int start, int length)
-    {
-        PacketID = packetId;
-        Buffer = buffer;
-        Sender = sender;
-        Start = start;
-        Length = length;
-    }
-    
     public BinaryReader GetReader()
     {
         if (_reader == null || _stream == null)
@@ -30,7 +21,7 @@ public sealed class IncomingModule : IDisposable, IPacket
         _reader?.Dispose();
         _stream?.Dispose();
 
-        Buffer = Array.Empty<byte>();
+        Buffer = [];
 
         GC.SuppressFinalize(this);
     }
@@ -38,11 +29,11 @@ public sealed class IncomingModule : IDisposable, IPacket
     private MemoryStream? _stream;
     private BinaryReader? _reader;
 
-    public byte PacketID { get; }
+    public byte PacketID { get; } = packetId;
     public NetPlayer Player => PlayerManager.Tracker[Sender];
-    
-    public byte[] Buffer;
-    public byte Sender;
-    public int Start;
-    public int Length;
+
+    public byte[] Buffer { get; set; } = buffer;
+    public byte Sender { get; set; } = sender;
+    public int Start { get; set; } = start;
+    public int Length { get; set; } = length;
 }

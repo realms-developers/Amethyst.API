@@ -20,7 +20,9 @@ public class RemadeTcpSocket : ISocket, IDisposable
     public RemadeTcpSocket(TcpClient tcpClient)
     {
         if (tcpClient.Client.RemoteEndPoint == null)
+        {
             return;
+        }
 
         _connection = tcpClient;
         _connection.NoDelay = true;
@@ -36,10 +38,7 @@ public class RemadeTcpSocket : ISocket, IDisposable
         _connected = false;
     }
 
-    bool ISocket.IsConnected()
-    {
-        return _connected && _connection != null && _connection.Client != null && _connection.Connected;
-    }
+    bool ISocket.IsConnected() => _connected && _connection != null && _connection.Client != null && _connection.Connected;
 
     void ISocket.Connect(RemoteAddress address)
     {
@@ -50,15 +49,23 @@ public class RemadeTcpSocket : ISocket, IDisposable
 
     private void ReadCallback(IAsyncResult result)
     {
-        if (result.AsyncState is not Tuple<SocketReceiveCallback, object>) return;
+        if (result.AsyncState is not Tuple<SocketReceiveCallback, object>)
+        {
+            return;
+        }
 
         var tuple = (Tuple<SocketReceiveCallback, object>?)result.AsyncState;
-        if (tuple == null) return;
+        if (tuple == null)
+        {
+            return;
+        }
 
         try
         {
             if (_connection == null)
+            {
                 return;
+            }
 
             tuple?.Item1.Invoke(tuple.Item2, _connection.GetStream().EndRead(result));
         }
@@ -72,7 +79,10 @@ public class RemadeTcpSocket : ISocket, IDisposable
     private void SendCallback(IAsyncResult result)
     {
         object[]? array = (object[]?)result.AsyncState;
-        if (array == null) return;
+        if (array == null)
+        {
+            return;
+        }
 
         LegacyNetBufferPool.ReturnBuffer((byte[])array[1]);
         var tuple = (Tuple<SocketSendCallback, object>)array[0];
@@ -101,7 +111,7 @@ public class RemadeTcpSocket : ISocket, IDisposable
     {
         try
         {
-            var array = LegacyNetBufferPool.RequestBuffer(data, offset, size);
+            byte[] array = LegacyNetBufferPool.RequestBuffer(data, offset, size);
             _connection?.GetStream().BeginWrite(array, 0, size, new AsyncCallback(SendCallback), new object[]
             {
                 new Tuple<SocketSendCallback, object>(callback, state),
@@ -161,11 +171,14 @@ public class RemadeTcpSocket : ISocket, IDisposable
 
     bool ISocket.StartListening(SocketConnectionAccepted callback)
     {
-        var any = IPAddress.Any;
+        IPAddress? any = IPAddress.Any;
         if (Netplay.ServerIP != null && !IPAddress.TryParse(Netplay.ServerIPText, out any))
+        {
             any = IPAddress.Any;
+        }
+
         _listenerCallback = callback;
-        if (_listener == null) _listener = new TcpListener(any, AmethystSession.Profile.Port);
+        _listener ??= new TcpListener(any, AmethystSession.Profile.Port);
         try
         {
             _listener.Start();
@@ -185,7 +198,8 @@ public class RemadeTcpSocket : ISocket, IDisposable
 
     private void ListenLoop(object? unused)
     {
-        for (;;)
+        for (; ; )
+        {
             try
             {
                 if (_listener == null)
@@ -193,7 +207,7 @@ public class RemadeTcpSocket : ISocket, IDisposable
                     return;
                 }
 
-                var tcpClient = _listener.AcceptTcpClient();
+                TcpClient tcpClient = _listener.AcceptTcpClient();
                 if (Netplay.FindNextOpenClientSlot() == -1)
                 {
                     continue;
@@ -207,6 +221,7 @@ public class RemadeTcpSocket : ISocket, IDisposable
             catch (Exception)
             {
             }
+        }
     }
 
     public void Dispose()
@@ -214,7 +229,7 @@ public class RemadeTcpSocket : ISocket, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private TcpClient? _connection;
+    private readonly TcpClient? _connection;
     private TcpListener? _listener;
     private SocketConnectionAccepted? _listenerCallback;
     private RemoteAddress? _remoteAddress;

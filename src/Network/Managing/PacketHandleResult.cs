@@ -13,8 +13,8 @@ public sealed class PacketHandleResult
     }
 
     private bool _handled;
-    private List<string> _reasons;
-    private IPacket _packet;
+    private readonly List<string> _reasons;
+    private readonly IPacket _packet;
 
     public bool IsHandled => _handled;
     public IReadOnlyList<string> Reasons => _reasons.AsReadOnly();
@@ -27,9 +27,12 @@ public sealed class PacketHandleResult
 
     internal void Log()
     {
-        if (_reasons.Count == 0 || AmethystSession.Profile.DebugMode == false) return;
+        if (_reasons.Count == 0 || AmethystSession.Profile.DebugMode == false)
+        {
+            return;
+        }
 
-        var lines = PagesCollection.PageifyItems(_reasons, 150);
+        List<string> lines = PagesCollection.PageifyItems(_reasons, 150);
 
         AmethystLog.Network.Debug("PacketHandleResult", $"Ignored packet {_packet.PacketID}, reasons:");
         lines.ForEach(p => AmethystLog.Network.Debug("PacketHandleResult", p));

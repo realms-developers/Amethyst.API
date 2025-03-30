@@ -16,7 +16,7 @@ public sealed class PacketWriter : IDisposable
 
     public PacketWriter SetType(short type)
     {
-        var position = writer.BaseStream.Position;
+        long position = writer.BaseStream.Position;
         writer.BaseStream.Position = 2L;
         writer.Write(type);
         writer.BaseStream.Position = position;
@@ -135,7 +135,7 @@ public sealed class PacketWriter : IDisposable
 
     public byte[] BuildPacket()
     {
-        var position = writer.BaseStream.Position;
+        long position = writer.BaseStream.Position;
         writer.BaseStream.Position = 0L;
         writer.Write((short)position);
         writer.BaseStream.Position = position;

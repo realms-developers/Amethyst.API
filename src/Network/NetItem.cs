@@ -1,17 +1,10 @@
 namespace Amethyst.Network;
 
-public struct NetItem
+public struct NetItem(int id, short stack, byte prefix)
 {
-    public NetItem(int id, short stack, byte prefix)
-    {
-        ID = id;
-        Stack = stack;
-        Prefix = prefix;
-    }
-
-    public int ID;
-    public short Stack;
-    public byte Prefix;
+    public int ID { get; set; } = id;
+    public short Stack { get; set; } = stack;
+    public byte Prefix { get; set; } = prefix;
 
     public static bool operator ==(NetItem left, NetItem right)
     {
@@ -23,18 +16,9 @@ public struct NetItem
         return false;
     }
 
-    public static bool operator !=(NetItem left, NetItem right)
-    {
-        return !(left == right);
-    }
+    public static bool operator !=(NetItem left, NetItem right) => !(left == right);
 
-    public override bool Equals(object? obj)
-    {
-        return base.Equals(obj);
-    }
+    public override readonly bool Equals(object? obj) => base.Equals(obj);
 
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
-    }
+    public override readonly int GetHashCode() => base.GetHashCode();
 }
