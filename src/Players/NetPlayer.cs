@@ -140,20 +140,21 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         Socket.SendPacket(packet);
     }
 
-    public void ReplyMessage(string text, Color color) =>
-        SendMessage($"[c/303030:{Localization.Get("amethyst.serverPrefix", AmethystSession.Profile.DefaultLanguage)}:] {text}", color);
+
+    public void ReplyMessage(string text, Color color)
+        => SendMessage($"[c/303030:{Localization.Get("amethyst.serverPrefix", Language)}:] {text}", color);
 
     public void ReplyError(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(201, 71, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), new Color(201, 71, 71));
 
     public void ReplyInfo(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(191, 201, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), new Color(191, 201, 71));
 
     public void ReplySuccess(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(71, 201, 75));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), new Color(71, 201, 75));
 
     public void ReplyWarning(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args), new Color(201, 125, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), new Color(201, 125, 71));
 
     public void ReplyPage(PagesCollection pages, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
         => pages.SendPage(this, header, footer, footerArgs, showPageName, page);
@@ -173,7 +174,6 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
     {
         AmethystLog.Network.Error("Players", $"Player '{Name}' was kicked for reason: {reason}");
 
-        Socket.Disconnect(string.Format(CultureInfo.InvariantCulture,
-            Localization.Get(reason, AmethystSession.Profile.DefaultLanguage), args ?? []));
+        Socket.Disconnect(string.Format(CultureInfo.InvariantCulture, Localization.Get(reason, Language), args ?? []));
     }
 }
