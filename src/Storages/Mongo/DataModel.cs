@@ -3,18 +3,13 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Amethyst.Storages.Mongo;
 
-public abstract class DataModel
+public abstract class DataModel(string name)
 {
-    public DataModel(string name)
-    {
-        Name = name;
-    }
-    
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)] 
+    [BsonRepresentation(BsonType.ObjectId)]
     public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
 
-    public string Name;
+    public string Name { get; set; } = name;
 
     public abstract void Save();
     public abstract void Remove();

@@ -13,7 +13,14 @@ public static class Localization
     private const string _directory = "localization";
 
     // Nested dictionary: culture -> (key -> localized string)
-    private static readonly Dictionary<string, Dictionary<string, string>> _localizationData = new();
+    private static readonly Dictionary<string, Dictionary<string, string>> _localizationData = [];
+
+    /// <summary>
+    /// Gets all currently loaded cultures.
+    /// </summary>
+    public static IReadOnlyCollection<string> LoadedCultures => _localizationData.Keys
+        .ToList()
+        .AsReadOnly();
 
     /// <summary>
     /// Loads all localization files for a specific culture.
@@ -30,7 +37,7 @@ public static class Localization
         // Create a new inner dictionary for this culture if it doesn't exist
         if (!_localizationData.ContainsKey(culture))
         {
-            _localizationData[culture] = new Dictionary<string, string>();
+            _localizationData[culture] = [];
         }
 
         string[] files = Directory.GetFiles(directoryPath, "*.json");
@@ -100,11 +107,15 @@ public static class Localization
     {
         internal static string[] RussianNames = new string[ItemID.Count];
         internal static string[] EnglishNames = new string[ItemID.Count];
-        internal static bool IsInitialized = false;
+        internal static bool IsInitialized;
 
         internal static void Initialize()
         {
-            if (IsInitialized) return;
+            if (IsInitialized)
+            {
+                return;
+            }
+
             IsInitialized = true;
 
             LanguageManager.Instance.SetLanguage(GameCulture.FromLegacyId((byte)GameCulture.CultureName.English));
@@ -113,12 +124,16 @@ public static class Localization
             EnglishNames = new string[ItemID.Count];
 
             for (int i = 0; i < ItemID.Count; i++)
+            {
                 EnglishNames[i] = Lang.GetItemNameValue(i);
+            }
 
             LanguageManager.Instance.SetLanguage(GameCulture.FromLegacyId((byte)GameCulture.CultureName.Russian));
 
             for (int i = 0; i < ItemID.Count; i++)
+            {
                 RussianNames[i] = Lang.GetItemNameValue(i);
+            }
 
             LanguageManager.Instance.SetLanguage(GameCulture.FromLegacyId((byte)GameCulture.CultureName.English));
         }
@@ -129,10 +144,10 @@ public static class Localization
 
             if (int.TryParse(input, out int itemIndex))
             {
-                return new List<ItemFindData>(1)
-                {
-                    new ItemFindData(itemIndex, names[itemIndex])
-                };
+                return
+                [
+                    new(itemIndex, names[itemIndex])
+                ];
             }
 
             if (input.StartsWith('['))
@@ -140,37 +155,38 @@ public static class Localization
                 NetItem? item = GetItemFromTag(input);
                 if (item != null)
                 {
-                    return new List<ItemFindData>(1)
-                    {
-                        new ItemFindData(item.Value.ID, names[item.Value.ID])
-                    };
+                    return
+                    [
+                        new(item.Value.ID, names[item.Value.ID])
+                    ];
                 }
             }
 
-            List<ItemFindData> startsResult = new List<ItemFindData>();
-            List<ItemFindData> containsResult = new List<ItemFindData>();
+            List<ItemFindData> startsResult = [];
+            List<ItemFindData> containsResult = [];
 
             for (int i = 0; i < names.Length; i++)
             {
                 if (input.Equals(names[i], StringComparison.OrdinalIgnoreCase))
-                    return new List<ItemFindData>(1)
-                    {
+                {
+                    return
+                    [
                         new ItemFindData(i, names[i])
-                    };
+                    ];
+                }
 
                 if (names[i].StartsWith(input, StringComparison.OrdinalIgnoreCase))
+                {
                     startsResult.Add(new ItemFindData(i, names[i]));
+                }
             }
 
-            if (startsResult.Count > 0)
-                return startsResult;
-
-            return containsResult;
+            return startsResult.Count > 0 ? startsResult : containsResult;
         }
 
         public static NetItem? GetItemFromTag(string tag)
         {
-            Regex regex = new Regex(@"\[i(tem)?(?:\/s(?<Stack>\d{1,4}))?(?:\/p(?<Prefix>\d{1,3}))?:(?<NetID>-?\d{1,4})\]");
+            Regex regex = new(@"\[i(tem)?(?:\/s(?<Stack>\d{1,4}))?(?:\/p(?<Prefix>\d{1,3}))?:(?<NetID>-?\d{1,4})\]");
             Match match = regex.Match(tag);
             if (!match.Success)
                 return null;

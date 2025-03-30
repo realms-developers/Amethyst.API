@@ -1,5 +1,4 @@
 using Amethyst.Core;
-using Amethyst.Players.Extensions;
 using Amethyst.Players.SSC;
 using Amethyst.Players.SSC.Interfaces;
 using Amethyst.Storages.Mongo;
@@ -16,7 +15,7 @@ public static class PlayerManager
     public static ISSCProvider SSCProvider { get; set; } = new BasicSSCProvider();
     public static bool IsSSCEnabled => AmethystSession.Profile.SSCMode;
 
-    private static Timer? _UpdateTimer;
+    private static Timer? _updateTimer;
 
     internal static void Initialize()
     {
@@ -25,18 +24,20 @@ public static class PlayerManager
 
         if (IsSSCEnabled)
         {
-            _UpdateTimer = new Timer(1000)
+            _updateTimer = new Timer(1000)
             {
                 AutoReset = true,
                 Enabled = true
             };
-            _UpdateTimer.Elapsed += OnElapsed;
+            _updateTimer.Elapsed += OnElapsed;
         }
     }
 
     private static void OnElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
-        foreach (var plr in Tracker)
+        foreach (NetPlayer plr in Tracker)
+        {
             plr.Character?.SaveUpdate();
+        }
     }
 }

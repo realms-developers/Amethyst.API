@@ -14,8 +14,8 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 {
     public string Name => "Amethyst.BasicNetworkProvider";
 
-    private INetworkClient?[] _clients = new INetworkClient?[256];
-    private ISocket _socket = new RemadeTcpSocket();
+    private readonly INetworkClient?[] _clients = new INetworkClient?[256];
+    private readonly ISocket _socket = new RemadeTcpSocket();
 
     public void Initialize(NetworkInstance instance)
     {
@@ -23,13 +23,15 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         On.Terraria.NetMessage.SendData += OnSendData;
     }
 
-    private void OnSendData(On.Terraria.NetMessage.orig_SendData orig, int packetId, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+    private void OnSendData(On.Terraria.NetMessage.orig_SendData orig, int packetId, int remoteClient,
+        int ignoreClient, NetworkText text, int number, float number2,
+        float number3, float number4, int number5, int number6, int number7)
     {
-        OutcomingPacket packet = new OutcomingPacket((byte)packetId, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7);
+        OutcomingPacket packet = new((byte)packetId, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7);
 
-        PacketHandleResult result = new PacketHandleResult(packet);
+        PacketHandleResult result = new(packet);
 
-        var handlers = NetworkManager.Instance.outcoming[packetId];
+        List<PacketHandler<OutcomingPacket>> handlers = NetworkManager.Instance.Outcoming[packetId];
         if (handlers != null && handlers.Count > 0)
         {
             handlers.ForEach(handler =>
@@ -46,17 +48,19 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             });
         }
 
-        if (result.IsHandled == true)
+        if (result.IsHandled)
         {
             result.Log();
+
             return;
         }
 
-        var replace = NetworkManager.Instance.outcomingReplace[packetId];
+        PacketHandler<OutcomingPacket>? replace = NetworkManager.Instance.OutcomingReplace[packetId];
         if (replace != null)
         {
             replace(packet, result);
             result.Log();
+
             return;
         }
 
@@ -65,10 +69,11 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
     private void OnGetData(On.Terraria.MessageBuffer.orig_GetData orig, MessageBuffer self, int start, int length, out int packetId)
     {
-        var buffer = self.readBuffer;
+        byte[] buffer = self.readBuffer;
         packetId = buffer[start];
 
         NetPlayer player = PlayerManager.Tracker[self.whoAmI];
+
         if (packetId == (byte)PacketTypes.SyncCavernMonsterType || packetId <= 0 || packetId >= MessageID.Count)
         {
             return;
@@ -81,7 +86,9 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         }
 
         // terraria code asmr
-        if (Netplay.Clients[self.whoAmI].State < 10 && packetId > 12 && packetId != 67 && packetId != 56 && packetId != 82 && packetId != 93 && packetId != 16 && packetId != 42 && packetId != 50 && packetId != 38 && packetId != 68 && packetId != 147)
+        if (Netplay.Clients[self.whoAmI].State < 10 && packetId > 12 && packetId != 67 && packetId != 56 &&
+            packetId != 82 && packetId != 93 && packetId != 16 && packetId != 42 && packetId != 50 && packetId != 38
+            && packetId != 68 && packetId != 147)
         {
             return;
         }
@@ -104,15 +111,16 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     }
 
     // TODO: refactor OnGetPacket and OnGetModule (because its just two copies)
-
     private static bool OnGetPacket(byte packetId, NetPlayer player, int start, int length)
     {
-        var buffer = NetMessage.buffer[player.Index].readBuffer;
-        IncomingPacket packet = new IncomingPacket(packetId, buffer, (byte)player.Index, start + 1, length - 1);
+        byte[] buffer = NetMessage.buffer[player.Index].readBuffer;
 
-        PacketHandleResult result = new PacketHandleResult(packet);
+        IncomingPacket packet = new(packetId, buffer, (byte)player.Index, start + 1, length - 1);
 
-        var handlers = NetworkManager.Instance.incoming[packetId];
+        PacketHandleResult result = new(packet);
+
+        List<PacketHandler<IncomingPacket>> handlers = NetworkManager.Instance.Incoming[packetId];
+
         if (handlers != null && handlers.Count > 0)
         {
             handlers.ForEach(handler =>
@@ -129,17 +137,19 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             });
         }
 
-        if (result.IsHandled == true)
+        if (result.IsHandled)
         {
             result.Log();
             return true;
         }
 
-        var replace = NetworkManager.Instance.incomingReplace[packetId];
+        PacketHandler<IncomingPacket>? replace = NetworkManager.Instance.IncomingReplace[packetId];
+
         if (replace != null)
         {
             replace(in packet, result);
             result.Log();
+
             return true;
         }
         return false;
@@ -148,12 +158,12 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
     private static bool OnGetModule(byte packetId, NetPlayer player, int start, int length)
     {
-        var buffer = NetMessage.buffer[player.Index].readBuffer;
-        IncomingModule packet = new IncomingModule(packetId, buffer, (byte)player.Index, start + 3, length - 3);
+        byte[] buffer = NetMessage.buffer[player.Index].readBuffer;
+        IncomingModule packet = new(packetId, buffer, (byte)player.Index, start + 3, length - 3);
 
-        PacketHandleResult result = new PacketHandleResult(packet);
+        PacketHandleResult result = new(packet);
 
-        var handlers = NetworkManager.Instance.incomingModules[packetId];
+        List<PacketHandler<IncomingModule>> handlers = NetworkManager.Instance.IncomingModules[packetId];
         if (handlers != null && handlers.Count > 0)
         {
             handlers.ForEach(handler =>
@@ -170,34 +180,45 @@ internal sealed class BasicNetworkProvider : INetworkProvider
             });
         }
 
-        if (result.IsHandled == true)
+        if (result.IsHandled)
         {
             result.Log();
+
             return true;
         }
 
-        var replace = NetworkManager.Instance.incomingModuleReplace[packetId];
+        PacketHandler<IncomingModule>? replace = NetworkManager.Instance.IncomingModuleReplace[packetId];
+
         if (replace != null)
         {
             replace(in packet, result);
             result.Log();
+
             return true;
         }
+
         return false;
     }
 
     public void StartListening()
     {
         if (_socket.StartListening(OnConnected))
+        {
             AmethystLog.Network.Info("Network", $"Server was started on {AmethystSession.Profile.Port} with {AmethystSession.Profile.MaxPlayers} slots.");
+        }
         else
+        {
             AmethystLog.Network.Error("Network", $"Failed to start server! Be sure that you use different port for this server!");
+        }
     }
 
     private void OnConnected(ISocket client)
     {
-        var ip = client.GetRemoteAddress()!.ToString()!.Split(':')[0];
-        var index = Netplay.FindNextOpenClientSlot();
+        string ip = client.GetRemoteAddress()!
+            .ToString()!
+            .Split(':')[0];
+
+        int index = Netplay.FindNextOpenClientSlot();
 
         AmethystLog.Network.Info("Network", $"Accepted connection from {ip} (Index: {index})");
 
@@ -211,20 +232,36 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     public void Broadcast(byte[] packet)
     {
         foreach (INetworkClient? client in _clients)
-            if (client?.IsConnected == true && client?.IsFrozen == false)
-                client?.SendPacket(packet);
+        {
+            if (client != null && client.IsConnected && !client.IsFrozen)
+            {
+                client.SendPacket(packet);
+            }
+        }
     }
+
     public void Broadcast(byte[] packet, Predicate<INetworkClient> predicate)
     {
         foreach (INetworkClient? client in _clients)
-            if (client?.IsConnected == true && client?.IsFrozen == false && predicate(client))
-                client?.SendPacket(packet);
+        {
+            if (client != null && client.IsConnected && !client.IsFrozen && predicate(client))
+            {
+                client.SendPacket(packet);
+            }
+        }
     }
+
     public void Broadcast(byte[] packet, params int[] ignored)
     {
         foreach (INetworkClient? client in _clients)
-            if (client?.IsConnected == true && client?.IsFrozen == false && ignored.Contains(client.PlayerIndex) == false)
-                client?.SendPacket(packet);
+        {
+            if (client != null &&
+                client.IsConnected && !client.IsFrozen && !ignored.Contains(client.PlayerIndex))
+            {
+                client.SendPacket(packet);
+            }
+        }
     }
+
     public INetworkClient? GetClient(int index) => _clients[index];
 }

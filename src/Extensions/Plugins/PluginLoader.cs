@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Reflection;
 using Amethyst.Core;
 
@@ -6,9 +5,9 @@ namespace Amethyst.Extensions.Plugins;
 
 public static class PluginLoader
 {
-    internal static List<PluginContainer> Containers = new List<PluginContainer>();
+    internal static List<PluginContainer> Containers = [];
     internal static string PluginsPath = Path.Combine("extensions", "plugins");
-    private static int CurrentLoadID = 0;
+    private static int _currentLoadID;
 
     public static event PluginOperationHandler? OnPluginLoad;
     public static event PluginOperationHandler? OnPluginUnload;
@@ -24,13 +23,17 @@ public static class PluginLoader
             Directory.CreateDirectory(PluginsPath);
             AmethystLog.Main.Info("PluginLoader", $"Created plugins directory at '{PluginsPath}'");
         }
-      
-        var files = Directory.EnumerateFiles(PluginsPath, "*.dll");
 
-        foreach (var file in files)
+        IEnumerable<string> files = Directory.EnumerateFiles(PluginsPath, "*.dll");
+
+        foreach (string file in files)
         {
-            if (AmethystSession.ExtensionsConfiguration.AllowedPlugins.Contains(file.Split('/').Last()) == false)
+            if (!AmethystSession.ExtensionsConfiguration.AllowedPlugins.Contains(file
+                .Split('/')
+                .Last()))
+            {
                 continue;
+            }
 
             AmethystLog.Main.Info("PluginLoader", $"Loading '{file}'...");
 
@@ -41,12 +44,15 @@ public static class PluginLoader
 
     public static PluginContainer? CreateContainer(string name, byte[] data)
     {
-        var asm = TryLoadAssembly(name, data);
-        if (asm == null) return null;
+        Assembly? asm = TryLoadAssembly(name, data);
+        if (asm == null)
+        {
+            return null;
+        }
 
-        CurrentLoadID++;
+        _currentLoadID++;
 
-        PluginContainer container = new PluginContainer(CurrentLoadID, data, asm);
+        PluginContainer container = new(_currentLoadID, data, asm);
         Containers.Add(container);
 
         return container;

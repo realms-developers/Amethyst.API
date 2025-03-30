@@ -19,24 +19,27 @@ public sealed class BasicSSCProvider : ISSCProvider
 
     private static void SetupConfiguration(ref SSCConfiguration configuration)
     {
-        configuration.StartItems ??= new List<NetItem>()
-        {
+        configuration.StartItems ??=
+        [
             new NetItem(ItemID.IronShortsword, 1, 0),
             new NetItem(ItemID.IronPickaxe, 1, 0),
             new NetItem(ItemID.IronAxe, 1, 0)
-        };
+        ];
 
-        configuration.StartLife = configuration.StartLife == 0 ? 120 : configuration.StartLife;
-        configuration.StartMana = configuration.StartMana == 0 ? 60 : configuration.StartMana;
+        configuration.StartLife = configuration.StartLife == 0 ? 100 : configuration.StartLife;
+        configuration.StartMana = configuration.StartMana == 0 ? 20 : configuration.StartMana;
     }
 
     public CharacterModel GetModel(string name)
     {
-        var model = Characters.Find(name);
-        if (model != null) return model;
+        CharacterModel? model = Characters.Find(name);
+        if (model != null)
+        {
+            return model;
+        }
 
-        var cfg = Configuration;
-        var slots = new NetItem[350];
+        SSCConfiguration cfg = Configuration;
+        NetItem[] slots = new NetItem[350];
         Configuration.StartItems.CopyTo(slots);
 
         model = new CharacterModel(name)
@@ -49,16 +52,13 @@ public sealed class BasicSSCProvider : ISSCProvider
 
         return model;
     }
-    
-    public ICharacterWrapper CreateServersideWrapper(NetPlayer player)
-    {
-        return new ServerCharacterWrapper(player);
-    }
+
+    public ICharacterWrapper CreateServersideWrapper(NetPlayer player) => new ServerCharacterWrapper(player);
 
     public struct SSCConfiguration
     {
-        public List<NetItem> StartItems;
-        public int StartLife;
-        public int StartMana;
+        public List<NetItem> StartItems { get; set; }
+        public int StartLife { get; set; }
+        public int StartMana { get; set; }
     }
 }

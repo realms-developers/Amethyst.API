@@ -6,7 +6,8 @@ public static class ConsoleInput
 
     internal static void Initialize()
     {
-        Thread thread = new Thread(CliTask);
+        Thread thread = new(CliTask);
+
         thread.Start();
     }
 
@@ -15,7 +16,10 @@ public static class ConsoleInput
         while (true)
         {
             string? input = Console.ReadLine();
-            if (string.IsNullOrEmpty(input)) continue;
+            if (string.IsNullOrEmpty(input))
+            {
+                continue;
+            }
 
             try
             {

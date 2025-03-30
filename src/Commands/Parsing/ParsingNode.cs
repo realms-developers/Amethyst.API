@@ -1,6 +1,3 @@
-using System.Data.Entity.Infrastructure.Design;
-using System.Globalization;
-using System.Transactions;
 using Amethyst.Commands.Arguments;
 using Amethyst.Players;
 
@@ -8,94 +5,109 @@ namespace Amethyst.Commands.Parsing;
 
 public static class ParsingNode
 {
-    private static Dictionary<Type, ArgumentParser> Parsers = new Dictionary<Type, ArgumentParser>();
+    private static readonly Dictionary<Type, ArgumentParser> _parsers = [];
 
     internal static void Initialize()
     {
-        Parsers.Add(typeof(string), (sender, input) => {
-            return ParseResult.Success(input);
-        });
+        // Generic numeric parsers - replaced ForEach with raw loop
+        Type[] numericTypes = [typeof(byte), typeof(int), typeof(double), typeof(float), typeof(bool)];
+        foreach (Type t in numericTypes)
+        {
+            _parsers.Add(t, CreateTryParseParser(t));
+        }
 
-        Parsers.Add(typeof(bool), (sender, input) => {
-            if (bool.TryParse(input, out bool value) == true)
-                return ParseResult.Success(value);
+        // String parser
+        _parsers[typeof(string)] = (sender, input) => ParseResult.Success(input);
 
-            return ParseResult.InvalidSyntax("$ParsingNode.InvalidSyntax");
-        });
-
-        Parsers.Add(typeof(byte), (sender, input) => {
-            if (byte.TryParse(input, out byte value) == true)
-                return ParseResult.Success(value);
-
-            return ParseResult.InvalidSyntax("$ParsingNode.InvalidSyntax");
-        });
-
-        Parsers.Add(typeof(int), (sender, input) => {
-            if (int.TryParse(input, out int value) == true)
-                return ParseResult.Success(value);
-
-            return ParseResult.InvalidSyntax("$ParsingNode.InvalidSyntax");
-        });
-
-        Parsers.Add(typeof(double), (sender, input) => {
-            if (double.TryParse(input, out double value) == true)
-                return ParseResult.Success(value);
-
-            return ParseResult.InvalidSyntax("$ParsingNode.InvalidSyntax");
-        });
-
-        Parsers.Add(typeof(float), (sender, input) => {
-            if (float.TryParse(input, out float value) == true)
-                return ParseResult.Success(value);
-
-            return ParseResult.InvalidSyntax("$ParsingNode.InvalidSyntax");
-        });
-
-        Parsers.Add(typeof(PlayerReference), (sender, input) => {
-            if (input.StartsWith("$me", StringComparison.InvariantCultureIgnoreCase) && sender is NetPlayer)
-                return ParseResult.Success(new PlayerReference((sender as NetPlayer)!.Index));
-
-            if (input.StartsWith('$') && byte.TryParse(input.AsSpan(1), out byte index))
-                return ParseResult.Success(index);
-
-            var plr = PlayerManager.Tracker.FirstOrDefault((p) => p != null && p.IsActive && p.Name.Equals(input, StringComparison.OrdinalIgnoreCase)) ?? 
-                      PlayerManager.Tracker.FirstOrDefault((p) => p != null && p.IsActive && p.Name.StartsWith(input, StringComparison.InvariantCultureIgnoreCase) == true);
-
-            if (plr != null)
-                return ParseResult.Success(new PlayerReference(plr.Index));
-
-            return ParseResult.ObjectNotFound();
-        });
-
-        Parsers.Add(typeof(ItemReference), (sender, input) => {
-            if (input.StartsWith("$held", StringComparison.InvariantCultureIgnoreCase) && sender is NetPlayer)
-                return ParseResult.Success(new ItemReference((sender as NetPlayer)!.Utils.HeldItem.type));
-
-            var enList = Localization.Items.FindItem(false, input);
-            if (enList.Count == 1)
-                return ParseResult.Success(new ItemReference(enList[0].ItemID));
-            else if (enList.Count > 1)
-                return ParseResult.TooManyVariants(enList.Select(p => p.Name).ToList());
-
-            var ruList = Localization.Items.FindItem(true, input);
-            if (ruList.Count == 1)
-                return ParseResult.Success(new ItemReference(ruList[0].ItemID));
-            else if (ruList.Count > 1)
-                return ParseResult.TooManyVariants(ruList.Select(p => p.Name).ToList());
-
-            return ParseResult.ObjectNotFound();
-        });
+        // Specialized parsers
+        _parsers[typeof(PlayerReference)] = ParsePlayerReference;
+        _parsers[typeof(ItemReference)] = ParseItemReference;
     }
-    
 
-    internal static ParseResult TryParse(Type type, ICommandSender sender, string input)
+    private static ArgumentParser CreateTryParseParser(Type type) => (_, input) =>
+        type.GetMethod("TryParse", [typeof(string), type.MakeByRefType()]) is { } tryParse &&
+        (bool)tryParse.Invoke(null, [input, null])!
+        ? ParseResult.Success(Convert.ChangeType(input, type, null))
+        : ParseResult.InvalidSyntax("$ParsingNode.InvalidSyntax");
+
+    private static ParseResult ParsePlayerReference(ICommandSender sender, string input)
     {
-        if (Parsers.ContainsKey(type) == false) return new ParseResult(ParseResultType.NoParser, null, null, null);
+        if (input.StartsWith("$me", StringComparison.OrdinalIgnoreCase) && sender is NetPlayer netPlayer)
+        {
+            return ParseResult.Success(new PlayerReference(netPlayer.Index));
+        }
 
-        var parser = Parsers[type];
-        return parser(sender, input);
+        if (input.StartsWith('$') && byte.TryParse(input.AsSpan(1), out byte index))
+        {
+            return ParseResult.Success(new PlayerReference(index));
+        }
+
+        // Manual player search without LINQ
+        NetPlayer? exactMatch = null;
+        NetPlayer? prefixMatch = null;
+
+        foreach (NetPlayer p in PlayerManager.Tracker)
+        {
+            if (p?.IsActive != true)
+            {
+                continue;
+            }
+
+            if (exactMatch == null && p.Name.Equals(input, StringComparison.OrdinalIgnoreCase))
+            {
+                exactMatch = p;
+                break; // Found exact match, exit early
+            }
+
+            if (prefixMatch == null && p.Name.StartsWith(input, StringComparison.OrdinalIgnoreCase))
+            {
+                prefixMatch = p;
+            }
+        }
+
+        NetPlayer? player = exactMatch ?? prefixMatch;
+        return player != null
+            ? ParseResult.Success(new PlayerReference(player.Index))
+            : ParseResult.ObjectNotFound();
     }
 
-    public static void AddParser(Type type, ArgumentParser parser) => Parsers.TryAdd(type, parser);
-    public static void RemoveParser(Type type) => Parsers.Remove(type);
+    private static ParseResult ParseItemReference(ICommandSender sender, string input)
+    {
+        return input.StartsWith("$held", StringComparison.OrdinalIgnoreCase) && sender is NetPlayer netPlayer
+            ? ParseResult.Success(new ItemReference(netPlayer.Utils.HeldItem.type))
+            : FindLocalizedItem(input, false)
+            ?? FindLocalizedItem(input, true)
+            ?? ParseResult.ObjectNotFound();
+    }
+
+    private static ParseResult? FindLocalizedItem(string input, bool isRussian)
+    {
+        List<Localization.ItemFindData> items = Localization.Items.FindItem(isRussian, input);
+
+        if (items.Count == 1)
+        {
+            return ParseResult.Success(new ItemReference(items[0].ItemID));
+        }
+
+        if (items.Count > 1)
+        {
+            // Manual variant collection without LINQ Select
+            List<string> variantNames = new(items.Count);
+            foreach (Localization.ItemFindData item in items)
+            {
+                variantNames.Add(item.Name);
+            }
+            return ParseResult.TooManyVariants(variantNames);
+        }
+
+        return null;
+    }
+
+    internal static ParseResult TryParse(Type type, ICommandSender sender, string input) =>
+        _parsers.TryGetValue(type, out ArgumentParser? parser)
+            ? parser(sender, input)
+            : new ParseResult(ParseResultType.NoParser, null, null, null);
+
+    public static void AddParser(Type type, ArgumentParser parser) => _parsers.TryAdd(type, parser);
+    public static void RemoveParser(Type type) => _parsers.Remove(type);
 }

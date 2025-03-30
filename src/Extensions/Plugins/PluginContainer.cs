@@ -19,7 +19,7 @@ public sealed class PluginContainer : IDisposable
 
     public void Load()
     {
-        var instance = TryGetInstance();
+        PluginInstance? instance = TryGetInstance();
         if (instance == null)
         {
             Dispose();
@@ -34,10 +34,10 @@ public sealed class PluginContainer : IDisposable
 
     private PluginInstance? TryGetInstance()
     {
-        var target = typeof(PluginInstance);
+        Type target = typeof(PluginInstance);
 
-        var pluginTypes = Assembly.GetExportedTypes().Where((p) => p.IsSubclassOf(target));
-        foreach (var type in pluginTypes)
+        IEnumerable<Type> pluginTypes = Assembly.GetExportedTypes().Where((p) => p.IsSubclassOf(target));
+        foreach (Type type in pluginTypes)
         {
             var createdInstance = (PluginInstance?)Activator.CreateInstance(type);
             return createdInstance;

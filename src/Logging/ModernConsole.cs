@@ -1,10 +1,8 @@
-using Amethyst.Logging;
-
 namespace Amethyst.Logging;
 
 public static class ModernConsole
 {
-    private static IReadOnlyDictionary<string, byte> ColorKeys = new Dictionary<string, byte>()
+    private static readonly IReadOnlyDictionary<string, byte> _colorKeys = new Dictionary<string, byte>()
     {
         { "!r", 0 },
         { "!b", 1 },
@@ -39,15 +37,15 @@ public static class ModernConsole
         { LogLevel.Info, "$yInfo    " },
         { LogLevel.Verbose, "$!dVerbose " },
         { LogLevel.Debug, "$wDebug   " },
-    }.AsReadOnly();
+    };
 
     public static void WriteLine(string text)
     {
-        foreach (var col in ColorKeys)
+        foreach (KeyValuePair<string, byte> col in _colorKeys)
         {
             text = text.Replace($"${col.Key}", $"\x1b[{col.Value}m");
         }
-        
+
         text += "\x1b[0m";
 
         Console.WriteLine(text);
@@ -55,7 +53,7 @@ public static class ModernConsole
 
     public static string ClearText(string text)
     {
-        foreach (var col in ColorKeys)
+        foreach (KeyValuePair<string, byte> col in _colorKeys)
         {
             text = text.Replace($"${col.Key}", string.Empty);
         }

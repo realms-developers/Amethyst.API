@@ -44,11 +44,17 @@ internal static class PlayerNetworking
 
         private static void OnPlayerSpawn(in IncomingPacket packet, PacketHandleResult result)
         {
-            if (packet.Player._sentSpawnPacket) return;
+            if (packet.Player._sentSpawnPacket)
+            {
+                return;
+            }
 
             packet.Player._sentSpawnPacket = true;
 
-            if (Netplay.Clients[packet.Player.Index].State < 3) return;
+            if (Netplay.Clients[packet.Player.Index].State < 3)
+            {
+                return;
+            }
 
             packet.Player._wasSpawned = true;
         }
@@ -71,7 +77,7 @@ internal static class PlayerNetworking
 
         private static void OnPlayerInfo(in IncomingPacket packet, PacketHandleResult result)
         {
-            var reader = packet.GetReader();
+            BinaryReader reader = packet.GetReader();
 
             reader.BaseStream.Position += 3;
             string name = reader.ReadString();
@@ -105,10 +111,10 @@ internal static class PlayerNetworking
                 return;
             }
 
-            var reader = packet.GetReader();
+            BinaryReader reader = packet.GetReader();
 
             string uuid = reader.ReadString();
-            if (Guid.TryParse(uuid, out var guidResult) == false)
+            if (!Guid.TryParse(uuid, out _))
             {
                 packet.Player.Kick(Localization.Get("network.invalidUUID", packet.Player.Language));
                 result.Ignore(Localization.Get("network.invalidUUID", "en"));
@@ -130,8 +136,8 @@ internal static class PlayerNetworking
         {
             Main.ServerSideCharacter = AmethystSession.Profile.SSCMode;
 
-            var writer = new PacketWriter().SetType(7);
-            var binaryWriter = writer.writer;
+            PacketWriter writer = new PacketWriter().SetType(7);
+            BinaryWriter binaryWriter = writer.writer;
 
             binaryWriter.Write((int)Main.time);
             BitsByte bitsByte5 = (byte)0;
@@ -306,11 +312,16 @@ internal static class PlayerNetworking
             }
             binaryWriter.Write(Sandstorm.IntendedSeverity);
 
-            var ignoreClient = packet.IgnoreClient;
-            var bytes = writer.BuildPacket();
+            int ignoreClient = packet.IgnoreClient;
+            byte[] bytes = writer.BuildPacket();
             if (packet.RemoteClient != -1)
+            {
                 PlayerManager.Tracker[packet.RemoteClient].Socket.SendPacket(bytes);
-            else PlayerUtilities.BroadcastPacket(bytes, p => p.Index != ignoreClient);
+            }
+            else
+            {
+                PlayerUtilities.BroadcastPacket(bytes, p => p.Index != ignoreClient);
+            }
         }
     }
 
@@ -329,7 +340,7 @@ internal static class PlayerNetworking
                 return;
             }
 
-            var reader = packet.GetReader();
+            BinaryReader reader = packet.GetReader();
 
             string command = reader.ReadString();
             string commandAdditional = reader.ReadString();

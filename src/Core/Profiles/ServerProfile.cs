@@ -20,9 +20,9 @@ public sealed class ServerProfile
 
     public bool WorldRecreate { get; set; }
 
-    public int MaxPlayers { get; set; }
+    public int MaxPlayers { get; set; } = 1;
 
-    public int Port { get; set; }
+    public int Port { get; set; } = 7777;
 
     public string DefaultLanguage { get; set; }
 

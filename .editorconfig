@@ -92,29 +92,45 @@ csharp_style_prefer_switch_expression = true:suggestion
 csharp_style_prefer_explicit_object_creation = true:suggestion
 dotnet_style_readonly_field = true:suggestion
 
+# Performance-critical code analysis rules
+# ---------------------------------------
+# Prefer raw loops/collections over LINQ
+dotnet_diagnostic.CA1826.severity = suggestion
+dotnet_diagnostic.CA1827.severity = suggestion
+dotnet_diagnostic.CA1829.severity = suggestion
+dotnet_diagnostic.CA1831.severity = suggestion
+dotnet_diagnostic.CA2013.severity = suggestion
+
+# Avoid allocations
+dotnet_diagnostic.CA1309.severity = suggestion
+dotnet_diagnostic.CA1310.severity = suggestion
+dotnet_diagnostic.CA1834.severity = suggestion
+dotnet_diagnostic.CA1835.severity = suggestion
+
+# Optimize method usage
+dotnet_diagnostic.CA1822.severity = suggestion
+dotnet_diagnostic.CA1812.severity = suggestion
+
 # Expression-level preferences
-dotnet_style_object_initializer = true:suggestion
-dotnet_style_collection_initializer = true:suggestion
+dotnet_style_object_initializer = false:suggestion
+dotnet_style_collection_initializer = false:suggestion
 dotnet_style_explicit_tuple_names = true:suggestion
 dotnet_style_coalesce_expression = true:suggestion
-dotnet_style_null_propagation = true:suggestion
+dotnet_style_null_propagation = false:suggestion
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
 dotnet_style_prefer_inferred_tuple_names = true:suggestion
 dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
-dotnet_style_prefer_auto_properties = true:suggestion
+dotnet_style_prefer_auto_properties = false:suggestion  # [!mod] Allow manual backing fields for optimizations
 dotnet_style_prefer_conditional_expression_over_assignment = true:silent
 dotnet_style_prefer_conditional_expression_over_return = true:silent
 csharp_prefer_simple_default_expression = true:suggestion
 
-# Expression-bodied members
-csharp_style_expression_bodied_methods = true:silent
-csharp_style_expression_bodied_constructors = true:silent
-csharp_style_expression_bodied_operators = true:silent
-csharp_style_expression_bodied_properties = true:silent
-csharp_style_expression_bodied_indexers = true:silent
-csharp_style_expression_bodied_accessors = true:silent
-csharp_style_expression_bodied_lambdas = true:silent
-csharp_style_expression_bodied_local_functions = true:silent
+# Expression-bodied members (disable for clarity in critical code)
+csharp_style_expression_bodied_methods = false:silent
+csharp_style_expression_bodied_constructors = false:silent
+csharp_style_expression_bodied_properties = false:silent
+csharp_style_expression_bodied_indexers = false:silent
+csharp_style_expression_bodied_accessors = false:silent
 
 # Pattern matching
 csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
@@ -122,15 +138,15 @@ csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
 csharp_style_inlined_variable_declaration = true:suggestion
 
 # Null checking preferences
-csharp_style_throw_expression = true:suggestion
+csharp_style_throw_expression = false:suggestion  # [!mod] Prefer explicit `throw` statements for stack clarity
 csharp_style_conditional_delegate_call = true:suggestion
 
-# Modern C# features
+# Modern C# features (optimized)
 csharp_style_prefer_index_operator = true:suggestion
-csharp_style_prefer_range_operator = true:suggestion
+csharp_style_prefer_range_operator = false:suggestion
 csharp_style_pattern_local_over_anonymous_function = true:suggestion
 
-# Space preferences
+# Space preferences (unchanged)
 csharp_space_after_cast = false
 csharp_space_after_colon_in_inheritance_clause = true
 csharp_space_after_comma = true

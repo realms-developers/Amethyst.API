@@ -1,14 +1,8 @@
 namespace Amethyst.Extensions.Modules;
 
 [AttributeUsage(AttributeTargets.Class)]
-public sealed class AmethystModuleAttribute : Attribute
+public sealed class AmethystModuleAttribute(string name, string[]? dependencies = null) : Attribute
 {
-    public AmethystModuleAttribute(string name, string[]? dependencies = null)
-    {
-        Name = name;
-        Dependencies = dependencies;
-    }
-
-    public readonly string Name;
-    public readonly string[]? Dependencies;
+    public string Name { get; } = name;
+    public string[]? Dependencies { get; } = dependencies;
 }

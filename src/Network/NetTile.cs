@@ -13,25 +13,37 @@ public struct NetTile
         Active = bitsBytes[0];
 
         if (bitsBytes[4])
+        {
             Wire = true;
+        }
 
         if (bitsBytes[5])
+        {
             HalfBrick = true;
+        }
 
         if (bitsBytes[6])
+        {
             Actuator = true;
+        }
 
         if (bitsBytes[7])
+        {
             Inactive = true;
+        }
 
         Wire2 = bitsBytes2[0];
         Wire3 = bitsBytes2[1];
 
         if (bitsBytes2[2])
+        {
             TileColor = reader.ReadByte();
-        
+        }
+
         if (bitsBytes2[3])
+        {
             WallColor = reader.ReadByte();
+        }
 
         if (Active)
         {
@@ -43,13 +55,19 @@ public struct NetTile
             }
 
             if (bitsBytes2[4])
+            {
                 Slope++;
+            }
 
             if (bitsBytes2[5])
+            {
                 Slope += 2;
+            }
 
             if (bitsBytes2[6])
+            {
                 Slope += 4;
+            }
         }
 
         if (bitsBytes[3])
@@ -64,14 +82,17 @@ public struct NetTile
         FullbrightWall = bitsBytes3[1];
         Invisible = bitsBytes3[2];
         InvisibleWall = bitsBytes3[3];
-        
-        if (bitsBytes[2]) Wall = reader.ReadUInt16();
 
+        if (bitsBytes[2])
+        {
+            Wall = reader.ReadUInt16();
+        }
     }
-    
-    public void Serialize(ref PacketWriter packet)
+
+    public readonly void Serialize(ref PacketWriter packet)
     {
-        BitsByte bitsByte1 = new BitsByte();
+        BitsByte bitsByte1 = new();
+
         bitsByte1[0] = Active;
         bitsByte1[2] = Wall > 0;
         bitsByte1[3] = Liquid > 0;
@@ -80,7 +101,8 @@ public struct NetTile
         bitsByte1[6] = Actuator;
         bitsByte1[7] = Inactive;
 
-        BitsByte bitsByte2 = new BitsByte();
+        BitsByte bitsByte2 = new();
+
         bitsByte2[0] = Wire2;
         bitsByte2[1] = Wire3;
         bitsByte2[2] = Active && TileColor > 0;
@@ -88,7 +110,8 @@ public struct NetTile
         bitsByte2 = (byte)((byte)bitsByte2 + (byte)(Slope << 4));
         bitsByte2[7] = Wire4;
 
-        BitsByte bitsByte3 = new BitsByte();
+        BitsByte bitsByte3 = new();
+
         bitsByte3[0] = Fullbright;
         bitsByte3[1] = FullbrightWall;
         bitsByte3[2] = Invisible;
@@ -99,10 +122,14 @@ public struct NetTile
             .PackByte((byte)bitsByte3);
 
         if (bitsByte2[2])
+        {
             packet = packet.PackByte((byte)TileColor);
+        }
 
         if (bitsByte2[3])
+        {
             packet = packet.PackByte((byte)WallColor);
+        }
 
         if (Active)
         {
@@ -115,7 +142,9 @@ public struct NetTile
         }
 
         if (Wall > 0)
+        {
             packet = packet.PackUInt16(Wall);
+        }
 
         if (Liquid > 0)
         {
@@ -124,25 +153,25 @@ public struct NetTile
         }
     }
 
-    public bool Active;
-    public ushort TileID;
-    public short FrameX;
-    public short FrameY;
-    public ushort Wall;
-    public byte Liquid;
-    public byte LiquidID;
-    public bool Wire;
-    public bool Wire2;
-    public bool Wire3;
-    public bool Wire4;
-    public bool Inactive;
-    public bool HalfBrick;
-    public bool Actuator;
-    public byte TileColor;
-    public byte WallColor;
-    public byte Slope;
-    public bool Fullbright;
-    public bool FullbrightWall;
-    public bool Invisible;
-    public bool InvisibleWall;
+    public bool Active { get; set; }
+    public ushort TileID { get; set; }
+    public short FrameX { get; set; }
+    public short FrameY { get; set; }
+    public ushort Wall { get; set; }
+    public byte Liquid { get; set; }
+    public byte LiquidID { get; set; }
+    public bool Wire { get; set; }
+    public bool Wire2 { get; set; }
+    public bool Wire3 { get; set; }
+    public bool Wire4 { get; set; }
+    public bool Inactive { get; set; }
+    public bool HalfBrick { get; set; }
+    public bool Actuator { get; set; }
+    public byte TileColor { get; set; }
+    public byte WallColor { get; set; }
+    public byte Slope { get; set; }
+    public bool Fullbright { get; set; }
+    public bool FullbrightWall { get; set; }
+    public bool Invisible { get; set; }
+    public bool InvisibleWall { get; set; }
 }

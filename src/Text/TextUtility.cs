@@ -1,57 +1,56 @@
 using System.Globalization;
+using System.Text;
 
 namespace Amethyst.Text;
 
 public static class TextUtility
 {
-    const int Minutes = 60;
-    const int Hours = 60 * 60;
-    const int Days = 60 * 60 * 24;
-    const int Months = 60 * 60 * 24 * 30;
-    const int Years = 60 * 60 * 24 * 365;
+    private const int _minutes = 60;
+    private const int _hours = 60 * _minutes;
+    private const int _days = 24 * _hours;
+    private const int _months = 30 * _days;
+    private const int _years = 365 * _days;
 
-    public static int ParseToSeconds(string from)
+    private static readonly Dictionary<char, int> TimeUnits = new()
+    {
+        ['s'] = 1,
+        ['с'] = 1,          // seconds
+        ['m'] = _minutes,
+        ['м'] = _minutes, // minutes
+        ['h'] = _hours,
+        ['ч'] = _hours,    // hours
+        ['d'] = _days,
+        ['д'] = _days,      // days
+        ['M'] = _months,
+        ['М'] = _months,  // months
+        ['y'] = _years,
+        ['г'] = _years     // years
+    };
+
+    public static int ParseToSeconds(string input)
     {
         int time = 0;
+        StringBuilder currentNumber = new();
 
-        string numbers = "";
-        foreach (char c in from)
+        foreach (char c in input)
         {
             if (char.IsDigit(c))
             {
-                numbers += c;
+                currentNumber.Append(c);
                 continue;
             }
 
-            switch (c)
+            if (TimeUnits.TryGetValue(c, out int multiplier))
             {
-                case 's': 
-                case 'с': 
-                    time += Convert.ToInt32(numbers, CultureInfo.InvariantCulture); 
-                    break;
-                case 'm': 
-                case 'м': 
-                    time += Convert.ToInt32(numbers, CultureInfo.InvariantCulture) * Minutes; 
-                    break;
-                case 'h': 
-                case 'ч': 
-                    time += Convert.ToInt32(numbers, CultureInfo.InvariantCulture) * Hours; 
-                    break;
-                case 'd': 
-                case 'д': 
-                    time += Convert.ToInt32(numbers, CultureInfo.InvariantCulture) * Days; 
-                    break;
-                case 'M': 
-                case 'М': 
-                    time += Convert.ToInt32(numbers, CultureInfo.InvariantCulture) * Months; 
-                    break;
-                case 'y': 
-                case 'г': 
-                    time += Convert.ToInt32(numbers, CultureInfo.InvariantCulture) * Years; 
-                    break;
+                if (currentNumber.Length == 0)
+                {
+                    continue;
+                }
+
+                int value = int.Parse(currentNumber.ToString(), CultureInfo.InvariantCulture);
+                time += value * multiplier;
+                currentNumber.Clear();
             }
-            
-            numbers = ""; 
         }
 
         return time;
@@ -59,30 +58,45 @@ public static class TextUtility
 
     public static List<string> SplitArguments(string text)
     {
-        List<string> args = new List<string>();
-        args.Add("");
-        int index = 0;
+        List<string> args = [string.Empty];
+        int currentArg = 0;
+        bool inQuotes = false;
+        bool escapeNext = false;
 
-        bool blockSpace = false;
-        bool ignoreFormat = false;
         foreach (char c in text)
         {
-            if (c == '"' && !ignoreFormat)
+            if (escapeNext)
             {
-                blockSpace = !blockSpace;
-                ignoreFormat = false;
+                args[currentArg] += c;
+                escapeNext = false;
+                continue;
             }
-            else if (c == ' ' && !ignoreFormat && !blockSpace)
+
+            switch (c)
             {
-                args.Add("");
-                index++;
-                ignoreFormat = false;
+                case '\\':
+                    escapeNext = true;
+                    break;
+
+                case '"':
+                    inQuotes = !inQuotes;
+                    break;
+
+                case ' ' when !inQuotes:
+                    args.Add(string.Empty);
+                    currentArg++;
+                    break;
+
+                default:
+                    args[currentArg] += c;
+                    break;
             }
-            else if (c == '\\' && !ignoreFormat) ignoreFormat = true;
-            else
-            {
-                args[index] += c;
-            }
+        }
+
+        // Remove empty trailing argument if created by trailing space
+        if (args.Count > 1 && args[^1].Length == 0)
+        {
+            args.RemoveAt(args.Count - 1);
         }
 
         return args;

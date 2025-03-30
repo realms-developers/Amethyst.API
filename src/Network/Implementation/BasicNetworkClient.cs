@@ -12,7 +12,7 @@ internal sealed class BasicNetworkClient : INetworkClient
         _socket = socket;
     }
 
-    private ISocket _socket;
+    private readonly ISocket _socket;
     private bool _isFrozen;
 
     public int PlayerIndex { get; }
@@ -25,10 +25,14 @@ internal sealed class BasicNetworkClient : INetworkClient
 
     public void Disconnect(string reason)
     {
-        var packet = new PacketWriter().SetType(2).PackByte(0).PackString(reason);
+        PacketWriter packet = new PacketWriter()
+            .SetType(2)
+            .PackByte(0)
+            .PackString(reason);
+
         SendPacket(packet.BuildPacket());
     }
-    
+
     public void SendPacket(byte[] packet)
     {
         SendPacket(packet, 0, packet.Length);
@@ -36,7 +40,7 @@ internal sealed class BasicNetworkClient : INetworkClient
 
     public void SendPacket(byte[] packet, int start, int length)
     {
-        if (_socket.IsConnected() && _isFrozen == false)
+        if (_socket.IsConnected() && !_isFrozen)
         {
             _socket.AsyncSend(packet, start, length, Netplay.Clients[PlayerIndex].ServerWriteCallBack);
         }
