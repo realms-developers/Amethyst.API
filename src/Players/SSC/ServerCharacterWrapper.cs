@@ -2,7 +2,6 @@ using Amethyst.Network;
 using Amethyst.Network.Packets;
 using Amethyst.Players.SSC.Enums;
 using Amethyst.Players.SSC.Interfaces;
-using MongoDB.Bson;
 using Terraria;
 
 namespace Amethyst.Players.SSC;
