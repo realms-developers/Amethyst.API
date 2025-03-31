@@ -1,9 +1,14 @@
 ![Amethyst Banner](https://github.com/user-attachments/assets/72706bdc-f722-48b4-a3b2-80006ec199be)
 
+<!--
+[Русский](README_ru.md)
+-->
+
 [![.NET CI](https://github.com/realms-developers/Amethyst.API/actions/workflows/dotnet.yml/badge.svg)](https://github.com/realms-developers/Amethyst.API/actions/workflows/dotnet.yml)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Amethyst.Server)](https://www.nuget.org/packages/Amethyst.Server)
 [![NuGet Version](https://img.shields.io/nuget/v/Amethyst.Server)](https://www.nuget.org/packages/Amethyst.Server)
 [![GitHub License](https://img.shields.io/github/license/realms-developers/Amethyst.API)](LICENSE)
+
 
 **Amethyst** is a modern, high-performance API for Terraria servers, offering complete control and customization over every aspect of your server. Built for developers who demand flexibility and power.
 
@@ -32,21 +37,33 @@
 
 ## ⚙️ Configuration
 
-Run multiple server instances with isolated configurations using profiles. All data is stored in `/data/<profile>`.
+Run multiple server instances with isolated configurations using profiles.
 
-Create and run a profile:
+- **Isolated Data**: Each profile stores configurations, plugins, and data in `/data/<profile>`, ensuring complete separation between server instances.
+- **Simplified Updates**: Update core components, plugins, or modules once, and all profiles inherit the changes—no need to update each server individually.
+- **Reduced Clutter**: Avoid scattered files by keeping all profile data organized in dedicated directories.
 
-```bash
-./start.sh -profile MyAwesomeServer
-```
+Amethyst dynamically loads configurations based on the profile name. For example, a profile named `MyAwesomeServer` uses the directory `/data/MyAwesomeServer/`.
+
+To create and run a profile, use the `-profile` argument followed by your desired profile name:
+   - **Windows**:
+     ```bash
+     start.bat -profile MyAwesomeServer
+     ```
+   - **Linux**:
+     ```bash
+     ./start.sh -profile MyAwesomeServer
+     ```
+
+The server will automatically generate the `/data/<profile>` directory and populate it with default configurations on first launch.
 
 ## 🧩 Extending Amethyst
 
 ### Plugin vs Module
-|               | Plugins                        | Modules                      |
+|               | Plugins                       | Modules                     |
 |---------------|-------------------------------|-----------------------------|
-| **Loading**   | Dynamic (can be unloaded)      | Static (startup only)       |
-| **Use Case**  | Temporary features             | Core functionality          |
+| **Loading**   | Dynamic (can be unloaded)     | Static (startup only)       |
+| **Use Case**  | Temporary features            | Core functionality          |
 | **Location**  | `/extensions/plugins/`        | `/extensions/modules/`      |
 
 ### Development Guide
@@ -68,13 +85,14 @@ Create and run a profile:
 
 3. Build and deploy:
    ```bash
-   dotnet publish --norestore
+   dotnet build -c Release
    ```
    Copy the output to the appropriate extensions folder.
 
 4. Enable in-game:
    ```
    /plugins setallow MyPlugin.dll
+   /plugins reload
    ```
 
 ---
