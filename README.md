@@ -1,8 +1,6 @@
 ![Amethyst Banner](https://github.com/user-attachments/assets/72706bdc-f722-48b4-a3b2-80006ec199be)
 
-<!--
 [Русский](README_ru.md)
--->
 
 [![.NET CI](https://github.com/realms-developers/Amethyst.API/actions/workflows/dotnet.yml/badge.svg)](https://github.com/realms-developers/Amethyst.API/actions/workflows/dotnet.yml)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Amethyst.Server)](https://www.nuget.org/packages/Amethyst.Server)
