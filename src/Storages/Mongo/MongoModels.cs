@@ -19,8 +19,6 @@ public sealed class MongoModels<TModel> where TModel : DataModel
 
     public TModel? Find(string name) => Find(m => m.Name == name);
 
-    public TModel? Find(ObjectId id) => Find(m => m.Id == id);
-
     public TModel? Find(Expression<Func<TModel, bool>> predicate)
     {
         IFindFluent<TModel, TModel> found = InternalCollection.Find(predicate);
@@ -43,7 +41,7 @@ public sealed class MongoModels<TModel> where TModel : DataModel
     {
         if (Find(model.Name) != null)
         {
-            InternalCollection.ReplaceOne(m => m.Id == model.Id || m.Name == model.Name, model);
+            InternalCollection.ReplaceOne(m => m.Name == model.Name, model);
         }
         else
         {
