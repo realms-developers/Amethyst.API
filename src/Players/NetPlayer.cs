@@ -145,16 +145,16 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         => SendMessage($"[c/303030:{Localization.Get("amethyst.serverPrefix", Language)}:] {text}", color);
 
     public void ReplyError(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), new Color(201, 71, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), Color.Red);
 
     public void ReplyInfo(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), new Color(191, 201, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), Color.Yellow);
 
     public void ReplySuccess(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), new Color(71, 201, 75));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), Color.Green);
 
     public void ReplyWarning(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), new Color(201, 125, 71));
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), Color.Orange);
 
     public void ReplyPage(PagesCollection pages, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
         => pages.SendPage(this, header, footer, footerArgs, showPageName, page);

@@ -10,13 +10,13 @@
 
 **Amethyst** is a modern, high-performance API for Terraria servers, offering complete control and customization over every aspect of your server. Built for developers who demand flexibility and power.
 
-<!--
-📚 [Read the Documentation](http://example.com/)
--->
+📚 [Read the Documentation](https://realms-developers.github.io/Amethyst.Documentation/)
 
 ---
 
 ## 🛠️ Installation
+
+**Prerequisite**: MongoDB must be installed on your machine. [Download MongoDB](https://www.mongodb.com/try/download/community).
 
 1. Clone the repository:
    ```bash
@@ -88,10 +88,15 @@ The server will automatically generate the `/data/<profile>` directory and popul
    Copy the output to the appropriate extensions folder.
 
 4. Enable in-game:
-   ```
-   /plugins setallow MyPlugin.dll
-   /plugins reload
-   ```
+   - **Plugin**:
+     ```bash
+     /plugins setallow MyPlugin.dll
+     /plugins reload
+     ```
+   - **Module**:
+     ```bash
+     /modules setallow MyModule.dll
+     ```
 
 ---
 
