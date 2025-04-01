@@ -144,17 +144,22 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
     public void ReplyMessage(string text, Color color)
         => SendMessage($"[c/303030:{Localization.Get("amethyst.serverPrefix", Language)}:] {text}", color);
 
+    private static readonly Color ReplyErrorColor = new Color(201, 71, 71);
+    private static readonly Color ReplyInfoColor = new Color(191, 201, 71);
+    private static readonly Color ReplySuccessColor = new Color(71, 201, 75);
+    private static readonly Color ReplyWarningColor = new Color(201, 125, 71);
+
     public void ReplyError(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), Color.Red);
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), ReplyErrorColor);
 
     public void ReplyInfo(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), Color.Yellow);
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), ReplyInfoColor);
 
     public void ReplySuccess(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), Color.Green);
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), ReplySuccessColor);
 
     public void ReplyWarning(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), Color.Orange);
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), ReplyWarningColor);
 
     public void ReplyPage(PagesCollection pages, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
         => pages.SendPage(this, header, footer, footerArgs, showPageName, page);
