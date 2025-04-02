@@ -14,6 +14,11 @@ namespace Amethyst.Players;
 
 public sealed class NetPlayer : ICommandSender, IPermissionable
 {
+    private static readonly Color _replyErrorColor = new(201, 71, 71);
+    private static readonly Color _replyInfoColor = new(191, 201, 71);
+    private static readonly Color _replySuccessColor = new(71, 201, 75);
+    private static readonly Color _replyWarningColor = new(201, 125, 71);
+
     internal NetPlayer(int index)
     {
         Index = index;
@@ -144,22 +149,17 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
     public void ReplyMessage(string text, Color color)
         => SendMessage($"[c/303030:{Localization.Get("amethyst.serverPrefix", Language)}:] {text}", color);
 
-    private static readonly Color ReplyErrorColor = new Color(201, 71, 71);
-    private static readonly Color ReplyInfoColor = new Color(191, 201, 71);
-    private static readonly Color ReplySuccessColor = new Color(71, 201, 75);
-    private static readonly Color ReplyWarningColor = new Color(201, 125, 71);
-
     public void ReplyError(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), ReplyErrorColor);
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), _replyErrorColor);
 
     public void ReplyInfo(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), ReplyInfoColor);
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), _replyInfoColor);
 
     public void ReplySuccess(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), ReplySuccessColor);
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), _replySuccessColor);
 
     public void ReplyWarning(string text, params object[] args)
-        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), ReplyWarningColor);
+        => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), _replyWarningColor);
 
     public void ReplyPage(PagesCollection pages, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
         => pages.SendPage(this, header, footer, footerArgs, showPageName, page);
