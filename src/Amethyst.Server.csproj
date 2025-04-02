@@ -36,9 +36,9 @@
       <HintPath>..\deps\FNA.dll</HintPath>
     </Reference>
 
-    <!-- <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="MonoMod.RuntimeDetour.HookGen" Version="22.7.31.1" />
-    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.0.2" /> -->
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.2.3" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
