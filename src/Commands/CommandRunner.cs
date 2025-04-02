@@ -93,7 +93,35 @@ public sealed class CommandRunner
             string input = arguments[userArgIndex];
             string? paramSyntax = GetParameterSyntax(userArgIndex);
 
-            ParseResult result = ParsingNode.TryParse(p.ParameterType, sender, input);
+            ArgumentParserAttribute? parserAttr = p.GetCustomAttribute<ArgumentParserAttribute>();
+            ParseResult result;
+
+            if (parserAttr != null)
+            {
+                // Retrieve the custom parser method
+                MethodInfo? parseMethod = parserAttr.ParserType.GetMethod(
+                    parserAttr.MethodName,
+                    BindingFlags.Public | BindingFlags.Static,
+                    null,
+                    [typeof(ICommandSender), typeof(string)],
+                    null);
+
+                if (parseMethod == null)
+                {
+                    sender.ReplyError(Localization.Get("commands.customParserNotFound", sender.Language));
+                    return false;
+                }
+
+                ArgumentParser customParser = (ArgumentParser)Delegate.CreateDelegate(typeof(ArgumentParser), parseMethod);
+
+                result = customParser(sender, input);
+            }
+            else
+            {
+                // Use default type-based parser
+                result = ParsingNode.TryParse(p.ParameterType, sender, input);
+            }
+
             if (!HandleParseResult(result, sender, paramSyntax, ref invokeArgs[i]))
             {
                 return false;
