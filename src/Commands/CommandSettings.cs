@@ -4,17 +4,17 @@ namespace Amethyst.Commands;
 public enum CommandSettings
 {
     /// <summary>
-    /// Command with that setting can be executed only in game.
+    /// Executed only in-game.
     /// </summary>
     IngameOnly = 1,
 
     /// <summary>
-    /// Command with that setting does not log into console.
+    /// Suppress execution logging.
     /// </summary>
     HideLog = 2,
 
     /// <summary>
-    /// Command with that setting does not shows in '/help commands'
+    /// Exclude from help listings.
     /// </summary>
     Hidden = 4
 }
