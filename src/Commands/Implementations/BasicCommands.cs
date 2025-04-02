@@ -25,7 +25,7 @@ public static class BasicCommands
                     .Where(whereExpression)
                     .Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")}"));
 
-            ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.availableCommands", ctx.Sender.Language), null, null, false, page);
+            ctx.Sender.ReplyPage(pages, "commands.text.availableCommands", null, null, false, page);
         }
         else
         {
@@ -34,7 +34,7 @@ public static class BasicCommands
                     .Select(p =>
                     $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")} - {Localization.Get(p.Data.Description, ctx.Sender.Language)}"));
 
-            ctx.Sender.ReplyPage(pages, Localization.Get("commands.text.availableCommands", ctx.Sender.Language), null, null, false, page);
+            ctx.Sender.ReplyPage(pages, "commands.text.availableCommands", null, null, false, page);
         }
     }
 
@@ -71,7 +71,7 @@ public static class BasicCommands
         if (exactMatch != null)
         {
             ctx.Sender.Language = exactMatch;
-            ctx.Sender.ReplySuccess(Localization.Get("commands.lang.success", exactMatch));
+            ctx.Sender.ReplySuccess("commands.lang.success");
             return;
         }
 
@@ -83,7 +83,7 @@ public static class BasicCommands
         if (languageMatch != null)
         {
             ctx.Sender.Language = languageMatch;
-            ctx.Sender.ReplySuccess(Localization.Get("commands.lang.success", languageMatch));
+            ctx.Sender.ReplySuccess("commands.lang.success");
             return;
         }
 
@@ -96,12 +96,12 @@ public static class BasicCommands
         if (fallbackMatch != null)
         {
             ctx.Sender.Language = fallbackMatch;
-            ctx.Sender.ReplySuccess(Localization.Get("commands.lang.success", fallbackMatch));
+            ctx.Sender.ReplySuccess("commands.lang.success");
             return;
         }
 
         // No matches found
-        ctx.Sender.ReplyError(Localization.Get("commands.lang.invalid_culture", ctx.Sender.Language));
+        ctx.Sender.ReplyError("commands.lang.invalid_culture");
 
         Languages(ctx);
     }
@@ -111,7 +111,7 @@ public static class BasicCommands
     {
         IReadOnlyCollection<string> cultures = Localization.LoadedCultures;
 
-        ctx.Sender.ReplySuccess(Localization.Get("commands.langs", ctx.Sender.Language));
+        ctx.Sender.ReplySuccess("commands.langs");
         ctx.Sender.ReplyInfo(string.Join(", ", cultures));
     }
 

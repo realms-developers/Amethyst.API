@@ -9,11 +9,16 @@ public static class DebugCommands
     [CommandsSettings(CommandSettings.IngameOnly)]
     public static void GrantRoot(CommandInvokeContext ctx)
     {
-        NetPlayer plr = (ctx.Sender as NetPlayer)!;
+        if (ctx.Sender is not NetPlayer plr)
+        {
+            ctx.Sender.ReplyError("commands.commandFailed");
+
+            return;
+        }
 
         plr.IsRootGranted = !plr.IsRootGranted;
 
-        ctx.Sender.ReplyInfo(plr.IsRootGranted ? Localization.Get("commands.text.rootPermissionsGranted", ctx.Sender.Language) :
-            Localization.Get("commands.text.rootPermissionsRemoved", ctx.Sender.Language));
+        ctx.Sender.ReplyInfo(
+            plr.IsRootGranted ? "commands.text.rootPermissionsGranted" : "commands.text.rootPermissionsRemoved");
     }
 }

@@ -95,7 +95,9 @@ public sealed class CommandRunner
 
             ParseResult result = ParsingNode.TryParse(p.ParameterType, sender, input);
             if (!HandleParseResult(result, sender, paramSyntax, ref invokeArgs[i]))
+            {
                 return false;
+            }
         }
 
         return true;
