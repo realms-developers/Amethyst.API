@@ -53,7 +53,7 @@ public sealed class CommandRunner
     {
         if (IsDisabled)
         {
-            ctx.Sender.ReplyError(Localization.Get("commands.commandIsDisabled", ctx.Sender.Language));
+            ctx.Sender.ReplyError("commands.commandIsDisabled");
             return;
         }
 
@@ -85,7 +85,7 @@ public sealed class CommandRunner
                     continue;
                 }
 
-                sender.ReplyError(Localization.Get("commands.notEnoughArguments", sender.Language));
+                sender.ReplyError("commands.notEnoughArguments");
                 ShowSyntaxHint(sender);
                 return false;
             }
@@ -108,7 +108,7 @@ public sealed class CommandRunner
 
                 if (parseMethod == null)
                 {
-                    sender.ReplyError(Localization.Get("commands.customParserNotFound", sender.Language));
+                    sender.ReplyError("commands.customParserNotFound");
                     return false;
                 }
 
@@ -142,7 +142,7 @@ public sealed class CommandRunner
     {
         if (Data.Syntax != null)
         {
-            sender.ReplyError(Localization.Get("commands.validSyntaxIs", sender.Language),
+            sender.ReplyError("commands.validSyntaxIs",
                 Data.Name, string.Join(' ', Data.Syntax));
         }
     }
@@ -157,24 +157,24 @@ public sealed class CommandRunner
                 break;
 
             case ParseResultType.EmptyArgument:
-                sender.ReplyError(Localization.Get("commands.emptyArgument", sender.Language), paramSyntax!);
+                sender.ReplyError("commands.emptyArgument", paramSyntax!);
                 return false;
 
             case ParseResultType.TooManyVariants:
                 sender.ReplyPage(PagesCollection.CreateFromList(result.Variants!, 120, 10),
-                    Localization.Get("commands.tooManyVariants", sender.Language), null, null, false, 0);
+                    "commands.tooManyVariants", null, null, false, 0);
                 return false;
 
             case ParseResultType.ObjectNotFound:
-                sender.ReplyError(Localization.Get("commands.objectNotFound", sender.Language));
+                sender.ReplyError("commands.objectNotFound");
                 return false;
 
             case ParseResultType.NoParser:
-                sender.ReplyError(Localization.Get("commands.noParser", sender.Language));
+                sender.ReplyError("commands.noParser");
                 return false;
 
             default:
-                sender.ReplyError(Localization.Get("commands.invalidSyntax", sender.Language));
+                sender.ReplyError("commands.invalidSyntax");
                 return false;
         }
 
