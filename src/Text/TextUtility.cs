@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Amethyst.Text;
 
@@ -93,12 +94,26 @@ public static class TextUtility
             }
         }
 
-        // Remove empty trailing argument if created by trailing space
-        if (args.Count > 1 && args[^1].Length == 0)
-        {
-            args.RemoveAt(args.Count - 1);
-        }
+        args.RemoveAll(string.IsNullOrWhiteSpace);
 
         return args;
     }
+
+    public static string RemoveColorTags(this StringBuilder builder) => builder.ToString().RemoveColorTags();
+    public static string RemoveColorTags(this string text)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        int num = 0;
+        foreach (object obj in ColorTagRegex.Matches(text))
+        {
+            Match match = (Match)obj;
+            stringBuilder.Append(text.AsSpan(num, match.Index - num));
+            stringBuilder.Append(match.Groups["text"].Value);
+            num = match.Index + match.Length;
+        }
+        stringBuilder.Append(text.AsSpan(num, text.Length - num));
+        return stringBuilder.ToString();
+    }
+    internal static readonly Regex ColorTagRegex = new Regex("(?<!\\\\)\\[c(olor)?(\\/(?<options>[^:]+))?:(?<text>.+?)(?<!\\\\)\\]", RegexOptions.Compiled);
+
 }

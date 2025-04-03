@@ -23,12 +23,12 @@ public sealed class ConsoleSender : ICommandSender
 
     public void ReplyError(string text, params object?[] args)
     {
-        AmethystLog.System!.Error("Console.Commands", string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args));
+        AmethystLog.System!.Error("Console.Commands", string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args).RemoveColorTags());
     }
 
     public void ReplyInfo(string text, params object?[] args)
     {
-        AmethystLog.System!.Info("Console.Commands", string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args));
+        AmethystLog.System!.Info("Console.Commands", string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args).RemoveColorTags());
     }
 
     public void ReplyPage(PagesCollection pages, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
@@ -36,11 +36,11 @@ public sealed class ConsoleSender : ICommandSender
 
     public void ReplySuccess(string text, params object?[] args)
     {
-        AmethystLog.System!.Info("Console.Commands", string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args));
+        AmethystLog.System!.Info("Console.Commands", string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args).RemoveColorTags());
     }
 
     public void ReplyWarning(string text, params object?[] args)
     {
-        AmethystLog.System!.Warning("Console.Commands", string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args));
+        AmethystLog.System!.Warning("Console.Commands", string.Format(CultureInfo.InvariantCulture, Localization.Get(text, AmethystSession.Profile.DefaultLanguage), args).RemoveColorTags());
     }
 }

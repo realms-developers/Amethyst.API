@@ -16,7 +16,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
     public static List<string> PageifyItems(IEnumerable<string> items, int maxLineLength = 80)
     {
-        List<string> lines = [string.Empty];
+        List<string> lines = [];
         StringBuilder currentLine = new(maxLineLength);
         List<string> itemsList = [.. items];
         int count = itemsList.Count;
@@ -26,7 +26,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
             string item = itemsList[i];
             string separator = i == count - 1 ? string.Empty : ", ";
 
-            if (currentLine.Length + item.Length + separator.Length > maxLineLength)
+            if (currentLine.RemoveColorTags().Length + item.RemoveColorTags().Length + separator.Length > maxLineLength)
             {
                 lines.Add(currentLine.ToString());
                 currentLine.Clear();
@@ -37,7 +37,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
         if (currentLine.Length > 0)
         {
-            lines[^1] = currentLine.ToString();
+            lines.Add(currentLine.ToString());
         }
 
         return lines;

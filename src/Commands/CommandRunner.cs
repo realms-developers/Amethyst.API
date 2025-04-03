@@ -1,6 +1,7 @@
 using System.Reflection;
 using Amethyst.Commands.Parsing;
 using Amethyst.Text;
+using MonoMod;
 
 namespace Amethyst.Commands;
 
@@ -74,6 +75,10 @@ public sealed class CommandRunner
 
         for (int i = 1; i < _methodParameters.Length; i++)
         {
+            Console.WriteLine($"Handling: {Data.Name}:");
+            Console.WriteLine($"methodParams: {string.Join(", ", _methodParameters.Select(p => p.ParameterType.Name))}");
+            Console.WriteLine($"invokeParams: {string.Join(", ", arguments.Select(p => $"\"{p}\""))}");
+
             ParameterInfo p = _methodParameters[i];
             int userArgIndex = i - 1;
 
