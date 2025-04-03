@@ -11,5 +11,6 @@
     "commands.tooManyVariants": "Найдено больше одного варианта:",
     "commands.objectNotFound": "Объект не найден!",
     "commands.noParser": "Парсер не найден!",
+    "commands.invalidSyntax": "Неверный синтаксис!",
     "commands.noDebugMode": "Команда может быть выполнена только в режиме отладки."
 }
