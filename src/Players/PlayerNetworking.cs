@@ -347,7 +347,7 @@ internal static class PlayerNetworking
 
             string message = command == "Say" ? commandAdditional : $"/{command.ToLowerInvariant()} {commandAdditional}";
 
-            if (message.StartsWith('/'))
+            if (message.StartsWith(CommandsManager.CommandPrefix))
             {
                 CommandsManager.RequestRun(packet.Player, message);
                 result.Ignore("network.commandUse");

@@ -9,6 +9,8 @@ namespace Amethyst.Commands;
 
 public static class CommandsManager
 {
+    public const char CommandPrefix = '/';
+
     internal static List<CommandRunner> Commands { get; } = [];
     public static ICommandSender ConsoleSender { get; } = new ConsoleSender();
 
@@ -27,7 +29,7 @@ public static class CommandsManager
 
     public static bool RequestRun(ICommandSender sender, string text)
     {
-        string commandText = text.StartsWith('/') ? text[1..] : text;
+        string commandText = text.StartsWith(CommandPrefix) ? text[1..] : text;
         CommandRunner? runner = FindCommand(commandText);
 
         if (runner is null)
