@@ -50,6 +50,10 @@ jobs:
         run: dotnet pack Amethyst.Server.csproj -c Release --no-build -p:PackageVersion=${{ steps.version.outputs.full }}
         working-directory: ./src
 
-      - name: Push to NuGet
+      - name: Push to NuGet (GitHub)
         run: dotnet nuget push ./bin/Release/Amethyst.Server.*.nupkg --api-key ${{ secrets.GITTOKEN }} --source "https://nuget.pkg.github.com/realms-developers/index.json"
+        working-directory: ./src
+
+      - name: Push to NuGet
+        run: dotnet nuget push ./bin/Release/Amethyst.Server.*.nupkg --api-key ${{ secrets.NUGETTOKEN }} --source "https://api.nuget.org/v3/index.json"
         working-directory: ./src
