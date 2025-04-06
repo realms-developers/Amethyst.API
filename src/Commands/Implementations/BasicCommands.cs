@@ -6,6 +6,10 @@ namespace Amethyst.Commands.Implementations;
 
 public static class BasicCommands
 {
+
+    [ServerCommand(CommandType.Console, "exit", "commands.desc.shutdown", null)]
+    public static void Exit(CommandInvokeContext _) => Environment.Exit(0);
+
     [ServerCommand(CommandType.Shared, "help", "commands.desc.showCommands", null)]
     [CommandsSyntax("[page]")]
     public static void Help(CommandInvokeContext ctx, int page = 0)

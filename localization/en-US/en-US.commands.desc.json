@@ -9,5 +9,6 @@
     "commands.desc.loadPlugins": "Load plugins.",
     "commands.desc.reloadPlugins": "reload plugins.",
     "commands.desc.moduleList": "display the list of loaded modules.",
-    "commands.desc.setallowModule": "Allow or disallow a module."
+    "commands.desc.setallowModule": "Allow or disallow a module.",
+    "commands.desc.shutdown": "Stops the server."
 }
