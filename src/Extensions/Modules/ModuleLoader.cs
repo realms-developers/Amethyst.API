@@ -22,14 +22,18 @@ public static class ModuleLoader
 
         foreach (string file in files)
         {
-            if (!AmethystSession.ExtensionsConfiguration.AllowedModules.Contains(file.Split('/').Last()))
+            // Get filename once (cleaner and cross-platform)
+            string fileName = Path.GetFileName(file);
+
+            if (!AmethystSession.ExtensionsConfiguration.AllowedModules.Contains(fileName))
             {
                 continue;
             }
 
-            AmethystLog.Main.Info("ModuleLoader", $"Loading '{file}'...");
+            AmethystLog.Main.Info("ModuleLoader", $"Loading '{fileName}'..."); // Log filename instead of full path
 
-            Assembly assembly = Assembly.LoadFrom(file);
+            Assembly assembly = Assembly.LoadFrom(file); // Still needs the full path to load
+
             foreach (Type type in assembly.GetTypes())
             {
                 TryLoadModule(assembly, type);

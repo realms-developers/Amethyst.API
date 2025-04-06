@@ -15,7 +15,9 @@ internal static class AmethystKernel
         {
             string resourceName = new AssemblyName(sargs.Name).Name + ".dll";
 
-            return File.Exists($"deps/{resourceName}") ? Assembly.LoadFrom($"deps/{resourceName}") : null;
+            string path = Path.Combine("deps", resourceName);
+
+            return File.Exists(path) ? Assembly.LoadFrom(path) : null;
         };
 
         ArgumentsHandler.Initialize();
@@ -26,7 +28,6 @@ internal static class AmethystKernel
             InitializeServer(Profile);
             return;
         }
-
 
         ModernConsole.WriteLine($"$!bAmethyst Terraria Server API v{typeof(AmethystKernel).Assembly.GetName().Version}");
         ModernConsole.WriteLine($"$wAvailable commands:");
