@@ -11,9 +11,7 @@ public static class DebugCommands
     {
         if (ctx.Sender is not NetPlayer plr)
         {
-            ctx.Sender.ReplyError("commands.commandFailed");
-
-            return;
+            throw new InvalidCastException();
         }
 
         plr.IsRootGranted = !plr.IsRootGranted;

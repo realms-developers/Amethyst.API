@@ -28,23 +28,26 @@ public static class PluginLoader
 
         foreach (string file in files)
         {
-            if (!AmethystSession.ExtensionsConfiguration.AllowedPlugins.Contains(file
-                .Split('/')
-                .Last()))
+            // Get filename once using Path.GetFileName
+            string fileName = Path.GetFileName(file);
+
+            if (!AmethystSession.ExtensionsConfiguration.AllowedPlugins.Contains(fileName))
             {
+                AmethystLog.Main.Warning("PluginLoader", $"Skipped '{fileName}'.");
                 continue;
             }
 
-            AmethystLog.Main.Info("PluginLoader", $"Loading '{file}'...");
+            AmethystLog.Main.Info("PluginLoader", $"Loading '{fileName}'...");
 
-            CreateContainer(file.Split('/').Last(), File.ReadAllBytes(file))
-                    ?.Load();
+            // Reuse fileName here too
+            CreateContainer(fileName, File.ReadAllBytes(file))?.Load();
         }
     }
 
     public static PluginContainer? CreateContainer(string name, byte[] data)
     {
         Assembly? asm = TryLoadAssembly(name, data);
+
         if (asm == null)
         {
             return null;

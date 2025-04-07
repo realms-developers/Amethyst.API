@@ -34,7 +34,7 @@ public static class CommandsManager
 
         if (runner is null)
         {
-            sender.ReplyError(Localization.Get("commands.commandNotFound", sender.Language));
+            sender.ReplyError("commands.commandNotFound");
             return false;
         }
 
@@ -84,19 +84,19 @@ public static class CommandsManager
 
     private static (bool IsValid, Action HandleError) ValidateDebugMode(ICommandSender sender, CommandRunner runner) =>
         (runner.Data.Type != CommandType.Debug || AmethystSession.Profile.DebugMode,
-        () => sender.ReplyError(Localization.Get("commands.noDebugMode", sender.Language)));
+        () => sender.ReplyError("commands.noDebugMode"));
 
     private static (bool IsValid, Action HandleError) ValidateIngameOnly(ICommandSender sender, CommandRunner runner) =>
         (!runner.Data.Settings.HasFlag(CommandSettings.IngameOnly) || sender.Type == SenderType.RealPlayer,
-        () => sender.ReplyError(Localization.Get("commands.ingameOnly", sender.Language)));
+        () => sender.ReplyError("commands.ingameOnly"));
 
     private static (bool IsValid, Action HandleError) ValidatePermissions(ICommandSender sender, CommandRunner runner) =>
         (runner.Data.Permission is null || sender.HasPermission(runner.Data.Permission),
-        () => sender.ReplyError(Localization.Get("commands.noPermission", sender.Language)));
+        () => sender.ReplyError("commands.noPermission"));
 
     private static void HandleCommandException(ICommandSender sender, string text, Exception ex)
     {
-        sender.ReplyError(Localization.Get("commands.commandFailed", sender.Language));
+        sender.ReplyError("commands.commandFailed", ex.Message);
         AmethystLog.System.Critical("Commands", $"Command failure '{text}' from {sender.Name} ({sender.Type}):\n{ex}");
     }
 

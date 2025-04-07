@@ -3,7 +3,7 @@
     "commands.commandNotFound": "Command not found. Type /cmds to see a list of available commands.",
     "commands.ingameOnly": "This command can only be executed ingame.",
     "commands.noPermission": "You do not have permission to execute this command.",
-    "commands.commandFailed": "Command failed to execute.",
+    "commands.commandFailed": "Command failed to execute: {0}",
     "commands.commandIsDisabled": "Command disabled.",
     "commands.notEnoughArguments": "Invalid arguments! Use: {0}",
     "commands.validSyntaxIs": "Incorrect syntax! Use: {0}",
