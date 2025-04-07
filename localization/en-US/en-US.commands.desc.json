@@ -1,14 +1,14 @@
 {
-    "commands.desc.grantRoot": "Grants root permissions.",
-    "commands.desc.showCommands": "Shows a list of available commands.",
-    "commands.desc.showHelp": "Show basic server information.",
-    "commands.desc.pluginsList": "Display the list of loaded plugins.",
-    "commands.desc.allowedPluginsList": "Display the list of allowed plugins.",
-    "commands.desc.setallowPlugin": "Allow or disallow a plugin.",
-    "commands.desc.unloadPlugins": "Unload plugins.",
-    "commands.desc.loadPlugins": "Load plugins.",
+    "commands.desc.grantRoot": "grants root permissions.",
+    "commands.desc.showCommands": "shows a list of available commands.",
+    "commands.desc.showHelp": "show basic server information.",
+    "commands.desc.pluginsList": "display the list of loaded plugins.",
+    "commands.desc.allowedPluginsList": "display the list of allowed plugins.",
+    "commands.desc.setallowPlugin": "allow or disallow a plugin.",
+    "commands.desc.unloadPlugins": "unload plugins.",
+    "commands.desc.loadPlugins": "load plugins.",
     "commands.desc.reloadPlugins": "reload plugins.",
     "commands.desc.moduleList": "display the list of loaded modules.",
     "commands.desc.setallowModule": "Allow or disallow a module.",
-    "commands.desc.shutdown": "Stops the server."
+    "commands.desc.shutdown": "stops the server."
 }

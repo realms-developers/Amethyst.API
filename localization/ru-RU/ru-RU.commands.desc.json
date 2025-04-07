@@ -10,5 +10,5 @@
     "commands.desc.reloadPlugins": "перезагрузить плагины.",
     "commands.desc.moduleList": "показать список загруженных модулей.",
     "commands.desc.setallowModule": "разрешить модуль или наоборот.",
-    "commands.desc.shutdown": "Останавливает сервер."
+    "commands.desc.shutdown": "остановить сервер."
 }
