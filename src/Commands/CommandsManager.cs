@@ -96,7 +96,8 @@ public static class CommandsManager
 
     private static void HandleCommandException(ICommandSender sender, string text, Exception ex)
     {
-        sender.ReplyError("commands.commandFailed", ex.Message);
+        sender.ReplyError("commands.commandFailed", Localization.Get(ex.Message, sender.Language));
+
         AmethystLog.System.Critical("Commands", $"Command failure '{text}' from {sender.Name} ({sender.Type}):\n{ex}");
     }
 
