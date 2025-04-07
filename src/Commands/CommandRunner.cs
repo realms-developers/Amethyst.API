@@ -1,7 +1,6 @@
 using System.Reflection;
 using Amethyst.Commands.Parsing;
 using Amethyst.Text;
-using MonoMod;
 
 namespace Amethyst.Commands;
 
@@ -66,7 +65,18 @@ public sealed class CommandRunner
             return;
         }
 
-        Data.Method.Invoke(null, invokeArgs);
+        try
+        {
+            Data.Method.Invoke(null, invokeArgs);
+        }
+        catch (TargetInvocationException tie)
+        {
+            // Get the original exception
+            Exception originalException = tie.InnerException!;
+
+            // Rethrow the original exception
+            throw originalException;
+        }
     }
 
     private bool ParseArguments(ICommandSender sender, string[] arguments, object?[] invokeArgs)
