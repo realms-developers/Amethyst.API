@@ -93,7 +93,7 @@ public sealed class LocalPlayerUtils
     public void TeleportTile(int x, int y, byte style = 0)
     {
         // sends section. why not rectangle? well, it breaking beatiful buildings!
-        RequestSendSection(Netplay.GetSectionX(x), Netplay.GetSectionX(x));
+        RequestSendSection(Netplay.GetSectionX(x), Netplay.GetSectionY(y));
 
         Player.TPlayer.position = new Vector2(x * 16, y * 16);
         NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x * 16, y * 16, style);
@@ -101,7 +101,7 @@ public sealed class LocalPlayerUtils
 
     public void Teleport(float x, float y, byte style = 0)
     {
-        RequestSendSection(Netplay.GetSectionX((int)x / 16), Netplay.GetSectionX((int)x / 16));
+        RequestSendSection(Netplay.GetSectionX((int)x / 16), Netplay.GetSectionY((int)y / 16));
 
         Player.TPlayer.position = new Vector2(x, y);
         NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x, y, style);
