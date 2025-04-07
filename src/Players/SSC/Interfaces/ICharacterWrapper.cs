@@ -72,5 +72,6 @@ public interface ICharacterWrapper
     public void SyncPlayerInfo(SyncType sync);
     public void SyncAngler(SyncType sync);
 
+    public void Save();
     public void SaveUpdate();
 }

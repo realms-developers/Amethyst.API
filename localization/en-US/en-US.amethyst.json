@@ -1,3 +1,5 @@
 {
-    "amethyst.serverPrefix": "Server"
+    "amethyst.serverPrefix": "Server",
+
+    "amethyst.serverStopped": "Server is stopped!"
 }

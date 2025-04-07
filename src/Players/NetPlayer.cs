@@ -75,6 +75,14 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
     internal bool _wasSpawned;
     internal bool _sentSpawnPacket; // used for preventing anonymous clients
 
+    internal void UnloadExtensions()
+    {
+        foreach (KeyValuePair<Type, IPlayerExtension> kvp in _extensions)
+            kvp.Value.Unload();
+
+        _extensions.Clear();
+    }
+
     public void LoadExtension<T>() where T : IPlayerExtension
     {
         Type type = typeof(T);
@@ -96,6 +104,10 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
     public void UnloadExtension<T>() where T : IPlayerExtension
     {
         Type type = typeof(T);
+
+        if (_extensions.TryGetValue(type, out IPlayerExtension? ext))
+            ext?.Unload();
+
         _extensions.Remove(type);
     }
 

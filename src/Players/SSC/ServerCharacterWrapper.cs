@@ -469,6 +469,11 @@ public sealed class ServerCharacterWrapper : ICharacterWrapper
         NetMessage.TrySendData(76, sync == SyncType.Local ? _owner.Index : -1, sync == SyncType.Exclude ? _owner.Index : -1, Terraria.Localization.NetworkText.Empty, _owner.Index);
     }
 
+    public void Save()
+    {
+        Model.Save();
+    }
+
     private bool _needsToSave;
     public void SaveUpdate()
     {

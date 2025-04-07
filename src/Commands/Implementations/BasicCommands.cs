@@ -1,6 +1,8 @@
-﻿using Amethyst.Commands.Attributes;
+﻿using System.Diagnostics;
+using Amethyst.Commands.Attributes;
 using Amethyst.Core;
 using Amethyst.Text;
+using Terraria.IO;
 
 namespace Amethyst.Commands.Implementations;
 
@@ -8,7 +10,21 @@ public static class BasicCommands
 {
 
     [ServerCommand(CommandType.Console, "exit", "commands.desc.shutdown", null)]
-    public static void Exit(CommandInvokeContext _) => Environment.Exit(0);
+    public static void Exit(CommandInvokeContext _) => AmethystKernel.StopServer();
+
+
+    [ServerCommand(CommandType.Console, "save", "commands.desc.save", null)]
+    public static void Save(CommandInvokeContext ctx)
+    {
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
+
+        WorldFile.SaveWorld();
+
+        sw.Stop();
+
+        ctx.Sender.ReplySuccess($"/save => {sw.Elapsed.TotalSeconds}s");
+    }
 
     [ServerCommand(CommandType.Shared, "help", "commands.desc.showCommands", null)]
     [CommandsSyntax("[page]")]

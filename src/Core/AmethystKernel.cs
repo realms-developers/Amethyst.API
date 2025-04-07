@@ -1,7 +1,11 @@
+using System.Diagnostics;
 using System.Reflection;
 using Amethyst.Core.Arguments;
 using Amethyst.Core.Profiles;
+using Amethyst.Core.Server;
 using Amethyst.Logging;
+using Amethyst.Players;
+using Terraria.IO;
 
 namespace Amethyst.Core;
 
@@ -11,6 +15,8 @@ internal static class AmethystKernel
 
     internal static void Main(string[] args)
     {
+        Console.CancelKeyPress += OnCancelKeyPress;
+
         AppDomain.CurrentDomain.AssemblyResolve += delegate (object? sender, ResolveEventArgs sargs)
         {
             string resourceName = new AssemblyName(sargs.Name).Name + ".dll";
@@ -36,6 +42,45 @@ internal static class AmethystKernel
         {
             ModernConsole.WriteLine($"$!b{kvp.Key} $!r- $!d{kvp.Value.Description}");
         }
+    }
+
+    private static void OnCancelKeyPress(object? sender, ConsoleCancelEventArgs e)
+    {
+        e.Cancel = true;
+        StopServer();
+    }
+
+    internal static void StopServer()
+    {
+        AmethystLog.System.Critical("AmethystKernel.StopServer", $"Server is stopping...");
+
+        if (!ServerLauncher.IsStarted)
+        {
+            AmethystLog.System.Critical("AmethystKernel.StopServer", $"Server was not fully loaded -> direct stopping...");
+
+            Environment.Exit(0);
+
+            return;
+        }
+
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
+        WorldFile.SaveWorld();
+        sw.Stop();
+
+        AmethystLog.System.Info("AmethystKernel.StopServer", $"Saved world in {sw.Elapsed.TotalSeconds}s ({sw.ElapsedMilliseconds}ms).");
+
+        foreach (NetPlayer plr in PlayerManager.Tracker.NonNullable)
+        {
+            plr.Kick("amethyst.serverStopped");
+            plr.Character?.Save();
+            plr.UnloadExtensions();
+
+            AmethystLog.System.Info("AmethystKernel.StopServer", $"Player {plr.Name} was deinitialized.");
+        }
+
+        AmethystLog.System.Info("AmethystKernel.StopServer", $"Exiting server...");
+        Environment.Exit(0);
     }
 
     private static void InitializeServer(ServerProfile profile)

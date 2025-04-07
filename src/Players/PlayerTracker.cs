@@ -6,6 +6,8 @@ public sealed class PlayerTracker : IEnumerable<NetPlayer>
 {
     private readonly NetPlayer[] _players = new NetPlayer[256];
 
+    public IEnumerable<NetPlayer> NonNullable => _players.Where(p => p != null);
+
     public IEnumerable<NetPlayer> Capable => _players.Where(p => p != null && p.IsActive && p.IsCapable);
 
     public IEnumerable<NetPlayer> Alive => _players.Where(p => p != null && p.IsActive && !p.TPlayer.dead);
