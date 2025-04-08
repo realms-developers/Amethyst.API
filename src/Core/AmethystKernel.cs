@@ -70,6 +70,14 @@ internal static class AmethystKernel
 
         AmethystLog.System.Info("AmethystKernel.StopServer", $"Saved world in {sw.Elapsed.TotalSeconds}s ({sw.ElapsedMilliseconds}ms).");
 
+        DeinitializeServer();
+
+        AmethystLog.System.Info("AmethystKernel.StopServer", $"Exiting server...");
+        Environment.Exit(0);
+    }
+
+    internal static void DeinitializeServer()
+    {
         foreach (NetPlayer plr in PlayerManager.Tracker.NonNullable)
         {
             plr.Kick("amethyst.serverStopped");
@@ -78,9 +86,6 @@ internal static class AmethystKernel
 
             AmethystLog.System.Info("AmethystKernel.StopServer", $"Player {plr.Name} was deinitialized.");
         }
-
-        AmethystLog.System.Info("AmethystKernel.StopServer", $"Exiting server...");
-        Environment.Exit(0);
     }
 
     private static void InitializeServer(ServerProfile profile)
@@ -100,6 +105,8 @@ internal static class AmethystKernel
             AmethystLog.Startup.Critical("ModuleLoader", $"Caught unhandled exception:");
             AmethystLog.Startup.Critical("ModuleLoader", ex.ExceptionObject.ToString() ?? "No data");
             AmethystLog.Startup.Critical("ModuleLoader", $"Server is terminated.");
+
+            DeinitializeServer();
 
             Thread.Sleep(-1);
         };
