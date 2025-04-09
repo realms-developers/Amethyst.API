@@ -90,12 +90,12 @@ The server will automatically generate the `/data/<profile>` directory and popul
 4. Enable in-game:
    - **Plugin**:
      ```bash
-     /plugins setallow MyPlugin.dll
-     /plugins reload
+     plugins setallow MyPlugin.dll
+     plugins reload
      ```
    - **Module**:
      ```bash
-     /modules setallow MyModule.dll
+     modules setallow MyModule.dll
      ```
 
 ---
