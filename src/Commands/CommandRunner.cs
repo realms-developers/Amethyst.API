@@ -71,11 +71,16 @@ public sealed class CommandRunner
         }
         catch (TargetInvocationException tie)
         {
-            // Get the original exception
-            Exception originalException = tie.InnerException!;
+            if (tie.InnerException != null)
+            {
+                // Get the original exception
+                Exception originalException = tie.InnerException;
 
-            // Rethrow the original exception
-            throw originalException;
+                // Rethrow the original exception
+                throw originalException;
+            }
+
+            throw;
         }
     }
 
