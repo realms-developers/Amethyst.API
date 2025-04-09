@@ -9,8 +9,14 @@ public static class ParsingNode
 
     internal static void Initialize()
     {
-        // Generic numeric parsers - replaced ForEach with raw loop
-        Type[] numericTypes = [typeof(byte), typeof(int), typeof(double), typeof(float), typeof(bool)];
+        // Generic numeric parsers
+        Type[] numericTypes = [typeof(sbyte), typeof(byte),
+            typeof(short), typeof(ushort),
+            typeof(int), typeof(uint),
+            typeof(long), typeof(ulong),
+            typeof(float), typeof(double), typeof(decimal),
+            typeof(bool)];
+
         foreach (Type t in numericTypes)
         {
             _parsers.Add(t, CreateTryParseParser(t));
