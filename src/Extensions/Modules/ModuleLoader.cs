@@ -18,7 +18,8 @@ public static class ModuleLoader
             AmethystLog.Main.Info("ModuleLoader", $"Created modules directory at '{ModulesPath}'");
         }
 
-        IEnumerable<string> files = Directory.EnumerateFiles(ModulesPath, "*.dll");
+        IEnumerable<string> files = Directory.EnumerateFiles(ModulesPath, "*.dll")
+            .OrderBy(Path.GetFileName);
 
         foreach (string file in files)
         {
@@ -27,6 +28,7 @@ public static class ModuleLoader
 
             if (!AmethystSession.ExtensionsConfiguration.AllowedModules.Contains(fileName))
             {
+                AmethystLog.Main.Warning("ModuleLoader", $"Skipped '{fileName}'.");
                 continue;
             }
 

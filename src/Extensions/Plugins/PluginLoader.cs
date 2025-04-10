@@ -24,7 +24,8 @@ public static class PluginLoader
             AmethystLog.Main.Info("PluginLoader", $"Created plugins directory at '{PluginsPath}'");
         }
 
-        IEnumerable<string> files = Directory.EnumerateFiles(PluginsPath, "*.dll");
+        IEnumerable<string> files = Directory.EnumerateFiles(PluginsPath, "*.dll")
+            .OrderBy(Path.GetFileName);
 
         foreach (string file in files)
         {
