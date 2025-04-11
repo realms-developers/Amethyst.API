@@ -48,7 +48,7 @@ public static class CommandsManager
             ? $"{sender.Name} [{sender.Type}]: $!r$!d/$!r$!b$r{runner.Data.Name} $!r$!d(hidden log)"
             : $"{sender.Name} [{sender.Type}]: $!r$!d/$!r$!b$r{text}";
 
-        AmethystLog.System.Verbose("Commands", logMessage);
+        AmethystLog.System.Verbose(nameof(CommandsManager), logMessage);
     }
 
     private static bool ValidateAndExecuteCommand(ICommandSender sender, string text, CommandRunner runner)
@@ -98,7 +98,7 @@ public static class CommandsManager
     {
         sender.ReplyError("commands.commandFailed", Localization.Get(ex.Message, sender.Language));
 
-        AmethystLog.System.Critical("Commands", $"Command failure '{text}' from {sender.Name} ({sender.Type}):\n{ex}");
+        AmethystLog.System.Critical(nameof(CommandsManager), $"Command failure '{text}' from {sender.Name} ({sender.Type}):\n{ex}");
     }
 
     public static CommandRunner? FindCommand(string name)

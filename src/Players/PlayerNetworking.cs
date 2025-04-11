@@ -97,7 +97,7 @@ internal static class PlayerNetworking
                     packet.Player.Character = PlayerManager.SSCProvider.CreateServersideWrapper(packet.Player);
                     packet.Player.Character.IsReadonly = true;
                 }
-                AmethystLog.Network.Verbose("Players", $"Player '{name}' is joining to server...");
+                AmethystLog.Network.Verbose(nameof(PlayerNetworking), $"Player '{name}' is joining to server...");
             }
 
             packet.Player.Character?.ReceivePlayerInfo(packet);
@@ -354,7 +354,7 @@ internal static class PlayerNetworking
                 return;
             }
 
-            AmethystLog.Network.Verbose($"Network", $"<{packet.Player.Name}> {message}");
+            AmethystLog.Network.Verbose(nameof(PlayerNetworking), $"<{packet.Player.Name}> {message}");
         }
     }
 }

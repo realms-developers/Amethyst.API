@@ -28,8 +28,8 @@ public static class ConsoleInput
             }
             catch (Exception ex)
             {
-                AmethystLog.Startup.Error("ConsoleInput", $"Failed to handle command {input}:");
-                AmethystLog.Startup.Error("ConsoleInput", ex.ToString());
+                AmethystLog.Startup.Error(nameof(ConsoleInput), $"Failed to handle command {input}:");
+                AmethystLog.Startup.Error(nameof(ConsoleInput), ex.ToString());
             }
         }
     }

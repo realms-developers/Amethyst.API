@@ -39,8 +39,8 @@ public abstract class PluginInstance
         }
         catch (Exception ex)
         {
-            AmethystLog.Main.Critical("Plugins", $"Failed to process '{logName}' operation for '{Name}':");
-            AmethystLog.Main.Critical("Plugins", ex.ToString());
+            AmethystLog.Main.Critical(nameof(PluginInstance), $"Failed to process '{logName}' operation for '{Name}':");
+            AmethystLog.Main.Critical(nameof(PluginInstance), ex.ToString());
         }
 
         return false;

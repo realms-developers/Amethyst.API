@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using Amethyst.Core.Profiles;
 using Amethyst.Core.Server;
+using Amethyst.Extensions.Modules;
 using Amethyst.Players;
 using Terraria.IO;
 
@@ -44,11 +45,11 @@ internal static class AmethystKernel
 
     internal static void StopServer()
     {
-        AmethystLog.System.Critical("AmethystKernel.StopServer", $"Server is stopping...");
+        AmethystLog.System.Critical(nameof(StopServer), $"Server is stopping...");
 
         if (!ServerLauncher.IsStarted)
         {
-            AmethystLog.System.Critical("AmethystKernel.StopServer", $"Server was not fully loaded -> direct stopping...");
+            AmethystLog.System.Critical(nameof(StopServer), $"Server was not fully loaded -> direct stopping...");
 
             Environment.Exit(0);
 
@@ -63,11 +64,11 @@ internal static class AmethystKernel
 
         sw.Stop();
 
-        AmethystLog.System.Info("AmethystKernel.StopServer", $"Saved world in {sw.Elapsed.TotalSeconds}s ({sw.ElapsedMilliseconds}ms).");
+        AmethystLog.System.Info(nameof(StopServer), $"Saved world in {sw.Elapsed.TotalSeconds}s ({sw.ElapsedMilliseconds}ms).");
 
         DeinitializeServer();
 
-        AmethystLog.System.Info("AmethystKernel.StopServer", $"Exiting server...");
+        AmethystLog.System.Info(nameof(StopServer), $"Exiting server...");
         Environment.Exit(0);
     }
 
@@ -79,7 +80,7 @@ internal static class AmethystKernel
             plr.Character?.Save();
             plr.UnloadExtensions();
 
-            AmethystLog.System.Info("AmethystKernel.StopServer", $"Player {plr.Name} was deinitialized.");
+            AmethystLog.System.Info(nameof(StopServer), $"Player {plr.Name} was deinitialized.");
         }
     }
 
@@ -92,14 +93,14 @@ internal static class AmethystKernel
 
         AppDomain.CurrentDomain.FirstChanceException += (sender, ex) =>
         {
-            AmethystLog.Startup.Error("ModuleLoader", $"Caught first-chance exception:");
-            AmethystLog.Startup.Error("ModuleLoader", ex.Exception.ToString() ?? "No data");
+            AmethystLog.Startup.Error(nameof(ModuleLoader), $"Caught first-chance exception:");
+            AmethystLog.Startup.Error(nameof(ModuleLoader), ex.Exception.ToString() ?? "No data");
         };
         AppDomain.CurrentDomain.UnhandledException += (sender, ex) =>
         {
-            AmethystLog.Startup.Critical("ModuleLoader", $"Caught unhandled exception:");
-            AmethystLog.Startup.Critical("ModuleLoader", ex.ExceptionObject.ToString() ?? "No data");
-            AmethystLog.Startup.Critical("ModuleLoader", $"Server is terminated.");
+            AmethystLog.Startup.Critical(nameof(ModuleLoader), $"Caught unhandled exception:");
+            AmethystLog.Startup.Critical(nameof(ModuleLoader), ex.ExceptionObject.ToString() ?? "No data");
+            AmethystLog.Startup.Critical(nameof(ModuleLoader), $"Server is terminated.");
 
             DeinitializeServer();
 

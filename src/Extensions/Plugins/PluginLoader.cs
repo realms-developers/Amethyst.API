@@ -21,7 +21,7 @@ public static class PluginLoader
         if (!Directory.Exists(PluginsPath))
         {
             Directory.CreateDirectory(PluginsPath);
-            AmethystLog.Main.Info("PluginLoader", $"Created plugins directory at '{PluginsPath}'");
+            AmethystLog.Main.Info(nameof(PluginLoader), $"Created plugins directory at '{PluginsPath}'");
         }
 
         IEnumerable<string> files = Directory.EnumerateFiles(PluginsPath, "*.dll")
@@ -34,11 +34,11 @@ public static class PluginLoader
 
             if (!AmethystSession.ExtensionsConfiguration.AllowedPlugins.Contains(fileName))
             {
-                AmethystLog.Main.Warning("PluginLoader", $"Skipped '{fileName}'.");
+                AmethystLog.Main.Warning(nameof(PluginLoader), $"Skipped '{fileName}'.");
                 continue;
             }
 
-            AmethystLog.Main.Info("PluginLoader", $"Loading '{fileName}'...");
+            AmethystLog.Main.Info(nameof(PluginLoader), $"Loading '{fileName}'...");
 
             // Reuse fileName here too
             CreateContainer(fileName, File.ReadAllBytes(file))?.Load();
@@ -79,8 +79,8 @@ public static class PluginLoader
         }
         catch (Exception ex)
         {
-            AmethystLog.Main.Critical("Plugins", $"Failed to load assembly '{name}':");
-            AmethystLog.Main.Critical("Plugins", ex.ToString());
+            AmethystLog.Main.Critical(nameof(PluginLoader), $"Failed to load assembly '{name}':");
+            AmethystLog.Main.Critical(nameof(PluginLoader), ex.ToString());
         }
 
         return null;

@@ -189,7 +189,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
     public void Kick(string reason, object[]? args = null)
     {
-        AmethystLog.Network.Error("Players", $"Player '{Name}' was kicked for reason: {reason}");
+        AmethystLog.Network.Error(nameof(NetPlayer), $"Player '{Name}' was kicked for reason: {reason}");
 
         Socket.Disconnect(string.Format(CultureInfo.InvariantCulture, Localization.Get(reason, Language), args ?? []));
     }

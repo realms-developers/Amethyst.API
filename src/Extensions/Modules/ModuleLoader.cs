@@ -15,7 +15,7 @@ public static class ModuleLoader
         if (!Directory.Exists(ModulesPath))
         {
             Directory.CreateDirectory(ModulesPath);
-            AmethystLog.Main.Info("ModuleLoader", $"Created modules directory at '{ModulesPath}'");
+            AmethystLog.Main.Info(nameof(ModuleLoader), $"Created modules directory at '{ModulesPath}'");
         }
 
         IEnumerable<string> files = Directory.EnumerateFiles(ModulesPath, "*.dll")
@@ -28,11 +28,11 @@ public static class ModuleLoader
 
             if (!AmethystSession.ExtensionsConfiguration.AllowedModules.Contains(fileName))
             {
-                AmethystLog.Main.Warning("ModuleLoader", $"Skipped '{fileName}'.");
+                AmethystLog.Main.Warning(nameof(ModuleLoader), $"Skipped '{fileName}'.");
                 continue;
             }
 
-            AmethystLog.Main.Info("ModuleLoader", $"Loading '{fileName}'..."); // Log filename instead of full path
+            AmethystLog.Main.Info(nameof(ModuleLoader), $"Loading '{fileName}'..."); // Log filename instead of full path
 
             Assembly assembly = Assembly.LoadFrom(file); // Still needs the full path to load
 
@@ -59,8 +59,8 @@ public static class ModuleLoader
         }
         catch (Exception ex)
         {
-            AmethystLog.Main.Critical("ModuleLoader", $"Failed to load module '{module.Name}':");
-            AmethystLog.Main.Critical("ModuleLoader", ex.ToString());
+            AmethystLog.Main.Critical(nameof(ModuleLoader), $"Failed to load module '{module.Name}':");
+            AmethystLog.Main.Critical(nameof(ModuleLoader), ex.ToString());
         }
 
         Modules.Add(module);

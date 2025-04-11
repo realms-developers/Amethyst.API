@@ -34,7 +34,7 @@ public sealed class PacketHandleResult
 
         List<string> lines = PagesCollection.PageifyItems(_reasons, 150);
 
-        AmethystLog.Network.Debug("PacketHandleResult", $"Ignored packet {_packet.PacketID}, reasons:");
-        lines.ForEach(p => AmethystLog.Network.Debug("PacketHandleResult", p));
+        AmethystLog.Network.Debug(nameof(PacketHandleResult), $"Ignored packet {_packet.PacketID}, reasons:");
+        lines.ForEach(p => AmethystLog.Network.Debug(nameof(PacketHandleResult), p));
     }
 }

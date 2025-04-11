@@ -23,17 +23,14 @@ public static class AmethystHooks
         }
         catch (Exception ex)
         {
-            AmethystLog.Main.Error("AmethystHooks", $"Exception in handling '{name}' hook:");
-            AmethystLog.Main.Error("AmethystHooks", ex.ToString());
+            AmethystLog.Main.Error(nameof(AmethystHooks), $"Exception in handling '{name}' hook:");
+            AmethystLog.Main.Error(nameof(AmethystHooks), ex.ToString());
         }
     }
 
     public static class Chat
     {
-        internal static void Initialize()
-        {
-            On.Terraria.Chat.ChatHelper.BroadcastChatMessageAs += ChatHelperBroadcastChatMessageAs;
-        }
+        internal static void Initialize() => ChatHelper.BroadcastChatMessageAs += ChatHelperBroadcastChatMessageAs;
 
         private static void ChatHelperBroadcastChatMessageAs(ChatHelper.orig_BroadcastChatMessageAs orig, byte messageAuthor, NetworkText text, Color color, int excludedPlayer)
         {

@@ -50,7 +50,7 @@ internal static class ServerLauncher
 
         UpdateTitle();
 
-        AmethystLog.Startup.Verbose("ServerLauncher", "Loading worlds...");
+        AmethystLog.Startup.Verbose(nameof(ServerLauncher), "Loading worlds...");
         Main.LoadWorlds();
 
         string? worldPath = AmethystSession.Profile.WorldToLoad;
@@ -64,7 +64,7 @@ internal static class ServerLauncher
 
         if (!File.Exists(worldPath) || AmethystSession.Profile.WorldRecreate)
         {
-            AmethystLog.Startup.Verbose("ServerLauncher", $"Requesting world-generation {worldPath}...");
+            AmethystLog.Startup.Verbose(nameof(ServerLauncher), $"Requesting world-generation {worldPath}...");
 
             GenerateWorld();
             CheckWorldExceptions();
@@ -73,7 +73,7 @@ internal static class ServerLauncher
         LoadWorld(worldPath);
         CheckWorldExceptions();
 
-        AmethystLog.Startup.Verbose("ServerLauncher", $"Starting server...");
+        AmethystLog.Startup.Verbose(nameof(ServerLauncher), $"Starting server...");
 
         InitializeNetwork();
 
@@ -131,7 +131,7 @@ internal static class ServerLauncher
                             }
 
                             AmethystLog.Main.Debug(
-                                "ServerLauncher", $"GAME UPDATE: [MIN: {Math.Ceiling(ordered.First())}ms / MAX: {Math.Ceiling(ordered.Last())}ms] AVG: {Math.Ceiling(totalMs / 180)}ms, TOTAL: {(int)totalMs}ms");
+                                nameof(ServerLauncher), $"GAME UPDATE: [MIN: {Math.Ceiling(ordered.First())}ms / MAX: {Math.Ceiling(ordered.Last())}ms] AVG: {Math.Ceiling(totalMs / 180)}ms, TOTAL: {(int)totalMs}ms");
 
                             timings.Clear();
                         }
@@ -212,12 +212,12 @@ internal static class ServerLauncher
 
     private static void PrintWorlds()
     {
-        AmethystLog.Startup.Info("ServerLauncher", "Available worlds:");
+        AmethystLog.Startup.Info(nameof(ServerLauncher), "Available worlds:");
         foreach (WorldFileData wld in Main.WorldList)
         {
-            AmethystLog.Startup.Info("ServerLauncher", $"World '{wld.Name}' from '{wld.Path}' ({wld.WorldSizeX}x{wld.WorldSizeY}, built at {wld.WorldGeneratorVersion})");
+            AmethystLog.Startup.Info(nameof(ServerLauncher), $"World '{wld.Name}' from '{wld.Path}' ({wld.WorldSizeX}x{wld.WorldSizeY}, built at {wld.WorldGeneratorVersion})");
         }
-        AmethystLog.Startup.Info("ServerLauncher", "Load server with '-worldpath <path>' argument.");
+        AmethystLog.Startup.Info(nameof(ServerLauncher), "Load server with '-worldpath <path>' argument.");
     }
 
     private static void LoadWorld(string path)
@@ -234,7 +234,7 @@ internal static class ServerLauncher
                 {
                     oldStatusText = Main.AutogenProgress.Message;
 
-                    AmethystLog.Startup.Verbose($"ServerLauncher", $"Loading world '{path}': '{Main.AutogenProgress._totalProgress}'");
+                    AmethystLog.Startup.Verbose(nameof(ServerLauncher), $"Loading world '{path}': '{Main.AutogenProgress._totalProgress}'");
                 }
             }
             Thread.Sleep(100);
@@ -282,6 +282,7 @@ internal static class ServerLauncher
         string oldStatusText = "None...";
 
         Thread.Sleep(2000);
+
         while (!task.IsCompleted)
         {
             if (oldStatusText != generationProgress.Message)
@@ -290,7 +291,7 @@ internal static class ServerLauncher
 
                 Console.CursorTop--;
                 AmethystLog.Startup.Verbose(
-                    $"ServerLauncher", $"Generating world '{Main.worldName}': {Math.Ceiling(generationProgress.TotalProgress * 100),5}%, {generationProgress.Message,30}");
+                    nameof(ServerLauncher), $"Generating world '{Main.worldName}': {Math.Ceiling(generationProgress.TotalProgress * 100),5}%, {generationProgress.Message,30}");
             }
             Thread.Sleep(100);
         }
@@ -300,8 +301,8 @@ internal static class ServerLauncher
     {
         if (WorldFile.LastThrownLoadException != null)
         {
-            AmethystLog.Startup.Critical("ServerLauncher", $"Failed to load world '{Main.worldName}':");
-            AmethystLog.Startup.Critical("ServerLauncher", WorldFile.LastThrownLoadException.ToString());
+            AmethystLog.Startup.Critical(nameof(ServerLauncher), $"Failed to load world '{Main.worldName}':");
+            AmethystLog.Startup.Critical(nameof(ServerLauncher), WorldFile.LastThrownLoadException.ToString());
         }
     }
 }

@@ -42,8 +42,8 @@ internal sealed class BasicNetworkProvider : INetworkProvider
                 }
                 catch (Exception ex)
                 {
-                    AmethystLog.Network.Critical("NetworkProvider", $"Failed to handle OutcomingPacket '{packetId}' packet :");
-                    AmethystLog.Network.Critical("NetworkProvider", ex.ToString());
+                    AmethystLog.Network.Critical(nameof(BasicNetworkProvider), $"Failed to handle OutcomingPacket '{packetId}' packet :");
+                    AmethystLog.Network.Critical(nameof(BasicNetworkProvider), ex.ToString());
                 }
             });
         }
@@ -131,8 +131,8 @@ internal sealed class BasicNetworkProvider : INetworkProvider
                 }
                 catch (Exception ex)
                 {
-                    AmethystLog.Network.Critical("NetworkProvider", $"Failed to handle IncomingPacket '{packetId}' packet :");
-                    AmethystLog.Network.Critical("NetworkProvider", ex.ToString());
+                    AmethystLog.Network.Critical(nameof(BasicNetworkProvider), $"Failed to handle IncomingPacket '{packetId}' packet :");
+                    AmethystLog.Network.Critical(nameof(BasicNetworkProvider), ex.ToString());
                 }
             });
         }
@@ -174,8 +174,8 @@ internal sealed class BasicNetworkProvider : INetworkProvider
                 }
                 catch (Exception ex)
                 {
-                    AmethystLog.Network.Critical("NetworkProvider", $"Failed to handle IncomingModule '{packetId}' packet :");
-                    AmethystLog.Network.Critical("NetworkProvider", ex.ToString());
+                    AmethystLog.Network.Critical(nameof(BasicNetworkProvider), $"Failed to handle IncomingModule '{packetId}' packet :");
+                    AmethystLog.Network.Critical(nameof(BasicNetworkProvider), ex.ToString());
                 }
             });
         }
@@ -204,11 +204,11 @@ internal sealed class BasicNetworkProvider : INetworkProvider
     {
         if (_socket.StartListening(OnConnected))
         {
-            AmethystLog.Network.Info("Network", $"Server was started on {AmethystSession.Profile.Port} with {AmethystSession.Profile.MaxPlayers} slots.");
+            AmethystLog.Network.Info(nameof(BasicNetworkProvider), $"Server was started on {AmethystSession.Profile.Port} with {AmethystSession.Profile.MaxPlayers} slots.");
         }
         else
         {
-            AmethystLog.Network.Error("Network", $"Failed to start server! Be sure that you use different port for this server!");
+            AmethystLog.Network.Error(nameof(BasicNetworkProvider), $"Failed to start server! Be sure that you use different port for this server!");
         }
     }
 
@@ -220,7 +220,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
         int index = Netplay.FindNextOpenClientSlot();
 
-        AmethystLog.Network.Info("Network", $"Accepted connection from {ip} (Index: {index})");
+        AmethystLog.Network.Info(nameof(BasicNetworkProvider), $"Accepted connection from {ip} (Index: {index})");
 
         INetworkClient netClient = new BasicNetworkClient(index, client);
 
