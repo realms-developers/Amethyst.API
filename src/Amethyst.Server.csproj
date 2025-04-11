@@ -36,6 +36,7 @@
       <HintPath>..\deps\FNA.dll</HintPath>
     </Reference>
 
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="MonoMod.RuntimeDetour.HookGen" Version="22.7.31.1" />
     <PackageReference Include="MonoMod.RuntimeDetour" Version="25.2.3" />

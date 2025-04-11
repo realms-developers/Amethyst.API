@@ -1,9 +1,8 @@
+using System.CommandLine;
 using System.Diagnostics;
 using System.Reflection;
-using Amethyst.Core.Arguments;
 using Amethyst.Core.Profiles;
 using Amethyst.Core.Server;
-using Amethyst.Logging;
 using Amethyst.Players;
 using Terraria.IO;
 
@@ -26,21 +25,14 @@ internal static class AmethystKernel
             return File.Exists(path) ? Assembly.LoadFrom(path) : null;
         };
 
-        ArgumentsHandler.Initialize();
-        ExecuteArguments(args);
+        RootCommand rootCommand = CommandConfiguration.BuildRootCommand();
+
+        rootCommand.Invoke(args);
 
         if (Profile != null)
         {
             InitializeServer(Profile);
             return;
-        }
-
-        ModernConsole.WriteLine($"$!bAmethyst Terraria Server API v{typeof(AmethystKernel).Assembly.GetName().Version}");
-        ModernConsole.WriteLine($"$wAvailable commands:");
-
-        foreach (KeyValuePair<string, ArgumentCommandInfo> kvp in ArgumentsHandler.RegisteredCommands)
-        {
-            ModernConsole.WriteLine($"$!b{kvp.Key} $!r- $!d{kvp.Value.Description}");
         }
     }
 
@@ -63,9 +55,12 @@ internal static class AmethystKernel
             return;
         }
 
-        Stopwatch sw = new Stopwatch();
+        Stopwatch sw = new();
+
         sw.Start();
+
         WorldFile.SaveWorld();
+
         sw.Stop();
 
         AmethystLog.System.Info("AmethystKernel.StopServer", $"Saved world in {sw.Elapsed.TotalSeconds}s ({sw.ElapsedMilliseconds}ms).");
@@ -112,19 +107,5 @@ internal static class AmethystKernel
         };
 
         AmethystSession.StartServer();
-    }
-
-    private static void ExecuteArguments(string[] args)
-    {
-        for (int i = 0; i < args.Length; i++)
-        {
-            if (args.Length > i + 1)
-            {
-                string cmd = args[i];
-                string arg = args[i + 1];
-
-                ArgumentsHandler.HandleCommand(cmd, arg);
-            }
-        }
     }
 }
