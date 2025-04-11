@@ -123,13 +123,14 @@ public sealed class LocalPlayerUtils
         NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x, y, style);
     }
 
+    public void Heal(int amount) =>
+        NetMessage.SendData((int)PacketTypes.PlayerHealOther, -1, -1, NetworkText.Empty, Player.TPlayer.whoAmI, amount);
+
     public void Hurt(int damage, string text, bool pvp = false)
         => Hurt(damage, PlayerDeathReason.ByCustomReason(text), pvp);
 
-    public void Hurt(int damage, PlayerDeathReason? reason = null, bool pvp = false)
-    {
+    public void Hurt(int damage, PlayerDeathReason? reason = null, bool pvp = false) =>
         NetMessage.SendPlayerHurt(Player.Index, reason ?? PlayerDeathReason.LegacyDefault(), damage, -1, false, pvp, 0);
-    }
 
     public void Kill(string text, bool pvp = false)
         => Kill(PlayerDeathReason.ByCustomReason(text), pvp);
