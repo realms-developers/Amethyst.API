@@ -6,7 +6,7 @@ namespace Amethyst.Network.Managing;
 
 public sealed class PacketHandleResult
 {
-    internal PacketHandleResult(IPacket packet)
+    public PacketHandleResult(IPacket packet)
     {
         _packet = packet;
         _reasons = new List<string>(16);
@@ -25,7 +25,7 @@ public sealed class PacketHandleResult
         _reasons.Add(reason);
     }
 
-    internal void Log()
+    public void Log()
     {
         if (_reasons.Count == 0 || !AmethystSession.Profile.DebugMode)
         {
