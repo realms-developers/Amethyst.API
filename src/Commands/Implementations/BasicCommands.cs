@@ -8,15 +8,15 @@ namespace Amethyst.Commands.Implementations;
 
 public static class BasicCommands
 {
-
     [ServerCommand(CommandType.Console, "exit", "commands.desc.shutdown", null)]
-    public static void Exit(CommandInvokeContext _) => AmethystKernel.StopServer();
-
+    [CommandsSyntax("-f(orce)")]
+    public static void Exit(CommandInvokeContext _, string args = "") => AmethystKernel.StopServer(args.Contains("-f"));
 
     [ServerCommand(CommandType.Console, "save", "commands.desc.save", null)]
     public static void Save(CommandInvokeContext ctx)
     {
-        Stopwatch sw = new Stopwatch();
+        Stopwatch sw = new();
+
         sw.Start();
 
         WorldFile.SaveWorld();

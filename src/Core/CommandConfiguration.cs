@@ -44,7 +44,7 @@ public static class CommandConfiguration
         Option<int> netSlotsOption = CreateNetSlotsOption();
 
         Option<bool> debugOption = new(
-            ["--debugmode", "-debugmode"],
+            ["--debugmode", "-debugmode", "-debug", "--debug"],
             "Enable debug mode");
 
         Option<bool> sscOption = new(
@@ -134,13 +134,13 @@ public static class CommandConfiguration
                 HandleOptionWithProfile(context, debugOption, value =>
                 {
                     AmethystKernel.Profile.DebugMode = value;
-                    ModernConsole.WriteLine($"$!bDebug mode: {value}.");
+                    ModernConsole.WriteLine("$bWarning: Debug mode enabled. Any player can have root access.");
                 });
 
                 HandleOptionWithProfile(context, sscOption, value =>
                 {
                     AmethystKernel.Profile.SSCMode = value;
-                    ModernConsole.WriteLine($"$!bSSC mode: {value}.");
+                    ModernConsole.WriteLine("$!bSSC enabled.");
                 });
 
                 #endregion

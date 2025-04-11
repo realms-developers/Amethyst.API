@@ -43,13 +43,14 @@ internal static class AmethystKernel
         StopServer();
     }
 
-    internal static void StopServer()
+    internal static void StopServer(bool force = false)
     {
-        AmethystLog.System.Critical(nameof(StopServer), $"Server is stopping...");
+        AmethystLog.System.Critical(nameof(StopServer), "Server is stopping...");
 
-        if (!ServerLauncher.IsStarted)
+        if (!ServerLauncher.IsStarted || force)
         {
-            AmethystLog.System.Critical(nameof(StopServer), $"Server was not fully loaded -> direct stopping...");
+            AmethystLog.System.Critical(nameof(StopServer),
+                $"{(ServerLauncher.IsStarted ? string.Empty : "Server was not fully loaded -> ")}Stopping forcefully...");
 
             Environment.Exit(0);
 
@@ -68,7 +69,8 @@ internal static class AmethystKernel
 
         DeinitializeServer();
 
-        AmethystLog.System.Info(nameof(StopServer), $"Exiting server...");
+        AmethystLog.System.Info(nameof(StopServer), "Exiting server...");
+
         Environment.Exit(0);
     }
 
@@ -93,14 +95,14 @@ internal static class AmethystKernel
 
         AppDomain.CurrentDomain.FirstChanceException += (sender, ex) =>
         {
-            AmethystLog.Startup.Error(nameof(ModuleLoader), $"Caught first-chance exception:");
+            AmethystLog.Startup.Error(nameof(ModuleLoader), "Caught first-chance exception:");
             AmethystLog.Startup.Error(nameof(ModuleLoader), ex.Exception.ToString() ?? "No data");
         };
         AppDomain.CurrentDomain.UnhandledException += (sender, ex) =>
         {
-            AmethystLog.Startup.Critical(nameof(ModuleLoader), $"Caught unhandled exception:");
+            AmethystLog.Startup.Critical(nameof(ModuleLoader), "Caught unhandled exception:");
             AmethystLog.Startup.Critical(nameof(ModuleLoader), ex.ExceptionObject.ToString() ?? "No data");
-            AmethystLog.Startup.Critical(nameof(ModuleLoader), $"Server is terminated.");
+            AmethystLog.Startup.Critical(nameof(ModuleLoader), "Server is terminated.");
 
             DeinitializeServer();
 
