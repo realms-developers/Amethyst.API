@@ -69,7 +69,21 @@ public static class ExtensionsCommands
     public static void PluginsReload(CommandInvokeContext ctx)
     {
         List<PluginContainer> containers = PluginLoader.Containers;
-        containers.ForEach(p => p.Dispose());
+
+        if (containers.Count == 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < containers.Count; i++)
+        {
+            PluginContainer container = containers[i];
+
+            container.Dispose();
+        }
+
+        containers.Clear();
+
         PluginLoader.LoadPlugins();
         ctx.Sender.ReplySuccess("commands.text.pluginsWasReloaded");
     }
