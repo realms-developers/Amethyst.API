@@ -90,6 +90,22 @@ public sealed class LocalPlayerUtils
         NetMessage.SendData(22, Player.Index, -1, NetworkText.Empty, itemIndex);
     }
 
+    public void SendCombatText(string text, Color color)
+    {
+        using PacketWriter writer = new();
+
+        byte[] packetBytes = writer
+            .SetType((short)PacketTypes.CreateCombatTextExtended)
+            .PackSingle(Player.Utils.PosX)
+            .PackSingle(Player.Utils.PosY - 32)
+            .PackColor(color)
+            .PackByte(0)
+            .PackString(text)
+            .BuildPacket();
+
+        Player.Socket.SendPacket(packetBytes);
+    }
+
     public void TeleportTile(int x, int y, byte style = 0)
     {
         // sends section. why not rectangle? well, it breaking beatiful buildings!
