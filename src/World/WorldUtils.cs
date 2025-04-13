@@ -21,7 +21,7 @@ public static class WorldUtils
 
         if (target != null)
         {
-            target.Socket?.SendPacket(packetBytes);
+            target.Socket.SendPacket(packetBytes);
         }
         else
         {

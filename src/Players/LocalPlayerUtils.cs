@@ -108,6 +108,35 @@ public sealed class LocalPlayerUtils
         NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x, y, style);
     }
 
+    public void RemoveProjectile(short index, bool broadcast = true)
+    {
+        using PacketWriter writer = new();
+
+        byte[] packetBytes = writer
+            .SetType((short)PacketTypes.ProjectileNew)
+            .PackInt16(index)
+            .PackSingle(-1)
+            .PackSingle(-1)
+            .PackSingle(0)
+            .PackSingle(0)
+            .PackSingle(0)
+            .PackInt16(0)
+            .PackByte((byte)Player.Index)
+            .PackInt16(0)
+            .PackSingle(0)
+            .PackSingle(0)
+            .BuildPacket();
+
+        if (broadcast)
+        {
+            PlayerUtilities.BroadcastPacket(packetBytes);
+        }
+        else
+        {
+            Player.Socket.SendPacket(packetBytes);
+        }
+    }
+
     public void Heal(int amount) =>
         NetMessage.SendData((int)PacketTypes.PlayerHealOther, -1, -1, NetworkText.Empty, Player.TPlayer.whoAmI, amount);
 
@@ -120,10 +149,8 @@ public sealed class LocalPlayerUtils
     public void Kill(string text, bool pvp = false)
         => Kill(PlayerDeathReason.ByCustomReason(text), pvp);
 
-    public void Kill(PlayerDeathReason? reason = null, bool pvp = false)
-    {
+    public void Kill(PlayerDeathReason? reason = null, bool pvp = false) =>
         NetMessage.SendPlayerDeath(Player.Index, reason ?? PlayerDeathReason.LegacyDefault(), short.MaxValue, -1, pvp);
-    }
 
     public void AddBuff(int buffId, TimeSpan span)
         => AddBuff(buffId, (int)span.TotalSeconds * 60); // 60 is fps
