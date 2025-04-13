@@ -167,6 +167,17 @@ public sealed class LocalPlayerUtils
         }
     }
 
+    public void Disable(TimeSpan span) => AddBuff(BuffID.Webbed, span);
+
+    public void DisableUsage(TimeSpan span)
+    {
+        int[] immunities = [ItemID.Nazar, ItemID.CountercurseMantra, ItemID.AnkhCharm, ItemID.AnkhShield];
+        Item[] armor = Player.TPlayer.armor;
+        bool immune = armor.Any(a => immunities.Any(i => a.netID == i));
+
+        AddBuff(immune ? BuffID.Webbed : BuffID.Cursed, span / (immune ? 1 : 2));
+    }
+
     public void Heal(int amount) =>
         NetMessage.SendData((int)PacketTypes.PlayerHealOther, -1, -1, NetworkText.Empty, Player.TPlayer.whoAmI, amount);
 
