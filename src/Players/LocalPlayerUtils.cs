@@ -1,4 +1,5 @@
 using Amethyst.Network;
+using Amethyst.World;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -9,10 +10,7 @@ namespace Amethyst.Players;
 
 public sealed class LocalPlayerUtils
 {
-    internal LocalPlayerUtils(NetPlayer plr)
-    {
-        Player = plr;
-    }
+    internal LocalPlayerUtils(NetPlayer plr) => Player = plr;
 
     public NetPlayer Player { get; }
 
@@ -90,21 +88,8 @@ public sealed class LocalPlayerUtils
         NetMessage.SendData(22, Player.Index, -1, NetworkText.Empty, itemIndex);
     }
 
-    public void SendCombatText(string text, Color color)
-    {
-        using PacketWriter writer = new();
-
-        byte[] packetBytes = writer
-            .SetType((short)PacketTypes.CreateCombatTextExtended)
-            .PackSingle(Player.Utils.PosX)
-            .PackSingle(Player.Utils.PosY - 32)
-            .PackColor(color)
-            .PackByte(0)
-            .PackString(text)
-            .BuildPacket();
-
-        Player.Socket.SendPacket(packetBytes);
-    }
+    public void SendCombatText(string text, Color color) => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
+    public void SendCombatText(string text, NetColor color) => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
 
     public void TeleportTile(int x, int y, byte style = 0)
     {
