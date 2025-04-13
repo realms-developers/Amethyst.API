@@ -108,6 +108,36 @@ public sealed class LocalPlayerUtils
         NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x, y, style);
     }
 
+    public void RemoveHeldItem()
+    {
+        using PacketWriter writer = new();
+
+        Item held = HeldItem;
+
+        byte[] packetBytes = writer
+            .SetType((short)PacketTypes.MassWireOperationPay)
+            .PackInt16((short)held.netID)
+            .PackInt16((short)held.stack)
+            .PackByte((byte)Player.Index)
+            .BuildPacket();
+
+        Player.Socket.SendPacket(packetBytes);
+    }
+
+    public void RemoveItem(short netId, short stack)
+    {
+        using PacketWriter writer = new();
+
+        byte[] packetBytes = writer
+            .SetType((short)PacketTypes.MassWireOperationPay)
+            .PackInt16(netId)
+            .PackInt16(stack)
+            .PackByte((byte)Player.Index)
+            .BuildPacket();
+
+        Player.Socket.SendPacket(packetBytes);
+    }
+
     public void RemoveProjectile(short index, bool broadcast = true)
     {
         using PacketWriter writer = new();
