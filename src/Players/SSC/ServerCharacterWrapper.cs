@@ -8,10 +8,10 @@ namespace Amethyst.Players.SSC;
 
 public sealed class ServerCharacterWrapper : ICharacterWrapper
 {
-    public ServerCharacterWrapper(NetPlayer player)
+    public ServerCharacterWrapper(NetPlayer player, CharacterModel model)
     {
         _owner = player;
-        _model = PlayerManager.SSCProvider.GetModel(player.Name);
+        _model = model;
     }
 
     private CharacterModel _model;

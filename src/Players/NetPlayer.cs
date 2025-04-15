@@ -5,6 +5,7 @@ using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Permissions;
 using Amethyst.Players.Extensions;
+using Amethyst.Players.SSC.Enums;
 using Amethyst.Players.SSC.Interfaces;
 using Amethyst.Text;
 using Microsoft.Xna.Framework;
@@ -74,6 +75,16 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
 
     internal bool _wasSpawned;
     internal bool _sentSpawnPacket; // used for preventing anonymous clients
+
+    internal PlayerInfo1 _initInfo1;
+    internal PlayerInfo2 _initInfo2;
+    internal PlayerInfo3 _initInfo3;
+    internal byte _initSkinVariant;
+    internal byte _initHair;
+    internal byte _initHairDye;
+    internal bool[] _initHideAccessories = new bool[10];
+    internal byte _initHideMisc;
+    internal NetColor[] _initColors = new NetColor[7];
 
     internal void UnloadExtensions()
     {

@@ -3,6 +3,7 @@ using Amethyst.Core;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
+using Amethyst.Players.SSC.Enums;
 using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.Social;
@@ -51,6 +52,12 @@ internal static class PlayerNetworking
 
             packet.Player._sentSpawnPacket = true;
 
+            PacketWriter buffsPacket = new PacketWriter().SetType(50).PackByte((byte)packet.Player.Index);
+            for (int i = 0; i < 45; i++)
+                buffsPacket = buffsPacket.PackUInt16(0);
+
+            PlayerUtilities.BroadcastPacket(buffsPacket.BuildPacket());
+
             if (Netplay.Clients[packet.Player.Index].State < 3)
             {
                 return;
@@ -79,6 +86,7 @@ internal static class PlayerNetworking
         {
             BinaryReader reader = packet.GetReader();
 
+            long oldPos = reader.BaseStream.Position;
             reader.BaseStream.Position += 3;
             string name = reader.ReadString();
             if (packet.Player.Name != "" && packet.Player.Name != name)
@@ -93,6 +101,26 @@ internal static class PlayerNetworking
                 packet.Player.SetName(name, false);
                 if (PlayerManager.IsSSCEnabled)
                 {
+                    reader.BaseStream.Position = oldPos + 1;
+
+                    packet.Player._initSkinVariant = reader.ReadByte();
+                    packet.Player._initHair = reader.ReadByte();
+
+                    reader.ReadString();
+
+                    packet.Player._initHairDye = reader.ReadByte();
+
+                    MessageBuffer.ReadAccessoryVisibility(reader, packet.Player._initHideAccessories);
+
+                    packet.Player._initHideMisc = reader.ReadByte();
+
+                    for (int i = 0; i < 7; i++)
+                        packet.Player._initColors[i] = reader.ReadNetColor();
+
+                    packet.Player._initInfo1 = reader.Read<PlayerInfo1>();
+                    packet.Player._initInfo2 = reader.Read<PlayerInfo2>();
+                    packet.Player._initInfo3 = reader.Read<PlayerInfo3>();
+
                     NetMessage.SendData(7, packet.Player.Index);
                     packet.Player.Character = PlayerManager.SSCProvider.CreateServersideWrapper(packet.Player);
                     packet.Player.Character.IsReadonly = true;

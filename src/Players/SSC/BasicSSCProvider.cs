@@ -46,14 +46,48 @@ public sealed class BasicSSCProvider : ISSCProvider
         {
             MaxLife = cfg.StartLife,
             MaxMana = cfg.StartMana,
-            Slots = slots
+            Slots = slots,
         };
         model.Save();
 
         return model;
     }
 
-    public ICharacterWrapper CreateServersideWrapper(NetPlayer player) => new ServerCharacterWrapper(player);
+    public CharacterModel GetModelByPlayer(NetPlayer player)
+    {
+        CharacterModel? model = Characters.Find(player.Name);
+        if (model != null)
+        {
+            return model;
+        }
+
+        SSCConfiguration cfg = Configuration;
+        NetItem[] slots = new NetItem[350];
+        Configuration.StartItems.CopyTo(slots);
+
+        model = new CharacterModel(player.Name)
+        {
+            MaxLife = cfg.StartLife,
+            MaxMana = cfg.StartMana,
+            Slots = slots,
+
+            HideAccessories = player._initHideAccessories,
+            HideMisc = player._initHideMisc,
+            HairDye = player._initHairDye,
+            Hair = player._initHair,
+
+            Colors = player._initColors,
+
+            Info1 = player._initInfo1,
+            Info2 = player._initInfo2,
+            Info3 = player._initInfo3,
+        };
+        model.Save();
+
+        return model;
+    }
+
+    public ICharacterWrapper CreateServersideWrapper(NetPlayer player) => new ServerCharacterWrapper(player, GetModelByPlayer(player));
 
     public struct SSCConfiguration
     {
