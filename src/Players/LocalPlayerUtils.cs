@@ -1,4 +1,5 @@
 using Amethyst.Network;
+using Amethyst.World;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -9,10 +10,7 @@ namespace Amethyst.Players;
 
 public sealed class LocalPlayerUtils
 {
-    internal LocalPlayerUtils(NetPlayer plr)
-    {
-        Player = plr;
-    }
+    internal LocalPlayerUtils(NetPlayer plr) => Player = plr;
 
     public NetPlayer Player { get; }
 
@@ -90,6 +88,9 @@ public sealed class LocalPlayerUtils
         NetMessage.SendData(22, Player.Index, -1, NetworkText.Empty, itemIndex);
     }
 
+    public void SendCombatText(string text, Color color) => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
+    public void SendCombatText(string text, NetColor color) => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
+
     public void TeleportTile(int x, int y, byte style = 0)
     {
         // sends section. why not rectangle? well, it breaking beatiful buildings!
@@ -107,21 +108,90 @@ public sealed class LocalPlayerUtils
         NetMessage.SendData(65, -1, -1, NetworkText.Empty, 0, Player.Index, x, y, style);
     }
 
+    public void RemoveHeldItem()
+    {
+        using PacketWriter writer = new();
+
+        Item held = HeldItem;
+
+        byte[] packetBytes = writer
+            .SetType((short)PacketTypes.MassWireOperationPay)
+            .PackInt16((short)held.netID)
+            .PackInt16((short)held.stack)
+            .PackByte((byte)Player.Index)
+            .BuildPacket();
+
+        Player.Socket.SendPacket(packetBytes);
+    }
+
+    public void RemoveItem(short netId, short stack)
+    {
+        using PacketWriter writer = new();
+
+        byte[] packetBytes = writer
+            .SetType((short)PacketTypes.MassWireOperationPay)
+            .PackInt16(netId)
+            .PackInt16(stack)
+            .PackByte((byte)Player.Index)
+            .BuildPacket();
+
+        Player.Socket.SendPacket(packetBytes);
+    }
+
+    public void RemoveProjectile(short index, bool broadcast = true)
+    {
+        using PacketWriter writer = new();
+
+        byte[] packetBytes = writer
+            .SetType((short)PacketTypes.ProjectileNew)
+            .PackInt16(index)
+            .PackSingle(-1)
+            .PackSingle(-1)
+            .PackSingle(0)
+            .PackSingle(0)
+            .PackSingle(0)
+            .PackInt16(0)
+            .PackByte((byte)Player.Index)
+            .PackInt16(0)
+            .PackSingle(0)
+            .PackSingle(0)
+            .BuildPacket();
+
+        if (broadcast)
+        {
+            PlayerUtilities.BroadcastPacket(packetBytes);
+        }
+        else
+        {
+            Player.Socket.SendPacket(packetBytes);
+        }
+    }
+
+    public void Disable(TimeSpan span) => AddBuff(BuffID.Webbed, span);
+
+    public void DisableUsage(TimeSpan span)
+    {
+        int[] immunities = [ItemID.Nazar, ItemID.CountercurseMantra, ItemID.AnkhCharm, ItemID.AnkhShield];
+        Item[] armor = Player.TPlayer.armor;
+        bool immune = armor.Any(a => immunities.Any(i => a.netID == i));
+
+        AddBuff(immune ? BuffID.Webbed : BuffID.Cursed, span / (immune ? 1 : 2));
+    }
+
+    public void Heal(int amount) =>
+        NetMessage.SendData((int)PacketTypes.PlayerHealOther, -1, -1, NetworkText.Empty, Player.TPlayer.whoAmI, amount);
+
     public void Hurt(int damage, string text, bool pvp = false)
         => Hurt(damage, PlayerDeathReason.ByCustomReason(text), pvp);
 
-    public void Hurt(int damage, PlayerDeathReason? reason = null, bool pvp = false)
-    {
+    public void Hurt(int damage, PlayerDeathReason? reason = null, bool pvp = false) =>
         NetMessage.SendPlayerHurt(Player.Index, reason ?? PlayerDeathReason.LegacyDefault(), damage, -1, false, pvp, 0);
-    }
 
     public void Kill(string text, bool pvp = false)
         => Kill(PlayerDeathReason.ByCustomReason(text), pvp);
 
-    public void Kill(PlayerDeathReason? reason = null, bool pvp = false)
-    {
+    public void Kill(PlayerDeathReason? reason = null, bool pvp = false) =>
         NetMessage.SendPlayerDeath(Player.Index, reason ?? PlayerDeathReason.LegacyDefault(), short.MaxValue, -1, pvp);
-    }
 
     public void AddBuff(int buffId, TimeSpan span)
         => AddBuff(buffId, (int)span.TotalSeconds * 60); // 60 is fps

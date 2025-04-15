@@ -12,6 +12,8 @@ public static class PluginLoader
     public static event PluginOperationHandler? OnPluginLoad;
     public static event PluginOperationHandler? OnPluginUnload;
 
+    public static IReadOnlyList<PluginContainer> LoadedPluginContainers => Containers.ToList().AsReadOnly();
+
     internal static void InvokeLoad(PluginContainer container) => OnPluginLoad?.Invoke(container);
     internal static void InvokeUnload(PluginContainer container) => OnPluginUnload?.Invoke(container);
 

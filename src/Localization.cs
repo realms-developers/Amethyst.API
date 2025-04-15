@@ -188,10 +188,9 @@ public static class Localization
         {
             Regex regex = new(@"\[i(tem)?(?:\/s(?<Stack>\d{1,4}))?(?:\/p(?<Prefix>\d{1,3}))?:(?<NetID>-?\d{1,4})\]");
             Match match = regex.Match(tag);
-            if (!match.Success)
-                return null;
-
-            return new NetItem(
+            return !match.Success
+                ? null
+                : new NetItem(
                 id: int.Parse(match.Groups["NetID"].Value, CultureInfo.InvariantCulture),
 
                 stack: string.IsNullOrWhiteSpace(match.Groups["Stack"].Value) ? (short)1 :

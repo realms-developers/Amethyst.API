@@ -101,7 +101,7 @@ public sealed class CommandRunner
                     continue;
                 }
 
-                sender.ReplyError("commands.notEnoughArguments");
+                //sender.ReplyError("commands.notEnoughArguments");
                 ShowSyntaxHint(sender);
                 return false;
             }
