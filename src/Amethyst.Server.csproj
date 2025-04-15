@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>9.13.8</AssemblyVersion>
-    <Version>9.13.8</Version>
+    <AssemblyVersion>9.13.9</AssemblyVersion>
+    <Version>9.13.9</Version>
     <Title>Amethyst</Title>
     <Product>Amethyst</Product>
     <Description>Amethyst is a modern, high-performance API for Terraria servers, offering complete control and customization over every aspect of your server.</Description>
@@ -17,10 +17,10 @@
     <LangVersion>preview</LangVersion>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <RepositoryType>git</RepositoryType>
-    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings> 
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
   <ItemGroup>
-  
+
     <None Include="..\README.md" Pack="true" />
     <None Include="..\deps\FNA.dll" Pack="true" PackagePath="lib/net9.0/" />
     <None Include="..\deps\TerrariaAPI.Hooks.dll" Pack="true" PackagePath="lib/net9.0/" />
