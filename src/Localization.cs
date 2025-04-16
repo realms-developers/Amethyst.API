@@ -25,9 +25,9 @@ public static class Localization
     /// <summary>
     /// Loads all localization files for a specific culture.
     /// </summary>
-    public static void Load(string culture)
+    public static void Load(string culture, string? directory = null)
     {
-        string directoryPath = Path.Combine(_directory, culture);
+        string directoryPath = Path.Combine(directory ?? _directory, culture);
 
         if (!Directory.Exists(directoryPath))
         {

@@ -26,7 +26,37 @@ public static class PluginLoader
             AmethystLog.Main.Info(nameof(PluginLoader), $"Created plugins directory at '{PluginsPath}'");
         }
 
-        IEnumerable<string> files = Directory.EnumerateFiles(PluginsPath, "*.dll")
+        LoadExtended();
+
+        LoadFromDirectory(PluginsPath);
+    }
+
+    internal static void LoadExtended()
+    {
+        IEnumerable<string> dirs = Directory.EnumerateDirectories(PluginsPath, "*", SearchOption.TopDirectoryOnly)
+            .OrderBy(Path.GetFileName);
+
+        foreach (string dir in dirs)
+        {
+            LoadFromDirectory(dir); // loads all .dll plugins from directory.
+
+            string localizationDir = Path.Combine(dir, "localization");
+
+            IEnumerable<string> cultures = Directory.EnumerateDirectories(localizationDir, "*", SearchOption.TopDirectoryOnly);
+
+            foreach (string culture in cultures)
+            {
+                string fixedCulture = new DirectoryInfo(culture).Name;
+
+                Localization.Load(fixedCulture, localizationDir);
+            }
+        }
+    }
+
+
+    internal static void LoadFromDirectory(string path)
+    {
+        IEnumerable<string> files = Directory.EnumerateFiles(path, "*.dll", SearchOption.TopDirectoryOnly)
             .OrderBy(Path.GetFileName);
 
         foreach (string file in files)

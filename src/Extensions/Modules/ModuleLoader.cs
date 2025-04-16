@@ -18,7 +18,36 @@ public static class ModuleLoader
             AmethystLog.Main.Info(nameof(ModuleLoader), $"Created modules directory at '{ModulesPath}'");
         }
 
-        IEnumerable<string> files = Directory.EnumerateFiles(ModulesPath, "*.dll")
+        LoadExtended();
+
+        LoadFromDirectory(ModulesPath);
+    }
+
+    internal static void LoadExtended()
+    {
+        IEnumerable<string> dirs = Directory.EnumerateDirectories(ModulesPath, "*", SearchOption.TopDirectoryOnly)
+            .OrderBy(Path.GetFileName);
+
+        foreach (string dir in dirs)
+        {
+            LoadFromDirectory(dir); // loads all .dll modules from directory.
+
+            string localizationDir = Path.Combine(dir, "localization");
+
+            IEnumerable<string> cultures = Directory.EnumerateDirectories(localizationDir, "*", SearchOption.TopDirectoryOnly);
+
+            foreach (string culture in cultures)
+            {
+                string fixedCulture = Path.GetDirectoryName(culture)!;
+
+                Localization.Load(fixedCulture, localizationDir);
+            }
+        }
+    }
+
+    internal static void LoadFromDirectory(string path)
+    {
+        IEnumerable<string> files = Directory.EnumerateFiles(path, "*.dll", SearchOption.TopDirectoryOnly)
             .OrderBy(Path.GetFileName);
 
         foreach (string file in files)
