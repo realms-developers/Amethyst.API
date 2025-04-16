@@ -110,15 +110,24 @@ public sealed class LocalPlayerUtils
 
     public void RemoveHeldItem()
     {
-        using PacketWriter writer = new();
-
         Item held = HeldItem;
 
+        RemoveItem((short)held.netID, (short)held.stack);
+    }
+
+    public void Spawn(short x, short y, int respawnTimer, byte style = 0)
+    {
+        using PacketWriter writer = new();
+
         byte[] packetBytes = writer
-            .SetType((short)PacketTypes.MassWireOperationPay)
-            .PackInt16((short)held.netID)
-            .PackInt16((short)held.stack)
+            .SetType((short)PacketTypes.PlayerSpawn)
             .PackByte((byte)Player.Index)
+            .PackInt16(x)
+            .PackInt16(y)
+            .PackInt32(respawnTimer)
+            .PackInt16((short)Player.TPlayer.numberOfDeathsPVE)
+            .PackInt16((short)Player.TPlayer.numberOfDeathsPVP)
+            .PackByte(style)
             .BuildPacket();
 
         Player.Socket.SendPacket(packetBytes);
