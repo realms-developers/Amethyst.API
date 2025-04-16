@@ -110,18 +110,9 @@ public sealed class LocalPlayerUtils
 
     public void RemoveHeldItem()
     {
-        using PacketWriter writer = new();
-
         Item held = HeldItem;
 
-        byte[] packetBytes = writer
-            .SetType((short)PacketTypes.MassWireOperationPay)
-            .PackInt16((short)held.netID)
-            .PackInt16((short)held.stack)
-            .PackByte((byte)Player.Index)
-            .BuildPacket();
-
-        Player.Socket.SendPacket(packetBytes);
+        RemoveItem((short)held.netID, (short)held.stack);
     }
 
     public void RemoveItem(short netId, short stack)
