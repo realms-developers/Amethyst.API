@@ -24,7 +24,9 @@ internal sealed class AmethystModule
 
         foreach (string dep in Dependencies)
         {
-            Assembly.LoadFrom(dep);
+            string path = Path.Combine(Directory.GetCurrentDirectory(), dep);
+
+            Assembly.LoadFile(path); // Use full path
         }
     }
 }

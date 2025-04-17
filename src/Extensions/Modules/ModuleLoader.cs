@@ -63,7 +63,7 @@ public static class ModuleLoader
 
             AmethystLog.Main.Info(nameof(ModuleLoader), $"Loading '{fileName}'..."); // Log filename instead of full path
 
-            Assembly assembly = Assembly.LoadFrom(file); // Still needs the full path to load
+            Assembly assembly = Assembly.LoadFrom(Path.Combine(Directory.GetCurrentDirectory(), file)); // Still needs the full path to load
 
             foreach (Type type in assembly.GetTypes())
             {
@@ -81,6 +81,7 @@ public static class ModuleLoader
         }
 
         module.LoadDependencies();
+
         try
         {
             module.InitializeDelegate.ForEach(p => p());

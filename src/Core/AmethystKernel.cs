@@ -17,13 +17,11 @@ internal static class AmethystKernel
     {
         Console.CancelKeyPress += OnCancelKeyPress;
 
-        AppDomain.CurrentDomain.AssemblyResolve += delegate (object? sender, ResolveEventArgs sargs)
+        AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
         {
-            string resourceName = new AssemblyName(sargs.Name).Name + ".dll";
-
-            string path = Path.Combine("deps", resourceName);
-
-            return File.Exists(path) ? Assembly.LoadFrom(path) : null;
+            string assemblyName = new AssemblyName(args.Name).Name + ".dll";
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "deps", assemblyName);
+            return File.Exists(path) ? Assembly.LoadFile(path) : null;
         };
 
         RootCommand rootCommand = CommandConfiguration.BuildRootCommand();
@@ -106,7 +104,7 @@ internal static class AmethystKernel
 
             DeinitializeServer();
 
-            Thread.Sleep(-1);
+            Environment.Exit(-1);
         };
 
         AmethystSession.StartServer();
