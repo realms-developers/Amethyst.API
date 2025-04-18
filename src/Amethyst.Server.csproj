@@ -14,6 +14,7 @@
     <PackageProjectUrl>https://github.com/realms-developers/Amethyst.API</PackageProjectUrl>
     <RepositoryUrl>https://github.com/realms-developers/Amethyst.API</RepositoryUrl>
     <RootNamespace>Amethyst</RootNamespace>
+    <PackageReadmeFile>..\README.md</PackageReadmeFile>
     <LangVersion>preview</LangVersion>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <RepositoryType>git</RepositoryType>
