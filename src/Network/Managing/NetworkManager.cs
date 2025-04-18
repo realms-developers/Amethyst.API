@@ -4,9 +4,9 @@ namespace Amethyst.Network.Managing;
 
 public static class NetworkManager
 {
+    internal static NetworkInstance Instance = new();
     internal static INetworkProvider Provider = new BasicNetworkProvider();
 
-    public static NetworkInstance Instance { get; set; } = new();
     public static PacketBinder Binding { get; } = new PacketBinder(Instance);
 
     internal static void Initialize() => Provider.Initialize(Instance);
