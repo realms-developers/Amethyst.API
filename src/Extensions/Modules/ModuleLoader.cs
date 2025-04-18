@@ -80,8 +80,6 @@ public static class ModuleLoader
             return;
         }
 
-        module.LoadDependencies();
-
         try
         {
             module.InitializeDelegate.ForEach(p => p());
@@ -123,7 +121,7 @@ public static class ModuleLoader
             initDelegates.Add((Delegate.CreateDelegate(typeof(ModuleInitializeDelegate), method) as ModuleInitializeDelegate)!);
         }
 
-        AmethystModule module = new(attribute.Name, attribute.Dependencies, initDelegates);
+        AmethystModule module = new(attribute.Name, initDelegates);
         return module;
     }
 }
