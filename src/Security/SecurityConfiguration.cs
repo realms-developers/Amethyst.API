@@ -14,4 +14,10 @@ public struct SecurityConfiguration
     public List<int> OneTimeModules { get; set; }
     public List<int> DisabledModules { get; set; }
 
+    public bool? NotifyModerators { get; set; }
+
+    public bool? EnableNicknameFilter { get; set; }
+    public string NicknameFilter { get; set; }
+
+    public bool PreventStackCheat { get; set; }
 }

@@ -6,6 +6,9 @@ namespace Amethyst.Security;
 
 public static class SecurityManager
 {
+    public const string IgnorePermission = "security.ignore";
+    public const string ModeratorPermission = "security.moderator";
+
     internal static Dictionary<string, RuleContainer> Rules = [];
     internal static SecurityConfiguration Configuration => AmethystSession.Profile.Config.Get<SecurityConfiguration>().Data;
 
@@ -13,13 +16,15 @@ public static class SecurityManager
     {
         AmethystSession.Profile.Config.Get<SecurityConfiguration>().Load();
         AmethystSession.Profile.Config.Get<SecurityConfiguration>().Modify(SetupConfiguration, true);
+
+        LoadFrom(typeof(SecurityManager).Assembly);
     }
 
     internal static void LoadFrom(Assembly assembly)
     {
-        foreach (Type type in assembly.GetTypes())
+        foreach (Type type in assembly.GetExportedTypes())
         {
-            if (!type.IsSubclassOf(typeof(ISecurityRule)))
+            if (type.GetInterface(nameof(ISecurityRule)) == null)
             {
                 continue;
             }
@@ -41,6 +46,11 @@ public static class SecurityManager
         configuration.PerSecondLimitModules ??= [];
         configuration.OneTimeModules ??= [];
         configuration.DisabledModules ??= [];
+
+        configuration.NotifyModerators ??= true;
+
+        configuration.EnableNicknameFilter = true;
+        configuration.NicknameFilter ??= " ~!@#$%^&*()_+`1234567890-=ё\"№;:?\\|qwertyuiopasdfghjklzxcvbnm{}[];'<>,./ёйцукенгшщзхъфывапролджэячсмитьбю";
     }
 
     public static void RegisterRule(ISecurityRule rule)
@@ -54,18 +64,22 @@ public static class SecurityManager
 
         Rules.Add(rule.Name, ruleContainer);
 
+        AmethystLog.Security.Info("Security", $"Registered security rule '{rule.Name}'!");
+
         if (!Configuration.DisabledRules.Contains(rule.Name))
             ruleContainer.RequestLoad();
     }
 
     public static void UnregisterRule(string name)
     {
-        if (!Rules.TryGetValue(name, out RuleContainer? value))
+        if (!Rules.TryGetValue(name, out RuleContainer? rule))
         {
             throw new ArgumentException($"Security rule with name {name} is not registered.");
         }
 
-        value.RequestLoad();
+        rule.RequestLoad();
+
+        AmethystLog.Security.Info("Security", $"Unregistered security rule '{rule.Name}'!");
 
         Rules.Remove(name);
     }

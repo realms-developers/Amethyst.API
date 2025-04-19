@@ -5,6 +5,7 @@ using Amethyst.Extensions.Modules;
 using Amethyst.Extensions.Plugins;
 using Amethyst.Permissions;
 using Amethyst.Players;
+using Amethyst.Security;
 
 namespace Amethyst.Core;
 
@@ -12,7 +13,7 @@ public static class AmethystSession
 {
     // private static AmethystSession? _session = null;
 
-    // // dsaf dont touch this 
+    // // dsaf dont touch this
     // // this was initialized in AmethystKernel
     // public static AmethystSession Session
     // {
@@ -51,6 +52,8 @@ public static class AmethystSession
 
         CommandsManager.Initialize();
         PlayerManager.Initialize();
+
+        SecurityManager.Initialize();
 
         ModuleLoader.LoadModules();
         PluginLoader.LoadPlugins();

@@ -105,18 +105,21 @@ internal sealed class BasicNetworkProvider : INetworkProvider
                 return;
             }
 
-            if (player._moduleThreshold.Fire(moduleId))
+            if (!player.HasPermission(SecurityManager.IgnorePermission))
             {
-                AmethystLog.Security.Debug("Network", $"Blocked net-module (threshold): {moduleId}");
-                return;
-            }
+                if (player._moduleThreshold.Fire(moduleId))
+                {
+                    AmethystLog.Security.Debug("Network", $"Blocked net-module (threshold): {moduleId}");
+                    return;
+                }
 
-            if (player._sentModules[moduleId] && SecurityManager.Configuration.OneTimeModules.Contains(moduleId))
-            {
-                AmethystLog.Security.Debug("Network", $"Blocked one-time net-module: {moduleId}");
-                return;
+                if (player._sentModules[moduleId] && SecurityManager.Configuration.OneTimeModules.Contains(moduleId))
+                {
+                    AmethystLog.Security.Debug("Network", $"Blocked one-time net-module: {moduleId}");
+                    return;
+                }
+                player._sentModules[moduleId] = true;
             }
-            player._sentModules[moduleId] = true;
 
             if (!OnGetModule(moduleId, player, start, length))
             {
@@ -125,18 +128,21 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         }
         else
         {
-            if (player._packetThreshold.Fire(packetId))
+            if (!player.HasPermission(SecurityManager.IgnorePermission))
             {
-                AmethystLog.Security.Debug("Network", $"Blocked packet (threshold): {packetId}");
-                return;
-            }
+                if (player._packetThreshold.Fire(packetId))
+                {
+                    AmethystLog.Security.Debug("Network", $"Blocked packet (threshold): {packetId}");
+                    return;
+                }
 
-            if (player._sentPackets[packetId] && SecurityManager.Configuration.OneTimePackets.Contains(packetId))
-            {
-                AmethystLog.Security.Debug("Network", $"Blocked one-time packet: {packetId}");
-                return;
+                if (player._sentPackets[packetId] && SecurityManager.Configuration.OneTimePackets.Contains(packetId))
+                {
+                    AmethystLog.Security.Debug("Network", $"Blocked one-time packet: {packetId}");
+                    return;
+                }
+                player._sentPackets[packetId] = true;
             }
-            player._sentPackets[packetId] = true;
 
             if (!OnGetPacket((byte)packetId, player, start, length))
             {
@@ -154,11 +160,14 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
         PacketHandleResult result = new(packet);
 
-        List<SecurityHandler<IncomingPacket>> preHandlers = NetworkManager.Instance.PreIncoming[packetId];
-        if (preHandlers.Any(p => p(in packet)))
+        if (!player.HasPermission(SecurityManager.IgnorePermission))
         {
-            AmethystLog.Security.Debug("Security", $"Packet '{packetId}' was blocked by security.");
-            return true;
+            List<SecurityHandler<IncomingPacket>> preHandlers = NetworkManager.Instance.SecureIncoming[packetId];
+            if (preHandlers.Any(p => p(in packet)))
+            {
+                AmethystLog.Security.Debug("Security", $"Packet '{packetId}' was blocked by security.");
+                return true;
+            }
         }
 
         List<PacketHandler<IncomingPacket>> handlers = NetworkManager.Instance.Incoming[packetId];
@@ -205,11 +214,14 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
         PacketHandleResult result = new(packet);
 
-        List<SecurityHandler<IncomingModule>> preHandlers = NetworkManager.Instance.PreIncomingModules[packetId];
-        if (preHandlers.Any(p => p(in packet)))
+        if (!player.HasPermission(SecurityManager.IgnorePermission))
         {
-            AmethystLog.Security.Debug("Security", $"NetModule '{packetId}' was blocked by security.");
-            return true;
+            List<SecurityHandler<IncomingModule>> preHandlers = NetworkManager.Instance.SecureIncomingModules[packetId];
+            if (preHandlers.Any(p => p(in packet)))
+            {
+                AmethystLog.Security.Debug("Security", $"NetModule '{packetId}' was blocked by security.");
+                return true;
+            }
         }
 
         List<PacketHandler<IncomingModule>> handlers = NetworkManager.Instance.IncomingModules[packetId];
