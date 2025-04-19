@@ -57,7 +57,8 @@ public static class CommandsManager
         [
             ValidateDebugMode(sender, runner),
             ValidateIngameOnly(sender, runner),
-            ValidatePermissions(sender, runner)
+            ValidatePermissions(sender, runner),
+            ValidateRCON(sender, runner)
         ];
 
         for (int i = 0; i < validationResults.Length; i++)
@@ -89,6 +90,10 @@ public static class CommandsManager
     private static (bool IsValid, Action HandleError) ValidateIngameOnly(ICommandSender sender, CommandRunner runner) =>
         (!runner.Data.Settings.HasFlag(CommandSettings.IngameOnly) || sender.Type == SenderType.RealPlayer,
         () => sender.ReplyError("commands.ingameOnly"));
+
+    private static (bool IsValid, Action HandleError) ValidateRCON(ICommandSender sender, CommandRunner runner) =>
+        ((runner.Data.Type != CommandType.Console || sender.Type == SenderType.Console),
+        () => sender.ReplyError("commands.rconOnly"));
 
     private static (bool IsValid, Action HandleError) ValidatePermissions(ICommandSender sender, CommandRunner runner) =>
         (runner.Data.Permission is null || sender.HasPermission(runner.Data.Permission),

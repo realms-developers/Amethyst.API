@@ -12,5 +12,6 @@
     "commands.objectNotFound": "Object not found!",
     "commands.noParser": "Parser not found!",
     "commands.invalidSyntax": "Invalid syntax!",
-    "commands.noDebugMode": "This command is only executable in debug mode."
+    "commands.noDebugMode": "This command is only executable in debug mode.",
+    "commands.rconOnly": "This command can only be executed by RCON."
 }

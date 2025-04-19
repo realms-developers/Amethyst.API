@@ -12,5 +12,6 @@
     "commands.objectNotFound": "Объект не найден!",
     "commands.noParser": "Парсер не найден!",
     "commands.invalidSyntax": "Неверный синтаксис!",
-    "commands.noDebugMode": "Команда может быть выполнена только в режиме отладки."
+    "commands.noDebugMode": "Команда может быть выполнена только в режиме отладки.",
+    "commands.rconOnly": "Эту команду может выполнить только RCON."
 }
