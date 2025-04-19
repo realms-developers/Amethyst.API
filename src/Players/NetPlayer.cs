@@ -7,13 +7,14 @@ using Amethyst.Permissions;
 using Amethyst.Players.Extensions;
 using Amethyst.Players.SSC.Enums;
 using Amethyst.Players.SSC.Interfaces;
+using Amethyst.Security;
 using Amethyst.Text;
 using Microsoft.Xna.Framework;
 using Terraria;
 
 namespace Amethyst.Players;
 
-public sealed class NetPlayer : ICommandSender, IPermissionable
+public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 {
     private static readonly Color _replyErrorColor = new(201, 71, 71);
     private static readonly Color _replyInfoColor = new(191, 201, 71);
@@ -35,9 +36,29 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         PlayerExtensions.LoadExtensions(this);
 
         Utils = new LocalPlayerUtils(this);
+
+        _packetThreshold = new CounterThreshold(255);
+        foreach (KeyValuePair<int, int> limit in SecurityManager.Configuration.PerSecondLimitPackets)
+        {
+            _packetThreshold.Setup(limit.Key, limit.Value);
+        }
+
+        _moduleThreshold = new CounterThreshold(255);
+        foreach (KeyValuePair<int, int> limit in SecurityManager.Configuration.PerSecondLimitModules)
+        {
+            _moduleThreshold.Setup(limit.Key, limit.Value);
+        }
+
+        _sentPackets = new bool[255];
+        _sentModules = new bool[255];
     }
 
     private string _playerName;
+    internal CounterThreshold _packetThreshold;
+    internal CounterThreshold _moduleThreshold;
+
+    internal bool[] _sentPackets;
+    internal bool[] _sentModules;
 
     public int Index { get; }
 
@@ -203,5 +224,13 @@ public sealed class NetPlayer : ICommandSender, IPermissionable
         AmethystLog.Network.Error(nameof(NetPlayer), $"Player '{Name}' was kicked for reason: {reason}");
 
         Socket.Disconnect(string.Format(CultureInfo.InvariantCulture, Localization.Get(reason, Language), args ?? []));
+    }
+
+    public void Dispose()
+    {
+        _packetThreshold.Dispose();
+        _moduleThreshold.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 }

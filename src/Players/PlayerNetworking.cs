@@ -92,7 +92,14 @@ internal static class PlayerNetworking
             if (packet.Player.Name != "" && packet.Player.Name != name)
             {
                 packet.Player.Kick(Localization.Get("network.invalidNameChange", packet.Player.Language));
-                result.Ignore(Localization.Get("network.invalidNameChange", "en"));
+                result.Ignore("network.invalidNameChange");
+                return;
+            }
+
+            if (name.Length == 0 || name.Length > 32)
+            {
+                packet.Player.Kick(Localization.Get("network.invalidNameLength", packet.Player.Language));
+                result.Ignore("network.invalidNameLength");
                 return;
             }
 

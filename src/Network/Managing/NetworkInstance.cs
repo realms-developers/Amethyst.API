@@ -9,6 +9,16 @@ public sealed class NetworkInstance
     {
         for (int i = 0; i < Incoming.Length; i++)
         {
+            PreIncoming[i] = new List<SecurityHandler<IncomingPacket>>(16);
+        }
+
+        for (int i = 0; i < IncomingModules.Length; i++)
+        {
+            PreIncomingModules[i] = new List<SecurityHandler<IncomingModule>>(16);
+        }
+
+        for (int i = 0; i < Incoming.Length; i++)
+        {
             Incoming[i] = new List<PacketHandler<IncomingPacket>>(16);
         }
 
@@ -22,6 +32,10 @@ public sealed class NetworkInstance
             Outcoming[i] = new List<PacketHandler<OutcomingPacket>>(16);
         }
     }
+
+    // Used ONLY for security.
+    public List<SecurityHandler<IncomingPacket>>[] PreIncoming { get; } = new List<SecurityHandler<IncomingPacket>>[MessageID.Count];
+    public List<SecurityHandler<IncomingModule>>[] PreIncomingModules { get; } = new List<SecurityHandler<IncomingModule>>[255];
 
     public List<PacketHandler<IncomingPacket>>[] Incoming { get; } = new List<PacketHandler<IncomingPacket>>[MessageID.Count];
     public List<PacketHandler<IncomingModule>>[] IncomingModules { get; } = new List<PacketHandler<IncomingModule>>[255];

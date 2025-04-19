@@ -1,0 +1,17 @@
+namespace Amethyst.Security;
+
+public struct SecurityConfiguration
+{
+    public bool DisableSecurity { get; set; }
+    public List<string> DisabledRules { get; set; }
+
+    public Dictionary<int, int> PerSecondLimitPackets { get; set; }
+    public List<int> OneTimePackets { get; set; }
+    public List<int> DisabledPackets { get; set; }
+
+
+    public Dictionary<int, int> PerSecondLimitModules { get; set; }
+    public List<int> OneTimeModules { get; set; }
+    public List<int> DisabledModules { get; set; }
+
+}

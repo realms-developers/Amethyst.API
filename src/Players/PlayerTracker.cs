@@ -18,6 +18,7 @@ public sealed class PlayerTracker : IEnumerable<NetPlayer>
     public void CreateInstance(int index)
     {
         NetPlayer player = new(index);
+        _players[index]?.Dispose();
         _players[index] = player;
     }
 
