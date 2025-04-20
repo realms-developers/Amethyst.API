@@ -51,6 +51,9 @@ public static class SecurityManager
 
         configuration.EnableNicknameFilter = true;
         configuration.NicknameFilter ??= " ~!@#$%^&*()_+`1234567890-=ё\"№;:?\\|qwertyuiopasdfghjklzxcvbnm{}[];'<>,./ёйцукенгшщзхъфывапролджэячсмитьбю";
+
+        configuration.MaxAllowedLife ??= 500;
+        configuration.MaxAllowedMana ??= 200;
     }
 
     public static void RegisterRule(ISecurityRule rule)

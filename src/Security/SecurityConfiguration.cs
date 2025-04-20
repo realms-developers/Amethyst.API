@@ -20,4 +20,7 @@ public struct SecurityConfiguration
     public string NicknameFilter { get; set; }
 
     public bool PreventStackCheat { get; set; }
+
+    public int? MaxAllowedLife { get; set; }
+    public int? MaxAllowedMana { get; set; }
 }

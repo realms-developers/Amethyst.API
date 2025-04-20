@@ -12,7 +12,7 @@ public sealed class PlayerSlotRule : ISecurityRule
 
     public void Load(NetworkInstance net)
     {
-        net.SecureIncoming[4].Add(OnPlayerSlot);
+        net.SecureIncoming[5].Add(OnPlayerSlot);
     }
 
     private bool OnPlayerSlot(in IncomingPacket packet)
@@ -26,12 +26,10 @@ public sealed class PlayerSlotRule : ISecurityRule
 		int prefix = reader.ReadByte();
 		int type = reader.ReadInt16();
 
-        if (slotId < 0 || slotId >= 350)
-        {
-            return true;
-        }
-
-        if (type < -1 || type >= ItemID.Count)
+        if (slotId < 0 || slotId >= 350 ||
+            type < -1 || type >= ItemID.Count ||
+            stack < -1 || stack > 9999 ||
+            prefix > PrefixID.Count)
         {
             return true;
         }
@@ -65,6 +63,6 @@ public sealed class PlayerSlotRule : ISecurityRule
 
     public void Unload(NetworkInstance net)
     {
-        net.SecureIncoming[4].Remove(OnPlayerSlot);
+        net.SecureIncoming[5].Remove(OnPlayerSlot);
     }
 }
