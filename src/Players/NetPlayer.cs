@@ -37,6 +37,10 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 
         Utils = new LocalPlayerUtils(this);
 
+        Rules = new PlayerRules(this);
+
+        Jail = new PlayerJail();
+
         _packetThreshold = new CounterThreshold(255);
         foreach (KeyValuePair<int, int> limit in SecurityManager.Configuration.PerSecondLimitPackets)
         {
@@ -78,6 +82,10 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 
     public LocalPlayerUtils Utils { get; }
 
+    public PlayerRules Rules { get; }
+
+    public PlayerJail Jail { get; }
+
     /// <summary>
     /// Indicates that player is connected to server
     /// </summary>
@@ -96,6 +104,11 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 
     internal bool _wasSpawned;
     internal bool _sentSpawnPacket; // used for preventing anonymous clients
+
+    internal short _lastLife;
+    internal short _lastMaxLife;
+
+    internal Vector2 _lastPos;
 
     internal PlayerInfo1 _initInfo1;
     internal PlayerInfo2 _initInfo2;

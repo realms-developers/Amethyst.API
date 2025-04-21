@@ -28,11 +28,20 @@ public sealed class PlayerUpdateRule : ISecurityRule
 		reader.ReadByte();
 		Vector2 position = reader.ReadVector2();
 
+        if (packet.Player.Jail.IsJailed)
+        {
+            packet.Player.Utils.Disable(TimeSpan.FromSeconds(3));
+            packet.Player.Utils.Teleport(packet.Player._lastPos.X, packet.Player._lastPos.Y);
+            return true;
+        }
+
         if (position.IsBadVector2() || !position.IsInTerrariaWorld())
         {
             packet.Player.Kick("security.badVec2");
             return true;
         }
+
+        packet.Player._lastPos = position;
 
 		if (bb2[2])
 		{

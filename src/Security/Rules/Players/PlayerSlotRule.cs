@@ -1,6 +1,7 @@
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Amethyst.Players;
+using Amethyst.Players.SSC.Enums;
 using Terraria;
 using Terraria.ID;
 
@@ -31,6 +32,12 @@ public sealed class PlayerSlotRule : ISecurityRule
             stack < -1 || stack > 9999 ||
             prefix > PrefixID.Count)
         {
+            return true;
+        }
+
+        if (PlayerManager.IsSSCEnabled && packet.Player.Jail.IsJailed)
+        {
+            packet.Player.Character?.SyncSlot(SyncType.Local, slotId);
             return true;
         }
 

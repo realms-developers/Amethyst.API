@@ -1,5 +1,7 @@
+using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
+using Amethyst.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 
@@ -29,6 +31,21 @@ public sealed class PlayerLifeRule : ISecurityRule
             packet.Player.Kick("security.invalidLife");
             return true;
         }
+
+        if (PlayerManager.IsSSCEnabled && packet.Player.Jail.IsJailed)
+        {
+            byte[] buffer = new PacketWriter().SetType(16)
+                .PackByte((byte)packet.Player.Index)
+                .PackInt16(packet.Player._lastLife)
+                .PackInt16(packet.Player._lastMaxLife)
+                .BuildPacket();
+
+            PlayerUtilities.BroadcastPacket(buffer);
+            return true;
+        }
+
+        packet.Player._lastLife = current;
+        packet.Player._lastMaxLife = current;
 
         return false;
     }

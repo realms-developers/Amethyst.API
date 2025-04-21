@@ -1,5 +1,7 @@
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
+using Amethyst.Players;
+using Amethyst.Players.SSC.Enums;
 
 namespace Amethyst.Security.Rules.Players;
 
@@ -28,6 +30,12 @@ public sealed class PlayerInfoRule : ISecurityRule
                     return true;
                 }
             }
+        }
+
+        if (PlayerManager.IsSSCEnabled && packet.Player.Jail.IsJailed)
+        {
+            packet.Player.Character?.SyncPlayerInfo(SyncType.Local);
+            return true;
         }
 
         return false;
