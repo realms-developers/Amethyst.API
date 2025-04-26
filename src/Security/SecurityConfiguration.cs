@@ -23,4 +23,6 @@ public struct SecurityConfiguration
 
     public int? MaxAllowedLife { get; set; }
     public int? MaxAllowedMana { get; set; }
+
+    public int? KillTileRange { get; set; }
 }

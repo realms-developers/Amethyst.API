@@ -26,6 +26,19 @@ public sealed class LocalPlayerUtils
 
     public bool HasBuff(int buffId) => Player.TPlayer.buffType.Any(p => p == buffId);
 
+    public bool InCube(int x, int y, int size) => InRectangle(x, y, x + size, y + size);
+
+    public bool InCenteredCube(int x, int y, int size)
+    {
+        int strippedSize = size / 2;
+        return InRectangle(x - strippedSize, y - strippedSize, x + strippedSize, y + strippedSize);
+    }
+
+    public bool InRectangle(int x, int y, int x2, int y2)
+    {
+        return TileX >= x && TileX <= x2 && TileY >= y && TileY <= y2;
+    }
+
     public void SendRectangle(int x, int y, byte size, TileChangeType changeType = TileChangeType.None)
         => NetMessage.SendTileSquare(Player.Index, x, y, size, changeType);
 
@@ -175,6 +188,7 @@ public sealed class LocalPlayerUtils
             Player.Socket.SendPacket(packetBytes);
         }
     }
+
 
     public void Disable(TimeSpan span) => AddBuff(BuffID.Webbed, span);
 

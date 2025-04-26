@@ -54,6 +54,8 @@ public static class SecurityManager
 
         configuration.MaxAllowedLife ??= 500;
         configuration.MaxAllowedMana ??= 200;
+
+        configuration.KillTileRange ??= 32;
     }
 
     public static void RegisterRule(ISecurityRule rule)
