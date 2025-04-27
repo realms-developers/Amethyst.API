@@ -38,11 +38,18 @@ public sealed class TileInteractRule : ISecurityRule
         {
             case TileInteractType.KillTile:
             case TileInteractType.KillTileV3:
+            case TileInteractType.KillTileNoItem:
 
                 if (!packet.Player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.KillTileRange!.Value))
                 {
                     return true;
                 }
+
+                return false;
+
+            case TileInteractType.PlaceTile:
+
+
 
                 return false;
         }
