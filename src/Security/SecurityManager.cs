@@ -1,6 +1,7 @@
 using System.Reflection;
 using Amethyst.Core;
 using Amethyst.Network;
+using Amethyst.Security.GameBans;
 
 namespace Amethyst.Security;
 
@@ -8,6 +9,15 @@ public static class SecurityManager
 {
     public const string IgnorePermission = "security.ignore";
     public const string ModeratorPermission = "security.moderator";
+
+    public static GameObjectBlocker ItemBans { get; } = new GameObjectBlocker("ItemBanCollection");
+    public static GameObjectBlocker ProjectileBans { get; } = new GameObjectBlocker("ProjectileBanCollection");
+
+    public static GameObjectBlocker TileBans { get; } = new GameObjectBlocker("TileBanCollection");
+    public static GameObjectBlocker WallBans { get; } = new GameObjectBlocker("WallBanCollection");
+
+    public static GameObjectBlocker TileSafety { get; } = new GameObjectBlocker("TileSafetyCollection");
+    public static GameObjectBlocker WallSafety { get; } = new GameObjectBlocker("TileSafetyCollection");
 
     internal static Dictionary<string, RuleContainer> Rules = [];
     internal static SecurityConfiguration Configuration => AmethystSession.Profile.Config.Get<SecurityConfiguration>().Data;
@@ -55,7 +65,27 @@ public static class SecurityManager
         configuration.MaxAllowedLife ??= 500;
         configuration.MaxAllowedMana ??= 200;
 
-        configuration.KillTileRange ??= 32;
+        configuration.KillTileRange ??= 64;
+        configuration.PlaceTileRange ??= 32;
+        configuration.ReplaceTileRange ??= 32;
+
+        configuration.KillTileThreshold ??= 80;
+        configuration.PlaceTileThreshold ??= 20;
+        configuration.ReplaceTileThreshold ??= 20;
+
+        configuration.KillWallRange ??= 32;
+        configuration.PlaceWallRange ??= 32;
+        configuration.ReplaceWallRange ??= 32;
+
+        configuration.KillWallThreshold ??= 50;
+        configuration.PlaceWallThreshold ??= 50;
+        configuration.ReplaceWallThreshold ??= 50;
+
+        configuration.AllowedMessages ??=
+        [
+            "security_tile_safety",
+            "security_tile_bans"
+        ];
     }
 
     public static void RegisterRule(ISecurityRule rule)

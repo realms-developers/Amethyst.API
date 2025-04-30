@@ -55,7 +55,17 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 
         _sentPackets = new bool[255];
         _sentModules = new bool[255];
+
+        _tilesThreshold = new CounterThreshold(6);
+        _tilesThreshold.Setup(0, SecurityManager.Configuration.KillTileThreshold!.Value);
+        _tilesThreshold.Setup(1, SecurityManager.Configuration.PlaceTileThreshold!.Value);
+        _tilesThreshold.Setup(2, SecurityManager.Configuration.ReplaceTileThreshold!.Value);
+        _tilesThreshold.Setup(3, SecurityManager.Configuration.KillWallThreshold!.Value);
+        _tilesThreshold.Setup(4, SecurityManager.Configuration.PlaceWallThreshold!.Value);
+        _tilesThreshold.Setup(5, SecurityManager.Configuration.ReplaceWallThreshold!.Value);
     }
+
+    internal CounterThreshold _tilesThreshold;
 
     private string _playerName;
     internal CounterThreshold _packetThreshold;
@@ -119,6 +129,25 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
     internal bool[] _initHideAccessories = new bool[10];
     internal byte _initHideMisc;
     internal NetColor[] _initColors = new NetColor[7];
+    internal Dictionary<string, DateTime> _notifyDelay = new Dictionary<string, DateTime>();
+
+    public bool CanNotify(string messageType, TimeSpan delay)
+    {
+        if (!_notifyDelay.TryGetValue(messageType, out DateTime value))
+        {
+            value = DateTime.UtcNow.Add(delay);
+            _notifyDelay.Add(messageType, value);
+            return true;
+        }
+
+        if (value < DateTime.UtcNow)
+        {
+            _notifyDelay[messageType] = DateTime.UtcNow.Add(delay);
+            return true;
+        }
+
+        return false;
+    }
 
     internal void UnloadExtensions()
     {

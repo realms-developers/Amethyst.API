@@ -25,4 +25,20 @@ public struct SecurityConfiguration
     public int? MaxAllowedMana { get; set; }
 
     public int? KillTileRange { get; set; }
+    public int? PlaceTileRange { get; set; }
+    public int? ReplaceTileRange { get; set; }
+
+    public int? KillTileThreshold { get; set; }
+    public int? PlaceTileThreshold { get; set; }
+    public int? ReplaceTileThreshold { get; set; }
+
+    public int? KillWallRange { get; set; }
+    public int? PlaceWallRange { get; set; }
+    public int? ReplaceWallRange { get; set; }
+
+    public int? KillWallThreshold { get; set; }
+    public int? PlaceWallThreshold { get; set; }
+    public int? ReplaceWallThreshold { get; set; }
+
+    public List<string> AllowedMessages { get; set; }
 }

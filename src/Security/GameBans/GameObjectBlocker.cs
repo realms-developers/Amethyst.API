@@ -31,7 +31,7 @@ public sealed class GameObjectBlocker
         models.Remove(id.ToString(CultureInfo.CurrentCulture));
     }
 
-    public void Contains(int id) => bans.Contains(id);
+    public bool Contains(int id) => bans.Contains(id);
 
     public IEnumerable<int> GetEnumerable()
     {

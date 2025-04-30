@@ -1,0 +1,4 @@
+{
+    "security.tileBannedToDestroy": "Этот блок (ID: {0}) нельзя сломать!",
+    "security.tileBannedToCreate": "Этот блок (ID: {0}) нельзя установить!",
+}

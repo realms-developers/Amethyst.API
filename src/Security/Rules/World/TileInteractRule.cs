@@ -1,6 +1,7 @@
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
+using Amethyst.Players;
 using Terraria;
 
 namespace Amethyst.Security.Rules.World;
@@ -19,10 +20,10 @@ public sealed class TileInteractRule : ISecurityRule
         var reader = packet.GetReader();
 
         TileInteractType interactType = reader.Read<TileInteractType>();
-		int x = reader.ReadInt16();
-		int y = reader.ReadInt16();
-		short type = reader.ReadInt16();
-		int style = reader.ReadByte();
+        int x = reader.ReadInt16();
+        int y = reader.ReadInt16();
+        short type = reader.ReadInt16();
+        int style = reader.ReadByte();
 
         if (!WorldGen.InWorld(x, y, 16))
         {
@@ -34,24 +35,123 @@ public sealed class TileInteractRule : ISecurityRule
             return true;
         }
 
+        NetPlayer player = packet.Player;
+        Tile tile = Main.tile[x, y];
+
+
+        bool CanPlaceTile()
+        {
+            if (SecurityManager.TileBans.Contains(type))
+            {
+                if (SecurityManager.Configuration.AllowedMessages.Contains("security_tile_bans") &&
+                    player.CanNotify("security_tile_bans", new TimeSpan(0, 0, 3)))
+                {
+                    player.ReplyError("security.tileBannedToCreate", type);
+                }
+
+                return true;
+            }
+
+            return false;
+        };
+
+        bool CanKillTile()
+        {
+            if (tile.active() && SecurityManager.TileSafety.Contains(tile.type))
+            {
+                if (SecurityManager.Configuration.AllowedMessages.Contains("security_tile_safety") &&
+                    player.CanNotify("security_tile_safety", new TimeSpan(0, 0, 3)))
+                {
+                    player.ReplyError("security.tileBannedToDestroy", tile.type);
+                }
+
+                return true;
+            }
+
+            return false;
+        };
+
+        bool CanPlaceWall()
+        {
+            if (type != 0 && SecurityManager.WallBans.Contains(type))
+            {
+                if (SecurityManager.Configuration.AllowedMessages.Contains("security_wall_bans") &&
+                    player.CanNotify("security_wall_bans", new TimeSpan(0, 0, 3)))
+                {
+                    player.ReplyError("security.wallBannedToCreate", type);
+                }
+
+                return true;
+            }
+
+            return false;
+        };
+
+        bool CanKillWall()
+        {
+            if (tile.wall != 0 && SecurityManager.WallSafety.Contains(tile.wall))
+            {
+                if (SecurityManager.Configuration.AllowedMessages.Contains("security_wall_safety") &&
+                    player.CanNotify("security_wall_safety", new TimeSpan(0, 0, 3)))
+                {
+                    player.ReplyError("security.wallBannedToDestroy", tile.wall);
+                }
+
+                return true;
+            }
+
+            return false;
+        };
+
+        bool NetworkResetTilesIf(bool value)
+        {
+            if (value)
+                player.Utils.SendRectangle(x, y, 2);
+
+            return value;
+        }
+
         switch (interactType)
         {
+            #region Tiles
             case TileInteractType.KillTile:
             case TileInteractType.KillTileV3:
             case TileInteractType.KillTileNoItem:
 
-                if (!packet.Player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.KillTileRange!.Value))
-                {
-                    return true;
-                }
-
-                return false;
+                return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.KillTileRange!.Value) ||
+                        CanKillTile());
 
             case TileInteractType.PlaceTile:
 
+                return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.PlaceTileRange!.Value) ||
+                        CanPlaceTile());
 
+            case TileInteractType.ReplaceTile:
 
-                return false;
+                return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.ReplaceTileRange!.Value) ||
+                        CanKillTile() || CanPlaceTile());
+            #endregion
+
+            #region Walls
+
+            case TileInteractType.KillWall:
+
+                return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.KillWallRange!.Value) ||
+                        CanKillWall());
+
+            case TileInteractType.PlaceWall:
+
+                return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.PlaceWallRange!.Value) ||
+                        CanPlaceWall());
+
+            case TileInteractType.ReplaceWall:
+
+                return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.ReplaceWallRange!.Value) ||
+                        CanKillWall() || CanPlaceWall());
+
+            #endregion
+
+            default: return false;
         }
     }
 
