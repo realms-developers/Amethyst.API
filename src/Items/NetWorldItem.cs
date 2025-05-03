@@ -1,4 +1,5 @@
 using Amethyst.Network;
+using Amethyst.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Localization;
@@ -14,6 +15,12 @@ public sealed class NetWorldItem
 
     public int Index { get; }
     public Item TItem => Main.item[Index];
+    public NetPlayer? ReservedFor => TItem.playerIndexTheItemIsReservedFor == 255 ? null : PlayerManager.Tracker[TItem.playerIndexTheItemIsReservedFor];
+    public int ItemID => TItem.netID;
+    public int ItemStack => TItem.stack;
+    public byte ItemPrefix => TItem.prefix;
+    public Vector2 Position => TItem.position;
+    public Vector2 Velocity => TItem.velocity;
 
     public void Modify(NetItem item, bool networkSync = true)
     {

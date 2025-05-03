@@ -1,3 +1,4 @@
+using Amethyst.Items;
 using Amethyst.Network;
 using Amethyst.World;
 using Microsoft.Xna.Framework;
@@ -94,15 +95,12 @@ public sealed class LocalPlayerUtils
         => GiveItem(item.netID, item.stack, item.prefix);
 
     public void GiveItem(int id, int stack, byte prefix)
-    {
-        int itemIndex = Item.NewItem(new EntitySource_DebugCommand(), (int)PosX, (int)PosY, 16, 16, id, stack, true, prefix, true);
-        Main.item[itemIndex].playerIndexTheItemIsReservedFor = Player.Index;
-        NetMessage.SendData(21, Player.Index, -1, NetworkText.Empty, itemIndex, 1);
-        NetMessage.SendData(22, Player.Index, -1, NetworkText.Empty, itemIndex);
-    }
+        => ItemManager.CreateItem(PosX, PosY, Player.Index, id, stack, prefix);
 
-    public void SendCombatText(string text, Color color) => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
-    public void SendCombatText(string text, NetColor color) => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
+    public void SendCombatText(string text, Color color)
+        => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
+    public void SendCombatText(string text, NetColor color)
+        => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
 
     public void TeleportTile(int x, int y, byte style = 0)
     {

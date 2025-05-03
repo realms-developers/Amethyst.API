@@ -4,6 +4,7 @@ using Amethyst.Core;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Permissions;
+using Amethyst.Players.Auth;
 using Amethyst.Players.Extensions;
 using Amethyst.Players.SSC.Enums;
 using Amethyst.Players.SSC.Interfaces;
@@ -63,6 +64,11 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         _tilesThreshold.Setup(3, SecurityManager.Configuration.KillWallThreshold!.Value);
         _tilesThreshold.Setup(4, SecurityManager.Configuration.PlaceWallThreshold!.Value);
         _tilesThreshold.Setup(5, SecurityManager.Configuration.ReplaceWallThreshold!.Value);
+
+        if (AuthManager.Configuration.EnableAuthorization)
+        {
+            Auth = new PlayerAuth(this);
+        }
     }
 
     internal CounterThreshold _tilesThreshold;
@@ -96,15 +102,22 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 
     public PlayerJail Jail { get; }
 
+    public PlayerAuth? Auth { get; }
+
     /// <summary>
     /// Indicates that player is connected to server
     /// </summary>
     public bool IsActive => Socket.IsConnected && !Socket.IsFrozen;
 
     /// <summary>
+    /// Indicates that player is connected to server
+    /// </summary>
+    public bool IsJoined => UUID != "" && Name != "" && _wasSpawned;
+
+    /// <summary>
     /// Indicates that player is capable (can run commands, modify world and etc...)
     /// </summary>
-    public bool IsCapable => IsActive && UUID != "" && Name != "" && _wasSpawned;
+    public bool IsCapable => IsActive && IsJoined && (Auth == null || Auth.IsAuthorized);
 
     public bool IsRootGranted { get; set; }
 

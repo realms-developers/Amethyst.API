@@ -5,6 +5,7 @@ using Amethyst.Extensions.Modules;
 using Amethyst.Extensions.Plugins;
 using Amethyst.Permissions;
 using Amethyst.Players;
+using Amethyst.Players.Auth;
 using Amethyst.Security;
 
 namespace Amethyst.Core;
@@ -49,6 +50,8 @@ public static class AmethystSession
         AmethystHooks.Initialize();
 
         Localization.Load();
+
+        AuthManager.Initialize();
 
         CommandsManager.Initialize();
         PlayerManager.Initialize();
