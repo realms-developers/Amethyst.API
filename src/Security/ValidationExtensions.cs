@@ -17,7 +17,7 @@ public static class ValidationExtensions
         float maxX = (Main.maxTilesX - offset) * 16;
         float maxY = (Main.maxTilesY - offset) * 16;
 
-        return  vector2.X < min || vector2.X > maxX ||
-                vector2.Y < min || vector2.Y > maxY;
+        return  vector2.X >= min || vector2.X <= maxX ||
+                vector2.Y >= min || vector2.Y <= maxY;
     }
 }

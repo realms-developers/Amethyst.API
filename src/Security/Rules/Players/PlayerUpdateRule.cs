@@ -1,3 +1,4 @@
+using Amethyst.Core;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Microsoft.Xna.Framework;
@@ -35,8 +36,9 @@ public sealed class PlayerUpdateRule : ISecurityRule
             return true;
         }
 
-        if (position.IsBadVector2() || !position.IsInTerrariaWorld())
+        if (position.IsBadVector2() || !position.IsInTerrariaWorld(0))
         {
+            AmethystLog.Security.Debug(Name, $"security.badVec2 (position) => {packet.Player.Name} [Bad: {position.IsBadVector2()}; InWorld: {position.IsInTerrariaWorld(0)}; X: {position.X / 16}; Y: {position.Y / 16}]");
             packet.Player.Kick("security.badVec2");
             return true;
         }
@@ -49,6 +51,7 @@ public sealed class PlayerUpdateRule : ISecurityRule
 
             if (velocity.IsBadVector2() || velocity.X > 10000 || velocity.X < -10000 || velocity.Y > 10000 || velocity.Y < -10000)
             {
+                AmethystLog.Security.Debug(Name, $"security.badVec2 (velocity) => {packet.Player.Name} [Bad: {velocity.IsBadVector2()}; InWorld: {velocity.IsInTerrariaWorld(0)}; X: {velocity.X}; Y: {velocity.Y}]");
                 packet.Player.Kick("security.badVec2");
                 return true;
             }
@@ -57,7 +60,7 @@ public sealed class PlayerUpdateRule : ISecurityRule
 		{
             Vector2 returnPotion = reader.ReadVector2();
 
-            if (returnPotion.IsBadVector2() || !returnPotion.IsInTerrariaWorld())
+            if (returnPotion.IsBadVector2() || position.IsInTerrariaWorld(0))
             {
                 packet.Player.Kick("security.badVec2");
                 return true;

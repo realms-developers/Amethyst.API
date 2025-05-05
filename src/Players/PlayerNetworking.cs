@@ -4,6 +4,7 @@ using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Amethyst.Players.SSC.Enums;
+using Amethyst.Text;
 using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.Social;
@@ -151,12 +152,15 @@ internal static class PlayerNetworking
             string uuid = reader.ReadString();
             if (!Guid.TryParse(uuid, out _))
             {
-                packet.Player.Kick(Localization.Get("network.invalidUUID", packet.Player.Language));
-                result.Ignore(Localization.Get("network.invalidUUID", "en"));
+                packet.Player.Kick("network.invalidUUID");
+                result.Ignore("network.invalidUUID");
                 return;
             }
 
-            packet.Player.UUID = uuid;
+            packet.Player.UUID = uuid.SelfHash();
+            AmethystLog.Network.Debug("PlayerNetworking", $"Player '{packet.Player.Name}' (Index: {packet.Player.Index}) was authorized:");
+            AmethystLog.Network.Debug("PlayerNetworking", $" -> Hashed UUID: '{packet.Player.UUID}'");
+            AmethystLog.Network.Debug("PlayerNetworking", $" -> IP: {packet.Player.IP}");
         }
     }
 

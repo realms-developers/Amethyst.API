@@ -1,6 +1,6 @@
 namespace Amethyst.Network;
 
-public enum TileInteractType
+public enum TileInteractType : byte
 {
     // main
     KillTile = 0, KillTileNoItem = 4, KillTileV3 = 20,

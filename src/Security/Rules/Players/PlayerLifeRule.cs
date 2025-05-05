@@ -1,3 +1,4 @@
+using Amethyst.Core;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
@@ -25,9 +26,10 @@ public sealed class PlayerLifeRule : ISecurityRule
 		short current = reader.ReadInt16();
 		short max = reader.ReadInt16();
 
-        if (current > SecurityManager.Configuration.MaxAllowedLife ||
+        if (current > SecurityManager.Configuration.MaxAllowedLife * 1.2 ||
             max > SecurityManager.Configuration.MaxAllowedLife)
         {
+            AmethystLog.Security.Debug(Name, $"security.invalidLife => {packet.Player.Name} [Allowed Max: {SecurityManager.Configuration.MaxAllowedLife}; Current: {current}: Max: {max}]");
             packet.Player.Kick("security.invalidLife");
             return true;
         }

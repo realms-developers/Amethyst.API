@@ -69,6 +69,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         {
             Auth = new PlayerAuth(this);
         }
+
+        _lastPos = new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16);
     }
 
     internal CounterThreshold _tilesThreshold;

@@ -21,6 +21,8 @@ public sealed class PlayerSpawnRule : ISecurityRule
 
 		short spawnX = reader.ReadInt16();
 		short spawnY = reader.ReadInt16();
+        spawnX = spawnX == -1 ? (short)Main.spawnTileX : spawnX;
+        spawnY = spawnY == -1 ? (short)Main.spawnTileY : spawnY;
 	    int respawnTimer = reader.ReadInt32();
 
         if (!WorldGen.InWorld(spawnX, spawnY, 16) || respawnTimer > 60)

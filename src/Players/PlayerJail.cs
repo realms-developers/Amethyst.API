@@ -2,7 +2,7 @@ namespace Amethyst.Players;
 
 public sealed class PlayerJail
 {
-    public bool IsJailed => IsJailed || JailExpiration > DateTime.UtcNow;
+    public bool IsJailed => IsJailForced || JailExpiration > DateTime.UtcNow;
 
     public bool IsJailForced { get; private set; }
     public DateTime JailExpiration { get; private set; }
