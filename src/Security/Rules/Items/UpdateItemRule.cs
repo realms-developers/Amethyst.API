@@ -1,7 +1,12 @@
+using Amethyst.Core;
+using Amethyst.Items;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
 
 namespace Amethyst.Security.Rules.World;
 
@@ -21,13 +26,56 @@ public sealed class UpdateItemRule : ISecurityRule
     {
         var reader = packet.GetReader();
 
-        int index = reader.ReadInt16();
-	    Vector2 position = reader.ReadVector2();
-		Vector2 velocity = reader.ReadVector2();
-		int stack = reader.ReadInt16();
-		int prefix = reader.ReadByte();
-		int ownIgnore = reader.ReadByte();
-		int type = reader.ReadInt16();
+        short index = reader.ReadInt16();
+	    Vector2 position = NetExtensions.ReadVector2(reader);
+		Vector2 velocity = NetExtensions.ReadVector2(reader);
+		short stack = reader.ReadInt16();
+		byte prefix = reader.ReadByte();
+		byte ownIgnore = reader.ReadByte();
+		short type = reader.ReadInt16();
+
+        AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} item drop [Index: {index}, Type: {type}]");
+
+        if (index < 0 || index > Main.item.Length)
+        {
+            packet.Player.Kick("security.invalidItemIndex");
+            AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} invalid item index: {index}");
+            return true;
+        }
+
+        if (type == 0) // pickup
+        {
+            AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} invalid item type: {type}");
+            return true;
+        }
+
+        if (type < 0 || type >= ItemID.Count ||
+            prefix >= PrefixID.Count ||
+            stack <= 0 || stack > 9999)
+        {
+            AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} invalid item data [Type: {type}; Prefix: {prefix}, Stack: {stack}]");
+            return true;
+        }
+
+        if (index != 400 && Main.item[index].type != 0)
+        {
+            AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} tried to replace existing item");
+            return true;
+        }
+
+        Item item = new Item();
+        item.SetDefaults(type);
+        if (stack > item.maxStack)
+        {
+            AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} invalid item stack [Requested: {stack}, Max: {item.maxStack}]");
+            return true;
+        }
+
+
+        // code for returning item.
+        // ItemManager.LocalCreateItem(packet.Player, index, type, stack, prefix);
+
+        // TODO: drop threshold settings, returning item by threshold
 
         return false;
     }
