@@ -4,32 +4,35 @@ namespace Amethyst.Extensions.Plugins;
 
 public sealed class PluginContainer : IDisposable
 {
-    internal PluginContainer(int loadId, byte[] ilCode, Assembly assembly)
+    internal PluginContainer(string fileName, int loadId, byte[] ilCode, Assembly assembly)
     {
+        FileName = fileName;
         LoadID = loadId;
         ILCode = ilCode;
         Assembly = assembly;
     }
 
+    public string FileName { get; }
     public int LoadID { get; }
     public byte[] ILCode { get; }
     public Assembly Assembly { get; }
 
     public PluginInstance? PluginInstance { get; private set; }
 
-    public void Load()
+    public bool Load()
     {
         PluginInstance? instance = TryGetInstance();
         if (instance == null)
         {
             Dispose();
-            return;
+            return false;
         }
 
         instance.Container = this;
 
         PluginInstance = instance;
         PluginInstance.RequestLoad();
+        return true;
     }
 
     private PluginInstance? TryGetInstance()

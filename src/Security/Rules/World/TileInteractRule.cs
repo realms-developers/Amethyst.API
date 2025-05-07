@@ -119,17 +119,17 @@ public sealed class TileInteractRule : ISecurityRule
             case TileInteractType.KillTileNoItem:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.KillTileRange!.Value) ||
-                        CanKillTile());
+                        CanKillTile()) || player._securityThreshold.Fire(0);
 
             case TileInteractType.PlaceTile:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.PlaceTileRange!.Value) ||
-                        CanPlaceTile());
+                        CanPlaceTile()) || player._securityThreshold.Fire(1);
 
             case TileInteractType.ReplaceTile:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.ReplaceTileRange!.Value) ||
-                        CanKillTile() || CanPlaceTile());
+                        CanKillTile() || CanPlaceTile()) || player._securityThreshold.Fire(2);
             #endregion
 
             #region Walls
@@ -137,17 +137,17 @@ public sealed class TileInteractRule : ISecurityRule
             case TileInteractType.KillWall:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.KillWallRange!.Value) ||
-                        CanKillWall());
+                        CanKillWall()) || player._securityThreshold.Fire(3);
 
             case TileInteractType.PlaceWall:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.PlaceWallRange!.Value) ||
-                        CanPlaceWall());
+                        CanPlaceWall()) || player._securityThreshold.Fire(4);
 
             case TileInteractType.ReplaceWall:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.ReplaceWallRange!.Value) ||
-                        CanKillWall() || CanPlaceWall());
+                        CanKillWall() || CanPlaceWall()) || player._securityThreshold.Fire(5);
 
             #endregion
 

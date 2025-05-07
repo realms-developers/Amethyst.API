@@ -11,7 +11,7 @@ public abstract class PluginInstance
     public bool IsLoaded { get; private set; }
 
     //internal int LoadID;
-    internal PluginContainer? Container;
+    internal PluginContainer Container = null!;
 
     protected abstract void Load();
     protected abstract void Unload();
@@ -39,8 +39,16 @@ public abstract class PluginInstance
         }
         catch (Exception ex)
         {
-            AmethystLog.Main.Critical(nameof(PluginInstance), $"Failed to process '{logName}' operation for '{Name}':");
-            AmethystLog.Main.Critical(nameof(PluginInstance), ex.ToString());
+            if (logName == "Load" && PluginLoader.InFirstLoadStage)
+            {
+                PluginLoader.LogLoaded.Remove(Container.FileName);
+                PluginLoader.LogFailed.Add(Container.FileName, ex);
+            }
+            else
+            {
+                AmethystLog.Main.Critical(nameof(PluginInstance), $"Failed to process '{logName}' operation for '{Name}':");
+                AmethystLog.Main.Critical(nameof(PluginInstance), ex.ToString());
+            }
         }
 
         return false;

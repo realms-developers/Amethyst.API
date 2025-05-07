@@ -40,5 +40,9 @@ public struct SecurityConfiguration
     public int? PlaceWallThreshold { get; set; }
     public int? ReplaceWallThreshold { get; set; }
 
+    public bool DisableItemDropThreshold { get; set; }
+    public int? ItemDropThreshold { get; set; }
+    public bool? ReturnDroppedItemInThreshold { get; set; }
+
     public List<string> AllowedMessages { get; set; }
 }

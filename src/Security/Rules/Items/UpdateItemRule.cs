@@ -45,7 +45,13 @@ public sealed class UpdateItemRule : ISecurityRule
 
         if (type == 0) // pickup
         {
-            AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} invalid item type: {type}");
+            if (index == 400)
+            {
+                AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} stupid pickup; item index is 400");
+                return true;
+            }
+
+            AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} pickup {Main.item[index].type} => {type}");
             return true;
         }
 
@@ -71,6 +77,10 @@ public sealed class UpdateItemRule : ISecurityRule
             return true;
         }
 
+        if (packet.Player._securityThreshold.Fire(6)) // drop threshold
+        {
+            return true;
+        }
 
         // code for returning item.
         // ItemManager.LocalCreateItem(packet.Player, index, type, stack, prefix);

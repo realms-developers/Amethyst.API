@@ -14,6 +14,10 @@ public sealed class ServerProfile
 
     public bool DebugMode { get; set; }
 
+    public bool DisableFrameDebug { get; set; }
+
+    public bool ForceUpdate { get; set; }
+
     public bool SSCMode { get; set; }
 
     public string? WorldToLoad { get; set; }

@@ -109,7 +109,7 @@ internal static class ServerLauncher
                 num7 += totalMilliseconds - num6;
                 stopwatch.Reset();
                 stopwatch.Start();
-                if (Netplay.HasClients)
+                if (Netplay.HasClients || AmethystKernel.Profile!.ForceUpdate)
                 {
                     if (AmethystSession.Profile.DebugMode)
                     {
@@ -130,8 +130,9 @@ internal static class ServerLauncher
                                 totalMs += ms;
                             }
 
-                            AmethystLog.Main.Debug(
-                                nameof(ServerLauncher), $"GAME UPDATE: [MIN: {Math.Ceiling(ordered.First())}ms / MAX: {Math.Ceiling(ordered.Last())}ms] AVG: {Math.Ceiling(totalMs / 180)}ms, TOTAL: {(int)totalMs}ms");
+                            if (!AmethystKernel.Profile!.DisableFrameDebug)
+                                AmethystLog.Main.Debug(
+                                    nameof(ServerLauncher), $"Game Update: [Min-Max range: {Math.Ceiling(ordered.First())}-{Math.Ceiling(ordered.Last())}ms] average: {Math.Ceiling(totalMs / 180)}ms, total: {(int)totalMs}ms");
 
                             timings.Clear();
                         }

@@ -57,13 +57,14 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         _sentPackets = new bool[255];
         _sentModules = new bool[255];
 
-        _tilesThreshold = new CounterThreshold(6);
-        _tilesThreshold.Setup(0, SecurityManager.Configuration.KillTileThreshold!.Value);
-        _tilesThreshold.Setup(1, SecurityManager.Configuration.PlaceTileThreshold!.Value);
-        _tilesThreshold.Setup(2, SecurityManager.Configuration.ReplaceTileThreshold!.Value);
-        _tilesThreshold.Setup(3, SecurityManager.Configuration.KillWallThreshold!.Value);
-        _tilesThreshold.Setup(4, SecurityManager.Configuration.PlaceWallThreshold!.Value);
-        _tilesThreshold.Setup(5, SecurityManager.Configuration.ReplaceWallThreshold!.Value);
+        _securityThreshold = new CounterThreshold(7);
+        _securityThreshold.Setup(0, SecurityManager.Configuration.KillTileThreshold!.Value);
+        _securityThreshold.Setup(1, SecurityManager.Configuration.PlaceTileThreshold!.Value);
+        _securityThreshold.Setup(2, SecurityManager.Configuration.ReplaceTileThreshold!.Value);
+        _securityThreshold.Setup(3, SecurityManager.Configuration.KillWallThreshold!.Value);
+        _securityThreshold.Setup(4, SecurityManager.Configuration.PlaceWallThreshold!.Value);
+        _securityThreshold.Setup(5, SecurityManager.Configuration.ReplaceWallThreshold!.Value);
+        _securityThreshold.Setup(6, SecurityManager.Configuration.ItemDropThreshold!.Value);
 
         if (AuthManager.Configuration.EnableAuthorization)
         {
@@ -73,7 +74,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         _lastPos = new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16);
     }
 
-    internal CounterThreshold _tilesThreshold;
+    internal CounterThreshold _securityThreshold;
 
     private string _playerName;
     internal CounterThreshold _packetThreshold;

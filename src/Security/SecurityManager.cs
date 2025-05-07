@@ -81,6 +81,9 @@ public static class SecurityManager
         configuration.PlaceWallThreshold ??= 50;
         configuration.ReplaceWallThreshold ??= 50;
 
+        configuration.ItemDropThreshold ??= 8;
+        configuration.ReturnDroppedItemInThreshold ??= true;
+
         configuration.AllowedMessages ??=
         [
             "security_tile_safety",
@@ -99,7 +102,7 @@ public static class SecurityManager
 
         Rules.Add(rule.Name, ruleContainer);
 
-        AmethystLog.Security.Info("Security", $"Registered security rule '{rule.Name}'!");
+        //AmethystLog.Security.Info("Security", $"Registered security rule '{rule.Name}'!");
 
         if (!Configuration.DisabledRules.Contains(rule.Name))
             ruleContainer.RequestLoad();

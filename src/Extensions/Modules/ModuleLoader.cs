@@ -9,6 +9,10 @@ public static class ModuleLoader
     internal static List<AmethystModule> Modules = [];
     internal static string ModulesPath = Path.Combine("extensions", "modules");
 
+    internal static List<string> LogSkipped = [];
+    internal static List<string> LogLoaded = [];
+    internal static Dictionary<string, Exception> LogFailed = [];
+
     internal static void LoadModules()
     {
         // Create the directory if it doesn't exist
@@ -57,7 +61,8 @@ public static class ModuleLoader
 
             if (!AmethystSession.ExtensionsConfiguration.AllowedModules.Contains(fileName))
             {
-                AmethystLog.Main.Warning(nameof(ModuleLoader), $"Skipped '{fileName}'.");
+                LogSkipped.Add(fileName);
+                //AmethystLog.Main.Warning(nameof(ModuleLoader), $"Skipped '{fileName}'.");
                 continue;
             }
 
@@ -84,11 +89,14 @@ public static class ModuleLoader
         {
             module.InitializeDelegate.ForEach(p => p());
             CommandsManager.ImportCommands(assembly, null);
+
+            LogLoaded.Add(module.Name);
         }
         catch (Exception ex)
         {
-            AmethystLog.Main.Critical(nameof(ModuleLoader), $"Failed to load module '{module.Name}':");
-            AmethystLog.Main.Critical(nameof(ModuleLoader), ex.ToString());
+            LogFailed.Add(module.Name, ex);
+            // AmethystLog.Main.Critical(nameof(ModuleLoader), $"Failed to load module '{module.Name}':");
+            // AmethystLog.Main.Critical(nameof(ModuleLoader), ex.ToString());
         }
 
         Modules.Add(module);

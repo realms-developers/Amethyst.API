@@ -14,6 +14,11 @@ public static class PluginLoader
 
     public static IReadOnlyList<PluginContainer> LoadedPluginContainers => Containers.ToList().AsReadOnly();
 
+    internal static List<string> LogSkipped = [];
+    internal static List<string> LogLoaded = [];
+    internal static Dictionary<string, Exception> LogFailed = [];
+    internal static bool InFirstLoadStage = true;
+
     internal static void InvokeLoad(PluginContainer container) => OnPluginLoad?.Invoke(container);
     internal static void InvokeUnload(PluginContainer container) => OnPluginUnload?.Invoke(container);
 
@@ -29,6 +34,8 @@ public static class PluginLoader
         LoadExtended();
 
         LoadFromDirectory(PluginsPath);
+
+        InFirstLoadStage = false;
     }
 
     internal static void LoadExtended()
@@ -66,14 +73,28 @@ public static class PluginLoader
 
             if (!AmethystSession.ExtensionsConfiguration.AllowedPlugins.Contains(fileName))
             {
-                AmethystLog.Main.Warning(nameof(PluginLoader), $"Skipped '{fileName}'.");
+                LogSkipped.Add(fileName);
+                //AmethystLog.Main.Warning(nameof(PluginLoader), $"Skipped '{fileName}'.");
                 continue;
             }
 
-            AmethystLog.Main.Info(nameof(PluginLoader), $"Loading '{fileName}'...");
+            //AmethystLog.Main.Info(nameof(PluginLoader), $"Loading '{fileName}'...");
 
             // Reuse fileName here too
-            CreateContainer(fileName, File.ReadAllBytes(file))?.Load();
+            PluginContainer? container = CreateContainer(fileName, File.ReadAllBytes(file));
+            if (container == null)
+            {
+                continue;
+            }
+
+            if (container.Load())
+            {
+                LogLoaded.Add(fileName);
+            }
+            else
+            {
+                LogFailed.Add(fileName, new NoInstancePluginException(fileName));
+            }
         }
     }
 
@@ -88,7 +109,7 @@ public static class PluginLoader
 
         _currentLoadID++;
 
-        PluginContainer container = new(_currentLoadID, data, asm);
+        PluginContainer container = new(name, _currentLoadID, data, asm);
         Containers.Add(container);
 
         return container;
@@ -111,8 +132,9 @@ public static class PluginLoader
         }
         catch (Exception ex)
         {
-            AmethystLog.Main.Critical(nameof(PluginLoader), $"Failed to load assembly '{name}':");
-            AmethystLog.Main.Critical(nameof(PluginLoader), ex.ToString());
+            LogFailed.Add(name, ex);
+            // AmethystLog.Main.Critical(nameof(PluginLoader), $"Failed to load assembly '{name}':");
+            // AmethystLog.Main.Critical(nameof(PluginLoader), ex.ToString());
         }
 
         return null;

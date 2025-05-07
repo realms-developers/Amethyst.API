@@ -51,6 +51,14 @@ public static class CommandConfiguration
             ["--ssc", "-ssc"],
             "Enable server-side characters");
 
+        Option<bool> forceUpdateOption = new(
+            ["--forceupdate", "-forceupdate"],
+            "Force game update cycle.");
+
+        Option<bool> noFrameDebugOption = new(
+            ["--noframedebug", "-noframedebug"],
+            "Disable GameUpdate stopwatch");
+
         // Add options individually
         rootCommand.AddOption(profileOption);
         rootCommand.AddOption(languageOption);
@@ -64,6 +72,8 @@ public static class CommandConfiguration
         rootCommand.AddOption(netSlotsOption);
         rootCommand.AddOption(debugOption);
         rootCommand.AddOption(sscOption);
+        rootCommand.AddOption(forceUpdateOption);
+        rootCommand.AddOption(noFrameDebugOption);
 
         // Set handler with all command implementations
         rootCommand.SetHandler((InvocationContext context) =>
@@ -73,74 +83,89 @@ public static class CommandConfiguration
                 // Handle profile first
                 string profile = context.ParseResult.GetValueForOption(profileOption)!;
                 AmethystKernel.Profile = new Profiles.ServerProfile(profile);
-                ModernConsole.WriteLine($"$!bLoaded server profile '{profile}'.");
+                //ModernConsole.WriteLine($"$!bLoaded server profile '{profile}'.");
 
                 #region Handle Option
 
                 HandleOptionWithProfile(context, languageOption, value =>
                 {
                     AmethystKernel.Profile.DefaultLanguage = value;
-                    ModernConsole.WriteLine($"$!bDefault server language set to: '{value}'.");
+                    //ModernConsole.WriteLine($"$!bDefault server language set to: '{value}'.");
                 });
 
                 HandleOptionWithProfile(context, genEvilOption, value =>
                 {
                     AmethystKernel.Profile.GenerationRules.Evil = value;
-                    ModernConsole.WriteLine($"$!bWorld evil: {value}.");
+                    //ModernConsole.WriteLine($"$!bWorld evil: {value}.");
                 });
 
                 HandleOptionWithProfile(context, genGameModeOption, value =>
                 {
                     AmethystKernel.Profile.GenerationRules.GameMode = value;
-                    ModernConsole.WriteLine($"$!bWorld gamemode: {value}.");
+                    //ModernConsole.WriteLine($"$!bWorld gamemode: {value}.");
                 });
 
                 HandleOptionWithProfile(context, genWidthOption, value =>
                 {
                     AmethystKernel.Profile.GenerationRules.Width = value;
-                    ModernConsole.WriteLine($"$!bWorld width: {value}.");
+                    //ModernConsole.WriteLine($"$!bWorld width: {value}.");
                 });
 
                 HandleOptionWithProfile(context, genHeightOption, value =>
                 {
                     AmethystKernel.Profile.GenerationRules.Height = value;
-                    ModernConsole.WriteLine($"$!bWorld height: {value}.");
+                    //ModernConsole.WriteLine($"$!bWorld height: {value}.");
                 });
 
                 HandleOptionWithProfile(context, worldPathOption, value =>
                 {
                     AmethystKernel.Profile.WorldToLoad = value;
-                    ModernConsole.WriteLine($"$!bSet world to load: {value}.");
+                    //ModernConsole.WriteLine($"$!bSet world to load: {value}.");
                 });
 
                 HandleOptionWithProfile(context, worldRecreateOption, value =>
                 {
                     AmethystKernel.Profile.WorldRecreate = value;
-                    ModernConsole.WriteLine($"$!bRecreate world: {value}.");
+                    //ModernConsole.WriteLine($"$!bRecreate world: {value}.");
                 });
 
                 HandleOptionWithProfile(context, netPortOption, value =>
                 {
                     AmethystKernel.Profile.Port = value;
-                    ModernConsole.WriteLine($"$!bSet server port to {value}.");
+                    //ModernConsole.WriteLine($"$!bSet server port to {value}.");
                 });
 
                 HandleOptionWithProfile(context, netSlotsOption, value =>
                 {
                     AmethystKernel.Profile.MaxPlayers = value;
-                    ModernConsole.WriteLine($"$!bSet max players to {value}.");
+                    //ModernConsole.WriteLine($"$!bSet max players to {value}.");
                 });
 
                 HandleOptionWithProfile(context, debugOption, value =>
                 {
                     AmethystKernel.Profile.DebugMode = value;
-                    ModernConsole.WriteLine("$bWarning: Debug mode enabled. Any player can have root access.");
+                    // if (value)
+                    // {
+                    //     ModernConsole.WriteLine("$bWarning: Debug mode enabled. Any player can have root access.");
+                    // }
                 });
 
                 HandleOptionWithProfile(context, sscOption, value =>
                 {
                     AmethystKernel.Profile.SSCMode = value;
-                    ModernConsole.WriteLine("$!bSSC enabled.");
+                    //ModernConsole.WriteLine($"$!bSSC was {(value ? "enabled" : "disabled")}.");
+                });
+
+                HandleOptionWithProfile(context, forceUpdateOption, value =>
+                {
+                    AmethystKernel.Profile.ForceUpdate = value;
+                    //ModernConsole.WriteLine($"$!bGame update was {(value ? "forced" : "online depended")}.");
+                });
+
+                HandleOptionWithProfile(context, noFrameDebugOption, value =>
+                {
+                    AmethystKernel.Profile.DisableFrameDebug = value;
+                    //ModernConsole.WriteLine($"$!bFrame debug was {(value ? "disabled" : "enabled")}.");
                 });
 
                 #endregion
