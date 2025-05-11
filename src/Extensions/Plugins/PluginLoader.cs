@@ -7,12 +7,13 @@ public static class PluginLoader
 {
     internal static List<PluginContainer> Containers = [];
     internal static string PluginsPath = Path.Combine("extensions", "plugins");
+
     private static int _currentLoadID;
 
     public static event PluginOperationHandler? OnPluginLoad;
     public static event PluginOperationHandler? OnPluginUnload;
 
-    public static IReadOnlyList<PluginContainer> LoadedPluginContainers => Containers.ToList().AsReadOnly();
+    public static IReadOnlyList<PluginContainer> LoadedPluginContainers => Containers.AsReadOnly();
 
     internal static void InvokeLoad(PluginContainer container) => OnPluginLoad?.Invoke(container);
     internal static void InvokeUnload(PluginContainer container) => OnPluginUnload?.Invoke(container);
@@ -94,19 +95,16 @@ public static class PluginLoader
         return container;
     }
 
-    internal static void RemovePlugin(int id)
-    {
-        Containers.RemoveAll(p => p.LoadID == id);
-    }
+    internal static void RemovePlugin(int id) => Containers.RemoveAll(p => p.LoadID == id);
 
     private static Assembly? TryLoadAssembly(string name, byte[] data)
     {
         try
         {
             // can throw BadImageException
-            // so this is reason why we use try-catch
 
             Assembly assembly = Assembly.Load(data);
+
             return assembly;
         }
         catch (Exception ex)
