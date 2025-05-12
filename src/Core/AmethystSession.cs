@@ -14,16 +14,6 @@ namespace Amethyst.Core;
 
 public static class AmethystSession
 {
-    // private static AmethystSession? _session = null;
-
-    // // dsaf dont touch this
-    // // this was initialized in AmethystKernel
-    // public static AmethystSession Session
-    // {
-    //     get => _session ?? throw new InvalidOperationException("Cannot get access to a uninitialized AmethystSession.");
-    //     private set => _session = value;
-    // }
-
     static AmethystSession()
     {
         // Session = this;
@@ -109,7 +99,7 @@ public static class AmethystSession
         ModernConsole.WriteLine("$!b$m(_)_/ \\__,_|_| |_| |_|\\___|\\__|_| |_|\\__, |___/\\__|");
         ModernConsole.WriteLine("$!b$m                                     |___/         ");
 
-        ModernConsole.WriteLine($"\n🛡️  $!b$mAmethyst v{typeof(AmethystSession).Assembly.GetName().Version!.ToString()} $!r$!bis distributed under the MIT License.");
+        ModernConsole.WriteLine($"\n🛡️  $!b$mAmethyst v{typeof(AmethystSession).Assembly.GetName().Version} $!r$!bis distributed under the MIT License.");
         ModernConsole.WriteLine($"🛡️  You are free to use, modify and distribute the code, provided that the author is attributed.");
 
         ModernConsole.WriteLine($"\n💾 Server with profile $!d$m'$!r$m{Profile.Name}$!d'$!r runs in {(Profile.DebugMode ? "$!b$rDebug" : "$!b$!gSafe")} $!rmode{(Profile.DisableFrameDebug ? " without frame debugging" : "")}.");
@@ -172,11 +162,11 @@ public static class AmethystSession
 
         foreach (KeyValuePair<string, Exception> kvp in ModuleLoader.LogFailed)
         {
-            ModernConsole.WriteLine($"Failed to load $bmodule$!r $!d$b'$!r$b{kvp.Key}$!d'$!r: $r{kvp.Value.ToString()}");
+            ModernConsole.WriteLine($"Failed to load $bmodule$!r $!d$b'$!r$b{kvp.Key}$!d'$!r: $r{kvp.Value}");
         }
         foreach (KeyValuePair<string, Exception> kvp in PluginLoader.LogFailed)
         {
-            ModernConsole.WriteLine($"Failed to load $gplugin$!r $!d$g'$!r$g{kvp.Key}$!d'$!r: $r{kvp.Value.ToString()}");
+            ModernConsole.WriteLine($"Failed to load $gplugin$!r $!d$g'$!r$g{kvp.Key}$!d'$!r: $r{kvp.Value}");
         }
 
         Console.WriteLine("\n");
