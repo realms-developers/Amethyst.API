@@ -28,6 +28,7 @@ internal static class PlayerNetworking
             // Authorization
             NetworkManager.Binding.AddInPacket(PacketTypes.ClientUUID, OnPlayerUUID);
             NetworkManager.Binding.AddInPacket(PacketTypes.PlayerInfo, OnPlayerInfo);
+            NetworkManager.Binding.AddInPacket(PacketTypes.ClientPlatform, OnPlayerPlatform);
 
             // SSC
             if (PlayerManager.IsSSCEnabled)
@@ -161,6 +162,24 @@ internal static class PlayerNetworking
             AmethystLog.Network.Debug("PlayerNetworking", $"Player '{packet.Player.Name}' (Index: {packet.Player.Index}) was authorized:");
             AmethystLog.Network.Debug("PlayerNetworking", $" -> Hashed UUID: '{packet.Player.UUID}'");
             AmethystLog.Network.Debug("PlayerNetworking", $" -> IP: {packet.Player.IP}");
+        }
+
+        private static void OnPlayerPlatform(in IncomingPacket packet, PacketHandleResult result)
+        {
+            if (packet.Player._sentPlatformPacket)
+            {
+                return;
+            }
+
+            packet.Player._sentPlatformPacket = true;
+
+            BinaryReader reader = packet.GetReader();
+            reader.BaseStream.Position += 2;
+
+            byte platform = reader.ReadByte();
+
+            packet.Player.Platform = (PlayerPlatform)platform;
+            AmethystLog.Network.Info("PlayerNetworking", $"Player '{packet.Player.Name}' (Index: {packet.Player.Index}) is joining via '{packet.Player.Platform}' platform...");
         }
     }
 

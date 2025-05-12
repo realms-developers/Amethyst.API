@@ -2,17 +2,42 @@ namespace Amethyst.Players;
 
 public sealed class PlayerJail
 {
-    public bool IsJailed => IsJailForced || JailExpiration > DateTime.UtcNow;
+    internal PlayerJail(NetPlayer player)
+    {
+        BasePlayer = player;
+    }
+
+    public bool IsJailed => IsJailForced || JailExpiration > DateTime.UtcNow || _jailDelegates.Any(p => p(BasePlayer));
 
     public bool IsJailForced { get; private set; }
     public DateTime JailExpiration { get; private set; }
+    public IReadOnlyList<JailCheck> JailDelegates => _jailDelegates.AsReadOnly();
 
-    public void ForceJail(bool value = true)
+    public NetPlayer BasePlayer { get; private set; }
+
+    private List<JailCheck> _jailDelegates = new List<JailCheck>();
+
+    public void AddCheck(JailCheck checkDelegate)
+    {
+        if (_jailDelegates.Contains(checkDelegate))
+        {
+            return;
+        }
+
+        _jailDelegates.Add(checkDelegate);
+    }
+
+    public void RemoveCheck(JailCheck checkDelegate)
+    {
+        _jailDelegates.Remove(checkDelegate);
+    }
+
+    public void SetForce(bool value = true)
     {
         IsJailForced = value;
     }
 
-    public void TempJail(TimeSpan span)
+    public void SetTemp(TimeSpan span)
     {
         DateTime newExpiration = DateTime.UtcNow + span;
 
@@ -23,4 +48,6 @@ public sealed class PlayerJail
 
         JailExpiration = newExpiration;
     }
+
+    public delegate bool JailCheck(NetPlayer player);
 }

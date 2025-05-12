@@ -49,7 +49,7 @@ public sealed class PlayerUpdateRule : ISecurityRule
 		{
             Vector2 velocity = reader.ReadVector2();
 
-            if (velocity.IsBadVector2() || velocity.X > 10000 || velocity.X < -10000 || velocity.Y > 10000 || velocity.Y < -10000)
+            if (velocity.IsBadVector2() || velocity.X > 5000 || velocity.X < -5000 || velocity.Y > 5000 || velocity.Y < -5000)
             {
                 AmethystLog.Security.Debug(Name, $"security.badVec2 (velocity) => {packet.Player.Name} [Bad: {velocity.IsBadVector2()}; InWorld: {velocity.IsInTerrariaWorld(0)}; X: {velocity.X}; Y: {velocity.Y}]");
                 packet.Player.Kick("security.badVec2");

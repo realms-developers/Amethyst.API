@@ -38,6 +38,19 @@ public sealed class TileInteractRule : ISecurityRule
         NetPlayer player = packet.Player;
         Tile tile = Main.tile[x, y];
 
+        if (packet.Player.Jail.IsJailed)
+        {
+            player.Utils.SendRectangle(x, y, 2);
+            return true;
+        }
+
+        if (packet.Player.IsHeldItemBanned)
+        {
+            player.Utils.SendRectangle(x, y, 2);
+
+            packet.Player.ReplyError("security.itemBanned", packet.Player.Utils.HeldItem.type);
+            return true;
+        }
 
         bool CanPlaceTile()
         {

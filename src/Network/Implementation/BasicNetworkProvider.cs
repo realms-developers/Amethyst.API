@@ -75,7 +75,12 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
         NetPlayer player = PlayerManager.Tracker[self.whoAmI];
 
-        if (SecurityManager.Configuration.DisabledPackets.Contains(packetId) || packetId <= 0 || packetId >= MessageID.Count)
+        if (player.Socket.IsFrozen)
+        {
+            return;
+        }
+
+        if (SecurityManager.Configuration.DisabledPackets.Contains(packetId) || packetId <= 0 || packetId > 150)
         {
             AmethystLog.Security.Debug("Network", $"Invalid or blocked packet: {packetId}");
             return;
@@ -90,7 +95,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         // terraria code asmr
         if (Netplay.Clients[self.whoAmI].State < 10 && packetId > 12 && packetId != 67 && packetId != 56 &&
             packetId != 82 && packetId != 93 && packetId != 16 && packetId != 42 && packetId != 50 && packetId != 38
-            && packetId != 68 && packetId != 147)
+            && packetId != 68 && packetId != 147 && packetId != 150)
         {
             return;
         }

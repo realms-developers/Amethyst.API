@@ -22,7 +22,7 @@ public sealed class PlayerInfoRule : ISecurityRule
         string name = reader.ReadString();
         if (SecurityManager.Configuration.EnableNicknameFilter == true)
         {
-            foreach (char character in name)
+            foreach (char character in name.ToLowerInvariant())
             {
                 if (!SecurityManager.Configuration.NicknameFilter.Contains(character))
                 {

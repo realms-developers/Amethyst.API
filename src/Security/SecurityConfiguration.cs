@@ -44,5 +44,7 @@ public struct SecurityConfiguration
     public int? ItemDropThreshold { get; set; }
     public bool? ReturnDroppedItemInThreshold { get; set; }
 
+    public int? MaxProjectilesPerUser { get; set; }
+
     public List<string> AllowedMessages { get; set; }
 }

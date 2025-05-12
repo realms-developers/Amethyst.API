@@ -34,14 +34,14 @@ public sealed class NetworkInstance
     }
 
     // Used ONLY for security.
-    public List<SecurityHandler<IncomingPacket>>[] SecureIncoming { get; } = new List<SecurityHandler<IncomingPacket>>[MessageID.Count];
+    public List<SecurityHandler<IncomingPacket>>[] SecureIncoming { get; } = new List<SecurityHandler<IncomingPacket>>[255];
     public List<SecurityHandler<IncomingModule>>[] SecureIncomingModules { get; } = new List<SecurityHandler<IncomingModule>>[255];
 
-    public List<PacketHandler<IncomingPacket>>[] Incoming { get; } = new List<PacketHandler<IncomingPacket>>[MessageID.Count];
+    public List<PacketHandler<IncomingPacket>>[] Incoming { get; } = new List<PacketHandler<IncomingPacket>>[255];
     public List<PacketHandler<IncomingModule>>[] IncomingModules { get; } = new List<PacketHandler<IncomingModule>>[255];
-    public List<PacketHandler<OutcomingPacket>>[] Outcoming { get; } = new List<PacketHandler<OutcomingPacket>>[MessageID.Count];
+    public List<PacketHandler<OutcomingPacket>>[] Outcoming { get; } = new List<PacketHandler<OutcomingPacket>>[255];
 
-    public PacketHandler<IncomingPacket>?[] IncomingReplace { get; } = new PacketHandler<IncomingPacket>?[MessageID.Count];
+    public PacketHandler<IncomingPacket>?[] IncomingReplace { get; } = new PacketHandler<IncomingPacket>?[255];
     public PacketHandler<IncomingModule>?[] IncomingModuleReplace { get; } = new PacketHandler<IncomingModule>?[255];
-    public PacketHandler<OutcomingPacket>?[] OutcomingReplace { get; } = new PacketHandler<OutcomingPacket>?[MessageID.Count];
+    public PacketHandler<OutcomingPacket>?[] OutcomingReplace { get; } = new PacketHandler<OutcomingPacket>?[255];
 }

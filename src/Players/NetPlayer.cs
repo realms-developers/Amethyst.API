@@ -6,6 +6,7 @@ using Amethyst.Network.Managing;
 using Amethyst.Permissions;
 using Amethyst.Players.Auth;
 using Amethyst.Players.Extensions;
+using Amethyst.Players.SSC;
 using Amethyst.Players.SSC.Enums;
 using Amethyst.Players.SSC.Interfaces;
 using Amethyst.Security;
@@ -17,6 +18,33 @@ namespace Amethyst.Players;
 
 public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 {
+    internal static bool JailItemBanCheck(NetPlayer player)
+    {
+        List<int> slots = player._weirdSlots; // important memory copy
+        List<int> realWeirdSlots = new List<int>(player._weirdSlots.Capacity);
+        List<int> holdingBannedItems = [];
+
+        foreach (int slot in slots)
+        {
+            NetItem item = player.Character[slot];
+
+            if (SecurityManager.ItemBans.Contains(item.ID))
+            {
+                if (!holdingBannedItems.Contains(item.ID))
+                {
+                    holdingBannedItems.Add(item.ID);
+                }
+
+                realWeirdSlots.Add(slot);
+            }
+        }
+
+        player._weirdSlots = realWeirdSlots;
+        player._holdingBannedItems = holdingBannedItems;
+
+        return realWeirdSlots.Count > 0;
+    }
+
     private static readonly Color _replyErrorColor = new(201, 71, 71);
     private static readonly Color _replyInfoColor = new(191, 201, 71);
     private static readonly Color _replySuccessColor = new(71, 201, 75);
@@ -40,7 +68,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 
         Rules = new PlayerRules(this);
 
-        Jail = new PlayerJail();
+        Jail = new PlayerJail(this);
 
         _packetThreshold = new CounterThreshold(255);
         foreach (KeyValuePair<int, int> limit in SecurityManager.Configuration.PerSecondLimitPackets)
@@ -72,16 +100,13 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         }
 
         _lastPos = new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16);
+
+        Platform = PlayerPlatform.PC;
+
+        Character = new ClientCharacterWrapper(this, new CharacterModel(Name));
+
+        Jail.AddCheck(JailItemBanCheck);
     }
-
-    internal CounterThreshold _securityThreshold;
-
-    private string _playerName;
-    internal CounterThreshold _packetThreshold;
-    internal CounterThreshold _moduleThreshold;
-
-    internal bool[] _sentPackets;
-    internal bool[] _sentModules;
 
     public int Index { get; }
 
@@ -97,7 +122,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 
     public INetworkClient Socket => NetworkManager.Provider.GetClient(Index)!;
 
-    public ICharacterWrapper? Character { get; internal set; }
+    public ICharacterWrapper Character { get; internal set; }
 
     public LocalPlayerUtils Utils { get; }
 
@@ -117,6 +142,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
     /// </summary>
     public bool IsJoined => UUID != "" && Name != "" && _wasSpawned;
 
+    public bool IsHeldItemBanned => Utils.HeldItem.type >= 0 && Utils.HeldItem.stack > 0 && SecurityManager.ItemBans.Contains(Utils.HeldItem.type);
+
     /// <summary>
     /// Indicates that player is capable (can run commands, modify world and etc...)
     /// </summary>
@@ -126,10 +153,26 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 
     public string Language { get; set; }
 
+    public PlayerPlatform Platform { get; set; }
+
+    public IReadOnlyList<int> HoldingBannedItems => _holdingBannedItems.AsReadOnly();
+
+    internal List<int> _holdingBannedItems = [];
+
+    internal CounterThreshold _securityThreshold;
+
+    private string _playerName;
+    internal CounterThreshold _packetThreshold;
+    internal CounterThreshold _moduleThreshold;
+
+    internal bool[] _sentPackets;
+    internal bool[] _sentModules;
+
     private readonly Dictionary<Type, IPlayerExtension> _extensions;
 
     internal bool _wasSpawned;
     internal bool _sentSpawnPacket; // used for preventing anonymous clients
+    internal bool _sentPlatformPacket;
 
     internal short _lastLife;
     internal short _lastMaxLife;
@@ -146,6 +189,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
     internal byte _initHideMisc;
     internal NetColor[] _initColors = new NetColor[7];
     internal Dictionary<string, DateTime> _notifyDelay = new Dictionary<string, DateTime>();
+
+    internal List<int> _weirdSlots = [];
 
     public bool CanNotify(string messageType, TimeSpan delay)
     {

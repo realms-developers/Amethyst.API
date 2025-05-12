@@ -65,4 +65,33 @@ public static class ItemManager
 
         player.Socket.SendPacket(itemOwnPacket);
     }
+
+    public static void LocalDecorativeItem(NetPlayer player, short itemIndex, int type, int stack, byte prefix)
+    {
+        itemIndex = itemIndex == 400 ? FindFreeIndex() : itemIndex;
+
+        if (itemIndex == -1)
+        {
+            return;
+        }
+
+        byte[] itemBasePacket = new PacketWriter().SetType(21)
+                                .PackInt16(itemIndex)
+                                .PackVector2(player.TPlayer.position)
+                                .PackVector2(Vector2.Zero)
+                                .PackInt16((short)stack)
+                                .PackByte(prefix)
+                                .PackByte((byte)player.Index)
+                                .PackInt16((short)type)
+                                .BuildPacket();
+
+        player.Socket.SendPacket(itemBasePacket);
+
+        byte[] itemOwnPacket = new PacketWriter().SetType(22)
+                                .PackInt16(itemIndex)
+                                .PackByte((byte)254)
+                                .BuildPacket();
+
+        player.Socket.SendPacket(itemOwnPacket);
+    }
 }

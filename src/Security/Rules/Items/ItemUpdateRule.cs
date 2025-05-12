@@ -10,7 +10,7 @@ using Terraria.Localization;
 
 namespace Amethyst.Security.Rules.World;
 
-public sealed class UpdateItemRule : ISecurityRule
+public sealed class ItemUpdateRule : ISecurityRule
 {
     public string Name => "coresec_itemUpdate";
 
@@ -34,6 +34,13 @@ public sealed class UpdateItemRule : ISecurityRule
 		byte ownIgnore = reader.ReadByte();
 		short type = reader.ReadInt16();
 
+        if (position.IsBadVector2() || !position.IsInTerrariaWorld() || velocity.IsBadVector2())
+        {
+            AmethystLog.Security.Debug(Name, $"security.badVec2 (item) => {packet.Player.Name} item {index} [Bad: {position.IsBadVector2()}; Bad Velocity: {velocity.IsBadVector2()} InWorld: {position.IsInTerrariaWorld()}; X: {position.X / 16}; Y: {position.Y / 16}]");
+            packet.Player.Kick("security.badVec2");
+            return true;
+        }
+
         AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} item drop [Index: {index}, Type: {type}]");
 
         if (index < 0 || index > Main.item.Length)
@@ -52,7 +59,7 @@ public sealed class UpdateItemRule : ISecurityRule
             }
 
             AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} pickup {Main.item[index].type} => {type}");
-            return true;
+            return false;
         }
 
         if (type < 0 || type >= ItemID.Count ||
@@ -63,9 +70,18 @@ public sealed class UpdateItemRule : ISecurityRule
             return true;
         }
 
-        if (index != 400 && Main.item[index].type != 0)
+        if (index != 400 && Main.item[index].type > 0 && Main.item[index].stack > 0)
         {
             AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} tried to replace existing item");
+            return true;
+        }
+
+        if (SecurityManager.ItemBans.Contains(type))
+        {
+            Main.item[index] = new Item();
+            NetMessage.SendData(21, packet.Sender, -1, NetworkText.Empty, index);
+
+            packet.Player.ReplyError("security.itemBanned", type);
             return true;
         }
 
@@ -77,15 +93,14 @@ public sealed class UpdateItemRule : ISecurityRule
             return true;
         }
 
-        if (packet.Player._securityThreshold.Fire(6)) // drop threshold
+        if (!SecurityManager.Configuration.DisableItemDropThreshold && packet.Player._securityThreshold.Fire(6)) // drop threshold
         {
+            if (SecurityManager.Configuration.ReturnDroppedItemInThreshold == true)
+            {
+                ItemManager.LocalCreateItem(packet.Player, index, type, stack, prefix);
+            }
             return true;
         }
-
-        // code for returning item.
-        // ItemManager.LocalCreateItem(packet.Player, index, type, stack, prefix);
-
-        // TODO: drop threshold settings, returning item by threshold
 
         return false;
     }
