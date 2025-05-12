@@ -10,6 +10,7 @@ using Amethyst.Players.SSC;
 using Amethyst.Players.SSC.Enums;
 using Amethyst.Players.SSC.Interfaces;
 using Amethyst.Security;
+using Amethyst.Security.Limits;
 using Amethyst.Text;
 using Microsoft.Xna.Framework;
 using Terraria;

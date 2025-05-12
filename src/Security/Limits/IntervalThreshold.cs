@@ -1,29 +1,26 @@
-namespace Amethyst.Security;
+namespace Amethyst.Security.Limits;
 
-public class IntervalThreshold : IThreshold
+public class IntervalThreshold(int maxCounters, bool alwaysReset) : IThreshold
 {
-    public IntervalThreshold(int maxCounters, bool alwaysReset)
-    {
-        _alwaysReset = alwaysReset;
-        _counters = new DateTime[maxCounters];
-        _intervals = new int[maxCounters];
-    }
-
-    private DateTime[] _counters;
-    private int[] _intervals;
-    private bool _alwaysReset;
+    private DateTime[] _counters = new DateTime[maxCounters];
+    private int[] _intervals = new int[maxCounters];
     private bool _disposed;
 
     public bool Fire(int index)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (_intervals[index] == 0) return false;
+        if (_intervals[index] == 0)
+        {
+            return false;
+        }
 
         if (_counters[index].AddMilliseconds(_intervals[index]) > DateTime.UtcNow)
         {
-            if (_alwaysReset)
+            if (alwaysReset)
+            {
                 _counters[index] = DateTime.UtcNow;
+            }
 
             return true;
         }

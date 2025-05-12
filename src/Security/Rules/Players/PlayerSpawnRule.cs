@@ -15,15 +15,15 @@ public sealed class PlayerSpawnRule : ISecurityRule
 
     private bool OnPlayerSpawn(in IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
 
-		reader.ReadByte();
+        reader.ReadByte();
 
-		short spawnX = reader.ReadInt16();
-		short spawnY = reader.ReadInt16();
+        short spawnX = reader.ReadInt16();
+        short spawnY = reader.ReadInt16();
         spawnX = spawnX == -1 ? (short)Main.spawnTileX : spawnX;
         spawnY = spawnY == -1 ? (short)Main.spawnTileY : spawnY;
-	    int respawnTimer = reader.ReadInt32();
+        int respawnTimer = reader.ReadInt32();
 
         if (!WorldGen.InWorld(spawnX, spawnY, 16) || respawnTimer > 60)
         {

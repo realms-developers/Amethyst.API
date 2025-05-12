@@ -3,8 +3,6 @@ using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Amethyst.Players;
-using Microsoft.Xna.Framework;
-using Terraria;
 
 namespace Amethyst.Security.Rules.Players;
 
@@ -19,12 +17,12 @@ public sealed class PlayerLifeRule : ISecurityRule
 
     private bool OnPlayerLife(in IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
 
-		reader.ReadByte();
+        reader.ReadByte();
 
-		short current = reader.ReadInt16();
-		short max = reader.ReadInt16();
+        short current = reader.ReadInt16();
+        short max = reader.ReadInt16();
 
         if (current > SecurityManager.Configuration.MaxAllowedLife * 1.2 ||
             max > SecurityManager.Configuration.MaxAllowedLife)

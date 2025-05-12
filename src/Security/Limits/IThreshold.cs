@@ -1,4 +1,4 @@
-namespace Amethyst.Security;
+namespace Amethyst.Security.Limits;
 
 public interface IThreshold : IDisposable
 {

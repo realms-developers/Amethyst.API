@@ -17,13 +17,13 @@ public sealed class TileInteractRule : ISecurityRule
 
     private bool OnTileInteract(in IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
 
         TileInteractType interactType = reader.Read<TileInteractType>();
         int x = reader.ReadInt16();
         int y = reader.ReadInt16();
         short type = reader.ReadInt16();
-        int style = reader.ReadByte();
+        int _ = reader.ReadByte();
 
         if (!WorldGen.InWorld(x, y, 16))
         {
@@ -66,7 +66,8 @@ public sealed class TileInteractRule : ISecurityRule
             }
 
             return false;
-        };
+        }
+        ;
 
         bool CanKillTile()
         {
@@ -82,7 +83,8 @@ public sealed class TileInteractRule : ISecurityRule
             }
 
             return false;
-        };
+        }
+        ;
 
         bool CanPlaceWall()
         {
@@ -98,7 +100,8 @@ public sealed class TileInteractRule : ISecurityRule
             }
 
             return false;
-        };
+        }
+        ;
 
         bool CanKillWall()
         {
@@ -114,12 +117,15 @@ public sealed class TileInteractRule : ISecurityRule
             }
 
             return false;
-        };
+        }
+        ;
 
         bool NetworkResetTilesIf(bool value)
         {
             if (value)
+            {
                 player.Utils.SendRectangle(x, y, 2);
+            }
 
             return value;
         }

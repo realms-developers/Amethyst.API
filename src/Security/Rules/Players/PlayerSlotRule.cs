@@ -18,14 +18,14 @@ public sealed class PlayerSlotRule : ISecurityRule
 
     private bool OnPlayerSlot(in IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
 
         reader.ReadByte();
 
         int slotId = reader.ReadInt16();
-		int stack = reader.ReadInt16();
-		int prefix = reader.ReadByte();
-		int type = reader.ReadInt16();
+        int stack = reader.ReadInt16();
+        int prefix = reader.ReadByte();
+        int type = reader.ReadInt16();
 
         if (slotId < 0 || slotId >= 350 ||
             type < -1 || type >= ItemID.Count ||
@@ -43,7 +43,7 @@ public sealed class PlayerSlotRule : ISecurityRule
 
         if (SecurityManager.Configuration.PreventStackCheat)
         {
-            Item item = new Item();
+            Item item = new();
             item.SetDefaults(type);
 
             if (stack > item.maxStack)

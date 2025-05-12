@@ -1,6 +1,5 @@
 using System.Reflection;
 using Amethyst.Core;
-using Amethyst.Network;
 using Amethyst.Security.GameBans;
 
 namespace Amethyst.Security;
@@ -50,8 +49,8 @@ public static class SecurityManager
         configuration.DisabledRules ??= [];
 
         configuration.PerSecondLimitPackets ??= [];
-        configuration.OneTimePackets ??= [ 1, 6, 8 ];
-        configuration.DisabledPackets ??= [ 136 ];
+        configuration.OneTimePackets ??= [1, 6, 8];
+        configuration.DisabledPackets ??= [136];
 
         configuration.PerSecondLimitModules ??= [];
         configuration.OneTimeModules ??= [];
@@ -98,14 +97,16 @@ public static class SecurityManager
             throw new ArgumentException($"Security rule with name {rule.Name} is already registered.");
         }
 
-        RuleContainer ruleContainer = new RuleContainer(rule);
+        RuleContainer ruleContainer = new(rule);
 
         Rules.Add(rule.Name, ruleContainer);
 
         //AmethystLog.Security.Info("Security", $"Registered security rule '{rule.Name}'!");
 
         if (!Configuration.DisabledRules.Contains(rule.Name))
+        {
             ruleContainer.RequestLoad();
+        }
     }
 
     public static void UnregisterRule(string name)

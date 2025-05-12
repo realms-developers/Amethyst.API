@@ -4,7 +4,7 @@ using Amethyst.Network.Packets;
 using Microsoft.Xna.Framework;
 using Terraria;
 
-namespace Amethyst.Security.Rules.World;
+namespace Amethyst.Security.Rules.Projectiles;
 
 public sealed class ProjectileUpdateRule : ISecurityRule
 {
@@ -17,7 +17,7 @@ public sealed class ProjectileUpdateRule : ISecurityRule
 
     private bool OnUpdateProjectile(in IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
 
         int identity = reader.ReadInt16();
         Vector2 position = reader.ReadVector2();

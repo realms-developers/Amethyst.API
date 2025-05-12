@@ -1,10 +1,10 @@
 using Timer = System.Timers.Timer;
 
-namespace Amethyst.Security;
+namespace Amethyst.Security.Limits;
 
 public class CounterThreshold : IThreshold
 {
-    internal static Timer ResetTimer = new Timer(1000)
+    internal static Timer ResetTimer = new(1000)
     {
         AutoReset = true,
         Enabled = true
@@ -26,12 +26,12 @@ public class CounterThreshold : IThreshold
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (_maxValues[index] == 0) return false;
+        if (_maxValues[index] == 0)
+        {
+            return false;
+        }
 
-        if (_counters[index]++ > _maxValues[index])
-            return true;
-
-        return false;
+        return _counters[index]++ > _maxValues[index];
     }
 
     public void Setup(int index, int max)
@@ -44,7 +44,9 @@ public class CounterThreshold : IThreshold
     private void OnReset(object? sender, System.Timers.ElapsedEventArgs e)
     {
         for (int i = 0; i < _counters.Length; i++)
+        {
             _counters[i] = 0;
+        }
     }
 
     public void Dispose()

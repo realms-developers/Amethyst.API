@@ -17,17 +17,17 @@ public sealed class PlayerUpdateRule : ISecurityRule
 
     private bool OnPlayerUpdate(in IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
 
-		reader.ReadByte();
+        reader.ReadByte();
 
-		BitsByte bb1 = reader.ReadByte();
-		BitsByte bb2 = reader.ReadByte();
+        BitsByte bb1 = reader.ReadByte();
+        BitsByte bb2 = reader.ReadByte();
         BitsByte bb3 = reader.ReadByte();
         BitsByte bb4 = reader.ReadByte();
 
-		reader.ReadByte();
-		Vector2 position = reader.ReadVector2();
+        reader.ReadByte();
+        Vector2 position = reader.ReadVector2();
 
         if (packet.Player.Jail.IsJailed)
         {
@@ -45,8 +45,8 @@ public sealed class PlayerUpdateRule : ISecurityRule
 
         packet.Player._lastPos = position;
 
-		if (bb2[2])
-		{
+        if (bb2[2])
+        {
             Vector2 velocity = reader.ReadVector2();
 
             if (velocity.IsBadVector2() || velocity.X > 5000 || velocity.X < -5000 || velocity.Y > 5000 || velocity.Y < -5000)
@@ -56,8 +56,8 @@ public sealed class PlayerUpdateRule : ISecurityRule
                 return true;
             }
         }
-		if (bb3[6])
-		{
+        if (bb3[6])
+        {
             Vector2 returnPotion = reader.ReadVector2();
 
             if (returnPotion.IsBadVector2() || position.IsInTerrariaWorld(0))

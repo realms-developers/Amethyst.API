@@ -16,7 +16,7 @@ public sealed class PlayerInfoRule : ISecurityRule
 
     private bool OnPlayerInfo(in IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
         reader.BaseStream.Position += 3;
 
         string name = reader.ReadString();
@@ -26,7 +26,7 @@ public sealed class PlayerInfoRule : ISecurityRule
             {
                 if (!SecurityManager.Configuration.NicknameFilter.Contains(character))
                 {
-                    packet.Player.Kick("security.invalidSymbols", [ character ]);
+                    packet.Player.Kick("security.invalidSymbols", [character]);
                     return true;
                 }
             }

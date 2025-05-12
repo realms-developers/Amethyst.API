@@ -8,7 +8,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 
-namespace Amethyst.Security.Rules.World;
+namespace Amethyst.Security.Rules.Items;
 
 public sealed class ItemUpdateRule : ISecurityRule
 {
@@ -24,15 +24,15 @@ public sealed class ItemUpdateRule : ISecurityRule
 
     private bool OnUpdateItem(in IncomingPacket packet)
     {
-        var reader = packet.GetReader();
+        BinaryReader reader = packet.GetReader();
 
         short index = reader.ReadInt16();
-	    Vector2 position = NetExtensions.ReadVector2(reader);
-		Vector2 velocity = NetExtensions.ReadVector2(reader);
-		short stack = reader.ReadInt16();
-		byte prefix = reader.ReadByte();
-		byte ownIgnore = reader.ReadByte();
-		short type = reader.ReadInt16();
+        Vector2 position = NetExtensions.ReadVector2(reader);
+        Vector2 velocity = NetExtensions.ReadVector2(reader);
+        short stack = reader.ReadInt16();
+        byte prefix = reader.ReadByte();
+        byte _ = reader.ReadByte();
+        short type = reader.ReadInt16();
 
         if (position.IsBadVector2() || !position.IsInTerrariaWorld() || velocity.IsBadVector2())
         {
@@ -85,7 +85,7 @@ public sealed class ItemUpdateRule : ISecurityRule
             return true;
         }
 
-        Item item = new Item();
+        Item item = new();
         item.SetDefaults(type);
         if (stack > item.maxStack)
         {

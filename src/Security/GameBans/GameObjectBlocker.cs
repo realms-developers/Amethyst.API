@@ -8,7 +8,7 @@ public sealed class GameObjectBlocker
     internal GameObjectBlocker(string name)
     {
         models = new MongoModels<GameObjectBan>(MongoDatabase.Main, name);
-        bans = models.FindAll().Select(static p => int.Parse(p.Name, CultureInfo.CurrentCulture)).ToHashSet();
+        bans = [.. models.FindAll().Select(static p => int.Parse(p.Name, CultureInfo.CurrentCulture))];
     }
 
     internal MongoModels<GameObjectBan> models;
@@ -16,7 +16,7 @@ public sealed class GameObjectBlocker
 
     public void Refresh()
     {
-        bans = models.FindAll().Select(static p => int.Parse(p.Name, CultureInfo.CurrentCulture)).ToHashSet();
+        bans = [.. models.FindAll().Select(static p => int.Parse(p.Name, CultureInfo.CurrentCulture))];
     }
 
     public void Add(int id)
@@ -36,6 +36,8 @@ public sealed class GameObjectBlocker
     public IEnumerable<int> GetEnumerable()
     {
         foreach (int value in bans)
+        {
             yield return value;
+        }
     }
 }
