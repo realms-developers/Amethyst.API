@@ -83,7 +83,7 @@ public sealed class LocalPlayerUtils
     }
 
     public void SendStatusText(NetworkText text)
-        => NetMessage.SendData(9, Player.Index, -1, text);
+        => NetMessage.SendData(9, Player.Index, -1, text, 0, 3);
 
     public void GiveItem(in NetItem item)
         => GiveItem(item.ID, item.Stack, item.Prefix);
