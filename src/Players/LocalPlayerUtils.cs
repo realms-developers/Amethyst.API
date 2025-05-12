@@ -35,10 +35,7 @@ public sealed class LocalPlayerUtils
         return InRectangle(x - strippedSize, y - strippedSize, x + strippedSize, y + strippedSize);
     }
 
-    public bool InRectangle(int x, int y, int x2, int y2)
-    {
-        return TileX >= x && TileX <= x2 && TileY >= y && TileY <= y2;
-    }
+    public bool InRectangle(int x, int y, int x2, int y2) => TileX >= x && TileX <= x2 && TileY >= y && TileY <= y2;
 
     public void SendRectangle(int x, int y, byte size, TileChangeType changeType = TileChangeType.None)
         => NetMessage.SendTileSquare(Player.Index, x, y, size, changeType);
@@ -99,6 +96,7 @@ public sealed class LocalPlayerUtils
 
     public void SendCombatText(string text, Color color)
         => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
+
     public void SendCombatText(string text, NetColor color)
         => WorldUtils.SendCombatText(Player.Utils.PosX, Player.Utils.PosY, text, color, Player);
 
