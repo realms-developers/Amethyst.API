@@ -1,3 +1,6 @@
+using Amethyst.Core;
+using Microsoft.Xna.Framework;
+
 namespace Amethyst.Players;
 
 public sealed class PlayerJail
@@ -35,6 +38,9 @@ public sealed class PlayerJail
     public void SetForce(bool value = true)
     {
         IsJailForced = value;
+
+        if (AmethystSession.Profile.DebugMode)
+            BasePlayer.SendMessage($"[Debug]: Jail -> Force {value}.", Color.OrangeRed);
     }
 
     public void SetTemp(TimeSpan span)
@@ -47,6 +53,10 @@ public sealed class PlayerJail
         }
 
         JailExpiration = newExpiration;
+        BasePlayer.Utils.Disable(span);
+
+        if (AmethystSession.Profile.DebugMode)
+            BasePlayer.SendMessage($"[Debug]: Jail -> Temp {span.TotalSeconds}s.", Color.OrangeRed);
     }
 
     public delegate bool JailCheck(NetPlayer player);

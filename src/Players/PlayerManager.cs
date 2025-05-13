@@ -38,6 +38,15 @@ public static class PlayerManager
         foreach (NetPlayer plr in Tracker)
         {
             plr.Character?.SaveUpdate();
+
+            if (plr.Jail.JailExpiration > DateTime.UtcNow)
+            {
+                plr.Utils.Disable((plr.Jail.JailExpiration - DateTime.UtcNow).Add(TimeSpan.FromSeconds(2)));
+            }
+            else if (plr.Jail.IsJailed)
+            {
+                plr.Utils.Disable(TimeSpan.FromSeconds(3));
+            }
         }
     }
 }

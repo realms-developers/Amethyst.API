@@ -31,7 +31,6 @@ public sealed class PlayerUpdateRule : ISecurityRule
 
         if (packet.Player.Jail.IsJailed)
         {
-            packet.Player.Utils.Disable(TimeSpan.FromSeconds(3));
             packet.Player.Utils.Teleport(packet.Player._lastPos.X, packet.Player._lastPos.Y);
             return true;
         }

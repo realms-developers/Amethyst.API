@@ -83,6 +83,9 @@ public static class SecurityManager
         configuration.ItemDropThreshold ??= 8;
         configuration.ReturnDroppedItemInThreshold ??= true;
 
+        configuration.MaxProjectilesPerUser ??= 60;
+        configuration.ProjectileCreateThreshold ??= 45;
+
         configuration.AllowedMessages ??=
         [
             "security_tile_safety",

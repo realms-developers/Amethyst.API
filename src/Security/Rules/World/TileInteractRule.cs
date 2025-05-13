@@ -120,12 +120,15 @@ public sealed class TileInteractRule : ISecurityRule
         }
         ;
 
-        bool NetworkResetTilesIf(bool value)
+        bool NetworkResetTilesIf(bool value, bool threshold)
         {
             if (value)
             {
                 player.Utils.SendRectangle(x, y, 2);
             }
+
+            if (threshold)
+                player.Jail.SetTemp(TimeSpan.FromSeconds(5));
 
             return value;
         }
@@ -138,17 +141,17 @@ public sealed class TileInteractRule : ISecurityRule
             case TileInteractType.KillTileNoItem:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.KillTileRange!.Value) ||
-                        CanKillTile()) || player._securityThreshold.Fire(0);
+                        CanKillTile(), player._securityThreshold.Fire(0));
 
             case TileInteractType.PlaceTile:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.PlaceTileRange!.Value) ||
-                        CanPlaceTile()) || player._securityThreshold.Fire(1);
+                        CanPlaceTile(), player._securityThreshold.Fire(1));
 
             case TileInteractType.ReplaceTile:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.ReplaceTileRange!.Value) ||
-                        CanKillTile() || CanPlaceTile()) || player._securityThreshold.Fire(2);
+                        CanKillTile() || CanPlaceTile(), player._securityThreshold.Fire(2));
             #endregion
 
             #region Walls
@@ -156,17 +159,17 @@ public sealed class TileInteractRule : ISecurityRule
             case TileInteractType.KillWall:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.KillWallRange!.Value) ||
-                        CanKillWall()) || player._securityThreshold.Fire(3);
+                        CanKillWall(), player._securityThreshold.Fire(3));
 
             case TileInteractType.PlaceWall:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.PlaceWallRange!.Value) ||
-                        CanPlaceWall()) || player._securityThreshold.Fire(4);
+                        CanPlaceWall(), player._securityThreshold.Fire(4));
 
             case TileInteractType.ReplaceWall:
 
                 return NetworkResetTilesIf(!player.Utils.InCenteredCube(x, y, SecurityManager.Configuration.ReplaceWallRange!.Value) ||
-                        CanKillWall() || CanPlaceWall()) || player._securityThreshold.Fire(5);
+                        CanKillWall() || CanPlaceWall(), player._securityThreshold.Fire(5));
 
             #endregion
 

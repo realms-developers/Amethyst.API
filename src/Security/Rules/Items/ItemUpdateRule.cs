@@ -34,6 +34,12 @@ public sealed class ItemUpdateRule : ISecurityRule
         byte _ = reader.ReadByte();
         short type = reader.ReadInt16();
 
+        if (packet.Player.Jail.IsJailed)
+        {
+            NetMessage.SendData(21, packet.Sender, -1, NetworkText.Empty, index);
+            return true;
+        }
+
         if (position.IsBadVector2() || !position.IsInTerrariaWorld() || velocity.IsBadVector2())
         {
             AmethystLog.Security.Debug(Name, $"security.badVec2 (item) => {packet.Player.Name} item {index} [Bad: {position.IsBadVector2()}; Bad Velocity: {velocity.IsBadVector2()} InWorld: {position.IsInTerrariaWorld()}; X: {position.X / 16}; Y: {position.Y / 16}]");
@@ -90,6 +96,7 @@ public sealed class ItemUpdateRule : ISecurityRule
         if (stack > item.maxStack)
         {
             AmethystLog.Security.Debug(Name, $"security.itemUpdate => {packet.Player.Name} invalid item stack [Requested: {stack}, Max: {item.maxStack}]");
+            packet.Player.Jail.SetTemp(TimeSpan.FromSeconds(3));
             return true;
         }
 
@@ -99,6 +106,7 @@ public sealed class ItemUpdateRule : ISecurityRule
             {
                 ItemManager.LocalCreateItem(packet.Player, index, type, stack, prefix);
             }
+            packet.Player.Jail.SetTemp(TimeSpan.FromSeconds(3));
             return true;
         }
 

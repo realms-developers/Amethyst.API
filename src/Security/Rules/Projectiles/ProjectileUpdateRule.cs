@@ -19,9 +19,15 @@ public sealed class ProjectileUpdateRule : ISecurityRule
     {
         BinaryReader reader = packet.GetReader();
 
-        int identity = reader.ReadInt16();
+        short identity = reader.ReadInt16();
         Vector2 position = reader.ReadVector2();
         Vector2 velocity = reader.ReadVector2();
+
+        if (packet.Player.Jail.IsJailed)
+        {
+            packet.Player.Utils.RemoveProjectile(identity);
+            return true;
+        }
 
         if (position.IsBadVector2() || !position.IsInTerrariaWorld(0))
         {
@@ -54,6 +60,32 @@ public sealed class ProjectileUpdateRule : ISecurityRule
             projUuid = -1;
         }
         ai[2] = flags2[0] ? reader.ReadSingle() : 0f;
+
+        if (packet.Player.IsHeldItemBanned)
+        {
+            packet.Player.Utils.RemoveProjectile(identity);
+            packet.Player.ReplyError("security.itemBanned", packet.Player.Utils.HeldItem.type);
+            return true;
+        }
+
+        if (SecurityManager.ProjectileBans.Contains(type))
+        {
+            packet.Player.Utils.RemoveProjectile(identity);
+            packet.Player.ReplyError("security.projBanned", type);
+            return true;
+        }
+
+        owner = packet.Sender;
+        Projectile? projectile = Main.projectile.FirstOrDefault(p => p != null && p.owner == owner && p.identity == identity);
+
+        bool isNew = projectile == null || !projectile.active;
+
+        if (isNew && packet.Player._securityThreshold.Fire(7))
+        {
+            packet.Player.Utils.RemoveProjectile(identity);
+            packet.Player.Jail.SetTemp(TimeSpan.FromSeconds(3));
+            return true;
+        }
 
         return false;
     }

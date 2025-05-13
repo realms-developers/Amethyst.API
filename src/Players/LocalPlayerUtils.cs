@@ -156,13 +156,13 @@ public sealed class LocalPlayerUtils
         Player.Socket.SendPacket(packetBytes);
     }
 
-    public void RemoveProjectile(short index, bool broadcast = true)
+    public void RemoveProjectile(short identity, bool broadcast = true)
     {
         using PacketWriter writer = new();
 
         byte[] packetBytes = writer
             .SetType((short)PacketTypes.ProjectileNew)
-            .PackInt16(index)
+            .PackInt16(identity)
             .PackSingle(-1)
             .PackSingle(-1)
             .PackSingle(0)
