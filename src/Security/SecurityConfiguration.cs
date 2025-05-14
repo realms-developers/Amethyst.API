@@ -49,7 +49,7 @@ public struct SecurityConfiguration
 
     public bool DisableSwitchingPvP { get; set; }
 
-    public bool? DisableChestNameFilter { get; set; }
+    public bool DisableChestNameFilter { get; set; }
     public int? ChestFateThreshold { get; set; }
 
     public List<string> AllowedMessages { get; set; }

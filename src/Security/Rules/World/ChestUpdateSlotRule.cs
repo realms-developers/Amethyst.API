@@ -44,6 +44,8 @@ public sealed class ChestUpdateSlotRule : ISecurityRule
             return true;
         }
 
+        // TODO: item prefix and stack check
+
         if (SecurityManager.ItemBans.Contains(type))
         {
             chest.item[slot] ??= new Item();
