@@ -86,6 +86,8 @@ public static class SecurityManager
         configuration.MaxProjectilesPerUser ??= 60;
         configuration.ProjectileCreateThreshold ??= 45;
 
+        configuration.ChestFateThreshold ??= 8;
+
         configuration.AllowedMessages ??=
         [
             "security_tile_safety",

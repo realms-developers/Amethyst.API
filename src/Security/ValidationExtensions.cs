@@ -10,6 +10,18 @@ public static class ValidationExtensions
         return  float.IsNaN(vector2.X) || float.IsInfinity(vector2.X) ||
                 float.IsNaN(vector2.Y) || float.IsInfinity(vector2.Y);
     }
+
+    public static bool IsInTerrariaWorld(this Point point, int offset = 8)
+    {
+        float min = offset;
+
+        float maxX = Main.maxTilesX - offset;
+        float maxY = Main.maxTilesY - offset;
+
+        return  point.X >= min || point.X <= maxX ||
+                point.Y >= min || point.Y <= maxY;
+    }
+
     public static bool IsInTerrariaWorld(this Vector2 vector2, int offset = 8)
     {
         float min = offset * 16;

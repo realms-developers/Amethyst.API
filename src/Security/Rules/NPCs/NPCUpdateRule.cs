@@ -14,7 +14,7 @@ public sealed class NPCUpdateRule : ISecurityRule
 
     private bool OnUpdateNPC(in IncomingPacket packet)
     {
-        throw new NotImplementedException();
+        return packet.Player.Jail.IsJailed;
     }
 
     public void Unload(NetworkInstance net)

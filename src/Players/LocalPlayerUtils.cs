@@ -37,6 +37,12 @@ public sealed class LocalPlayerUtils
 
     public bool InRectangle(int x, int y, int x2, int y2) => TileX >= x && TileX <= x2 && TileY >= y && TileY <= y2;
 
+    public void SetPvP(bool value, bool localSync = false)
+    {
+        Player.TPlayer.hostile = value;
+        NetMessage.SendData(30, localSync ? Player.Index : -1, -1, NetworkText.Empty, Player.Index);
+    }
+
     public void SendRectangle(int x, int y, byte size, TileChangeType changeType = TileChangeType.None)
         => NetMessage.SendTileSquare(Player.Index, x, y, size, changeType);
 

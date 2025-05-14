@@ -47,5 +47,10 @@ public struct SecurityConfiguration
     public int? MaxProjectilesPerUser { get; set; }
     public int? ProjectileCreateThreshold { get; set; }
 
+    public bool DisableSwitchingPvP { get; set; }
+
+    public bool? DisableChestNameFilter { get; set; }
+    public int? ChestFateThreshold { get; set; }
+
     public List<string> AllowedMessages { get; set; }
 }
