@@ -1,3 +1,4 @@
+using Amethyst.Commands;
 using Amethyst.Core;
 
 namespace Amethyst.Extensions.Plugins;
@@ -10,11 +11,29 @@ public abstract class PluginInstance
 
     public bool IsLoaded { get; private set; }
 
-    //internal int LoadID;
+    public int LoadID => Container.LoadID;
+
     internal PluginContainer Container = null!;
 
     protected abstract void Load();
     protected abstract void Unload();
+
+    public bool RegisterCommand(CommandData data)
+    {
+        if (CommandsManager.FindCommand(data.Name) != null)
+        {
+            return false;
+        }
+
+        CommandData commandData = new(LoadID, data.Name, data.Description,
+            data.Method, data.Settings, data.Type,
+            data.Permission, data.Syntax);
+
+
+        CommandsManager.Commands.Add(new(commandData));
+
+        return true;
+    }
 
     internal bool RequestLoad()
     {
@@ -36,6 +55,22 @@ public abstract class PluginInstance
         {
             action();
             return true;
+        }
+        catch (FileNotFoundException fnfe)
+        {
+            string errorMessage = $"Failed to {logName} plugin '{Name}'. Missing dependency: {Path.GetFileNameWithoutExtension(fnfe.FileName)}.dll\n" +
+                             $"Please ensure '{fnfe.FileName}' is present in the dependencies directory.";
+
+            if (logName == "Load" && PluginLoader.InFirstLoadStage)
+            {
+                PluginLoader.LogLoaded.Remove(Container.FileName);
+                PluginLoader.LogFailed.Add(Container.FileName, new FileNotFoundException(errorMessage, fnfe));
+            }
+            else
+            {
+                AmethystLog.Main.Critical(nameof(PluginInstance), errorMessage);
+            }
+            return false;
         }
         catch (Exception ex)
         {

@@ -38,16 +38,14 @@ public sealed class CommandRunner
         return true;
     }
 
-    public void Run(ICommandSender sender, string arguments)
+    public void Run(ICommandSender sender, string arguments, string name)
     {
         List<string> parsedArgs = TextUtility.SplitArguments(arguments);
-        Run(new(sender, arguments, parsedArgs));
+        Run(new(sender, arguments, parsedArgs, name));
     }
 
-    public void Run(ICommandSender sender, List<string> arguments)
-    {
-        Run(new(sender, string.Join(' ', arguments), arguments));
-    }
+    public void Run(ICommandSender sender, List<string> arguments, string name) =>
+        Run(new(sender, string.Join(' ', arguments), arguments, name));
 
     public void Run(CommandInvokeContext ctx)
     {
@@ -73,11 +71,7 @@ public sealed class CommandRunner
         {
             if (tie.InnerException != null)
             {
-                // Get the original exception
-                Exception originalException = tie.InnerException;
-
-                // Rethrow the original exception
-                throw originalException;
+                throw tie.InnerException;
             }
 
             throw;

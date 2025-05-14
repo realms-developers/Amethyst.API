@@ -73,7 +73,7 @@ public static class CommandsManager
         try
         {
             string arguments = text.Substring(runner.Data.Name.Length).TrimStart();
-            runner.Run(sender, arguments);
+            runner.Run(sender, arguments, runner.Data.Name);
             return true;
         }
         catch (Exception ex)
@@ -166,7 +166,7 @@ public static class CommandsManager
         return parameters.Length > 0 && parameters[0].ParameterType == typeof(CommandInvokeContext);
     }
 
-    private static CommandData CreateCommandData(
+    public static CommandData CreateCommandData(
         (MethodInfo Method, ServerCommandAttribute? CommandAttr,
          CommandsSyntaxAttribute? SyntaxAttr, CommandsSettingsAttribute? SettingsAttr) t,
         int? pluginId) =>

@@ -60,7 +60,6 @@ public static class PluginLoader
         }
     }
 
-
     internal static void LoadFromDirectory(string path)
     {
         IEnumerable<string> files = Directory.EnumerateFiles(path, "*.dll", SearchOption.TopDirectoryOnly)

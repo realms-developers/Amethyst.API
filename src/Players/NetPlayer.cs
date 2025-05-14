@@ -215,7 +215,9 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
     internal void UnloadExtensions()
     {
         foreach (KeyValuePair<Type, IPlayerExtension> kvp in _extensions)
+        {
             kvp.Value.Unload();
+        }
 
         _extensions.Clear();
     }
@@ -243,7 +245,9 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         Type type = typeof(T);
 
         if (_extensions.TryGetValue(type, out IPlayerExtension? ext))
+        {
             ext?.Unload();
+        }
 
         _extensions.Remove(type);
     }
@@ -281,6 +285,8 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
     public bool HasTilePermission(int x, int y, int? width = null, int? height = null)
         => IsCapable && (IsRootGranted || AmethystSession.PlayerPermissions.HandleResult(p => p.HasTilePermission(this, x, y, width, height)) == PermissionAccess.HasPermission);
 
+    public void SendMessage(string text) => SendMessage(text, Color.White);
+
     public void SendMessage(string text, Color color)
     {
         byte[] packet = new PacketWriter().SetType(82)
@@ -294,6 +300,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         Socket.SendPacket(packet);
     }
 
+    public void ReplyMessage(string text) => ReplyMessage(text, Color.White);
 
     public void ReplyMessage(string text, Color color)
         => SendMessage($"[c/303030:{Localization.Get("amethyst.serverPrefix", Language)}:] {text}", color);

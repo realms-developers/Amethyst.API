@@ -1,9 +1,5 @@
 namespace Amethyst.Extensions.Plugins;
 
-public sealed class NoInstancePluginException : Exception
+public sealed class NoInstancePluginException(string name) : Exception($"Cannot find AmethystPlugin instance in '{name}'")
 {
-    public NoInstancePluginException(string name) : base($"Cannot find AmethystPlugin instance in '{name}'")
-    {
-
-    }
 }

@@ -92,17 +92,19 @@ public static class AmethystSession
     {
         Console.Clear();
 
-        ModernConsole.WriteLine("$!b$m      __                   _   _               _   ");
-        ModernConsole.WriteLine("$!b$m     / /_ _ _ __ ___   ___| |_| |__  _   _ ___| |_ ");
-        ModernConsole.WriteLine("$!b$m    / / _` | '_ ` _ \\ / _ \\ __| '_ \\| | | / __| __|");
-        ModernConsole.WriteLine("$!b$m _ / / (_| | | | | | |  __/ |_| | | | |_| \\__ \\ |_ ");
-        ModernConsole.WriteLine("$!b$m(_)_/ \\__,_|_| |_| |_|\\___|\\__|_| |_|\\__, |___/\\__|");
-        ModernConsole.WriteLine("$!b$m                                     |___/         ");
+        ModernConsole.WriteLine(@"
+$!b$m      __                   _   _               _   
+$!b$m     / /_ _ _ __ ___   ___| |_| |__  _   _ ___| |_ 
+$!b$m    / / _` | '_ ` _ \ / _ \ __| '_ \| | | / __| __|
+$!b$m _ / / (_| | | | | | |  __/ |_| | | | |_| \__ \ |_ 
+$!b$m(_)_/ \__,_|_| |_| |_|\___|\__|_| |_|\__, |___/\__|
+$!b$m                                     |___/         ");
 
         ModernConsole.WriteLine($"\n🛡️  $!b$mAmethyst v{typeof(AmethystSession).Assembly.GetName().Version} $!r$!bis distributed under the MIT License.");
         ModernConsole.WriteLine($"🛡️  You are free to use, modify and distribute the code, provided that the author is attributed.");
 
         ModernConsole.WriteLine($"\n💾 Server with profile $!d$m'$!r$m{Profile.Name}$!d'$!r runs in {(Profile.DebugMode ? "$!b$rDebug" : "$!b$!gSafe")} $!rmode{(Profile.DisableFrameDebug ? " without frame debugging" : "")}.");
+
         if (Profile.DebugMode)
         {
             ModernConsole.WriteLine("❗ $rThis means that more data needed for development will be logged to the console.");
@@ -129,7 +131,7 @@ public static class AmethystSession
             ModernConsole.WriteLine($"$!d   {line}");
         }
 
-        if (ModuleLoader.LogLoaded.Count > 1 || PluginLoader.LogLoaded.Count > 1)
+        if (ModuleLoader.LogLoaded.Count > 0 || PluginLoader.LogLoaded.Count > 0)
         {
             ModernConsole.WriteLine($"\n✔️  $gLoaded$!r extensions: ($bmodules$!r, $gplugins)");
             foreach (string line in PagesCollection.PageifyItems(ModuleLoader.LogLoaded, 100))
@@ -142,7 +144,7 @@ public static class AmethystSession
             }
         }
 
-        if (ModuleLoader.LogSkipped.Count > 1 || PluginLoader.LogSkipped.Count > 1)
+        if (ModuleLoader.LogSkipped.Count > 0 || PluginLoader.LogSkipped.Count > 0)
         {
             ModernConsole.WriteLine($"\n⭕ $!gSkipped$!r extensions: ($bmodules$!r, $gplugins)");
             foreach (string line in PagesCollection.PageifyItems(ModuleLoader.LogSkipped, 100))
@@ -164,6 +166,7 @@ public static class AmethystSession
         {
             ModernConsole.WriteLine($"Failed to load $bmodule$!r $!d$b'$!r$b{kvp.Key}$!d'$!r: $r{kvp.Value}");
         }
+
         foreach (KeyValuePair<string, Exception> kvp in PluginLoader.LogFailed)
         {
             ModernConsole.WriteLine($"Failed to load $gplugin$!r $!d$g'$!r$g{kvp.Key}$!d'$!r: $r{kvp.Value}");
