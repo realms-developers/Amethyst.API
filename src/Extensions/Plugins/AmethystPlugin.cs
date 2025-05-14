@@ -35,6 +35,23 @@ public abstract class PluginInstance
         return true;
     }
 
+    public bool UnregisterCommand(string name)
+    {
+        CommandRunner? command = CommandsManager.FindCommand(name);
+
+        if (command == null || command.Data.PluginID != LoadID)
+        {
+            return false;
+        }
+
+        return CommandsManager.Commands.Remove(command);
+    }
+
+    /// <summary>
+    /// Called automatically on unload
+    /// </summary>
+    public int UnregisterCommands() => CommandsManager.Commands.RemoveAll(p => p.Data.PluginID == LoadID);
+
     internal bool RequestLoad()
     {
         IsLoaded = true;

@@ -114,10 +114,7 @@ public static class PluginLoader
         return container;
     }
 
-    internal static void RemovePlugin(int id)
-    {
-        Containers.RemoveAll(p => p.LoadID == id);
-    }
+    internal static void RemovePlugin(int id) => Containers.RemoveAll(p => p.LoadID == id);
 
     private static Assembly? TryLoadAssembly(string name, byte[] data)
     {

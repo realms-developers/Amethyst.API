@@ -92,7 +92,7 @@ public static class CommandsManager
         () => sender.ReplyError("commands.ingameOnly"));
 
     private static (bool IsValid, Action HandleError) ValidateRCON(ICommandSender sender, CommandRunner runner) =>
-        ((runner.Data.Type != CommandType.Console || sender.Type == SenderType.Console),
+        (runner.Data.Type != CommandType.Console || sender.Type == SenderType.Console,
         () => sender.ReplyError("commands.rconOnly"));
 
     private static (bool IsValid, Action HandleError) ValidatePermissions(ICommandSender sender, CommandRunner runner) =>
@@ -119,7 +119,7 @@ public static class CommandsManager
     }
 
     private static void OnPluginUnload(PluginContainer container) =>
-        Commands.RemoveAll(p => p.Data.PluginID == container.LoadID);
+        container.PluginInstance!.UnregisterCommands();
 
     private static void OnPluginLoad(PluginContainer container) =>
         ImportCommands(container.Assembly, container.LoadID);
