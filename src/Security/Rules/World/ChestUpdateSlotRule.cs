@@ -3,6 +3,7 @@ using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Amethyst.Players;
 using Terraria;
+using Terraria.Localization;
 
 namespace Amethyst.Security.Rules.World;
 
@@ -40,6 +41,15 @@ public sealed class ChestUpdateSlotRule : ISecurityRule
         if (chest == null || chest.item == null || slot >= chest.item.Length ||
             packet.Player.TPlayer.chest != index || !packet.Player.Utils.InCenteredCube(chest.x, chest.y, 32))
         {
+            return true;
+        }
+
+        if (SecurityManager.ItemBans.Contains(type))
+        {
+            chest.item[slot] ??= new Item();
+            NetMessage.SendData(32, packet.Player.Index, -1, NetworkText.Empty, index, slot);
+
+            packet.Player.ReplyError("security.itemBanned", type);
             return true;
         }
 
