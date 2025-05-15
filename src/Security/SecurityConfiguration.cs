@@ -52,5 +52,8 @@ public struct SecurityConfiguration
     public bool DisableChestNameFilter { get; set; }
     public int? ChestFateThreshold { get; set; }
 
+    public bool DisableHealCombatText { get; set; }
+    public int? HealTextThreshold { get; set; }
+
     public List<string> AllowedMessages { get; set; }
 }

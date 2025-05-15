@@ -88,6 +88,8 @@ public static class SecurityManager
 
         configuration.ChestFateThreshold ??= 8;
 
+        configuration.HealTextThreshold ??= 1;
+
         configuration.AllowedMessages ??=
         [
             "security_tile_safety",

@@ -3,6 +3,7 @@ using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Amethyst.Players;
 using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
 
 namespace Amethyst.Security.Rules.World;
@@ -44,7 +45,15 @@ public sealed class ChestUpdateSlotRule : ISecurityRule
             return true;
         }
 
-        // TODO: item prefix and stack check
+        Item item = new Item();
+        item.netDefaults(type);
+
+        if (stack > item.maxStack || prefix >= PrefixID.Count)
+        {
+            chest.item[slot] ??= new Item();
+            NetMessage.SendData(32, packet.Player.Index, -1, NetworkText.Empty, index, slot);
+            return true;
+        }
 
         if (SecurityManager.ItemBans.Contains(type))
         {
