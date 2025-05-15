@@ -86,7 +86,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         _sentPackets = new bool[255];
         _sentModules = new bool[255];
 
-        _securityThreshold = new CounterThreshold(9);
+        _securityThreshold = new CounterThreshold(10);
         _securityThreshold.Setup(0, SecurityManager.Configuration.KillTileThreshold!.Value);
         _securityThreshold.Setup(1, SecurityManager.Configuration.PlaceTileThreshold!.Value);
         _securityThreshold.Setup(2, SecurityManager.Configuration.ReplaceTileThreshold!.Value);
@@ -96,6 +96,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         _securityThreshold.Setup(6, SecurityManager.Configuration.ItemDropThreshold!.Value);
         _securityThreshold.Setup(7, SecurityManager.Configuration.ProjectileCreateThreshold!.Value);
         _securityThreshold.Setup(8, SecurityManager.Configuration.ChestFateThreshold!.Value);
+        _securityThreshold.Setup(9, SecurityManager.Configuration.HealTextThreshold!.Value);
 
         if (AuthManager.Configuration.EnableAuthorization)
         {
