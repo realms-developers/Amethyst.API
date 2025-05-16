@@ -16,7 +16,7 @@ public sealed class PlayerPvPRule : ISecurityRule
 
     private bool OnPlayerSetPvP(in IncomingPacket packet)
     {
-        if (packet.Player.Jail.IsJailed || SecurityManager.Configuration.DisableSwitchingPvP)
+        if (packet.Player.Jail.IsJailed || SecurityManager.Configuration.DisableSwitchingPvP || packet.Player._securityThreshold.Fire(12))
         {
             packet.Player.Utils.SetPvP(packet.Player.Utils.InPvP, true);
             return true;

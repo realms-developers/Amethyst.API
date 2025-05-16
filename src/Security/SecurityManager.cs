@@ -89,6 +89,7 @@ public static class SecurityManager
         configuration.ChestFateThreshold ??= 8;
 
         configuration.HealTextThreshold ??= 1;
+        configuration.ManaHealTextThreshold ??= 4;
 
         configuration.ProjectileFixedAI1 ??= new()
         {

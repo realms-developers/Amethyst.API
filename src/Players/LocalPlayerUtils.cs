@@ -43,6 +43,12 @@ public sealed class LocalPlayerUtils
         NetMessage.SendData(30, localSync ? Player.Index : -1, -1, NetworkText.Empty, Player.Index);
     }
 
+    public void SetTeam(int team, bool localSync = false)
+    {
+        Player.TPlayer.team = team;
+        NetMessage.SendData(45, localSync ? Player.Index : -1, -1, NetworkText.Empty, Player.Index);
+    }
+
     public void SendRectangle(int x, int y, byte size, TileChangeType changeType = TileChangeType.None)
         => NetMessage.SendTileSquare(Player.Index, x, y, size, changeType);
 
