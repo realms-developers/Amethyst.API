@@ -58,7 +58,7 @@ public static class SecurityManager
 
         configuration.NotifyModerators ??= true;
 
-        configuration.EnableNicknameFilter = true;
+        configuration.EnableNicknameFilter ??= true;
         configuration.NicknameFilter ??= " ~!@#$%^&*()_+`1234567890-=ё\"№;:?\\|qwertyuiopasdfghjklzxcvbnm{}[];'<>,./ёйцукенгшщзхъфывапролджэячсмитьбю";
 
         configuration.MaxAllowedLife ??= 500;
@@ -89,6 +89,47 @@ public static class SecurityManager
         configuration.ChestFateThreshold ??= 8;
 
         configuration.HealTextThreshold ??= 1;
+
+        configuration.ProjectileFixedAI1 ??= new()
+        {
+            { 950, 0 }
+        };
+
+        configuration.ProjectileMinAI1 ??= new()
+        {
+            { 611, -1 }
+        };
+
+        configuration.ProjectileMaxAI1 ??= new()
+        {
+            { 611, 1 }
+        };
+
+        configuration.ProjectileMinAI2 ??= new()
+        {
+			{ 405, 0f },
+			{ 410, 0f },
+			{ 424, 0.5f },
+			{ 425, 0.5f },
+			{ 426, 0.5f },
+			{ 522, 0 },
+			{ 612, 0.4f },
+			{ 953, 0.85f },
+			{ 756, 0.5f },
+        };
+
+        configuration.ProjectileMaxAI2 ??= new()
+        {
+			{ 405, 1.2f },
+			{ 410, 1.2f },
+			{ 424, 0.8f },
+			{ 425, 0.8f },
+			{ 426, 0.8f },
+			{ 522, 40f },
+			{ 612, 0.7f },
+			{ 953, 2 },
+			{ 756, 1 }
+        };
 
         configuration.AllowedMessages ??=
         [

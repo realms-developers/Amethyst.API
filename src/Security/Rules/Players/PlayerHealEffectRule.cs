@@ -3,7 +3,7 @@ using Amethyst.Network.Packets;
 
 namespace Amethyst.Security.Rules.Players;
 
-public sealed class PlayerHealEffect : ISecurityRule
+public sealed class PlayerHealEffectRule : ISecurityRule
 {
     public string Name => "coresec_playerHealEffect";
 

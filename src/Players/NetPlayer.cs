@@ -181,6 +181,9 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
     internal short _lastLife;
     internal short _lastMaxLife;
 
+    internal short _lastMana;
+    internal short _lastMaxMana;
+
     internal Vector2 _lastPos;
 
     internal PlayerInfo1 _initInfo1;

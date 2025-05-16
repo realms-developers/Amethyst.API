@@ -47,6 +47,14 @@ public struct SecurityConfiguration
     public int? MaxProjectilesPerUser { get; set; }
     public int? ProjectileCreateThreshold { get; set; }
 
+    public Dictionary<int, float> ProjectileFixedAI1 { get; set; }
+    public Dictionary<int, float> ProjectileMinAI1 { get;  set; }
+    public Dictionary<int, float> ProjectileMaxAI1 { get;  set; }
+
+    public Dictionary<int, float> ProjectileFixedAI2 { get;  set; }
+    public Dictionary<int, float> ProjectileMinAI2 { get; set; }
+    public Dictionary<int, float> ProjectileMaxAI2 { get;  set; }
+
     public bool DisableSwitchingPvP { get; set; }
 
     public bool DisableChestNameFilter { get; set; }

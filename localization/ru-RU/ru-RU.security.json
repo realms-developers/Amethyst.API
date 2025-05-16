@@ -5,4 +5,7 @@
     "security.itemBanned": "Этот предмет ([i:{0}]) заблокирован!",
 
     "security.projBanned": "Этот снаряд (ID: {0}) заблокирован!",
+
+    "security.invalidLife": "Некорректное значение здоровья!",
+    "security.invalidMana": "Некорректное значение маны!",
 }
