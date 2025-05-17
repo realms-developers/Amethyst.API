@@ -2,7 +2,7 @@ using System.Reflection;
 using Amethyst.Commands;
 using Amethyst.Core;
 
-namespace Amethyst.Extensions.Modules;
+namespace Amethyst.Infrastructure.Extensions.Modules;
 
 public static class ModuleLoader
 {

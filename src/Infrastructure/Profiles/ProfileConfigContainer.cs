@@ -1,6 +1,6 @@
 using Amethyst.Storages.Config;
 
-namespace Amethyst.Core.Profiles;
+namespace Amethyst.Infrastructure.Core.Profiles;
 
 public sealed class ProfileConfigContainer
 {
