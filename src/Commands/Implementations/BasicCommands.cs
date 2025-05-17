@@ -2,6 +2,7 @@
 using Amethyst.Commands.Attributes;
 using Amethyst.Core;
 using Amethyst.Text;
+using Microsoft.Extensions.Configuration;
 using Terraria.IO;
 
 namespace Amethyst.Commands.Implementations;
@@ -68,80 +69,16 @@ public static class BasicCommands
         ctx.Sender.ReplyPage(pages, "commands.text.availableCommands", null, null, false, page);
     }
 
-    #region Language
-
-    [ServerCommand(CommandType.Shared, "lang ru", "установить русский язык.", null)]
-    public static void Russian(CommandInvokeContext ctx)
+    public static void Language(CommandInvokeContext ctx)
     {
-        ctx.Sender.Language = "ru-RU";
-        ctx.Sender.ReplySuccess("Язык успешно изменен!");
+        string lang = ctx.Name.Substring(5);
+
+        ctx.Sender.Language = lang;
+
+        IConfigurationRoot config = new ConfigurationBuilder()
+                .AddIniFile(Path.Combine(Localization.Directory, lang, CommandsManager.LanguageCFG))
+                .Build();
+
+        ctx.Sender.ReplySuccess(config["meta:reply"] ?? string.Empty);
     }
-
-    [ServerCommand(CommandType.Shared, "lang en", "Set english language.", null)]
-    public static void English(CommandInvokeContext ctx)
-    {
-        ctx.Sender.Language = "en-US";
-        ctx.Sender.ReplySuccess("Language was successfully changed!");
-    }
-
-    /*
-    [ServerCommand(CommandType.Shared, "lang", "commands.desc.lang", null)]
-    [CommandsSyntax("<culture>")]
-    public static void Language(CommandInvokeContext ctx, string culture)
-    {
-        culture = culture.Trim();
-
-        // First check if the exact culture is loaded (case-insensitive)
-        string? exactMatch = Localization.LoadedCultures
-            .FirstOrDefault(c => string.Equals(c, culture, StringComparison.OrdinalIgnoreCase));
-
-        if (exactMatch != null)
-        {
-            ctx.Sender.Language = exactMatch;
-            ctx.Sender.ReplySuccess("commands.lang.success");
-            return;
-        }
-
-        // If no exact match, try matching the language part (e.g. "en" matches "en-US")
-        string? languageMatch = Localization.LoadedCultures
-            .FirstOrDefault(c => c.IndexOf('-') > 0 &&
-                               c.StartsWith(culture + "-", StringComparison.OrdinalIgnoreCase));
-
-        if (languageMatch != null)
-        {
-            ctx.Sender.Language = languageMatch;
-            ctx.Sender.ReplySuccess("commands.lang.success");
-            return;
-        }
-
-        // If still no match, try matching just the first part of loaded cultures
-        // (e.g. "es" matches "es-ES" even if the input was "es-MX")
-        string? fallbackMatch = Localization.LoadedCultures
-            .FirstOrDefault(c => c.IndexOf('-') > 0 &&
-                               c.Split('-')[0].Equals(culture, StringComparison.OrdinalIgnoreCase));
-
-        if (fallbackMatch != null)
-        {
-            ctx.Sender.Language = fallbackMatch;
-            ctx.Sender.ReplySuccess("commands.lang.success");
-            return;
-        }
-
-        // No matches found
-        ctx.Sender.ReplyError("commands.lang.invalid_culture");
-
-        Languages(ctx);
-    }
-
-    [ServerCommand(CommandType.Shared, "langs", "commands.desc.langs", null)]
-    public static void Languages(CommandInvokeContext ctx)
-    {
-        IReadOnlyCollection<string> cultures = Localization.LoadedCultures;
-
-        ctx.Sender.ReplySuccess("commands.langs");
-        ctx.Sender.ReplyInfo(string.Join(", ", cultures));
-    }
-    */
-
-    #endregion
 }

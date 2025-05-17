@@ -1,14 +1,18 @@
 using System.Reflection;
 using Amethyst.Commands.Attributes;
+using Amethyst.Commands.Implementations;
 using Amethyst.Commands.Parsing;
 using Amethyst.Core;
 using Amethyst.Core.Server;
 using Amethyst.Extensions.Plugins;
+using Microsoft.Extensions.Configuration;
 
 namespace Amethyst.Commands;
 
 public static class CommandsManager
 {
+    internal const string LanguageCFG = "meta.ini";
+
     public const char CommandPrefix = '/';
 
     internal static List<CommandRunner> Commands { get; } = [];
@@ -18,6 +22,7 @@ public static class CommandsManager
     {
         ParsingNode.Initialize();
         ImportCommands(typeof(CommandsManager).Assembly, null);
+        CreateLanguageCommands();
 
         PluginLoader.OnPluginLoad += OnPluginLoad;
         PluginLoader.OnPluginUnload += OnPluginUnload;
@@ -123,6 +128,23 @@ public static class CommandsManager
 
     private static void OnPluginLoad(PluginContainer container) =>
         ImportCommands(container.Assembly, container.LoadID);
+
+    private static void CreateLanguageCommands()
+    {
+        string[] cultureDirectories = Directory.GetDirectories(Localization.Directory);
+
+        foreach (string cultureDirectory in cultureDirectories)
+        {
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .AddIniFile(Path.Combine(cultureDirectory, LanguageCFG))
+                .Build();
+
+            CommandData data = new(null, $"lang {new DirectoryInfo(cultureDirectory).Name}", config["meta:description"]!,
+                typeof(BasicCommands).GetMethod(nameof(BasicCommands.Language))!, 0, CommandType.Shared, null, null);
+
+            Commands.Add(new(data));
+        }
+    }
 
     internal static void ImportCommands(Assembly assembly, int? pluginId)
     {

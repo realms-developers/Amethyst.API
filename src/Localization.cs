@@ -10,7 +10,13 @@ namespace Amethyst;
 
 public static class Localization
 {
-    private const string _directory = "localization";
+    internal static readonly string Directory = Path.GetFullPath(
+        Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            "..",
+            "localization"
+        )
+    );
 
     // Nested dictionary: culture -> (key -> localized string)
     private static readonly Dictionary<string, Dictionary<string, string>> _localizationData = [];
@@ -27,9 +33,9 @@ public static class Localization
     /// </summary>
     public static void Load(string culture, string? directory = null)
     {
-        string directoryPath = Path.Combine(directory ?? _directory, culture);
+        string directoryPath = Path.Combine(directory ?? Directory, culture);
 
-        if (!Directory.Exists(directoryPath))
+        if (!System.IO.Directory.Exists(directoryPath))
         {
             throw new DirectoryNotFoundException($"Localization directory for '{culture}' not found.");
         }
@@ -40,7 +46,7 @@ public static class Localization
             _localizationData[culture] = [];
         }
 
-        string[] files = Directory.GetFiles(directoryPath, "*.json");
+        string[] files = System.IO.Directory.GetFiles(directoryPath, "*.json");
 
         foreach (string file in files)
         {
@@ -63,13 +69,13 @@ public static class Localization
     /// </summary>
     public static void Load()
     {
-        if (!Directory.Exists(_directory))
+        if (!System.IO.Directory.Exists(Directory))
         {
-            throw new DirectoryNotFoundException("Localization directory not found.");
+            throw new DirectoryNotFoundException($"Localization directory not found at {Directory}");
         }
 
         // Iterate over each subdirectory (each represents a culture)
-        string[] cultureDirectories = Directory.GetDirectories(_directory);
+        string[] cultureDirectories = System.IO.Directory.GetDirectories(Directory);
 
         foreach (string cultureDir in cultureDirectories)
         {
