@@ -100,6 +100,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
         _securityThreshold.Setup(10, SecurityManager.Configuration.ManaHealTextThreshold!.Value);
         _securityThreshold.Setup(11, 2000);
         _securityThreshold.Setup(12, 2000);
+        _securityThreshold.Setup(8, SecurityManager.Configuration.ChestFateThreshold!.Value);
 
         if (AuthManager.Configuration.EnableAuthorization)
         {
