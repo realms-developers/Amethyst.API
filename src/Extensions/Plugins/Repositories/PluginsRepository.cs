@@ -37,7 +37,7 @@ public sealed class PluginsRepository : IExtensionRepository
             if (ext != null)
             {
                 var metadata = new ExtensionMetadata(attribute!.Name, attribute.Author, attribute.Description, attribute.Version);
-                var plugin = new PluginExtension(metadata, ext, this);
+                var plugin = new PluginExtension(metadata, ext, assembly, this);
                 plugin.Handler = new PluginExtensionHandler(plugin);
 
                 _extensions.Add(plugin);

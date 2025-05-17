@@ -1,4 +1,5 @@
 using System.Reflection;
+using Amethyst.Commands;
 using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Base.Utility;
 using Amethyst.Extensions.Repositories;
@@ -45,11 +46,13 @@ public sealed class ModulesRepository : IExtensionRepository
                     var instance = Activator.CreateInstance(ext);
                     var initializer = attributedMethod.CreateDelegate<ModuleInitializer>(instance);
 
-                    var module = new ModuleExtension(metadata, this, initializer);
+                    var module = new ModuleExtension(metadata, this, assembly, initializer);
                     module.Handler = new ModuleExtensionHandler(module);
 
                     _extensions.Add(module);
                     yield return module.Handler.Load();
+
+                    CommandsManager.ImportCommands(assembly, null);
                 }
             }
             else

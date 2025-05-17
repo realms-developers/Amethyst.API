@@ -1,3 +1,4 @@
+using System.Reflection;
 using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Repositories;
 
@@ -5,10 +6,11 @@ namespace Amethyst.Extensions.Plugins;
 
 public sealed class PluginExtension : IExtension
 {
-    public PluginExtension(ExtensionMetadata metadata, PluginInstance pluginInstance, IExtensionRepository repository)
+    public PluginExtension(ExtensionMetadata metadata, PluginInstance pluginInstance, Assembly assembly, IExtensionRepository repository)
     {
         Metadata = metadata;
         PluginInstance = pluginInstance;
+        Assembly = assembly;
         Repository = repository;
     }
 
@@ -20,5 +22,7 @@ public sealed class PluginExtension : IExtension
 
     public IExtensionHandler Handler { get; set; } = null!;
 
-    public PluginInstance PluginInstance { get; set; }
+    public PluginInstance PluginInstance { get; }
+
+    public Assembly Assembly { get; }
 }

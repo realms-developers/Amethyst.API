@@ -1,3 +1,4 @@
+using System.Reflection;
 using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Repositories;
 
@@ -9,4 +10,5 @@ public interface IExtension
     public ExtensionMetadata Metadata { get; }
     public IExtensionRepository Repository { get; }
     public IExtensionHandler Handler { get; set; }
+    public Assembly Assembly { get; }
 }

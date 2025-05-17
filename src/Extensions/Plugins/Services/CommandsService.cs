@@ -13,10 +13,12 @@ public sealed class CommandsService : IPluginService
 
     public void OnPluginLoad()
     {
+        CommandsManager.ImportCommands(BaseInstance.Root.Assembly, BaseInstance.Root.LoadIdentifier);
     }
 
     public void OnPluginUnload()
     {
+        CommandsManager.Commands.RemoveAll(p => p.Data.PluginIdentifier == BaseInstance.Root.LoadIdentifier);
     }
 
     public bool RegisterCommand(CommandData data)
@@ -40,7 +42,7 @@ public sealed class CommandsService : IPluginService
     {
         CommandRunner? command = CommandsManager.FindCommand(name);
 
-        if (command == null || command.Data.PluginID != BaseInstance.Root.LoadIdentifier)
+        if (command == null || command.Data.PluginIdentifier != BaseInstance.Root.LoadIdentifier)
         {
             return false;
         }

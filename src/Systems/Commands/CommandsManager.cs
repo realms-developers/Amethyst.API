@@ -2,9 +2,6 @@ using System.Reflection;
 using Amethyst.Commands.Attributes;
 using Amethyst.Commands.Implementations;
 using Amethyst.Commands.Parsing;
-using Amethyst.Core;
-using Amethyst.Core.Server;
-using Amethyst.Extensions.Plugins;
 using Microsoft.Extensions.Configuration;
 
 namespace Amethyst.Commands;
@@ -146,7 +143,7 @@ public static class CommandsManager
         }
     }
 
-    internal static void ImportCommands(Assembly assembly, int? pluginId)
+    internal static void ImportCommands(Assembly assembly, Guid? pluginId)
     {
         foreach (CommandData cmd in LoadCommands(assembly, pluginId))
         {
@@ -154,7 +151,7 @@ public static class CommandsManager
         }
     }
 
-    internal static IEnumerable<CommandData> LoadCommands(Assembly assembly, int? pluginId)
+    internal static IEnumerable<CommandData> LoadCommands(Assembly assembly, Guid? pluginId)
     {
         var commands = new List<CommandData>();
         Type[] exportedTypes = assembly.GetExportedTypes();
@@ -191,7 +188,7 @@ public static class CommandsManager
     public static CommandData CreateCommandData(
         (MethodInfo Method, ServerCommandAttribute? CommandAttr,
          CommandsSyntaxAttribute? SyntaxAttr, CommandsSettingsAttribute? SettingsAttr) t,
-        int? pluginId) =>
+        Guid? pluginId) =>
         new(
             pluginId,
             t.CommandAttr!.Name,
