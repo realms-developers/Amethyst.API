@@ -4,11 +4,12 @@ namespace Amethyst.Extensions.Repositories;
 
 public interface IExtensionRepository
 {
+    public string Name { get; }
+
     IRepositoryRuler Ruler { get; set; }
 
     IEnumerable<ExtensionHandleResult> LoadExtensions();
     IEnumerable<ExtensionHandleResult> UnloadExtensions();
-    IEnumerable<ExtensionHandleResult> ReloadExtensions();
 
     IEnumerable<IExtension> GetExtensions();
 }

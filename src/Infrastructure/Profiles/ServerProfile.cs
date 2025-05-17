@@ -6,7 +6,6 @@ public sealed class ServerProfile
     {
         Name = name;
         DefaultLanguage = "en-US";
-        Config = new ProfileConfigContainer();
         GenerationRules = new WorldGenerationRules();
     }
 
@@ -32,6 +31,5 @@ public sealed class ServerProfile
 
     public string SavePath => Path.Combine(Environment.CurrentDirectory, "data", "profiles", Name);
 
-    public ProfileConfigContainer Config { get; }
     public WorldGenerationRules GenerationRules { get; set; }
 }

@@ -6,7 +6,6 @@ public interface IRepositoryRuler
     bool DisallowExtension(string name);
 
     IEnumerable<string> GetAllowedExtensions();
-    IEnumerable<string> GetDisallowedExtensions();
 
     bool IsExtensionAllowed(string name);
 }

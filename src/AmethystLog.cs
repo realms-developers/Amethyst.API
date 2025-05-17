@@ -1,6 +1,7 @@
+using Amethyst.Infrastructure;
 using Amethyst.Logging;
 
-namespace Amethyst.Core;
+namespace Amethyst;
 
 public static class AmethystLog
 {

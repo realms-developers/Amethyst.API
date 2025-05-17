@@ -1,4 +1,6 @@
-namespace Amethyst.Logging;
+using Amethyst.Logging;
+
+namespace Amethyst.Infrastructure.CLI;
 
 public static class ModernConsole
 {

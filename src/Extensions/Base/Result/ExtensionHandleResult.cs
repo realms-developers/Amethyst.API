@@ -2,14 +2,12 @@ namespace Amethyst.Extensions.Result;
 
 public sealed class ExtensionHandleResult
 {
-    public ExtensionHandleResult(ExtensionState state, string? errorMessage = null)
+    public ExtensionHandleResult(ExtensionResult result, string? errorMessage = null)
     {
-        State = state;
+        State = result;
         ErrorMessage = errorMessage;
     }
 
-    public ExtensionState State { get; }
+    public ExtensionResult State { get; }
     public string? ErrorMessage { get; }
-
-    public bool IsSuccess => State == ExtensionState.Initialized;
 }

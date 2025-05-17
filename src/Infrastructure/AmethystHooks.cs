@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.Net.Sockets;
 
-namespace Amethyst.Core;
+namespace Amethyst.Infrastructure;
 
 public static class AmethystHooks
 {

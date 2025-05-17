@@ -1,6 +1,6 @@
 namespace Amethyst.Storages.Config;
 
-public sealed class Configuration<T>(string name, T defaultValue) where T : struct
+public sealed class Configuration<T>(string name, T defaultValue) where T : class
 {
     public string Name { get; } = name;
     public T Data => _data;

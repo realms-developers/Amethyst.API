@@ -1,9 +1,11 @@
+using Amethyst.Extensions.Result;
+
 namespace Amethyst.Extensions;
 
-public interface IExtensionHandler<T> where T : IExtension
+public interface IExtensionHandler
 {
     bool SupportsUnload { get; }
 
-    void Load();
-    void Unload();
+    ExtensionHandleResult Load();
+    ExtensionHandleResult Unload();
 }
