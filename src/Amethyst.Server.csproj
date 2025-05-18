@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>9.13.10</AssemblyVersion>
-    <Version>9.13.10</Version>
+    <AssemblyVersion>10.0.1</AssemblyVersion>
+    <Version>10.0.1</Version>
     <Title>Amethyst</Title>
     <Product>Amethyst</Product>
     <Description>Amethyst is a modern, high-performance API for Terraria servers, offering complete control and customization over every aspect of your server.</Description>
@@ -21,7 +21,6 @@
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
   <ItemGroup>
-
     <None Include="..\README.md" Pack="true" />
     <None Include="..\deps\FNA.dll" Pack="true" PackagePath="lib/net9.0/" />
     <None Include="..\deps\TerrariaAPI.Hooks.dll" Pack="true" PackagePath="lib/net9.0/" />
@@ -45,5 +44,7 @@
     <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
     <PackageReference Include="MySql.Data" Version="*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="9.0.5" />
   </ItemGroup>
 </Project>

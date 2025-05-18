@@ -1,4 +1,3 @@
-using Amethyst.Core;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Microsoft.Xna.Framework;
@@ -60,6 +59,17 @@ public sealed class ProjectileUpdateRule : ISecurityRule
             projUuid = -1;
         }
         ai[2] = flags2[0] ? reader.ReadSingle() : 0f;
+
+        if ((SecurityManager.Configuration.ProjectileFixedAI1.TryGetValue((int)ai[0], out float value) && ai[0] != value) ||
+            (SecurityManager.Configuration.ProjectileFixedAI2.TryGetValue((int)ai[1], out float value2) && ai[1] != value2) ||
+            (SecurityManager.Configuration.ProjectileMinAI1.TryGetValue((int)ai[0], out float value3) && ai[0] < value3) ||
+            (SecurityManager.Configuration.ProjectileMaxAI1.TryGetValue((int)ai[0], out float value4) && ai[0] < value4) ||
+            (SecurityManager.Configuration.ProjectileMinAI2.TryGetValue((int)ai[1], out float value5) && ai[1] < value5) ||
+            (SecurityManager.Configuration.ProjectileMaxAI2.TryGetValue((int)ai[1], out float value6) && ai[1] < value6))
+        {
+            packet.Player.Utils.RemoveProjectile(identity);
+            return true;
+        }
 
         if (packet.Player.IsHeldItemBanned)
         {

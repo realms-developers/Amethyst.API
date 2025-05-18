@@ -1,5 +1,4 @@
-using Amethyst.Core;
-using Amethyst.Items;
+using Amethyst.Gameplay.Items;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;

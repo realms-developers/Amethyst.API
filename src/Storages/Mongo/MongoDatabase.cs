@@ -1,4 +1,3 @@
-using Amethyst.Core;
 using MongoDB.Driver;
 
 namespace Amethyst.Storages.Mongo;
@@ -6,8 +5,8 @@ namespace Amethyst.Storages.Mongo;
 public sealed class MongoDatabase
 {
     public static MongoDatabase Main { get; } = new(
-        AmethystSession.StorageConfiguration.MongoConnection,
-        AmethystSession.StorageConfiguration.MongoDatabaseName);
+        StorageConfiguration.Instance.MongoConnection,
+        StorageConfiguration.Instance.MongoDatabaseName);
 
     public MongoDatabase(string uri, string name)
     {

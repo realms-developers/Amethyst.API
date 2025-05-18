@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
-using Amethyst.Core;
+using Amethyst.Infrastructure;
 using Terraria;
 using Terraria.Net;
 using Terraria.Net.Sockets;

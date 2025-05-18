@@ -1,7 +1,5 @@
-using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
-using Amethyst.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -51,10 +49,11 @@ public sealed class ChestFateRule : ISecurityRule
 
         if (bottomTile.active() == false || bottomTile.type == TileID.MetalBars || bottomTile.type == TileID.Teleporter ||
             bottomTile2.active() == false || bottomTile2.type == TileID.MetalBars || bottomTile2.type == TileID.Teleporter)
-
-        if (!ValidationExtensions.IsInTerrariaWorld(new Point(x, y)))
         {
-            return true;
+            if (!ValidationExtensions.IsInTerrariaWorld(new Point(x, y)))
+            {
+                return true;
+            }
         }
 
         if (interaction != 0 && interaction != 4 && tile.type != TileID.Containers && tile.type != TileID.Containers2 && tile.type != TileID.Dressers)

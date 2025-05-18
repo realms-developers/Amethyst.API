@@ -1,6 +1,6 @@
 namespace Amethyst.Storages.Config;
 
-public sealed class Configuration<T>(string name, T defaultValue) where T : struct
+public sealed class Configuration<T>(string name, T defaultValue) where T : class
 {
     public string Name { get; } = name;
     public T Data => _data;
@@ -9,9 +9,14 @@ public sealed class Configuration<T>(string name, T defaultValue) where T : stru
 
     public void Load()
     {
-        T data = Data;
-        ConfigDiskStorage.ReadOrCreate(Name, ref data);
-        _data = data;
+        if (ConfigDiskStorage.TryRead(Name, out T? loadedData) && loadedData != null)
+        {
+            _data = loadedData; // Completely replace defaults
+        }
+        else
+        {
+            Save(); // Write defaults if file doesn't exist
+        }
     }
 
     public void Save() => ConfigDiskStorage.Write(Name, _data);
