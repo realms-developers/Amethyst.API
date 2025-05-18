@@ -1,3 +1,5 @@
+using Amethyst.Gameplay.Players;
+
 namespace Amethyst.Players.Auth;
 
 public sealed class PlayerAuth
