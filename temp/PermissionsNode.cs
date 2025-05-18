@@ -1,6 +1,6 @@
 namespace Amethyst.Systems.Permissions;
 
-public class PermissionsNode<T> where T : IPermissionable
+public class PermissionsNode<T> where T : IPermissionProvider
 {
     internal readonly List<IPermissionWorker<T>> Workers = [];
 

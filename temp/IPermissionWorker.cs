@@ -1,4 +1,4 @@
-namespace Amethyst.Systems.Permissions;
+namespace Amethyst.Systems.Users.Base.Permissions;
 
 public interface IPermissionWorker<T>
 {

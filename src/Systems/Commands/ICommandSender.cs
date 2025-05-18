@@ -3,7 +3,7 @@ using Amethyst.Text;
 
 namespace Amethyst.Systems.Commands;
 
-public interface ICommandSender : IPermissionable
+public interface ICommandSender : IPermissionProvider
 {
     public SenderType Type { get; }
 

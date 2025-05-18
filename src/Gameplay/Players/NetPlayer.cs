@@ -17,7 +17,7 @@ using Terraria;
 
 namespace Amethyst.Gameplay.Players;
 
-public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
+public sealed class NetPlayer : ICommandSender, IPermissionProvider, IDisposable
 {
     internal static bool JailItemBanCheck(NetPlayer player)
     {
