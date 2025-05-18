@@ -1,5 +1,4 @@
 using Amethyst.Gameplay.Players;
-using Amethyst.Gameplay.Players.SSC.Interfaces;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Extensions;

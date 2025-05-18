@@ -1,7 +1,7 @@
 using Amethyst.Systems.Users.Base.Permissions;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Extensions;
-using Amethyst.Gameplay.Players.SSC.Interfaces;
+using Amethyst.Systems.Characters.Base;
 
 namespace Amethyst.Systems.Users.Base;
 
@@ -15,5 +15,5 @@ public interface IAmethystUser
 
     IExtensionProvider Extensions { get; }
 
-    ISSCProvider? SSC { get; }
+    ICharacterProvider? Character { get; }
 }
