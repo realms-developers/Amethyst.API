@@ -2,6 +2,9 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 using Amethyst.Systems.Commands;
+using Amethyst.Systems.Users.Base;
+using Amethyst.Systems.Users.Base.Messages;
+using Amethyst.Systems.Users.Base.Permissions;
 
 namespace Amethyst.Text;
 
@@ -62,20 +65,20 @@ public sealed class PagesCollection : IEnumerable<TextPage>
             pages.Add(new TextPage($"#{i + 1}", pageLines, null, false));
         }
 
-#pragma warning disable IDE0306 
+#pragma warning disable IDE0306
         return new(pages);
-#pragma warning restore IDE0306 
+#pragma warning restore IDE0306
     }
 
-    public void SendPage(ICommandSender sender, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
+    public void SendPage(IAmethystUser user, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
     {
         var visiblePages = _pages
-            .Where(p => !p.IsDisabled && (p.ShowPermission == null || sender.HasPermission(p.ShowPermission)))
+            .Where(p => !p.IsDisabled && (p.ShowPermission == null || user.Permissions.HasPermission(p.ShowPermission) == PermissionAccess.HasPermission))
             .ToList();
 
         if (visiblePages.Count == 0)
         {
-            sender.ReplyError(Localization.Get("commands.noAvailablePages", sender.Language));
+            user.MessageProvider.ReplyError("commands.noAvailablePages");
             return;
         }
 
@@ -84,23 +87,23 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
         if (header != null)
         {
-            sender.ReplySuccess(
-                $"[c/094729:===] [c/35875f:[][c/43d990:{page + 1}] [c/35875f:|] [c/43d990:{visiblePages.Count}][c/35875f:]] [c/11d476:{Localization.Get(header, sender.Language)}]");
+            user.MessageProvider.ReplySuccess(
+                $"[c/094729:===] [c/35875f:[][c/43d990:{page + 1}] [c/35875f:|] [c/43d990:{visiblePages.Count}][c/35875f:]] [c/11d476:{Localization.Get(header, user.MessageProvider.Language)}]");
         }
 
         foreach (string text in currentPage._lines)
         {
-            sender.ReplyInfo(text);
+            user.MessageProvider.ReplyInfo(text);
         }
 
         if (footer != null)
         {
             string footerText = string.Format(CultureInfo.InvariantCulture,
-                Localization.Get(footer, sender.Language),
+                Localization.Get(footer, user.MessageProvider.Language),
                 footerArgs ?? []);
 
             string pageInfo = showPageName ? $"[c/3d8562:{currentPage.Name}] [c/11633c:|] " : "";
-            sender.ReplySuccess($"[c/094729:===] {pageInfo}{footerText}");
+            user.MessageProvider.ReplySuccess($"[c/094729:===] {pageInfo}{footerText}");
         }
     }
 

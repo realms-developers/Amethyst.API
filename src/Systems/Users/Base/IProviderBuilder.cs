@@ -1,6 +1,4 @@
-using Amethyst.Systems.Users.Base;
-
-namespace Amethyst.Systems.Base.Users;
+namespace Amethyst.Systems.Users.Base;
 
 public interface IProviderBuilder<TProvider>
 {

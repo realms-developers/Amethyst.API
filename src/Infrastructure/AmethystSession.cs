@@ -10,7 +10,6 @@ using Amethyst.Infrastructure.Profiles;
 using Amethyst.Infrastructure.Server;
 using Amethyst.Security;
 using Amethyst.Systems.Commands;
-using Amethyst.Systems.Permissions;
 using Amethyst.Text;
 using Terraria.IO;
 
@@ -21,15 +20,9 @@ public static class AmethystSession
     static AmethystSession()
     {
         Profile = AmethystKernel.Profile!;
-        OfflinePermissions = new PermissionsNode<ICommandSender>();
-        PlayerPermissions = new PermissionsNode<NetPlayer>();
     }
 
     public static ServerProfile Profile { get; }
-
-    public static PermissionsNode<ICommandSender> OfflinePermissions { get; }
-
-    public static PermissionsNode<NetPlayer> PlayerPermissions { get; }
 
     internal static void StartServer()
     {
@@ -105,10 +98,10 @@ public static class AmethystSession
         Console.Clear();
 
         ModernConsole.WriteLine(@"
-$!b$m      __                   _   _               _   
-$!b$m     / /_ _ _ __ ___   ___| |_| |__  _   _ ___| |_ 
+$!b$m      __                   _   _               _
+$!b$m     / /_ _ _ __ ___   ___| |_| |__  _   _ ___| |_
 $!b$m    / / _` | '_ ` _ \ / _ \ __| '_ \| | | / __| __|
-$!b$m _ / / (_| | | | | | |  __/ |_| | | | |_| \__ \ |_ 
+$!b$m _ / / (_| | | | | | |  __/ |_| | | | |_| \__ \ |_
 $!b$m(_)_/ \__,_|_| |_| |_|\___|\__|_| |_|\__, |___/\__|
 $!b$m                                     |___/         ");
 

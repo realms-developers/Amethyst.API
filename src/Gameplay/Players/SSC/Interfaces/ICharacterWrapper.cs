@@ -15,7 +15,7 @@ public interface ICharacterWrapper
     /// Indicates, that server supports SSC and player is able to receive SSC packets.
     /// </summary>
     public bool SupportsChange { get; }
-    
+
     /// <summary>
     /// Manages read-only inventory state. If enabled, then only plugins/modules/core can edit character.
     /// Player cannot edit character settings in that mode.
@@ -47,7 +47,7 @@ public interface ICharacterWrapper
     public void LoadCharacter(CharacterModel model, bool sync);
 
     /// <summary>
-    /// Synchronises server character with player. 
+    /// Synchronises server character with player.
     /// </summary>
     public void SyncCharacter();
 

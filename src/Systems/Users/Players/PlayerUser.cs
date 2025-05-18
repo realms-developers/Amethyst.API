@@ -1,5 +1,6 @@
+using Amethyst.Gameplay.Players;
 using Amethyst.Gameplay.Players.SSC.Interfaces;
-using Amethyst.Systems.Base.Users;
+using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Users.Base.Messages;
@@ -9,25 +10,32 @@ namespace Amethyst.Systems.Users.Players;
 
 public sealed class PlayerUser : IAmethystUser
 {
-    internal PlayerUser(string name, IMessageProvider messageProvider, IPermissionProvider permissions, IExtensionProvider extensions, bool isSSCProvided, ISSCProvider? ssc)
+    internal PlayerUser(string name, int netIndex, string ip, string uuid, IUsersService<PlayerUser, PlayerUserMetadata> service)
     {
         Name = name;
-        MessageProvider = messageProvider;
-        Permissions = permissions;
-        Extensions = extensions;
-        IsSSCProvided = isSSCProvided;
-        SSC = ssc;
+        NetworkIndex = netIndex;
+        IP = ip;
+        UUID = uuid;
+        MessageProvider = service.MessageProviderBuilder.BuildFor(this);
+        Permissions = service.PermissionProviderBuilder.BuildFor(this);
+        Extensions = service.ExtensionProviderBuilder.BuildFor(this);
     }
 
-    public string Name { get;  }
+    public string Name { get; }
 
-    public IMessageProvider MessageProvider { get;  }
+    public IMessageProvider MessageProvider { get; }
 
-    public IPermissionProvider Permissions { get;  }
+    public IPermissionProvider Permissions { get; }
 
-    public IExtensionProvider Extensions { get;  }
+    public IExtensionProvider Extensions { get; }
 
-    public bool IsSSCProvided { get;  }
+    public ICharacterProvider? Character { get; }
 
-    public ISSCProvider? SSC { get;  }
+    public int NetworkIndex { get; }
+
+    public NetPlayer Player => PlayerManager.Tracker[NetworkIndex];
+
+    public string IP { get; set; }
+
+    public string UUID { get; set; }
 }

@@ -1,4 +1,4 @@
-namespace Amethyst.Gameplay.Players.SSC.Enums;
+namespace Amethyst.Systems.Characters.Base.Enums;
 
 [Flags]
 public enum PlayerInfo1 : byte

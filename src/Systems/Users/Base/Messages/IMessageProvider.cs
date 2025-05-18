@@ -4,7 +4,7 @@ namespace Amethyst.Systems.Users.Base.Messages;
 
 public interface IMessageProvider
 {
-    string Culture { get; set; }
+    string Language { get; set; }
 
     void ReplySuccess(string text, params object[] args);
     void ReplyInfo(string text, params object[] args);

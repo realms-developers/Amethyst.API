@@ -5,5 +5,5 @@ namespace Amethyst.Systems.Users;
 
 public static class UsersOrganizer
 {
-    public static IUsersService<PlayerUser, PlayerUserMetadata> PlayerUsers { get; } = new PlayersUsersService();
+    public static PlayersUsersService PlayerUsers { get; } = new PlayersUsersService();
 }

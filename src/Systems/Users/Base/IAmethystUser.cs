@@ -15,6 +15,5 @@ public interface IAmethystUser
 
     IExtensionProvider Extensions { get; }
 
-    bool IsSSCProvided { get; }
     ISSCProvider? SSC { get; }
 }

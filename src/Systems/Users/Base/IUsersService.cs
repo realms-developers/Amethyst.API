@@ -1,4 +1,3 @@
-using Amethyst.Systems.Base.Users;
 using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Permissions;

@@ -1,9 +1,9 @@
-namespace Amethyst.Gameplay.Players.SSC.Enums;
+namespace Amethyst.Systems.Characters.Base.Enums;
 
 public enum SyncType
 {
     /// <summary>
-    /// Syncing only with character owner. 
+    /// Syncing only with character owner.
     /// </summary>
     Local,
 
