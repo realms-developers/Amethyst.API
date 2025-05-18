@@ -1,7 +1,7 @@
-using Amethyst.Gameplay.Players.SSC.Enums;
 using Amethyst.Gameplay.Players.SSC.Interfaces;
 using Amethyst.Network;
 using Amethyst.Network.Packets;
+using Amethyst.Systems.Characters.Base.Enums;
 using Terraria;
 
 namespace Amethyst.Gameplay.Players.SSC;

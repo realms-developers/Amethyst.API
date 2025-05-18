@@ -1,8 +1,7 @@
-using Amethyst.Gameplay.Players;
-using Amethyst.Gameplay.Players.SSC.Enums;
 using Amethyst.Gameplay.Players.SSC.Interfaces;
 using Amethyst.Network;
 using Amethyst.Network.Packets;
+using Amethyst.Systems.Characters.Base.Enums;
 using Terraria;
 
 namespace Amethyst.Gameplay.Players.SSC;
@@ -27,7 +26,7 @@ public sealed class ClientCharacterWrapper(NetPlayer player, CharacterModel mode
             return true;
         }
 
-        set {}
+        set { }
     }
 
     public int Life => _owner.TPlayer.statLife;
@@ -66,7 +65,7 @@ public sealed class ClientCharacterWrapper(NetPlayer player, CharacterModel mode
         }
     }
 
-    public void SyncCharacter() {}
+    public void SyncCharacter() { }
 
     public void ReceiveSlot(IncomingPacket packet)
     {
@@ -411,7 +410,7 @@ public sealed class ClientCharacterWrapper(NetPlayer player, CharacterModel mode
         NetMessage.TrySendData(76, sync == SyncType.Local ? _owner.Index : -1, sync == SyncType.Exclude ? _owner.Index : -1, Terraria.Localization.NetworkText.Empty, _owner.Index);
     }
 
-    public void Save() {}
+    public void Save() { }
 
-    public void SaveUpdate() {}
+    public void SaveUpdate() { }
 }

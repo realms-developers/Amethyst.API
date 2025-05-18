@@ -1,8 +1,8 @@
-using Amethyst.Gameplay.Players.SSC.Enums;
 using Amethyst.Infrastructure;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
+using Amethyst.Systems.Characters.Base.Enums;
 using Amethyst.Systems.Commands;
 using Amethyst.Text;
 using Terraria;

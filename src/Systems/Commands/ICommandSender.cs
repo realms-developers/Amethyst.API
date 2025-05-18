@@ -1,4 +1,4 @@
-using Amethyst.Systems.Permissions;
+using Amethyst.Systems.Users.Base.Permissions;
 using Amethyst.Text;
 
 namespace Amethyst.Systems.Commands;
