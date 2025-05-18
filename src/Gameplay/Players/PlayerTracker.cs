@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Amethyst.Players;
+namespace Amethyst.Gameplay.Players;
 
 public sealed class PlayerTracker : IEnumerable<NetPlayer>
 {

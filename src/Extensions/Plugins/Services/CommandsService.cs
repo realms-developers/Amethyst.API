@@ -1,6 +1,6 @@
-using Amethyst.Commands;
+using Amethyst.Systems.Commands;
 
-namespace Amethyst.Extensions.Plugins;
+namespace Amethyst.Extensions.Plugins.Services;
 
 public sealed class CommandsService : IPluginService
 {
@@ -11,15 +11,9 @@ public sealed class CommandsService : IPluginService
 
     public PluginInstance BaseInstance { get; }
 
-    public void OnPluginLoad()
-    {
-        CommandsManager.ImportCommands(BaseInstance.Root.Assembly, BaseInstance.Root.LoadIdentifier);
-    }
+    public void OnPluginLoad() => CommandsManager.ImportCommands(BaseInstance.Root.Assembly, BaseInstance.Root.LoadIdentifier);
 
-    public void OnPluginUnload()
-    {
-        CommandsManager.Commands.RemoveAll(p => p.Data.PluginIdentifier == BaseInstance.Root.LoadIdentifier);
-    }
+    public void OnPluginUnload() => CommandsManager.Commands.RemoveAll(p => p.Data.PluginIdentifier == BaseInstance.Root.LoadIdentifier);
 
     public bool RegisterCommand(CommandData data)
     {

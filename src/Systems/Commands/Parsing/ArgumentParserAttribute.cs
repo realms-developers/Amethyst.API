@@ -1,4 +1,4 @@
-﻿namespace Amethyst.Commands.Parsing;
+﻿namespace Amethyst.Systems.Commands.Parsing;
 
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class ArgumentParserAttribute(Type parserType, string methodName) : Attribute

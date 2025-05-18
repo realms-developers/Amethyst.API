@@ -1,3 +1,3 @@
-namespace Amethyst.Commands.Parsing;
+namespace Amethyst.Systems.Commands.Parsing;
 
 public delegate ParseResult ArgumentParser(ICommandSender sender, string input);

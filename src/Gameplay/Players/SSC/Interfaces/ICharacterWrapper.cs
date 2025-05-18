@@ -1,8 +1,8 @@
+using Amethyst.Gameplay.Players.SSC.Enums;
 using Amethyst.Network;
 using Amethyst.Network.Packets;
-using Amethyst.Players.SSC.Enums;
 
-namespace Amethyst.Players.SSC.Interfaces;
+namespace Amethyst.Gameplay.Players.SSC.Interfaces;
 
 public interface ICharacterWrapper
 {

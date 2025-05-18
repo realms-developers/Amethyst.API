@@ -1,9 +1,10 @@
 using System.Reflection;
-using Amethyst.Commands;
 using Amethyst.Extensions.Base;
+using Amethyst.Extensions.Base.Metadata;
+using Amethyst.Extensions.Base.Repositories;
+using Amethyst.Extensions.Base.Result;
 using Amethyst.Extensions.Base.Utility;
-using Amethyst.Extensions.Repositories;
-using Amethyst.Extensions.Result;
+using Amethyst.Systems.Commands;
 
 namespace Amethyst.Extensions.Modules.Repositories;
 
@@ -11,70 +12,119 @@ public sealed class ModulesRepository : IExtensionRepository
 {
     public string Name => "StandardModuleRepository";
 
-    private List<IExtension> _extensions = new List<IExtension>();
+    private readonly List<IExtension> _extensions = [];
+    private readonly List<ExtensionHandleResult> _results = [];
+
+    private IReadOnlyDictionary<IExtension, ExtensionHandleResult>? _extensionMap;
     private ExtensionState _state = ExtensionState.NotInitialized;
 
     public IRepositoryRuler Ruler { get; set; } = new ModulesRepositoryRuler();
 
-    public IEnumerable<IExtension> GetExtensions()
+    public IEnumerable<IExtension> Extensions => _extensions.AsReadOnly().AsEnumerable();
+
+    public IEnumerable<ExtensionHandleResult> Results => _results.AsReadOnly().AsEnumerable();
+
+    public IReadOnlyDictionary<IExtension, ExtensionHandleResult> ExtensionMap
     {
-        return _extensions.AsReadOnly().AsEnumerable();
+        get
+        {
+            if (_extensionMap != null)
+            {
+                return _extensionMap;
+            }
+
+            _extensionMap = _extensions
+                .Zip(_results, (ext, result) => new { Extension = ext, Result = result })
+                .Where(x => x.Result.LoadIdentifier != Guid.Empty)
+                .ToDictionary(
+                    x => x.Extension,
+                    x => x.Result)
+                .AsReadOnly();
+
+            return _extensionMap;
+        }
     }
 
     public IEnumerable<ExtensionHandleResult> LoadExtensions()
     {
         if (_state == ExtensionState.Initialized)
         {
-            yield break;
+            return [];
         }
 
         _extensions.Clear();
+        _results.Clear();
+        _extensionMap = null;
 
-        foreach (var file in FileUtility.GetExtensions("extensions/Modules"))
+        var results = new List<ExtensionHandleResult>();
+
+        foreach (string file in FileUtility.GetExtensions("modules"))
         {
-            var assembly = Assembly.Load(File.ReadAllBytes(file));
-            var ext = AssemblyUtility.TryFindExtensionType(assembly, out var attribute);
+            Assembly assembly = ModuleLoadContext.Instance.LoadFromAssemblyPath(file);
+            Type? ext = AssemblyUtility.TryFindExtensionType(assembly, out ExtensionMetadataAttribute? attribute);
 
             if (ext != null)
             {
-                var metadata = new ExtensionMetadata(attribute!.Name, attribute.Author, attribute.Description, attribute.Version);
+                var metadata = new ExtensionMetadata(attribute!.Name, attribute.Author,
+                    attribute.Description, attribute.Version);
 
-                var attributedMethod = ext.GetMethods().Where(p => p.GetCustomAttribute<ModuleInitializeAttribute>() != null).FirstOrDefault(p => p != null);
+                MethodInfo? attributedMethod = ext.GetMethods()
+                    .FirstOrDefault(m => m.GetCustomAttribute<ModuleInitializeAttribute>() != null
+                        && m.IsStatic
+                        && m.ReturnType == typeof(void)
+                        && m.GetParameters().Length == 0);
 
-                if (attributedMethod != null && attributedMethod.IsStatic && attributedMethod.ReturnType == typeof(void) && attributedMethod.GetParameters().Length == 0)
+                if (attributedMethod != null)
                 {
-                    var instance = Activator.CreateInstance(ext);
-                    var initializer = attributedMethod.CreateDelegate<ModuleInitializer>(instance);
+                    ModuleInitializer initializer = attributedMethod.CreateDelegate<ModuleInitializer>();
 
                     var module = new ModuleExtension(metadata, this, assembly, initializer);
+
                     module.Handler = new ModuleExtensionHandler(module);
 
                     _extensions.Add(module);
-                    yield return module.Handler.Load();
+
+                    ExtensionHandleResult result = module.Handler.Load();
+                    _results.Add(result);
+                    results.Add(result);
 
                     CommandsManager.ImportCommands(assembly, null);
                 }
             }
             else
             {
-                yield return new ExtensionHandleResult(ExtensionResult.ExternalError, $"Failed to load Module from {file}");
+                var errorResult = new ExtensionHandleResult(Guid.Empty,
+                    ExtensionResult.ExternalError,
+                    $"Failed to load Module from {file}");
+                results.Add(errorResult);
             }
         }
+
+        return results;
     }
+
 
     public IEnumerable<ExtensionHandleResult> UnloadExtensions()
     {
         if (_state != ExtensionState.Initialized)
         {
-            yield break;
+            return [];
         }
 
-        foreach (var ext in _extensions)
+        _results.Clear();
+        var results = new List<ExtensionHandleResult>();
+
+        foreach (IExtension ext in _extensions)
         {
-            yield return ext.Handler.Unload();
+            ExtensionHandleResult result = ext.Handler.Unload();
+            _results.Add(result);
+            results.Add(result);
         }
 
         _extensions.Clear();
+        _extensionMap = null;
         _state = ExtensionState.Deinitialized;
+
+        return results;
     }
 }

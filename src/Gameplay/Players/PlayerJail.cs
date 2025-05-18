@@ -1,7 +1,7 @@
-using Amethyst.Core;
+using Amethyst.Infrastructure;
 using Microsoft.Xna.Framework;
 
-namespace Amethyst.Players;
+namespace Amethyst.Gameplay.Players;
 
 public sealed class PlayerJail
 {
@@ -18,7 +18,7 @@ public sealed class PlayerJail
 
     public NetPlayer BasePlayer { get; private set; }
 
-    private List<JailCheck> _jailDelegates = new List<JailCheck>();
+    private readonly List<JailCheck> _jailDelegates = [];
 
     public void AddCheck(JailCheck checkDelegate)
     {
@@ -40,7 +40,9 @@ public sealed class PlayerJail
         IsJailForced = value;
 
         if (AmethystSession.Profile.DebugMode)
+        {
             BasePlayer.SendMessage($"[Debug]: Jail -> Force {value}.", Color.OrangeRed);
+        }
     }
 
     public void SetTemp(TimeSpan span)
@@ -56,7 +58,9 @@ public sealed class PlayerJail
         BasePlayer.Utils.Disable(span);
 
         if (AmethystSession.Profile.DebugMode)
+        {
             BasePlayer.SendMessage($"[Debug]: Jail -> Temp {span.TotalSeconds}s.", Color.OrangeRed);
+        }
     }
 
     public delegate bool JailCheck(NetPlayer player);

@@ -1,17 +1,17 @@
 ﻿using System.Diagnostics;
-using Amethyst.Commands.Attributes;
-using Amethyst.Core;
+using Amethyst.Infrastructure;
+using Amethyst.Systems.Commands.Attributes;
 using Amethyst.Text;
 using Microsoft.Extensions.Configuration;
 using Terraria.IO;
 
-namespace Amethyst.Commands.Implementations;
+namespace Amethyst.Systems.Commands.Implementations;
 
 public static class BasicCommands
 {
     [ServerCommand(CommandType.Console, "exit", "commands.desc.shutdown", null)]
     [CommandsSyntax("-f(orce)")]
-    public static void Exit(CommandInvokeContext _, string args = "") => AmethystKernel.StopServer(args.Contains("-f"));
+    public static void Exit(CommandInvokeContext _, string args = "") => AmethystSession.StopServer(args.Contains("-f"));
 
     [ServerCommand(CommandType.Console, "save", "commands.desc.save", null)]
     public static void Save(CommandInvokeContext ctx)
@@ -71,7 +71,7 @@ public static class BasicCommands
 
     public static void Language(CommandInvokeContext ctx)
     {
-        string lang = ctx.Name.Substring(5);
+        string lang = ctx.Name.Substring(CommandsManager.LanguageCommandPrefix.Length);
 
         ctx.Sender.Language = lang;
 

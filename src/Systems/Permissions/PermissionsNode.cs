@@ -1,7 +1,4 @@
-using Amethyst.Commands;
-using Amethyst.Players;
-
-namespace Amethyst.Permissions;
+namespace Amethyst.Systems.Permissions;
 
 public class PermissionsNode<T> where T : IPermissionable
 {

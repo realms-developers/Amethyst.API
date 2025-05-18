@@ -1,34 +1,19 @@
-using Amethyst.Core;
+using Amethyst.Gameplay.Players.SSC.Interfaces;
 using Amethyst.Network;
-using Amethyst.Players.SSC.Interfaces;
+using Amethyst.Storages.Config;
 using Amethyst.Storages.Mongo;
 using Terraria.ID;
 
-namespace Amethyst.Players.SSC;
+namespace Amethyst.Gameplay.Players.SSC;
 
 public sealed class BasicSSCProvider : ISSCProvider
 {
-    public static SSCConfiguration Configuration => AmethystSession.Profile.Config.Get<SSCConfiguration>().Data;
+    internal static readonly Configuration<SSCConfiguration> _sscCfg = new(typeof(SSCConfiguration).FullName!, new());
+
+    public static SSCConfiguration Configuration => _sscCfg.Data;
     public static MongoModels<CharacterModel> Characters { get; } = MongoDatabase.Main.Get<CharacterModel>();
 
-    public void Initialize()
-    {
-        AmethystSession.Profile.Config.Get<SSCConfiguration>().Load();
-        AmethystSession.Profile.Config.Get<SSCConfiguration>().Modify(SetupConfiguration, true);
-    }
-
-    private static void SetupConfiguration(ref SSCConfiguration configuration)
-    {
-        configuration.StartItems ??=
-        [
-            new NetItem(ItemID.IronShortsword, 1, 0),
-            new NetItem(ItemID.IronPickaxe, 1, 0),
-            new NetItem(ItemID.IronAxe, 1, 0)
-        ];
-
-        configuration.StartLife = configuration.StartLife == 0 ? 100 : configuration.StartLife;
-        configuration.StartMana = configuration.StartMana == 0 ? 20 : configuration.StartMana;
-    }
+    public BasicSSCProvider() => _sscCfg.Load();
 
     public CharacterModel GetModel(string name)
     {
@@ -53,7 +38,7 @@ public sealed class BasicSSCProvider : ISSCProvider
         return model;
     }
 
-    public CharacterModel GetModelByPlayer(NetPlayer player)
+    public static CharacterModel GetModelByPlayer(NetPlayer player)
     {
         CharacterModel? model = Characters.Find(player.Name);
         if (model != null)
@@ -89,10 +74,16 @@ public sealed class BasicSSCProvider : ISSCProvider
 
     public ICharacterWrapper CreateServersideWrapper(NetPlayer player) => new ServerCharacterWrapper(player, GetModelByPlayer(player));
 
-    public struct SSCConfiguration
+    public class SSCConfiguration
     {
-        public List<NetItem> StartItems { get; set; }
-        public int StartLife { get; set; }
-        public int StartMana { get; set; }
+        public List<NetItem> StartItems { get; set; } =
+        [
+            new NetItem(ItemID.IronShortsword, 1, 0),
+            new NetItem(ItemID.IronPickaxe, 1, 0),
+            new NetItem(ItemID.IronAxe, 1, 0)
+        ];
+
+        public int StartLife { get; set; } = 100;
+        public int StartMana { get; set; } = 20;
     }
 }

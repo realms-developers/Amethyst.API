@@ -18,7 +18,7 @@ public sealed class PlayerHealEffectRule : ISecurityRule
 
         reader.ReadByte();
 
-        short count = reader.ReadInt16();
+        short _ = reader.ReadInt16();
 
         if (SecurityManager.Configuration.DisableHealCombatText || packet.Player._securityThreshold.Fire(9))
         {

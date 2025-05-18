@@ -1,4 +1,4 @@
-namespace Amethyst.Extensions;
+namespace Amethyst.Extensions.Base;
 
 public static class ExtensionStateExtensions
 {

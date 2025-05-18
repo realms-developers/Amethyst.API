@@ -1,7 +1,7 @@
 using Amethyst.Network;
 using Terraria;
 
-namespace Amethyst.Commands.Arguments;
+namespace Amethyst.Systems.Commands.Arguments;
 
 public sealed class ItemReference
 {

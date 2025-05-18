@@ -1,7 +1,7 @@
-using Amethyst.Permissions;
+using Amethyst.Systems.Permissions;
 using Amethyst.Text;
 
-namespace Amethyst.Commands;
+namespace Amethyst.Systems.Commands;
 
 public interface ICommandSender : IPermissionable
 {

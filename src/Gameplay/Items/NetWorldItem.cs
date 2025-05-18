@@ -1,10 +1,10 @@
+using Amethyst.Gameplay.Players;
 using Amethyst.Network;
-using Amethyst.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Localization;
 
-namespace Amethyst.Items;
+namespace Amethyst.Gameplay.Items;
 
 public sealed class NetWorldItem
 {

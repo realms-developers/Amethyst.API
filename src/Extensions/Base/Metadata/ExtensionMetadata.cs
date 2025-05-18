@@ -1,8 +1,8 @@
-namespace Amethyst.Extensions.Base;
+namespace Amethyst.Extensions.Base.Metadata;
 
 public record ExtensionMetadata(
     string Name,
     string Author,
     string? Description,
-    string Version
+    Version Version
 );

@@ -1,31 +1,27 @@
-using Amethyst.Extensions.Result;
+using Amethyst.Extensions.Base;
+using Amethyst.Extensions.Base.Result;
 
 namespace Amethyst.Extensions.Modules;
 
-public sealed class ModuleExtensionHandler : IExtensionHandler
+public sealed class ModuleExtensionHandler(ModuleExtension extension) : IExtensionHandler
 {
-    public ModuleExtensionHandler(ModuleExtension extension)
-    {
-        Extension = extension;
-    }
-
-    public ModuleExtension Extension { get; }
+    public ModuleExtension Extension { get; } = extension;
     public bool SupportsUnload => false;
 
     public ExtensionHandleResult Load()
     {
-        if (ModulesConfiguration.Instance.AllowedModules.Contains(Extension.Metadata.Name))
+        if (Extension.Repository.Ruler.IsExtensionAllowed(Extension.Metadata.Name))
         {
             Extension.Initializer();
 
-            return new ExtensionHandleResult(ExtensionResult.SuccessOperation, "Module loaded successfully.");
+            return new ExtensionHandleResult(Extension.LoadIdentifier, ExtensionResult.SuccessOperation, "Module loaded successfully.");
         }
 
-        return new ExtensionHandleResult(ExtensionResult.NotAllowed, "Module is not allowed to be loaded.");
+        return new ExtensionHandleResult(Extension.LoadIdentifier, ExtensionResult.NotAllowed, "Module is not allowed to be loaded.");
     }
 
     public ExtensionHandleResult Unload()
     {
-        return new ExtensionHandleResult(ExtensionResult.NotAllowed, "Module unloading is not supported.");
+        return new ExtensionHandleResult(Extension.LoadIdentifier, ExtensionResult.NotAllowed, "Module unloading is not supported.");
     }
 }

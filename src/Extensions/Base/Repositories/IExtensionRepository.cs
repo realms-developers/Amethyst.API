@@ -1,6 +1,6 @@
-using Amethyst.Extensions.Result;
+using Amethyst.Extensions.Base.Result;
 
-namespace Amethyst.Extensions.Repositories;
+namespace Amethyst.Extensions.Base.Repositories;
 
 public interface IExtensionRepository
 {
@@ -11,5 +11,8 @@ public interface IExtensionRepository
     IEnumerable<ExtensionHandleResult> LoadExtensions();
     IEnumerable<ExtensionHandleResult> UnloadExtensions();
 
-    IEnumerable<IExtension> GetExtensions();
+    IEnumerable<IExtension> Extensions { get; }
+    IEnumerable<ExtensionHandleResult> Results { get; }
+
+    IReadOnlyDictionary<IExtension, ExtensionHandleResult> ExtensionMap { get; }
 }

@@ -1,4 +1,4 @@
-namespace Amethyst.Permissions;
+namespace Amethyst.Systems.Permissions;
 
 public enum PermissionAccess
 {

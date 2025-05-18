@@ -1,4 +1,4 @@
-namespace Amethyst.Security.Threshold;
+namespace Amethyst.Security.Threshold.Interval;
 
 public sealed class IntervalThresholdBuilder<T> : IThresholdBuilder<T> where T : Enum
 {

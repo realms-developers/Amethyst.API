@@ -1,4 +1,4 @@
-namespace Amethyst.Commands.Parsing;
+namespace Amethyst.Systems.Commands.Parsing;
 
 public sealed class ParseResult
 {

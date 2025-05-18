@@ -1,11 +1,12 @@
-namespace Amethyst.Extensions.Repositories;
+namespace Amethyst.Extensions.Base.Repositories;
 
 public interface IRepositoryRuler
 {
-    bool AllowExtension(string name);
+    void AllowExtension(string name);
+    bool ToggleExtension(string name);
     bool DisallowExtension(string name);
 
-    IEnumerable<string> GetAllowedExtensions();
+    IEnumerable<string> AllowedExtensions { get; }
 
     bool IsExtensionAllowed(string name);
 }

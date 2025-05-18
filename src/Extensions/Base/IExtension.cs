@@ -1,8 +1,8 @@
 using System.Reflection;
-using Amethyst.Extensions.Base;
-using Amethyst.Extensions.Repositories;
+using Amethyst.Extensions.Base.Metadata;
+using Amethyst.Extensions.Base.Repositories;
 
-namespace Amethyst.Extensions;
+namespace Amethyst.Extensions.Base;
 
 public interface IExtension
 {

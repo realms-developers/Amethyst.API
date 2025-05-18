@@ -1,8 +1,8 @@
 using System.Reflection;
-using Amethyst.Commands.Parsing;
+using Amethyst.Systems.Commands.Parsing;
 using Amethyst.Text;
 
-namespace Amethyst.Commands;
+namespace Amethyst.Systems.Commands;
 
 public sealed class CommandRunner
 {

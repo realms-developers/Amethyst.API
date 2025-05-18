@@ -27,7 +27,7 @@ public sealed class PlayerZoneRule : ISecurityRule
         {
             bool hasSolar = false, hasVortex = false, hasNebula = false, hasStardust = false;
 
-			foreach (var npc in Main.npc)
+            foreach (NPC npc in Main.npc)
             {
                 switch (npc.netID)
                 {

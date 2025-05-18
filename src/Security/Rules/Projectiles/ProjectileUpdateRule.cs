@@ -1,4 +1,3 @@
-using Amethyst.Core;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 using Microsoft.Xna.Framework;

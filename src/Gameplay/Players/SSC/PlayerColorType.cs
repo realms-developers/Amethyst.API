@@ -1,4 +1,4 @@
-namespace Amethyst.Players.SSC;
+namespace Amethyst.Gameplay.Players.SSC;
 
 public enum PlayerColorType
 {

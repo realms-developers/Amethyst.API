@@ -1,4 +1,4 @@
-namespace Amethyst.Players.Auth;
+namespace Amethyst.Gameplay.Players.Auth;
 
 public sealed class PlayerAuth
 {
@@ -6,7 +6,7 @@ public sealed class PlayerAuth
     {
         Player = player;
 
-        _factors = new Dictionary<string, bool>();
+        _factors = [];
 
         List<string> factors = AuthManager._Factors;
         foreach (string factor in factors)
@@ -15,7 +15,7 @@ public sealed class PlayerAuth
         }
     }
 
-    private Dictionary<string, bool> _factors;
+    private readonly Dictionary<string, bool> _factors;
 
     public NetPlayer Player { get; }
 

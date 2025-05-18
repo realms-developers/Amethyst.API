@@ -1,11 +1,11 @@
-using Amethyst.Core;
-using Amethyst.Players.SSC;
-using Amethyst.Players.SSC.Interfaces;
+using Amethyst.Gameplay.Players.SSC;
+using Amethyst.Gameplay.Players.SSC.Interfaces;
+using Amethyst.Infrastructure;
 using Amethyst.Storages.Mongo;
 
 using Timer = System.Timers.Timer;
 
-namespace Amethyst.Players;
+namespace Amethyst.Gameplay.Players;
 
 public static class PlayerManager
 {
@@ -17,9 +17,8 @@ public static class PlayerManager
 
     private static Timer? _updateTimer;
 
-    internal static void Initialize()
+    public static void Initialize()
     {
-        SSCProvider.Initialize();
         PlayerNetworking.Initialize();
 
         if (IsSSCEnabled)

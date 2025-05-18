@@ -1,16 +1,25 @@
-using System.Reflection;
-
 namespace Amethyst.Extensions.Base.Utility;
 
 public static class FileUtility
 {
-    public static IEnumerable<string> GetExtensions(string path)
+    private static readonly string _extDirectory = Path.Combine(AppContext.BaseDirectory, "..", "extensions");
+
+    public static IEnumerable<string> GetExtensions(string folder)
     {
-        if (string.IsNullOrEmpty(path))
+        if (string.IsNullOrEmpty(folder))
         {
-            throw new ArgumentException("Path cannot be null or empty.", nameof(path));
+            throw new ArgumentException("Folder cannot be null or empty.", nameof(folder));
         }
 
-        return Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories);
+        string path = Path.Combine(_extDirectory, folder);
+
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+
+            return [];
+        }
+
+        return Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories);
     }
 }

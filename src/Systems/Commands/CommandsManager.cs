@@ -1,13 +1,15 @@
 using System.Reflection;
-using Amethyst.Commands.Attributes;
-using Amethyst.Commands.Implementations;
-using Amethyst.Commands.Parsing;
+using Amethyst.Infrastructure;
+using Amethyst.Infrastructure.CLI.Input;
+using Amethyst.Systems.Commands.Attributes;
+using Amethyst.Systems.Commands.Implementations;
 using Microsoft.Extensions.Configuration;
 
-namespace Amethyst.Commands;
+namespace Amethyst.Systems.Commands;
 
 public static class CommandsManager
 {
+    internal const string LanguageCommandPrefix = "lang ";
     internal const string LanguageCFG = "meta.ini";
 
     public const char CommandPrefix = '/';
@@ -17,17 +19,11 @@ public static class CommandsManager
 
     internal static void Initialize()
     {
-        ParsingNode.Initialize();
         ImportCommands(typeof(CommandsManager).Assembly, null);
         CreateLanguageCommands();
 
-        PluginLoader.OnPluginLoad += OnPluginLoad;
-        PluginLoader.OnPluginUnload += OnPluginUnload;
-        ConsoleInput.OnConsoleInput += OnConsoleInput;
+        CliInputHandler.RegisterHandler(HandleConsoleInput);
     }
-
-    private static void OnConsoleInput(string input, ref bool handled) =>
-        handled |= RequestRun(ConsoleSender, input);
 
     public static bool RequestRun(ICommandSender sender, string text)
     {
@@ -120,12 +116,6 @@ public static class CommandsManager
         return null;
     }
 
-    private static void OnPluginUnload(PluginContainer container) =>
-        container.PluginInstance!.UnregisterCommands();
-
-    private static void OnPluginLoad(PluginContainer container) =>
-        ImportCommands(container.Assembly, container.LoadID);
-
     private static void CreateLanguageCommands()
     {
         string[] cultureDirectories = Directory.GetDirectories(Localization.Directory);
@@ -136,7 +126,7 @@ public static class CommandsManager
                 .AddIniFile(Path.Combine(cultureDirectory, LanguageCFG))
                 .Build();
 
-            CommandData data = new(null, $"lang {new DirectoryInfo(cultureDirectory).Name}", config["meta:description"]!,
+            CommandData data = new(null, $"{LanguageCommandPrefix}{new DirectoryInfo(cultureDirectory).Name}", config["meta:description"]!,
                 typeof(BasicCommands).GetMethod(nameof(BasicCommands.Language))!, 0, CommandType.Shared, null, null);
 
             Commands.Add(new(data));
@@ -199,4 +189,11 @@ public static class CommandsManager
             t.CommandAttr.Permission,
             t.SyntaxAttr?.Syntax
         );
+
+    private static async Task HandleConsoleInput(string input, CancellationToken cancellationToken)
+    {
+        RequestRun(ConsoleSender, input);
+
+        await Task.CompletedTask;
+    }
 }

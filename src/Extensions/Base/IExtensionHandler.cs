@@ -1,6 +1,6 @@
-using Amethyst.Extensions.Result;
+using Amethyst.Extensions.Base.Result;
 
-namespace Amethyst.Extensions;
+namespace Amethyst.Extensions.Base;
 
 public interface IExtensionHandler
 {

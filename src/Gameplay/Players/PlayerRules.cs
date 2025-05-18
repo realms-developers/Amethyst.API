@@ -1,4 +1,5 @@
-namespace Amethyst.Players;
+
+namespace Amethyst.Gameplay.Players;
 
 public sealed class PlayerRules
 {
@@ -9,7 +10,9 @@ public sealed class PlayerRules
         _rules = new List<string>[1];
 
         for (int i = 0; i < _rules.Length; i++)
+        {
             _rules[i] = [];
+        }
     }
 
     public NetPlayer Player { get; }
@@ -22,15 +25,17 @@ public sealed class PlayerRules
         }
     }
 
-    private List<string>[] _rules = new List<string>[1];
-    private object _lock = new object();
+    private readonly List<string>[] _rules = new List<string>[1];
+    private readonly Lock _lock = new();
 
     public void Block(InteractRuleType type, string reason)
     {
         lock (_lock)
         {
             if (!_rules[(int)type].Contains(reason))
+            {
                 _rules[(int)type].Add(reason);
+            }
         }
     }
 

@@ -1,25 +1,17 @@
-using Amethyst.Core;
+using Amethyst.Storages.Config;
 
-namespace Amethyst.Players.Auth;
+namespace Amethyst.Gameplay.Players.Auth;
 
 public static class AuthManager
 {
+    internal static readonly Configuration<AuthConfiguration> _authCfg = new(typeof(AuthConfiguration).FullName!, new());
+
     public static IReadOnlyList<string> Factors => _Factors.AsReadOnly();
-    public static AuthConfiguration Configuration => AmethystSession.Profile.Config.Get<AuthConfiguration>().Data;
+    public static AuthConfiguration Configuration => _authCfg.Data;
 
-    internal static List<string> _Factors = [ "password" ];
+    internal static List<string> _Factors = ["password"];
 
-    internal static void Initialize()
-    {
-        AmethystSession.Profile.Config.Get<AuthConfiguration>().Load();
-        AmethystSession.Profile.Config.Get<AuthConfiguration>().Modify(SetupConfiguration, true);
-    }
-
-    private static void SetupConfiguration(ref AuthConfiguration configuration)
-    {
-        configuration.MinPasswordLength ??= 6;
-        configuration.MaxPasswordLength ??= 48;
-    }
+    public static void Initialize() => _authCfg.Load();
 
     public static void AddAuthFactor(string name)
     {
@@ -29,8 +21,5 @@ public static class AuthManager
         }
     }
 
-    public static void RemoveAuthFactor(string name)
-    {
-        _Factors.Remove(name);
-    }
+    public static void RemoveAuthFactor(string name) => _Factors.Remove(name);
 }

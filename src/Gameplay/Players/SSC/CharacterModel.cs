@@ -1,9 +1,9 @@
+using Amethyst.Gameplay.Players.SSC.Enums;
 using Amethyst.Network;
-using Amethyst.Players.SSC.Enums;
 using Amethyst.Storages.Mongo;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Amethyst.Players.SSC;
+namespace Amethyst.Gameplay.Players.SSC;
 
 [BsonIgnoreExtraElements]
 public sealed class CharacterModel(string name) : DataModel(name)

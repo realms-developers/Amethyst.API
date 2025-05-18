@@ -1,28 +1,28 @@
 using System.Globalization;
-using Amethyst.Commands;
-using Amethyst.Core;
+using Amethyst.Gameplay.Players.Auth;
+using Amethyst.Gameplay.Players.Extensions;
+using Amethyst.Gameplay.Players.SSC;
+using Amethyst.Gameplay.Players.SSC.Enums;
+using Amethyst.Gameplay.Players.SSC.Interfaces;
+using Amethyst.Infrastructure;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
-using Amethyst.Permissions;
-using Amethyst.Players.Auth;
-using Amethyst.Players.Extensions;
-using Amethyst.Players.SSC;
-using Amethyst.Players.SSC.Enums;
-using Amethyst.Players.SSC.Interfaces;
 using Amethyst.Security;
 using Amethyst.Security.Limits;
+using Amethyst.Systems.Commands;
+using Amethyst.Systems.Permissions;
 using Amethyst.Text;
 using Microsoft.Xna.Framework;
 using Terraria;
 
-namespace Amethyst.Players;
+namespace Amethyst.Gameplay.Players;
 
 public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
 {
     internal static bool JailItemBanCheck(NetPlayer player)
     {
         List<int> slots = player._weirdSlots; // important memory copy
-        List<int> realWeirdSlots = new List<int>(player._weirdSlots.Capacity);
+        List<int> realWeirdSlots = new(player._weirdSlots.Capacity);
         List<int> holdingBannedItems = [];
 
         foreach (int slot in slots)
@@ -199,7 +199,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionable, IDisposable
     internal bool[] _initHideAccessories = new bool[10];
     internal byte _initHideMisc;
     internal NetColor[] _initColors = new NetColor[7];
-    internal Dictionary<string, DateTime> _notifyDelay = new Dictionary<string, DateTime>();
+    internal Dictionary<string, DateTime> _notifyDelay = [];
 
     internal List<int> _weirdSlots = [];
 

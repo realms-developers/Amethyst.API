@@ -1,8 +1,7 @@
-using Amethyst.Core;
+using Amethyst.Gameplay.Players;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
-using Amethyst.Players;
 
 namespace Amethyst.Security.Rules.Players;
 

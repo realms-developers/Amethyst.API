@@ -1,9 +1,9 @@
-namespace Amethyst.Players.Auth;
+namespace Amethyst.Gameplay.Players.Auth;
 
-public struct AuthConfiguration
+public class AuthConfiguration
 {
     public bool EnableAuthorization { get; set; }
 
-    public int? MinPasswordLength { get; set; }
-    public int? MaxPasswordLength { get; set; }
+    public int? MinPasswordLength { get; set; } = 6;
+    public int? MaxPasswordLength { get; set; } = 48;
 }

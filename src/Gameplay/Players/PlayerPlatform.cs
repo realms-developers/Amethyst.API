@@ -1,4 +1,4 @@
-namespace Amethyst.Players;
+namespace Amethyst.Gameplay.Players;
 
 public enum PlayerPlatform : byte
 {

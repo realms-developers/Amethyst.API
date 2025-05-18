@@ -1,13 +1,13 @@
-using Amethyst.Commands.Arguments;
-using Amethyst.Players;
+using Amethyst.Gameplay.Players;
+using Amethyst.Systems.Commands.Arguments;
 
-namespace Amethyst.Commands.Parsing;
+namespace Amethyst.Systems.Commands.Parsing;
 
 public static class ParsingNode
 {
     private static readonly Dictionary<Type, ArgumentParser> _parsers = [];
 
-    internal static void Initialize()
+    static ParsingNode()
     {
         // Generic numeric parsers
         Type[] numericTypes = [typeof(sbyte), typeof(byte),

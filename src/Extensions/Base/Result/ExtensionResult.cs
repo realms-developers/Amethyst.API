@@ -1,4 +1,4 @@
-namespace Amethyst.Extensions.Result;
+namespace Amethyst.Extensions.Base.Result;
 
 public enum ExtensionResult
 {

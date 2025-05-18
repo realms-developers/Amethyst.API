@@ -1,4 +1,4 @@
-namespace Amethyst.Commands;
+namespace Amethyst.Systems.Commands;
 
 public enum SenderType
 {

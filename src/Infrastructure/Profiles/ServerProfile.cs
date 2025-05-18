@@ -1,4 +1,4 @@
-namespace Amethyst.Infrastructure.Core.Profiles;
+namespace Amethyst.Infrastructure.Profiles;
 
 public sealed class ServerProfile
 {

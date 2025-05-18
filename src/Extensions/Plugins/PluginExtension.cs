@@ -1,28 +1,23 @@
 using System.Reflection;
 using Amethyst.Extensions.Base;
-using Amethyst.Extensions.Repositories;
+using Amethyst.Extensions.Base.Metadata;
+using Amethyst.Extensions.Base.Repositories;
 
 namespace Amethyst.Extensions.Plugins;
 
-public sealed class PluginExtension : IExtension
+public sealed class PluginExtension(ExtensionMetadata metadata, PluginInstance pluginInstance, Assembly assembly, IExtensionRepository repository, PluginLoadContext ctx) : IExtension
 {
-    public PluginExtension(ExtensionMetadata metadata, PluginInstance pluginInstance, Assembly assembly, IExtensionRepository repository)
-    {
-        Metadata = metadata;
-        PluginInstance = pluginInstance;
-        Assembly = assembly;
-        Repository = repository;
-    }
-
     public Guid LoadIdentifier { get; } = Guid.NewGuid();
 
-    public ExtensionMetadata Metadata { get; }
+    public ExtensionMetadata Metadata { get; } = metadata;
 
-    public IExtensionRepository Repository { get; }
+    public IExtensionRepository Repository { get; } = repository;
 
     public IExtensionHandler Handler { get; set; } = null!;
 
-    public PluginInstance PluginInstance { get; }
+    public PluginInstance PluginInstance { get; } = pluginInstance;
 
-    public Assembly Assembly { get; }
+    public Assembly Assembly { get; } = assembly;
+
+    public PluginLoadContext LoadContext { get; } = ctx;
 }

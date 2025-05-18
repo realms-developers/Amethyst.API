@@ -1,15 +1,15 @@
-using Amethyst.Commands;
-using Amethyst.Core;
+using Amethyst.Gameplay.Players.SSC.Enums;
+using Amethyst.Infrastructure;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
-using Amethyst.Players.SSC.Enums;
+using Amethyst.Systems.Commands;
 using Amethyst.Text;
 using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.Social;
 
-namespace Amethyst.Players;
+namespace Amethyst.Gameplay.Players;
 
 internal static class PlayerNetworking
 {
@@ -56,7 +56,9 @@ internal static class PlayerNetworking
 
             PacketWriter buffsPacket = new PacketWriter().SetType(50).PackByte((byte)packet.Player.Index);
             for (int i = 0; i < 45; i++)
+            {
                 buffsPacket = buffsPacket.PackUInt16(0);
+            }
 
             PlayerUtilities.BroadcastPacket(buffsPacket.BuildPacket());
 
@@ -71,8 +73,8 @@ internal static class PlayerNetworking
         private static void OnRequestWorldInfo(in IncomingPacket packet, PacketHandleResult result)
         {
             packet.Player.Character!.SyncCharacter();
-            packet.Player.Character.SetLife(SSC.Enums.SyncType.Broadcast, packet.Player.Character.LifeMax, null);
-            packet.Player.Character.SetMana(SSC.Enums.SyncType.Broadcast, packet.Player.Character.ManaMax, null);
+            packet.Player.Character.SetLife(SyncType.Broadcast, packet.Player.Character.LifeMax, null);
+            packet.Player.Character.SetMana(SyncType.Broadcast, packet.Player.Character.ManaMax, null);
             packet.Player.Character.IsReadonly = false;
         }
 
@@ -124,7 +126,9 @@ internal static class PlayerNetworking
                     packet.Player._initHideMisc = reader.ReadByte();
 
                     for (int i = 0; i < 7; i++)
+                    {
                         packet.Player._initColors[i] = reader.ReadNetColor();
+                    }
 
                     packet.Player._initInfo1 = reader.Read<PlayerInfo1>();
                     packet.Player._initInfo2 = reader.Read<PlayerInfo2>();
@@ -198,7 +202,7 @@ internal static class PlayerNetworking
             BinaryWriter binaryWriter = writer.writer;
 
             binaryWriter.Write((int)Main.time);
-            BitsByte bitsByte5 = (byte)0;
+            BitsByte bitsByte5 = 0;
             bitsByte5[0] = Main.dayTime;
             bitsByte5[1] = Main.bloodMoon;
             bitsByte5[2] = Main.eclipse;
@@ -256,7 +260,7 @@ internal static class PlayerNetworking
                 Main.maxRaining = 0f;
             }
             binaryWriter.Write(Main.maxRaining);
-            BitsByte bitsByte6 = (byte)0;
+            BitsByte bitsByte6 = 0;
             bitsByte6[0] = WorldGen.shadowOrbSmashed;
             bitsByte6[1] = NPC.downedBoss1;
             bitsByte6[2] = NPC.downedBoss2;
@@ -266,7 +270,7 @@ internal static class PlayerNetworking
             bitsByte6[6] = Main.ServerSideCharacter;
             bitsByte6[7] = NPC.downedPlantBoss;
             binaryWriter.Write(bitsByte6);
-            BitsByte bitsByte7 = (byte)0;
+            BitsByte bitsByte7 = 0;
             bitsByte7[0] = NPC.downedMechBoss1;
             bitsByte7[1] = NPC.downedMechBoss2;
             bitsByte7[2] = NPC.downedMechBoss3;
@@ -276,7 +280,7 @@ internal static class PlayerNetworking
             bitsByte7[6] = Main.pumpkinMoon;
             bitsByte7[7] = Main.snowMoon;
             binaryWriter.Write(bitsByte7);
-            BitsByte bitsByte8 = (byte)0;
+            BitsByte bitsByte8 = 0;
             bitsByte8[1] = Main.fastForwardTimeToDawn;
             bitsByte8[2] = Main.slimeRain;
             bitsByte8[3] = NPC.downedSlimeKing;
@@ -285,7 +289,7 @@ internal static class PlayerNetworking
             bitsByte8[6] = NPC.downedMartians;
             bitsByte8[7] = NPC.downedAncientCultist;
             binaryWriter.Write(bitsByte8);
-            BitsByte bitsByte9 = (byte)0;
+            BitsByte bitsByte9 = 0;
             bitsByte9[0] = NPC.downedMoonlord;
             bitsByte9[1] = NPC.downedHalloweenKing;
             bitsByte9[2] = NPC.downedHalloweenTree;
@@ -295,7 +299,7 @@ internal static class PlayerNetworking
             bitsByte9[6] = NPC.downedGolemBoss;
             bitsByte9[7] = BirthdayParty.PartyIsUp;
             binaryWriter.Write(bitsByte9);
-            BitsByte bitsByte10 = (byte)0;
+            BitsByte bitsByte10 = 0;
             bitsByte10[0] = NPC.downedPirates;
             bitsByte10[1] = NPC.downedFrost;
             bitsByte10[2] = NPC.downedGoblins;
@@ -305,7 +309,7 @@ internal static class PlayerNetworking
             bitsByte10[6] = DD2Event.DownedInvasionT2;
             bitsByte10[7] = DD2Event.DownedInvasionT3;
             binaryWriter.Write(bitsByte10);
-            BitsByte bitsByte11 = (byte)0;
+            BitsByte bitsByte11 = 0;
             bitsByte11[0] = NPC.combatBookWasUsed;
             bitsByte11[1] = LanternNight.LanternsUp;
             bitsByte11[2] = NPC.downedTowerSolar;
@@ -315,7 +319,7 @@ internal static class PlayerNetworking
             bitsByte11[6] = Main.forceHalloweenForToday;
             bitsByte11[7] = Main.forceXMasForToday;
             binaryWriter.Write(bitsByte11);
-            BitsByte bitsByte12 = (byte)0;
+            BitsByte bitsByte12 = 0;
             bitsByte12[0] = NPC.boughtCat;
             bitsByte12[1] = NPC.boughtDog;
             bitsByte12[2] = NPC.boughtBunny;
@@ -325,7 +329,7 @@ internal static class PlayerNetworking
             bitsByte12[6] = NPC.downedQueenSlime;
             bitsByte12[7] = Main.getGoodWorld;
             binaryWriter.Write(bitsByte12);
-            BitsByte bitsByte13 = (byte)0;
+            BitsByte bitsByte13 = 0;
             bitsByte13[0] = Main.tenthAnniversaryWorld;
             bitsByte13[1] = Main.dontStarveWorld;
             bitsByte13[2] = NPC.downedDeerclops;
@@ -335,7 +339,7 @@ internal static class PlayerNetworking
             bitsByte13[6] = NPC.combatBookVolumeTwoWasUsed;
             bitsByte13[7] = NPC.peddlersSatchelWasUsed;
             binaryWriter.Write(bitsByte13);
-            BitsByte bitsByte14 = (byte)0;
+            BitsByte bitsByte14 = 0;
             bitsByte14[0] = NPC.unlockedSlimeGreenSpawn;
             bitsByte14[1] = NPC.unlockedSlimeOldSpawn;
             bitsByte14[2] = NPC.unlockedSlimePurpleSpawn;
@@ -345,7 +349,7 @@ internal static class PlayerNetworking
             bitsByte14[6] = NPC.unlockedSlimeCopperSpawn;
             bitsByte14[7] = Main.fastForwardTimeToDusk;
             binaryWriter.Write(bitsByte14);
-            BitsByte bitsByte15 = (byte)0;
+            BitsByte bitsByte15 = 0;
             bitsByte15[0] = Main.noTrapsWorld;
             bitsByte15[1] = Main.zenithWorld;
             bitsByte15[2] = NPC.unlockedTruffleSpawn;

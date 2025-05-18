@@ -1,12 +1,11 @@
+using Amethyst.Gameplay.Players;
 using Amethyst.Network;
-using Amethyst.Players;
 using Microsoft.Xna.Framework;
-using Org.BouncyCastle.Bcpg;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Localization;
 
-namespace Amethyst.Items;
+namespace Amethyst.Gameplay.Items;
 
 public static class ItemManager
 {
@@ -89,7 +88,7 @@ public static class ItemManager
 
         byte[] itemOwnPacket = new PacketWriter().SetType(22)
                                 .PackInt16(itemIndex)
-                                .PackByte((byte)254)
+                                .PackByte(254)
                                 .BuildPacket();
 
         player.Socket.SendPacket(itemOwnPacket);

@@ -1,33 +1,40 @@
-namespace Amethyst.Extensions.Base;
+namespace Amethyst.Extensions.Base.Metadata;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class ExtensionMetadataAttribute : Attribute
+public class ExtensionMetadataAttribute(string name, string author, string? description, Version version) : Attribute
 {
-    public string Name { get; }
-    public string Author { get; }
-    public string? Description { get; }
-    public string Version { get; }
+    public string Name { get; } = name;
+    public string Author { get; } = author;
+    public string? Description { get; } = description;
+    public Version Version { get; } = version;
 
-    public ExtensionMetadataAttribute(string name, string author, string? description, string version)
+    public ExtensionMetadataAttribute(string name, string author, string? description,
+            int major, int minor = 0, int build = 0, int revision = 0)
+            : this(name, author, description, new Version(major, minor, build, revision))
     {
-        Name = name;
-        Author = author;
-        Description = description;
-        Version = version;
     }
 
-    public ExtensionMetadataAttribute(string name, string author, string version)
+    public ExtensionMetadataAttribute(string name, string author, Version version)
         : this(name, author, null, version)
     {
     }
 
+    public ExtensionMetadataAttribute(string name, string author,
+        int major, int minor = 0, int build = 0, int revision = 0)
+        : this(name, author, null, new Version(major, minor, build, revision)) { }
+
+    public ExtensionMetadataAttribute(string name, string author, string description)
+        : this(name, author, description, new())
+    {
+    }
+
     public ExtensionMetadataAttribute(string name, string author)
-        : this(name, author, null, "1.0.0")
+        : this(name, author, null, new())
     {
     }
 
     public ExtensionMetadataAttribute(string name)
-        : this(name, "Unknown", null, "1.0.0")
+        : this(name, "Unknown", null, new())
     {
     }
 }

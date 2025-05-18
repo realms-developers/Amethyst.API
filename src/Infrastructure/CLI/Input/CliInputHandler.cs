@@ -2,26 +2,19 @@ namespace Amethyst.Infrastructure.CLI.Input;
 
 public static class CliInputHandler
 {
-    private static List<InputHandler> _Handlers = new();
+    private static readonly List<InputHandler> _handlers = [];
 
     public static void RegisterHandler(InputHandler handler)
     {
-        if (_Handlers.Contains(handler))
+        if (!_handlers.Contains(handler))
         {
-            return;
+            _handlers.Add(handler);
         }
-        _Handlers.Add(handler);
     }
 
-    public static void UnregisterHandler(InputHandler handler)
-    {
-        _Handlers.Remove(handler);
-    }
+    public static void UnregisterHandler(InputHandler handler) => _handlers.Remove(handler);
 
-    internal static void Initialize()
-    {
-        Task.Run(CliTask);
-    }
+    internal static void Initialize() => Task.Run(CliTask);
 
     private static void CliTask()
     {
@@ -35,7 +28,7 @@ public static class CliInputHandler
 
             CancellationTokenSource tokenSource = new();
 
-            foreach (var handler in _Handlers)
+            foreach (InputHandler handler in _handlers)
             {
                 Task task = handler(input!, tokenSource.Token);
                 task.ContinueWith(t =>

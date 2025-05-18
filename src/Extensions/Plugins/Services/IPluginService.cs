@@ -1,4 +1,4 @@
-namespace Amethyst.Extensions.Plugins;
+namespace Amethyst.Extensions.Plugins.Services;
 
 public interface IPluginService
 {

@@ -1,7 +1,7 @@
+using Amethyst.Gameplay.Players;
+using Amethyst.Gameplay.Players.SSC.Enums;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
-using Amethyst.Players;
-using Amethyst.Players.SSC.Enums;
 using Terraria;
 using Terraria.ID;
 

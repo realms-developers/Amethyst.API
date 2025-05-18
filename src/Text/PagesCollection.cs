@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Globalization;
 using System.Text;
-using Amethyst.Commands;
+using Amethyst.Systems.Commands;
 
 namespace Amethyst.Text;
 

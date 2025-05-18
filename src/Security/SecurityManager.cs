@@ -1,11 +1,13 @@
 using System.Reflection;
-using Amethyst.Core;
 using Amethyst.Security.GameBans;
+using Amethyst.Storages.Config;
 
 namespace Amethyst.Security;
 
 public static class SecurityManager
 {
+    internal static readonly Configuration<SecurityConfiguration> _securityCfg = new(typeof(SecurityConfiguration).FullName!, new());
+
     public const string IgnorePermission = "security.ignore";
     public const string ModeratorPermission = "security.moderator";
 
@@ -19,12 +21,11 @@ public static class SecurityManager
     public static GameObjectBlocker WallSafety { get; } = new GameObjectBlocker("TileSafetyCollection");
 
     internal static Dictionary<string, RuleContainer> Rules = [];
-    internal static SecurityConfiguration Configuration => AmethystSession.Profile.Config.Get<SecurityConfiguration>().Data;
+    internal static SecurityConfiguration Configuration => _securityCfg.Data;
 
-    internal static void Initialize()
+    public static void Initialize()
     {
-        AmethystSession.Profile.Config.Get<SecurityConfiguration>().Load();
-        AmethystSession.Profile.Config.Get<SecurityConfiguration>().Modify(SetupConfiguration, true);
+        _securityCfg.Load();
 
         LoadFrom(typeof(SecurityManager).Assembly);
     }
@@ -42,101 +43,6 @@ public static class SecurityManager
 
             RegisterRule(rule);
         }
-    }
-
-    private static void SetupConfiguration(ref SecurityConfiguration configuration)
-    {
-        configuration.DisabledRules ??= [];
-
-        configuration.PerSecondLimitPackets ??= [];
-        configuration.OneTimePackets ??= [1, 6, 8];
-        configuration.DisabledPackets ??= [136];
-
-        configuration.PerSecondLimitModules ??= [];
-        configuration.OneTimeModules ??= [];
-        configuration.DisabledModules ??= [];
-
-        configuration.NotifyModerators ??= true;
-
-        configuration.EnableNicknameFilter ??= true;
-        configuration.NicknameFilter ??= " ~!@#$%^&*()_+`1234567890-=ё\"№;:?\\|qwertyuiopasdfghjklzxcvbnm{}[];'<>,./ёйцукенгшщзхъфывапролджэячсмитьбю";
-
-        configuration.MaxAllowedLife ??= 500;
-        configuration.MaxAllowedMana ??= 200;
-
-        configuration.KillTileRange ??= 64;
-        configuration.PlaceTileRange ??= 32;
-        configuration.ReplaceTileRange ??= 32;
-
-        configuration.KillTileThreshold ??= 80;
-        configuration.PlaceTileThreshold ??= 20;
-        configuration.ReplaceTileThreshold ??= 20;
-
-        configuration.KillWallRange ??= 32;
-        configuration.PlaceWallRange ??= 32;
-        configuration.ReplaceWallRange ??= 32;
-
-        configuration.KillWallThreshold ??= 50;
-        configuration.PlaceWallThreshold ??= 50;
-        configuration.ReplaceWallThreshold ??= 50;
-
-        configuration.ItemDropThreshold ??= 8;
-        configuration.ReturnDroppedItemInThreshold ??= true;
-
-        configuration.MaxProjectilesPerUser ??= 60;
-        configuration.ProjectileCreateThreshold ??= 45;
-
-        configuration.ChestFateThreshold ??= 8;
-
-        configuration.HealTextThreshold ??= 1;
-        configuration.ManaHealTextThreshold ??= 4;
-
-        configuration.ProjectileFixedAI1 ??= new()
-        {
-            { 950, 0 }
-        };
-
-        configuration.ProjectileMinAI1 ??= new()
-        {
-            { 611, -1 }
-        };
-
-        configuration.ProjectileMaxAI1 ??= new()
-        {
-            { 611, 1 }
-        };
-
-        configuration.ProjectileMinAI2 ??= new()
-        {
-			{ 405, 0f },
-			{ 410, 0f },
-			{ 424, 0.5f },
-			{ 425, 0.5f },
-			{ 426, 0.5f },
-			{ 522, 0 },
-			{ 612, 0.4f },
-			{ 953, 0.85f },
-			{ 756, 0.5f },
-        };
-
-        configuration.ProjectileMaxAI2 ??= new()
-        {
-			{ 405, 1.2f },
-			{ 410, 1.2f },
-			{ 424, 0.8f },
-			{ 425, 0.8f },
-			{ 426, 0.8f },
-			{ 522, 40f },
-			{ 612, 0.7f },
-			{ 953, 2 },
-			{ 756, 1 }
-        };
-
-        configuration.AllowedMessages ??=
-        [
-            "security_tile_safety",
-            "security_tile_bans"
-        ];
     }
 
     public static void RegisterRule(ISecurityRule rule)

@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Net;
-using Amethyst.Infrastructure.Core.Profiles;
 using Amethyst.Infrastructure.Kernel;
+using Amethyst.Infrastructure.Profiles;
 using Amethyst.Network.Managing;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -131,8 +131,10 @@ internal static class ServerLauncher
                             }
 
                             if (!AmethystKernel.Profile!.DisableFrameDebug)
+                            {
                                 AmethystLog.Main.Debug(
                                     nameof(ServerLauncher), $"Game Update: [Min-Max range: {Math.Ceiling(ordered.First())}-{Math.Ceiling(ordered.Last())}ms] average: {Math.Ceiling(totalMs / 180)}ms, total: {(int)totalMs}ms");
+                            }
 
                             timings.Clear();
                         }

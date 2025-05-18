@@ -12,7 +12,7 @@ public static class Localization
 {
     internal static readonly string Directory = Path.GetFullPath(
         Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory,
+            AppContext.BaseDirectory,
             "..",
             "localization"
         )

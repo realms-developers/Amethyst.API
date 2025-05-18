@@ -1,23 +1,18 @@
+using Amethyst.Gameplay.Players;
+using Amethyst.Gameplay.Players.SSC.Enums;
+using Amethyst.Gameplay.Players.SSC.Interfaces;
 using Amethyst.Network;
 using Amethyst.Network.Packets;
-using Amethyst.Players.SSC.Enums;
-using Amethyst.Players.SSC.Interfaces;
 using Terraria;
 
-namespace Amethyst.Players.SSC;
+namespace Amethyst.Gameplay.Players.SSC;
 
-public sealed class ClientCharacterWrapper : ICharacterWrapper
+public sealed class ClientCharacterWrapper(NetPlayer player, CharacterModel model) : ICharacterWrapper
 {
-    public ClientCharacterWrapper(NetPlayer player, CharacterModel model)
-    {
-        _owner = player;
-        _model = model;
-    }
+    private CharacterModel _model = model;
+    private readonly NetPlayer _owner = player;
 
-    private CharacterModel _model;
-    private readonly NetPlayer _owner;
-
-    public NetItem this[int slot] => (slot >= 0 && slot < _model.Slots.Length) ? _model.Slots[slot] : default;
+    public NetItem this[int slot] => slot >= 0 && slot < _model.Slots.Length ? _model.Slots[slot] : default;
 
     public NetColor this[PlayerColorType type] => _model.Colors[(int)type];
 

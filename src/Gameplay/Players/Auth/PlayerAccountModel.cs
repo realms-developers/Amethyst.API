@@ -1,13 +1,9 @@
 using Amethyst.Storages.Mongo;
 
-namespace Amethyst.Players.Auth;
+namespace Amethyst.Gameplay.Players.Auth;
 
-public sealed class PlayerAccountModel : DataModel
+public sealed class PlayerAccountModel(string name) : DataModel(name)
 {
-    public PlayerAccountModel(string name) : base(name)
-    {
-    }
-
     public override void Save()
     {
     }

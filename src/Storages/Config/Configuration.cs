@@ -9,9 +9,14 @@ public sealed class Configuration<T>(string name, T defaultValue) where T : clas
 
     public void Load()
     {
-        T data = Data;
-        ConfigDiskStorage.ReadOrCreate(Name, ref data);
-        _data = data;
+        if (ConfigDiskStorage.TryRead(Name, out T? loadedData) && loadedData != null)
+        {
+            _data = loadedData; // Completely replace defaults
+        }
+        else
+        {
+            Save(); // Write defaults if file doesn't exist
+        }
     }
 
     public void Save() => ConfigDiskStorage.Write(Name, _data);

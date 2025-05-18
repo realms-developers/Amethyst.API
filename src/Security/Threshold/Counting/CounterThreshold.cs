@@ -2,11 +2,11 @@ namespace Amethyst.Security.Threshold.Counting;
 
 internal sealed class CounterThreshold<T> : IThreshold<T>, IDisposable where T : Enum
 {
-    private static Timer _timer = new Timer((obj) => _timerCallback?.Invoke(obj), null, Timeout.Infinite, 1000);
+    private static readonly Timer _timer = new Timer((obj) => _timerCallback?.Invoke(obj), null, Timeout.Infinite, 1000);
     private static event TimerCallback? _timerCallback;
 
     private readonly int[] _limits;
-    private int[] _counters;
+    private readonly int[] _counters;
     private readonly bool _reset;
 
     public CounterThreshold(int[] limits, bool reset)
@@ -30,7 +30,7 @@ internal sealed class CounterThreshold<T> : IThreshold<T>, IDisposable where T :
 
     public bool Fire(T index)
     {
-        var idx = Convert.ToByte(index, System.Globalization.CultureInfo.InvariantCulture);
+        byte idx = Convert.ToByte(index, System.Globalization.CultureInfo.InvariantCulture);
         if (_counters[idx] < _limits[idx])
         {
             _counters[idx]++;

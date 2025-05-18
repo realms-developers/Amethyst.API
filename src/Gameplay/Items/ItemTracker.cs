@@ -1,7 +1,7 @@
 using System.Collections;
 using Terraria;
 
-namespace Amethyst.Items;
+namespace Amethyst.Gameplay.Items;
 
 public sealed class ItemTracker : IEnumerable<NetWorldItem>
 {

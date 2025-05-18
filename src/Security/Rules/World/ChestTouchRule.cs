@@ -1,8 +1,5 @@
-using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
-using Amethyst.Players;
-using Terraria;
 
 namespace Amethyst.Security.Rules.World;
 

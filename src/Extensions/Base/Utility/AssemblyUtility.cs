@@ -1,4 +1,5 @@
 using System.Reflection;
+using Amethyst.Extensions.Base.Metadata;
 
 namespace Amethyst.Extensions.Base.Utility;
 
@@ -8,7 +9,7 @@ public static class AssemblyUtility
     {
         attribute = null;
 
-        foreach (var type in assembly.GetTypes())
+        foreach (Type type in assembly.GetTypes())
         {
             attribute = type.GetCustomAttribute<ExtensionMetadataAttribute>();
             if (attribute != null)
@@ -20,15 +21,15 @@ public static class AssemblyUtility
         return null;
     }
 
-    public static TExtension? TryCreateExtension<TExtension>(Assembly assembly, out ExtensionMetadataAttribute? attribute) where TExtension : class
+    public static TExtension? TryCreateExtension<TExtension>(Assembly assembly, out ExtensionMetadataAttribute? attribute, params object[] args) where TExtension : class
     {
-        var extensionType = TryFindExtensionType(assembly, out attribute);
+        Type? extensionType = TryFindExtensionType(assembly, out attribute);
         if (extensionType == null)
         {
             return null;
         }
 
-        var instance = Activator.CreateInstance(extensionType) as TExtension;
+        var instance = Activator.CreateInstance(extensionType, args) as TExtension;
         return instance;
     }
 }

@@ -18,7 +18,7 @@ public sealed class PlayerManaEffectRule : ISecurityRule
 
         reader.ReadByte();
 
-        short count = reader.ReadInt16();
+        short _ = reader.ReadInt16();
 
         if (SecurityManager.Configuration.DisableManaHealCombatText || packet.Player._securityThreshold.Fire(10))
         {

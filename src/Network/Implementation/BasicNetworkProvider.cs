@@ -1,11 +1,9 @@
-
-using Amethyst.Core;
+using Amethyst.Gameplay.Players;
+using Amethyst.Infrastructure;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
-using Amethyst.Players;
 using Amethyst.Security;
 using Terraria;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.Net.Sockets;
 

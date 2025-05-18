@@ -1,9 +1,9 @@
-namespace Amethyst.Security.Threshold;
+namespace Amethyst.Security.Threshold.Interval;
 
 internal sealed class IntervalThreshold<T> : IThreshold<T> where T : Enum
 {
     private readonly TimeSpan[] _interval;
-    private DateTime[] _lastFireTime;
+    private readonly DateTime[] _lastFireTime;
 
     public IntervalThreshold(TimeSpan[] interval)
     {
@@ -17,8 +17,8 @@ internal sealed class IntervalThreshold<T> : IThreshold<T> where T : Enum
 
     public bool Fire(T index)
     {
-        var now = DateTime.UtcNow;
-        var idx = Convert.ToByte(index, System.Globalization.CultureInfo.InvariantCulture);
+        DateTime now = DateTime.UtcNow;
+        byte idx = Convert.ToByte(index, System.Globalization.CultureInfo.InvariantCulture);
         if (now - _lastFireTime[idx] >= _interval[idx])
         {
             _lastFireTime[idx] = now;

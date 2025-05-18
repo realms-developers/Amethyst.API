@@ -1,4 +1,4 @@
-namespace Amethyst.Players.SSC.Enums;
+namespace Amethyst.Gameplay.Players.SSC.Enums;
 
 public enum SyncType
 {

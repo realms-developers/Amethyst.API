@@ -1,28 +1,59 @@
-using Amethyst.Extensions.Repositories;
+using Amethyst.Extensions.Base.Repositories;
+using Amethyst.Storages.Config;
 
-namespace Amethyst.Extensions.Modules;
+namespace Amethyst.Extensions.Modules.Repositories;
 
 public sealed class ModulesRepositoryRuler : IRepositoryRuler
 {
-    public bool AllowExtension(string name)
+    internal readonly Configuration<ModulesConfiguration> _modulesCfg;
+
+    public IEnumerable<string> AllowedExtensions => _modulesCfg.Data.AllowedModules;
+
+    public ModulesRepositoryRuler()
     {
-        ModulesConfiguration.Configuration.Modify((ref ModulesConfiguration cfg) => cfg.AllowedModules.Add(name));
-        return true;
+        _modulesCfg = new(typeof(ModulesConfiguration).FullName!, new());
+        _modulesCfg.Load();
+
+        if (_modulesCfg.Data.AllowedModules.Count == 0)
+        {
+            AllowExtension("ExampleModule1");
+            AllowExtension("ExampleModule2");
+        }
     }
+
+    public ModulesRepositoryRuler(string identifier)
+    {
+        _modulesCfg = new($"{typeof(ModulesConfiguration).FullName!}.{identifier}", new());
+        _modulesCfg.Load();
+    }
+
+    public bool ToggleExtension(string name)
+    {
+        bool isNowAllowed = false;
+
+        _modulesCfg.Modify((ref cfg) =>
+        {
+            isNowAllowed = !cfg.AllowedModules.Remove(name);
+
+            if (isNowAllowed)
+            {
+                cfg.AllowedModules.Add(name);
+            }
+        });
+
+        return isNowAllowed;
+    }
+
+    public void AllowExtension(string name) =>
+        _modulesCfg.Modify((ref cfg) => cfg.AllowedModules.Add(name));
 
     public bool DisallowExtension(string name)
     {
-        ModulesConfiguration.Configuration.Modify((ref ModulesConfiguration cfg) => cfg.AllowedModules.Remove(name));
-        return true;
+        bool removed = false;
+        _modulesCfg.Modify((ref cfg) => removed = cfg.AllowedModules.Remove(name));
+        return removed;
     }
 
-    public IEnumerable<string> GetAllowedExtensions()
-    {
-        return ModulesConfiguration.Instance.AllowedModules;
-    }
-
-    public bool IsExtensionAllowed(string name)
-    {
-        return ModulesConfiguration.Instance.AllowedModules.Contains(name);
-    }
+    public bool IsExtensionAllowed(string name) =>
+        _modulesCfg.Data.AllowedModules.Contains(name);
 }

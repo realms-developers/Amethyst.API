@@ -1,4 +1,4 @@
-using Amethyst.Players;
+using Amethyst.Gameplay.Players;
 using Microsoft.Xna.Framework;
 using On.Terraria.Chat;
 using Terraria;

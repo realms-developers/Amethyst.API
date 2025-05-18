@@ -1,4 +1,4 @@
-namespace Amethyst.Players.Extensions;
+namespace Amethyst.Gameplay.Players.Extensions;
 
 public static class PlayerExtensions
 {

@@ -1,13 +1,8 @@
-namespace Amethyst.Extensions.Result;
+namespace Amethyst.Extensions.Base.Result;
 
-public sealed class ExtensionHandleResult
+public sealed class ExtensionHandleResult(Guid loadIdentifier, ExtensionResult result, string? errorMessage = null)
 {
-    public ExtensionHandleResult(ExtensionResult result, string? errorMessage = null)
-    {
-        State = result;
-        ErrorMessage = errorMessage;
-    }
-
-    public ExtensionResult State { get; }
-    public string? ErrorMessage { get; }
+    public Guid LoadIdentifier { get; } = loadIdentifier;
+    public ExtensionResult State { get; } = result;
+    public string? ErrorMessage { get; } = errorMessage;
 }

@@ -1,7 +1,5 @@
-using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
-using Amethyst.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;

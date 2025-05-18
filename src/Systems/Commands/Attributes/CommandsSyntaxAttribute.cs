@@ -1,4 +1,4 @@
-namespace Amethyst.Commands.Attributes;
+namespace Amethyst.Systems.Commands.Attributes;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public sealed class CommandsSyntaxAttribute(params string[] syntax) : Attribute

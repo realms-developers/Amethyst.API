@@ -1,4 +1,4 @@
-namespace Amethyst.Extensions.Plugins;
+namespace Amethyst.Extensions.Plugins.Services;
 
 public sealed class ServiceManager
 {
@@ -7,12 +7,12 @@ public sealed class ServiceManager
         _pluginInstance = pluginInstance;
     }
 
-    private readonly Dictionary<Type, IPluginService> _services = new();
+    private readonly Dictionary<Type, IPluginService> _services = [];
     private readonly PluginInstance _pluginInstance;
 
     public T GetService<T>() where T : IPluginService
     {
-        if (_services.TryGetValue(typeof(T), out var service))
+        if (_services.TryGetValue(typeof(T), out IPluginService? service))
         {
             return (T)service;
         }
@@ -45,7 +45,7 @@ public sealed class ServiceManager
 
     internal void LoadAllServices()
     {
-        foreach (var service in _services.Values)
+        foreach (IPluginService service in _services.Values)
         {
             service.OnPluginLoad();
         }
@@ -53,7 +53,7 @@ public sealed class ServiceManager
 
     internal void UnloadAllServices()
     {
-        foreach (var service in _services.Values)
+        foreach (IPluginService service in _services.Values)
         {
             service.OnPluginUnload();
         }

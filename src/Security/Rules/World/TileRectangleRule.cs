@@ -1,4 +1,3 @@
-using Amethyst.Network;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
 
@@ -20,11 +19,11 @@ public sealed class TileRectangleRule : ISecurityRule
 
         // var reader = packet.GetReader();
 
-		// int x = reader.ReadInt16();
-		// int y = reader.ReadInt16();
-		// ushort width = reader.ReadByte();
-		// ushort height = reader.ReadByte();
-		// byte flags = reader.ReadByte();
+        // int x = reader.ReadInt16();
+        // int y = reader.ReadInt16();
+        // ushort width = reader.ReadByte();
+        // ushort height = reader.ReadByte();
+        // byte flags = reader.ReadByte();
 
         // if (width > 4 || height > 4)
         // {

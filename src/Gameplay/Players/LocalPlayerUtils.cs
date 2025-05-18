@@ -1,13 +1,13 @@
-using Amethyst.Items;
+using Amethyst.Gameplay.Items;
+using Amethyst.Gameplay.World;
 using Amethyst.Network;
-using Amethyst.World;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 
-namespace Amethyst.Players;
+namespace Amethyst.Gameplay.Players;
 
 public sealed class LocalPlayerUtils
 {

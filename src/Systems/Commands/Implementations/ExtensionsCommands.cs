@@ -1,11 +1,8 @@
-using Amethyst.Commands.Attributes;
-using Amethyst.Core;
-using Amethyst.Core.Server;
-using Amethyst.Extensions.Modules;
-using Amethyst.Extensions.Plugins;
+using Amethyst.Extensions;
+using Amethyst.Systems.Commands.Attributes;
 using Amethyst.Text;
 
-namespace Amethyst.Commands.Implementations;
+namespace Amethyst.Systems.Commands.Implementations;
 
 public static class ExtensionsCommands
 {
@@ -14,9 +11,9 @@ public static class ExtensionsCommands
     [CommandsSyntax("[page]")]
     public static void PluginsList(CommandInvokeContext ctx, int page = 0)
     {
-        var pages = PagesCollection.CreateFromList(PluginLoader.Containers
-            .Where(p => p.PluginInstance != null)
-            .Select(p => $"{p.PluginInstance!.Name} ({p.LoadID})"));
+        PagesCollection pages = PagesCollection.CreateFromList(ExtensionsOrganizer.Plugins.Repositories
+            .SelectMany(r => r.Extensions)
+            .Select(e => $"{e.Metadata.Name} ({e.LoadIdentifier})"));
 
         ctx.Sender.ReplyPage(pages, "commands.text.loadedPlugins", null, null, false, page);
     }
@@ -25,35 +22,25 @@ public static class ExtensionsCommands
     [CommandsSyntax("[page]")]
     public static void PluginsAllowList(CommandInvokeContext ctx, int page = 0)
     {
-        var pages = PagesCollection.CreateFromList(AmethystSession.ExtensionsConfiguration.AllowedPlugins);
+        PagesCollection pages = PagesCollection.CreateFromList(ExtensionsOrganizer.Plugins.Repositories
+            .SelectMany(r => r.Ruler.AllowedExtensions));
 
         ctx.Sender.ReplyPage(pages, "commands.text.allowedPlugins", null, null, false, page);
     }
 
-    [ServerCommand(CommandType.Shared, "plugins setallow", "commands.desc.setallowPlugin", "amethyst.management.extensions")]
-    [CommandsSyntax("<name with .dll>", "<true | false>")]
-    public static void PluginsAllow(CommandInvokeContext ctx, string name, bool value)
+    [ServerCommand(CommandType.Shared, "plugins toggle", "commands.desc.setallowPlugin", "amethyst.management.extensions")]
+    [CommandsSyntax("<name>")]
+    public static void PluginsAllow(CommandInvokeContext ctx, string name)
     {
-        AmethystSession.Profile.Config.Get<ExtensionsConfiguration>().Modify((ref ExtensionsConfiguration p) =>
-        {
-            if (value)
-            {
-                p.AllowedPlugins.Add(name);
-            }
-            else
-            {
-                p.AllowedPlugins.Remove(name);
-            }
-        }, true);
+        bool isNowAllowed = ExtensionsOrganizer.Plugins.Repositories[0].Ruler.ToggleExtension(name);
 
-        ctx.Sender.ReplySuccess(Localization.Get(value ? "commands.text.extensionWasAllowed" : "commands.text.extensionWasDisallowed", ctx.Sender.Language));
+        ctx.Sender.ReplySuccess(Localization.Get(isNowAllowed ? "commands.text.extensionWasAllowed" : "commands.text.extensionWasDisallowed", ctx.Sender.Language));
     }
 
     [ServerCommand(CommandType.Shared, "plugins unload", "commands.desc.unloadPlugin", "amethyst.management.extensions")]
     public static void PluginsUnload(CommandInvokeContext ctx)
     {
-        List<PluginContainer> containers = PluginLoader.Containers;
-        containers.ForEach(p => p.Dispose());
+        ExtensionsOrganizer.UnloadPlugins();
 
         ctx.Sender.ReplySuccess("commands.text.pluginsWasUnloaded");
     }
@@ -61,30 +48,16 @@ public static class ExtensionsCommands
     [ServerCommand(CommandType.Shared, "plugins load", "commands.desc.loadPlugins", "amethyst.management.extensions")]
     public static void PluginsLoad(CommandInvokeContext ctx)
     {
-        PluginLoader.LoadPlugins();
+        ExtensionsOrganizer.LoadPlugins();
         ctx.Sender.ReplySuccess("commands.text.pluginsWasLoaded");
     }
 
     [ServerCommand(CommandType.Shared, "plugins reload", "commands.desc.reloadPlugins", "amethyst.management.extensions")]
     public static void PluginsReload(CommandInvokeContext ctx)
     {
-        List<PluginContainer> containers = PluginLoader.Containers;
+        ExtensionsOrganizer.UnloadPlugins();
+        ExtensionsOrganizer.LoadPlugins();
 
-        if (containers.Count == 0)
-        {
-            return;
-        }
-
-        for (int i = 0; i < containers.Count; i++)
-        {
-            PluginContainer container = containers[i];
-
-            container.Dispose();
-        }
-
-        containers.Clear();
-
-        PluginLoader.LoadPlugins();
         ctx.Sender.ReplySuccess("commands.text.pluginsWasReloaded");
     }
 
@@ -95,7 +68,9 @@ public static class ExtensionsCommands
     [CommandsSyntax("[page]")]
     public static void ModulesList(CommandInvokeContext ctx, int page = 0)
     {
-        var pages = PagesCollection.CreateFromList(ModuleLoader.Modules.Select(p => p.Name));
+        PagesCollection pages = PagesCollection.CreateFromList(ExtensionsOrganizer.Modules.Repositories
+            .SelectMany(r => r.Extensions)
+            .Select(e => e.Metadata.Name));
 
         ctx.Sender.ReplyPage(pages, "commands.text.loadedModules", null, null, false, page);
     }
@@ -104,28 +79,19 @@ public static class ExtensionsCommands
     [CommandsSyntax("[page]")]
     public static void ModulesAllowList(CommandInvokeContext ctx, int page = 0)
     {
-        var pages = PagesCollection.CreateFromList(AmethystSession.ExtensionsConfiguration.AllowedModules);
+        PagesCollection pages = PagesCollection.CreateFromList(ExtensionsOrganizer.Modules.Repositories
+            .SelectMany(r => r.Ruler.AllowedExtensions));
 
         ctx.Sender.ReplyPage(pages, "commands.text.allowedModules", null, null, false, page);
     }
 
-    [ServerCommand(CommandType.Shared, "modules setallow", "commands.desc.setallowModule", "amethyst.management.extensions")]
-    [CommandsSyntax("<name with .dll>", "<true | false>")]
-    public static void ModulesAllow(CommandInvokeContext ctx, string name, bool value)
+    [ServerCommand(CommandType.Shared, "modules toggle", "commands.desc.setallowModule", "amethyst.management.extensions")]
+    [CommandsSyntax("<name>")]
+    public static void ModulesAllow(CommandInvokeContext ctx, string name)
     {
-        AmethystSession.Profile.Config.Get<ExtensionsConfiguration>().Modify((ref ExtensionsConfiguration p) =>
-        {
-            if (value)
-            {
-                p.AllowedModules.Add(name);
-            }
-            else
-            {
-                p.AllowedModules.Remove(name);
-            }
-        }, true);
+        bool isNowAllowed = ExtensionsOrganizer.Modules.Repositories[0].Ruler.ToggleExtension(name);
 
-        ctx.Sender.ReplySuccess(value ? "commands.text.extensionWasAllowed" : "commands.text.extensionWasDisallowed");
+        ctx.Sender.ReplySuccess(Localization.Get(isNowAllowed ? "commands.text.extensionWasAllowed" : "commands.text.extensionWasDisallowed", ctx.Sender.Language));
 
         ctx.Sender.ReplyWarning("commands.text.pleaseRebootServer");
     }

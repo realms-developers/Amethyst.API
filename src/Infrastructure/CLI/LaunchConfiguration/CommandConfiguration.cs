@@ -1,8 +1,8 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
-using Amethyst.Infrastructure.Core.Profiles;
 using Amethyst.Infrastructure.Kernel;
+using Amethyst.Infrastructure.Profiles;
 
 namespace Amethyst.Infrastructure.CLI.LaunchConfiguration;
 
@@ -77,7 +77,7 @@ internal static class CommandConfiguration
         rootCommand.AddOption(noFrameDebugOption);
 
         // Set handler with all command implementations
-        rootCommand.SetHandler((InvocationContext context) =>
+        rootCommand.SetHandler(context =>
         {
             try
             {

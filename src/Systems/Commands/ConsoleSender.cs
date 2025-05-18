@@ -1,9 +1,9 @@
 
 using System.Globalization;
-using Amethyst.Core;
+using Amethyst.Infrastructure;
 using Amethyst.Text;
 
-namespace Amethyst.Commands;
+namespace Amethyst.Systems.Commands;
 
 public sealed class ConsoleSender : ICommandSender
 {

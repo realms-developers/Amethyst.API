@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
-using Amethyst.Commands.Attributes;
+using Amethyst.Systems.Commands.Attributes;
 using Amethyst.Text;
 using static Amethyst.Security.SecurityManager;
 
-namespace Amethyst.Commands.Implementations;
+namespace Amethyst.Systems.Commands.Implementations;
 
 public static class BanCommands
 {

@@ -1,7 +1,7 @@
-using Amethyst.Commands.Attributes;
-using Amethyst.Players;
+using Amethyst.Gameplay.Players;
+using Amethyst.Systems.Commands.Attributes;
 
-namespace Amethyst.Commands.Implementations;
+namespace Amethyst.Systems.Commands.Implementations;
 
 public static class DebugCommands
 {
