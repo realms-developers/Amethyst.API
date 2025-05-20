@@ -3,11 +3,11 @@ using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Permissions;
 
-namespace Amethyst.Systems.Users.Players;
+namespace Amethyst.Systems.Users.Artificial;
 
-public sealed class PlayersUsersService : IUsersService<PlayerUser, PlayerUserMetadata>
+public sealed class ArtificialUsersService : IUsersService<ArtificialUser, ArtificialUserMetadata>
 {
-    public PlayersUsersService(IProviderBuilder<IMessageProvider> messageBuilder,
+    public ArtificialUsersService(IProviderBuilder<IMessageProvider> messageBuilder,
         IProviderBuilder<IPermissionProvider> permissionBuilder,
         IProviderBuilder<IExtensionProvider> extensionBuilder)
     {
@@ -18,20 +18,17 @@ public sealed class PlayersUsersService : IUsersService<PlayerUser, PlayerUserMe
 
     public IProviderBuilder<IMessageProvider> MessageProviderBuilder { get; set; }
 
-    public IProviderBuilder<IPermissionProvider> PermissionProviderBuilder { get; set; }
+    public IProviderBuilder<IPermissionProvider> PermissionProviderBuilder { get; set;  }
 
     public IProviderBuilder<IExtensionProvider> ExtensionProviderBuilder { get; set;  }
 
-    public PlayerUser CreateUser(PlayerUserMetadata metadata,
+    public ArtificialUser CreateUser(ArtificialUserMetadata metadata,
         IProviderBuilder<IMessageProvider>? messageBuilder = null,
         IProviderBuilder<IPermissionProvider>? permissionBuilder = null,
         IProviderBuilder<IExtensionProvider>? extensionBuilder = null)
     {
-        return new PlayerUser(
+        return new ArtificialUser(
             metadata.Name,
-            metadata.NetIndex,
-            metadata.IP,
-            metadata.UUID,
             messageBuilder ?? MessageProviderBuilder,
             permissionBuilder ?? PermissionProviderBuilder,
             extensionBuilder ?? ExtensionProviderBuilder);

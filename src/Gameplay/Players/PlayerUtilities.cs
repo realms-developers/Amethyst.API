@@ -1,5 +1,8 @@
 using System.Globalization;
+using Amethyst.Network;
 using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ID;
 
 namespace Amethyst.Gameplay.Players;
 
@@ -45,4 +48,3 @@ public static class PlayerUtilities
             }
         }
     }
-}

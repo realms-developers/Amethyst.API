@@ -2,16 +2,15 @@ using System.Globalization;
 using Amethyst.Gameplay.Players.Auth;
 using Amethyst.Gameplay.Players.Extensions;
 using Amethyst.Gameplay.Players.SSC;
+using Amethyst.Gameplay.Players.SSC.Enums;
 using Amethyst.Gameplay.Players.SSC.Interfaces;
 using Amethyst.Infrastructure;
 using Amethyst.Network;
 using Amethyst.Network.Managing;
-using Amethyst.Players.Auth;
 using Amethyst.Security;
 using Amethyst.Security.Limits;
-using Amethyst.Systems.Characters.Base.Enums;
 using Amethyst.Systems.Commands;
-using Amethyst.Systems.Users.Base.Permissions;
+using Amethyst.Systems.Permissions;
 using Amethyst.Text;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -105,7 +104,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionProvider, IDisposable
 
         if (AuthManager.Configuration.EnableAuthorization)
         {
-            Auth = new PlayerAuth(this, AuthManager._Factors);
+            Auth = new PlayerAuth(this);
         }
 
         _lastPos = new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16);

@@ -1,11 +1,11 @@
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Permissions;
 
-namespace Amethyst.Systems.Users.Players.Permissions;
+namespace Amethyst.Systems.Users.Artificial.Permissions;
 
-public sealed class PlayerPermissionProvider : IPermissionProvider
+public sealed class ArtificialPermissionProvider : IPermissionProvider
 {
-    internal PlayerPermissionProvider(IAmethystUser user)
+    internal ArtificialPermissionProvider(IAmethystUser user)
     {
         User = user;
     }

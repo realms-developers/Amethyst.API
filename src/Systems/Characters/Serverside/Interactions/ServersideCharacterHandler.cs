@@ -13,7 +13,10 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
     {
         Provider = provider;
 
-        PlayerUser user = (provider.User as PlayerUser)!;
+        if (provider.User is not PlayerUser)
+            throw new InvalidOperationException("Provider user is not a PlayerUser.");
+
+        PlayerUser user = (PlayerUser)provider.User;
 
         Player = user.Player;
         TPlayer = user.Player.TPlayer;
@@ -23,6 +26,8 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
 
     public NetPlayer Player { get; }
     public Player TPlayer { get; }
+
+    public bool InReadonlyMode { get; set; }
 
     public void HandlePlayerInfo(IncomingPacket packet)
     {

@@ -14,7 +14,10 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
     {
         Provider = provider;
 
-        PlayerUser user = (provider.User as PlayerUser)!;
+        if (provider.User is not PlayerUser)
+            throw new InvalidOperationException("Provider user is not a PlayerUser.");
+
+        PlayerUser user = (PlayerUser)provider.User;
 
         Player = user.Player;
         TPlayer = user.Player.TPlayer;
@@ -29,8 +32,7 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
     {
         Provider.CurrentModel.Colors[(byte)colorType] = color;
 
-        if (sync != null)
-            Provider.Synchronizer.SyncPlayerInfo(sync.Value);
+        SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
 
         return true;
     }
@@ -46,8 +48,7 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
         if (hideMisc != null)
             Provider.CurrentModel.HideMisc = hideMisc.Value;
 
-        if (sync != null)
-            Provider.Synchronizer.SyncPlayerInfo(sync.Value);
+        SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
 
         return true;
     }
@@ -55,13 +56,12 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
     public bool SetLife(SyncType? sync, int? current, int? max)
     {
         if (current != null)
-            Provider.CurrentModel.MaxLife = current.Value;
+            Player.TPlayer.statLife = current.Value;
 
         if (max != null)
             Provider.CurrentModel.MaxLife = max.Value;
 
-        if (sync != null)
-            Provider.Synchronizer.SyncLife(sync.Value);
+        SyncIfNeeded(sync, Provider.Synchronizer.SyncLife);
 
         return true;
     }
@@ -69,13 +69,12 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
     public bool SetMana(SyncType? sync, int? current, int? max)
     {
         if (current != null)
-            Provider.CurrentModel.MaxMana = current.Value;
+            Player.TPlayer.statMana = current.Value;
 
         if (max != null)
             Provider.CurrentModel.MaxMana = max.Value;
 
-        if (sync != null)
-            Provider.Synchronizer.SyncMana(sync.Value);
+        SyncIfNeeded(sync, Provider.Synchronizer.SyncMana);
 
         return true;
     }
@@ -84,8 +83,7 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
     {
         Provider.CurrentModel.QuestsCompleted = completed;
 
-        if (sync != null)
-            Provider.Synchronizer.SyncQuests(sync.Value);
+        SyncIfNeeded(sync, Provider.Synchronizer.SyncQuests);
 
         return true;
     }
@@ -101,8 +99,7 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
         if (skinVariant != null)
             Provider.CurrentModel.SkinVariant = skinVariant.Value;
 
-        if (sync != null)
-            Provider.Synchronizer.SyncPlayerInfo(sync.Value);
+        SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
 
         return true;
     }
@@ -112,12 +109,7 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
         if (slot >= 59 && slot <= 88)
         {
             int fixedSlot = 260 + 30 * TPlayer.CurrentLoadoutIndex + (slot - 59);
-            Provider.CurrentModel.Slots[fixedSlot] = item;
-
-            if (sync != null)
-            {
-                Provider.Synchronizer.SyncSlot(sync.Value, fixedSlot);
-            }
+            SetSlot(sync, slot, item);
         }
 
         Provider.CurrentModel.Slots[slot] = item;
@@ -139,9 +131,14 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
         if (stats3 != null)
             Provider.CurrentModel.Info3 = stats3.Value;
 
-        if (sync != null)
-            Provider.Synchronizer.SyncPlayerInfo(sync.Value);
+        SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
 
         return true;
+    }
+
+    private void SyncIfNeeded(SyncType? sync, Action<SyncType> action)
+    {
+        if (sync != null)
+            action(sync.Value);
     }
 }

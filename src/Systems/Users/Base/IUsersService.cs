@@ -10,5 +10,8 @@ public interface IUsersService<TUser, TMetadata> where TUser : IAmethystUser
     IProviderBuilder<IPermissionProvider> PermissionProviderBuilder { get; set; }
     IProviderBuilder<IExtensionProvider> ExtensionProviderBuilder { get; set; }
 
-    TUser CreateUser(TMetadata metadata);
+    TUser CreateUser(TMetadata metadata,
+        IProviderBuilder<IMessageProvider>? messageBuilder = null,
+        IProviderBuilder<IPermissionProvider>? permissionBuilder = null,
+        IProviderBuilder<IExtensionProvider>? extensionBuilder = null);
 }

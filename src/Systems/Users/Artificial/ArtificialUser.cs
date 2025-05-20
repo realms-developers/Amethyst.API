@@ -1,26 +1,23 @@
-using Amethyst.Gameplay.Players;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Permissions;
 
-namespace Amethyst.Systems.Users.Players;
+namespace Amethyst.Systems.Users.Artificial;
 
-public sealed class PlayerUser : IAmethystUser
+public sealed class ArtificialUser : IAmethystUser
 {
-    internal PlayerUser(string name, int netIndex, string ip, string uuid, IProviderBuilder<IMessageProvider> messageBuilder,
+    public ArtificialUser(string name, IProviderBuilder<IMessageProvider> messageBuilder,
         IProviderBuilder<IPermissionProvider> permissionBuilder,
         IProviderBuilder<IExtensionProvider> extensionBuilder)
     {
         Name = name;
-        NetworkIndex = netIndex;
-        IP = ip;
-        UUID = uuid;
         MessageProvider = messageBuilder.BuildFor(this);
         Permissions = permissionBuilder.BuildFor(this);
         Extensions = extensionBuilder.BuildFor(this);
     }
+
 
     public string Name { get; }
 
@@ -31,12 +28,4 @@ public sealed class PlayerUser : IAmethystUser
     public IExtensionProvider Extensions { get; }
 
     public ICharacterProvider? Character { get; }
-
-    public int NetworkIndex { get; }
-
-    public NetPlayer Player => PlayerManager.Tracker[NetworkIndex];
-
-    public string IP { get; set; }
-
-    public string UUID { get; set; }
 }

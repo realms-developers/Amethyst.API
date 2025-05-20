@@ -6,6 +6,8 @@ public interface ICharacterHandler
 {
     public ICharacterProvider Provider { get; }
 
+    public bool InReadonlyMode { get; set; }
+
     public void HandleSlot(IncomingPacket packet);
     public void HandleSetLife(IncomingPacket packet);
     public void HandleSetMana(IncomingPacket packet);

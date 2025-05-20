@@ -1,6 +1,6 @@
+using Amethyst.Gameplay.Players.SSC.Enums;
 using Amethyst.Network;
 using Amethyst.Storages.Mongo;
-using Amethyst.Systems.Characters.Base.Enums;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Amethyst.Gameplay.Players.SSC;
