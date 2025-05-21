@@ -5,6 +5,7 @@ using Amethyst.Extensions.Base.Repositories;
 using Amethyst.Extensions.Base.Result;
 using Amethyst.Extensions.Base.Utility;
 using Amethyst.Systems.Commands;
+using Amethyst.Systems.Commands.Dynamic.Utilities;
 
 namespace Amethyst.Extensions.Modules.Repositories;
 
@@ -88,7 +89,7 @@ public sealed class ModulesRepository : IExtensionRepository
                     _results.Add(result);
                     results.Add(result);
 
-                    CommandsManager.ImportCommands(assembly, null);
+                    ImportUtility.ImportFrom(assembly, module.LoadIdentifier);
                 }
             }
             else

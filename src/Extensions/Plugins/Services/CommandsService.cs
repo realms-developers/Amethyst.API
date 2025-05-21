@@ -1,4 +1,7 @@
 using Amethyst.Systems.Commands;
+using Amethyst.Systems.Commands.Base;
+using Amethyst.Systems.Commands.Dynamic;
+using Amethyst.Systems.Commands.Dynamic.Utilities;
 
 namespace Amethyst.Extensions.Plugins.Services;
 
@@ -11,33 +14,22 @@ public sealed class CommandsService : IPluginService
 
     public PluginInstance BaseInstance { get; }
 
-    public void OnPluginLoad() => CommandsManager.ImportCommands(BaseInstance.Root.Assembly, BaseInstance.Root.LoadIdentifier);
-
-    public void OnPluginUnload() => CommandsManager.Commands.RemoveAll(p => p.Data.PluginIdentifier == BaseInstance.Root.LoadIdentifier);
-
-    public bool RegisterCommand(CommandData data)
+    public void OnPluginLoad()
     {
-        if (CommandsManager.FindCommand(data.Name) != null)
-        {
-            return false;
-        }
-
-        CommandData commandData = new(BaseInstance.Root.LoadIdentifier, data.Name, data.Description,
-            data.Method, data.Settings, data.Type,
-            data.Permission, data.Syntax);
-
-
-        CommandsManager.Commands.Add(new(commandData));
-
-        return true;
+        ImportUtility.ImportFrom(BaseInstance.Root.Assembly, BaseInstance.Root.LoadIdentifier);
     }
 
-    public bool UnregisterCommand(string name)
+    public void OnPluginUnload()
     {
-        CommandRunner? command = CommandsManager.FindCommand(name);
-
-        return command == null || command.Data.PluginIdentifier != BaseInstance.Root.LoadIdentifier
-            ? false
-            : CommandsManager.Commands.Remove(command);
+        foreach (var repo in CommandsOrganizer.Repositories)
+        {
+            foreach (var command in repo.RegisteredCommands)
+            {
+                if (command is DynamicCommand dynamicCommand && dynamicCommand.LoadIdentifier == BaseInstance.Root.LoadIdentifier)
+                {
+                    repo.Remove(dynamicCommand);
+                }
+            }
+        }
     }
 }
