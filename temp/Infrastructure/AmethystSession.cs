@@ -8,9 +8,6 @@ using Amethyst.Infrastructure.CLI;
 using Amethyst.Infrastructure.Kernel;
 using Amethyst.Infrastructure.Profiles;
 using Amethyst.Infrastructure.Server;
-using Amethyst.Security;
-using Amethyst.Systems.Commands;
-using Amethyst.Systems.Users;
 using Amethyst.Text;
 using Terraria.IO;
 

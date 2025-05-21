@@ -1,6 +1,6 @@
 using Amethyst.Systems.Users.Base;
 
-namespace Amethyst.Systems.Commands.Base.Invoking;
+namespace Amethyst.Systems.Commands.Base;
 
 public interface ICommandInvoker
 {

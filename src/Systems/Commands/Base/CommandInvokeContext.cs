@@ -2,7 +2,7 @@ using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Permissions;
 
-namespace Amethyst.Systems.Commands.Base.Invoking;
+namespace Amethyst.Systems.Commands.Base;
 
 public sealed class CommandInvokeContext
 {

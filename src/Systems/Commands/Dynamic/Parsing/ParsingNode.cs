@@ -9,7 +9,7 @@ public static class ParsingNode
 
     internal static void Initialize()
     {
-        Parsers.Add(typeof(string), (IAmethystUser user, string inputText, out string? errorMessage) =>
+        Parsers.Add(typeof(string), static (IAmethystUser user, string inputText, out string? errorMessage) =>
         {
             errorMessage = null;
             return inputText;
@@ -33,6 +33,18 @@ public static class ParsingNode
         {
             Parsers.Add(type, GenerateGenericParser(type));
         }
+    }
+
+    public static void AddParser(Type type, ArgumentParser parser)
+    {
+        if (Parsers.ContainsKey(type))
+            return;
+
+        Parsers.Add(type, parser);
+    }
+    public static void RemoveParser(Type type)
+    {
+        Parsers.Remove(type);
     }
 
     private static ArgumentParser GenerateGenericParser(Type type)
