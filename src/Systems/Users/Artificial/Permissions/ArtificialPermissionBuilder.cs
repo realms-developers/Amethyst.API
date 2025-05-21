@@ -7,9 +7,8 @@ public sealed class ArtificialPermissionBuilder : IProviderBuilder<IPermissionPr
 {
     public IPermissionProvider BuildFor(IAmethystUser user)
     {
-        if (user is not ArtificialUser)
-            throw new ArgumentException("User is not a ArtificialUser", nameof(user));
-
-        return new ArtificialPermissionProvider(user);
+        return user is not ArtificialUser
+            ? throw new ArgumentException("User is not a ArtificialUser", nameof(user))
+            : (IPermissionProvider)new ArtificialPermissionProvider(user);
     }
 }

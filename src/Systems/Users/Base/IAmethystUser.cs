@@ -9,7 +9,7 @@ public interface IAmethystUser
 {
     string Name { get; }
 
-    IMessageProvider MessageProvider { get; }
+    IMessageProvider Messages { get; }
 
     IPermissionProvider Permissions { get; }
 

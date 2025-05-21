@@ -29,5 +29,5 @@ public sealed class ArtificialMessageProvider : IMessageProvider
         => AmethystLog.System.Warning(User.Name, string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args).RemoveColorTags());
 
     public void ReplyPage(PagesCollection pages, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
-        => pages.SendPage(User, header, footer, footerArgs, showPageName, page);
+        => pages.SendPage(User, this, header, footer, footerArgs, showPageName, page);
 }

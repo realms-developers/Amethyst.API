@@ -36,11 +36,8 @@ public sealed class CommandsService : IPluginService
     {
         CommandRunner? command = CommandsManager.FindCommand(name);
 
-        if (command == null || command.Data.PluginIdentifier != BaseInstance.Root.LoadIdentifier)
-        {
-            return false;
-        }
-
-        return CommandsManager.Commands.Remove(command);
+        return command == null || command.Data.PluginIdentifier != BaseInstance.Root.LoadIdentifier
+            ? false
+            : CommandsManager.Commands.Remove(command);
     }
 }

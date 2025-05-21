@@ -17,14 +17,14 @@ public sealed class PlayerUser : IAmethystUser
         NetworkIndex = netIndex;
         IP = ip;
         UUID = uuid;
-        MessageProvider = messageBuilder.BuildFor(this);
+        Messages = messageBuilder.BuildFor(this);
         Permissions = permissionBuilder.BuildFor(this);
         Extensions = extensionBuilder.BuildFor(this);
     }
 
     public string Name { get; }
 
-    public IMessageProvider MessageProvider { get; }
+    public IMessageProvider Messages { get; }
 
     public IPermissionProvider Permissions { get; }
 

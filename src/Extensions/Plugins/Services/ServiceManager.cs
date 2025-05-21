@@ -12,12 +12,9 @@ public sealed class ServiceManager
 
     public T GetService<T>() where T : IPluginService
     {
-        if (_services.TryGetValue(typeof(T), out IPluginService? service))
-        {
-            return (T)service;
-        }
-
-        throw new KeyNotFoundException($"Service of type {typeof(T).Name} is not registered.");
+        return _services.TryGetValue(typeof(T), out IPluginService? service)
+            ? (T)service
+            : throw new KeyNotFoundException($"Service of type {typeof(T).Name} is not registered.");
     }
 
     public void RegisterService<T>(IPluginService service) where T : IPluginService

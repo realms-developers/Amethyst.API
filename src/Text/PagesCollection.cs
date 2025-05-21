@@ -70,7 +70,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 #pragma warning restore IDE0306
     }
 
-    public void SendPage(IAmethystUser user, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
+    public void SendPage(IAmethystUser user, IMessageProvider provider, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
     {
         var visiblePages = _pages
             .Where(p => !p.IsDisabled && (p.ShowPermission == null || user.Permissions.HasPermission(p.ShowPermission) == PermissionAccess.HasPermission))
@@ -78,7 +78,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
         if (visiblePages.Count == 0)
         {
-            user.MessageProvider.ReplyError("commands.noAvailablePages");
+            provider.ReplyError("commands.noAvailablePages");
             return;
         }
 
@@ -87,23 +87,23 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
         if (header != null)
         {
-            user.MessageProvider.ReplySuccess(
-                $"[c/094729:===] [c/35875f:[][c/43d990:{page + 1}] [c/35875f:|] [c/43d990:{visiblePages.Count}][c/35875f:]] [c/11d476:{Localization.Get(header, user.MessageProvider.Language)}]");
+            provider.ReplySuccess(
+                $"[c/094729:===] [c/35875f:[][c/43d990:{page + 1}] [c/35875f:|] [c/43d990:{visiblePages.Count}][c/35875f:]] [c/11d476:{Localization.Get(header, provider.Language)}]");
         }
 
         foreach (string text in currentPage._lines)
         {
-            user.MessageProvider.ReplyInfo(text);
+            provider.ReplyInfo(text);
         }
 
         if (footer != null)
         {
             string footerText = string.Format(CultureInfo.InvariantCulture,
-                Localization.Get(footer, user.MessageProvider.Language),
+                Localization.Get(footer, provider.Language),
                 footerArgs ?? []);
 
             string pageInfo = showPageName ? $"[c/3d8562:{currentPage.Name}] [c/11633c:|] " : "";
-            user.MessageProvider.ReplySuccess($"[c/094729:===] {pageInfo}{footerText}");
+            provider.ReplySuccess($"[c/094729:===] {pageInfo}{footerText}");
         }
     }
 

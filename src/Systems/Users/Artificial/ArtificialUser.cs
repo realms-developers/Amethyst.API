@@ -13,7 +13,7 @@ public sealed class ArtificialUser : IAmethystUser
         IProviderBuilder<IExtensionProvider> extensionBuilder)
     {
         Name = name;
-        MessageProvider = messageBuilder.BuildFor(this);
+        Messages = messageBuilder.BuildFor(this);
         Permissions = permissionBuilder.BuildFor(this);
         Extensions = extensionBuilder.BuildFor(this);
     }
@@ -21,7 +21,7 @@ public sealed class ArtificialUser : IAmethystUser
 
     public string Name { get; }
 
-    public IMessageProvider MessageProvider { get; }
+    public IMessageProvider Messages { get; }
 
     public IPermissionProvider Permissions { get; }
 

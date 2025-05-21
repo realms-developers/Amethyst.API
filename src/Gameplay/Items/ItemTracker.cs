@@ -15,12 +15,7 @@ public sealed class ItemTracker : IEnumerable<NetWorldItem>
             }
 
             Item? item = Main.item[index];
-            if (item == null || !item.active)
-            {
-                return null;
-            }
-
-            return new NetWorldItem(item.whoAmI);
+            return item == null || !item.active ? null : new NetWorldItem(item.whoAmI);
         }
     }
 

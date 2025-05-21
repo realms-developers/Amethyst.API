@@ -8,9 +8,8 @@ public sealed class ArtificialMessageBuilder : IProviderBuilder<IMessageProvider
 {
     public IMessageProvider BuildFor(IAmethystUser user)
     {
-        if (user is not ArtificialUser artUser)
-            throw new ArgumentException("User is not a ArtificialUser", nameof(user));
-
-        return new ArtificialMessageProvider(artUser, AmethystSession.Profile.DefaultLanguage);
+        return user is not ArtificialUser artUser
+            ? throw new ArgumentException("User is not a ArtificialUser", nameof(user))
+            : (IMessageProvider)new ArtificialMessageProvider(artUser, AmethystSession.Profile.DefaultLanguage);
     }
 }

@@ -265,12 +265,7 @@ public sealed class NetPlayer : ICommandSender, IPermissionProvider, IDisposable
     {
         Type type = typeof(T);
 
-        if (_extensions.TryGetValue(type, out IPlayerExtension? ext))
-        {
-            return (T)ext;
-        }
-
-        return default;
+        return _extensions.TryGetValue(type, out IPlayerExtension? ext) ? (T)ext : default;
     }
 
     public bool HasPermission(string permission)

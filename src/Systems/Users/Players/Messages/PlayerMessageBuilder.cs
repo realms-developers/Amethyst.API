@@ -8,9 +8,8 @@ public sealed class PlayerMessageBuilder : IProviderBuilder<IMessageProvider>
 {
     public IMessageProvider BuildFor(IAmethystUser user)
     {
-        if (user is not PlayerUser plrUser)
-            throw new ArgumentException("User is not a PlayerUser", nameof(user));
-
-        return new PlayerMessageProvider(plrUser, AmethystSession.Profile.DefaultLanguage);
+        return user is not PlayerUser plrUser
+            ? throw new ArgumentException("User is not a PlayerUser", nameof(user))
+            : (IMessageProvider)new PlayerMessageProvider(plrUser, AmethystSession.Profile.DefaultLanguage);
     }
 }

@@ -7,9 +7,8 @@ public sealed class ArtificialExtensionBuilder : IProviderBuilder<IExtensionProv
 {
     public IExtensionProvider BuildFor(IAmethystUser user)
     {
-        if (user is not ArtificialUser)
-            throw new ArgumentException("User is not a ArtificialUser", nameof(user));
-
-        return new ArtificialExtensionsProvider();
+        return user is not ArtificialUser
+            ? throw new ArgumentException("User is not a ArtificialUser", nameof(user))
+            : (IExtensionProvider)new ArtificialExtensionsProvider();
     }
 }

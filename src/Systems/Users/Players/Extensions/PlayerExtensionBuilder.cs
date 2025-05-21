@@ -7,9 +7,8 @@ public sealed class PlayerExtensionBuilder : IProviderBuilder<IExtensionProvider
 {
     public IExtensionProvider BuildFor(IAmethystUser user)
     {
-        if (user is not PlayerUser)
-            throw new ArgumentException("User is not a PlayerUser", nameof(user));
-
-        return new PlayerExtensionsProvider();
+        return user is not PlayerUser
+            ? throw new ArgumentException("User is not a PlayerUser", nameof(user))
+            : (IExtensionProvider)new PlayerExtensionsProvider();
     }
 }

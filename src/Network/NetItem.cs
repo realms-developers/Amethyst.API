@@ -8,12 +8,7 @@ public struct NetItem(int id, short stack, byte prefix)
 
     public static bool operator ==(NetItem left, NetItem right)
     {
-        if (left.ID == right.ID && left.Stack == right.Stack && left.Prefix == right.Prefix)
-        {
-            return true;
-        }
-
-        return false;
+        return left.ID == right.ID && left.Stack == right.Stack && left.Prefix == right.Prefix;
     }
 
     public static bool operator !=(NetItem left, NetItem right) => !(left == right);

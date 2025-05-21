@@ -7,9 +7,8 @@ public sealed class PlayerPermissionBuilder : IProviderBuilder<IPermissionProvid
 {
     public IPermissionProvider BuildFor(IAmethystUser user)
     {
-        if (user is not PlayerUser)
-            throw new ArgumentException("User is not a PlayerUser", nameof(user));
-
-        return new PlayerPermissionProvider(user);
+        return user is not PlayerUser
+            ? throw new ArgumentException("User is not a PlayerUser", nameof(user))
+            : (IPermissionProvider)new PlayerPermissionProvider(user);
     }
 }
