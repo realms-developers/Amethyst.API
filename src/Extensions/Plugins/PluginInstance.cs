@@ -1,6 +1,8 @@
 using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Base.Result;
+using Amethyst.Extensions.Hooks;
 using Amethyst.Extensions.Plugins.Services;
+using Amethyst.Hooks;
 
 namespace Amethyst.Extensions.Plugins;
 
@@ -11,6 +13,9 @@ public abstract class PluginInstance
         Services = new ServiceManager(this);
 
         Services.RegisterService<CommandsService>(new CommandsService(this));
+
+        HookRegistry.GetHook<PluginPreloadArgs>()
+            .Invoke(new PluginPreloadArgs(this));
     }
 
     public IExtension Root { get; internal set; } = null!;

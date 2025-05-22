@@ -130,7 +130,7 @@ public sealed class PluginsRepository : IExtensionRepository
             {
                 results.Add(new ExtensionHandleResult(
                     ext.LoadIdentifier,
-                    ExtensionResult.InternalError,
+                    ExtensionResult.ExternalError,
                     $"Error unloading {ext.Metadata.Name}: {ex.Message}"));
             }
         }

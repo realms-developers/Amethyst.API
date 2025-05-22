@@ -1,5 +1,7 @@
 using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Base.Result;
+using Amethyst.Extensions.Hooks;
+using Amethyst.Hooks;
 
 namespace Amethyst.Extensions.Plugins;
 
@@ -18,8 +20,13 @@ public sealed class PluginExtensionHandler(PluginExtension extension) : IExtensi
 
         if (Extension.Repository.Ruler.IsExtensionAllowed(Extension.Metadata.Name))
         {
+            ExtensionHandleResult result = Extension.PluginInstance.RequestLoad();
             IsInitialized = true;
-            return Extension.PluginInstance.RequestLoad();
+
+            HookRegistry.GetHook<PluginInitializeArgs>()
+                .Invoke(new PluginInitializeArgs(Extension.PluginInstance, result));
+
+            return result;
         }
 
         Unload();
@@ -37,6 +44,8 @@ public sealed class PluginExtensionHandler(PluginExtension extension) : IExtensi
         IsInitialized = false;
 
         ExtensionHandleResult result = Extension.PluginInstance.RequestUnload();
+        HookRegistry.GetHook<PluginDeinitializeArgs>()
+            .Invoke(new PluginDeinitializeArgs(Extension.PluginInstance, result));
 
         Extension.LoadContext.Unload();
 
