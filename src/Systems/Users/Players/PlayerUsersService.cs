@@ -2,6 +2,7 @@ using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Permissions;
+using Amethyst.Systems.Users.Base.Suspension;
 
 namespace Amethyst.Systems.Users.Players;
 
@@ -9,11 +10,13 @@ public sealed class PlayersUsersService : IUsersService<PlayerUser, PlayerUserMe
 {
     public PlayersUsersService(IProviderBuilder<IMessageProvider> messageBuilder,
         IProviderBuilder<IPermissionProvider> permissionBuilder,
-        IProviderBuilder<IExtensionProvider> extensionBuilder)
+        IProviderBuilder<IExtensionProvider> extensionBuilder,
+        IProviderBuilder<ISuspensionProvider> suspensionBuilder)
     {
         MessageProviderBuilder = messageBuilder;
         PermissionProviderBuilder = permissionBuilder;
         ExtensionProviderBuilder = extensionBuilder;
+        SuspensionProviderBuilder = suspensionBuilder;
     }
 
     public IProviderBuilder<IMessageProvider> MessageProviderBuilder { get; set; }
@@ -22,10 +25,13 @@ public sealed class PlayersUsersService : IUsersService<PlayerUser, PlayerUserMe
 
     public IProviderBuilder<IExtensionProvider> ExtensionProviderBuilder { get; set;  }
 
+    public IProviderBuilder<ISuspensionProvider>? SuspensionProviderBuilder { get; set; }
+
     public PlayerUser CreateUser(PlayerUserMetadata metadata,
         IProviderBuilder<IMessageProvider>? messageBuilder = null,
         IProviderBuilder<IPermissionProvider>? permissionBuilder = null,
-        IProviderBuilder<IExtensionProvider>? extensionBuilder = null)
+        IProviderBuilder<IExtensionProvider>? extensionBuilder = null,
+        IProviderBuilder<ISuspensionProvider>? suspensionBuilder = null)
     {
         return new PlayerUser(
             metadata.Name,
@@ -34,6 +40,8 @@ public sealed class PlayersUsersService : IUsersService<PlayerUser, PlayerUserMe
             metadata.UUID,
             messageBuilder ?? MessageProviderBuilder,
             permissionBuilder ?? PermissionProviderBuilder,
-            extensionBuilder ?? ExtensionProviderBuilder);
+            extensionBuilder ?? ExtensionProviderBuilder,
+            suspensionBuilder ?? SuspensionProviderBuilder
+            );
     }
 }

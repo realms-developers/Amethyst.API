@@ -12,6 +12,8 @@ public sealed class HookResult<TArgs>
 
     public bool CanBeModified { get; }
 
+    public bool IsModified { get; private set; }
+
     public bool IsCancelled => _cancellationReasons.Count > 0;
 
     public IReadOnlyList<string> CancellationReasons => _cancellationReasons.AsReadOnly();
@@ -36,6 +38,7 @@ public sealed class HookResult<TArgs>
         if (!CanBeModified)
             throw new InvalidOperationException("This hook result cannot be modified.");
 
+        IsModified = true;
         Args = args;
     }
 }
