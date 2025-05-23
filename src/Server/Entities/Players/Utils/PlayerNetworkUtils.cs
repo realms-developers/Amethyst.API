@@ -12,8 +12,8 @@ public sealed class PlayerNetworkUtils
     public PlayerOperations Operations { get; } = new();
 
     public void Kick(string reason) =>
-        (Operations.PersonalKickOperation ?? PlayerOperations.GlobalKickOperation).Invoke(Player, reason);
+        (Operations.KickOperation ?? PlayerOperations.DefaultKickOperation).Invoke(Player, reason);
 
     public void SendBytes(byte[] bytes) =>
-        (Operations.PersonalSendBytesOperation ?? PlayerOperations.GlobalSendBytesOperation).Invoke(Player, bytes);
+        (Operations.SendBytesOperation ?? PlayerOperations.DefaultSendBytesOperation).Invoke(Player, bytes);
 }
