@@ -17,20 +17,20 @@ public sealed class PlayerNetworkModule : IEntityModule<PlayerEntity, PlayerNetw
     public PlayerNetworkOperations Operations { get; }
 
     public void Kick(string reason) =>
-        (Operations.KickOperation ?? PlayerNetworkOperations.DefaultKickOperation).Invoke(BaseEntity, reason);
+        (Operations.Kick ?? PlayerNetworkOperations.DefaultKick).Invoke(BaseEntity, reason);
 
     public void SendBytes(byte[] bytes) =>
-        (Operations.SendBytesOperation ?? PlayerNetworkOperations.DefaultSendBytesOperation).Invoke(BaseEntity, bytes);
+        (Operations.SendBytes ?? PlayerNetworkOperations.DefaultSendBytes).Invoke(BaseEntity, bytes);
 
     public sealed class PlayerNetworkOperations
     {
-        public static Action<PlayerEntity, string> DefaultKickOperation { get; set; } = static (player, reason) =>
+        public static Action<PlayerEntity, string> DefaultKick { get; set; } = static (player, reason) =>
         {
             NetMessage.SendData(2, player.Index, -1, NetworkText.FromLiteral(reason));
         };
-        public Action<PlayerEntity, string>? KickOperation { get; set; }
+        public Action<PlayerEntity, string>? Kick { get; set; }
 
-        public static Action<PlayerEntity, byte[]> DefaultSendBytesOperation { get; set; } = static (player, bytes) =>
+        public static Action<PlayerEntity, byte[]> DefaultSendBytes { get; set; } = static (player, bytes) =>
         {
             var socket = Netplay.Clients[player.Index].Socket;
             if (socket.IsConnected() && !Netplay.Clients[player.Index].PendingTermination)
@@ -38,6 +38,6 @@ public sealed class PlayerNetworkModule : IEntityModule<PlayerEntity, PlayerNetw
                 socket.AsyncSend(bytes, 0, bytes.Length, Netplay.Clients[player.Index].ServerWriteCallBack);
             }
         };
-        public Action<PlayerEntity, byte[]>? SendBytesOperation { get; set; }
+        public Action<PlayerEntity, byte[]>? SendBytes { get; set; }
     }
 }
