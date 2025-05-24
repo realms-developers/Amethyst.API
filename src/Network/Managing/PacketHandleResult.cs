@@ -1,20 +1,14 @@
-using Amethyst.Core;
+using Amethyst.Infrastructure;
 using Amethyst.Network.Packets;
 using Amethyst.Text;
 
 namespace Amethyst.Network.Managing;
 
-public sealed class PacketHandleResult
+public sealed class PacketHandleResult(IPacket packet)
 {
-    public PacketHandleResult(IPacket packet)
-    {
-        _packet = packet;
-        _reasons = new List<string>(16);
-    }
-
     private bool _handled;
-    private readonly List<string> _reasons;
-    private readonly IPacket _packet;
+    private readonly List<string> _reasons = new(16);
+    private readonly IPacket _packet = packet;
 
     public bool IsHandled => _handled;
     public IReadOnlyList<string> Reasons => _reasons.AsReadOnly();

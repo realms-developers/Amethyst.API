@@ -1,4 +1,4 @@
-using Amethyst.Players;
+using Amethyst.Gameplay.Players;
 
 namespace Amethyst.Network.Packets;
 

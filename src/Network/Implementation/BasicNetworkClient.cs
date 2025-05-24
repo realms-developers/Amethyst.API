@@ -25,6 +25,8 @@ internal sealed class BasicNetworkClient : INetworkClient
 
     public void Disconnect(string reason)
     {
+        SetFreeze(true);
+
         PacketWriter packet = new PacketWriter()
             .SetType(2)
             .PackByte(0)

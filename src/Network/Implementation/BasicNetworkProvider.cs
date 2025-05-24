@@ -1,10 +1,9 @@
-
-using Amethyst.Core;
+using Amethyst.Gameplay.Players;
+using Amethyst.Infrastructure;
 using Amethyst.Network.Managing;
 using Amethyst.Network.Packets;
-using Amethyst.Players;
+using Amethyst.Security;
 using Terraria;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.Net.Sockets;
 
@@ -74,8 +73,14 @@ internal sealed class BasicNetworkProvider : INetworkProvider
 
         NetPlayer player = PlayerManager.Tracker[self.whoAmI];
 
-        if (packetId == (byte)PacketTypes.SyncCavernMonsterType || packetId <= 0 || packetId >= MessageID.Count)
+        if (player.Socket.IsFrozen)
         {
+            return;
+        }
+
+        if (SecurityManager.Configuration.DisabledPackets.Contains(packetId) || packetId <= 0 || packetId > 150)
+        {
+            AmethystLog.Security.Debug("Network", $"Invalid or blocked packet: {packetId}");
             return;
         }
 
@@ -88,7 +93,7 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         // terraria code asmr
         if (Netplay.Clients[self.whoAmI].State < 10 && packetId > 12 && packetId != 67 && packetId != 56 &&
             packetId != 82 && packetId != 93 && packetId != 16 && packetId != 42 && packetId != 50 && packetId != 38
-            && packetId != 68 && packetId != 147)
+            && packetId != 68 && packetId != 147 && packetId != 150)
         {
             return;
         }
@@ -96,6 +101,29 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         if (packetId == 82)
         {
             byte moduleId = (byte)BitConverter.ToUInt16(buffer, start + 1);
+
+            if (SecurityManager.Configuration.DisabledModules.Contains(moduleId))
+            {
+                AmethystLog.Security.Debug("Network", $"Blocked net-module: {moduleId}");
+                return;
+            }
+
+            if (!player.HasPermission(SecurityManager.IgnorePermission))
+            {
+                if (player._moduleThreshold.Fire(moduleId))
+                {
+                    AmethystLog.Security.Debug("Network", $"Blocked net-module (threshold): {moduleId}");
+                    return;
+                }
+
+                if (player._sentModules[moduleId] && SecurityManager.Configuration.OneTimeModules.Contains(moduleId))
+                {
+                    AmethystLog.Security.Debug("Network", $"Blocked one-time net-module: {moduleId}");
+                    return;
+                }
+                player._sentModules[moduleId] = true;
+            }
+
             if (!OnGetModule(moduleId, player, start, length))
             {
                 orig(self, start, length, out packetId);
@@ -103,6 +131,22 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         }
         else
         {
+            if (!player.HasPermission(SecurityManager.IgnorePermission))
+            {
+                if (player._packetThreshold.Fire(packetId))
+                {
+                    AmethystLog.Security.Debug("Network", $"Blocked packet (threshold): {packetId}");
+                    return;
+                }
+
+                if (player._sentPackets[packetId] && SecurityManager.Configuration.OneTimePackets.Contains(packetId))
+                {
+                    AmethystLog.Security.Debug("Network", $"Blocked one-time packet: {packetId}");
+                    return;
+                }
+                player._sentPackets[packetId] = true;
+            }
+
             if (!OnGetPacket((byte)packetId, player, start, length))
             {
                 orig(self, start, length, out packetId);
@@ -118,6 +162,16 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         IncomingPacket packet = new(packetId, buffer, (byte)player.Index, start + 1, length - 1);
 
         PacketHandleResult result = new(packet);
+
+        if (!player.HasPermission(SecurityManager.IgnorePermission))
+        {
+            List<SecurityHandler<IncomingPacket>> preHandlers = NetworkManager.Instance.SecureIncoming[packetId];
+            if (preHandlers.Any(p => p(in packet)))
+            {
+                AmethystLog.Security.Debug("Security", $"Packet '{packetId}' was blocked by security.");
+                return true;
+            }
+        }
 
         List<PacketHandler<IncomingPacket>> handlers = NetworkManager.Instance.Incoming[packetId];
 
@@ -162,6 +216,16 @@ internal sealed class BasicNetworkProvider : INetworkProvider
         IncomingModule packet = new(packetId, buffer, (byte)player.Index, start + 3, length - 3);
 
         PacketHandleResult result = new(packet);
+
+        if (!player.HasPermission(SecurityManager.IgnorePermission))
+        {
+            List<SecurityHandler<IncomingModule>> preHandlers = NetworkManager.Instance.SecureIncomingModules[packetId];
+            if (preHandlers.Any(p => p(in packet)))
+            {
+                AmethystLog.Security.Debug("Security", $"NetModule '{packetId}' was blocked by security.");
+                return true;
+            }
+        }
 
         List<PacketHandler<IncomingModule>> handlers = NetworkManager.Instance.IncomingModules[packetId];
         if (handlers != null && handlers.Count > 0)

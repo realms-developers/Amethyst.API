@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -116,4 +117,13 @@ public static class TextUtility
     }
     internal static readonly Regex ColorTagRegex = new Regex("(?<!\\\\)\\[c(olor)?(\\/(?<options>[^:]+))?:(?<text>.+?)(?<!\\\\)\\]", RegexOptions.Compiled);
 
+    public static string SelfHash(this string input)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(input);
+
+        using HMACSHA256 hmac = new(bytes);
+        byte[] hash = hmac.ComputeHash(bytes);
+
+        return Convert.ToBase64String(hash);
+    }
 }

@@ -145,5 +145,6 @@ public enum PacketTypes : int
 	ItemShimmerUpdate = 145,
 	ShimmerActions = 146,
 	SyncLoadout = 147,
-	SyncItemCannotBeTakenByEnemies = 148
+	SyncItemCannotBeTakenByEnemies = 148,
+    ClientPlatform = 150
 }
