@@ -1,6 +1,7 @@
 using Amethyst.Hooks;
+using Amethyst.Hooks.Args.Players;
 using Amethyst.Server.Entities.Base;
-using Amethyst.Server.Entities.Players.Hooks;
+using Amethyst.Server.Entities.Players.Modules;
 using Amethyst.Systems.Users.Players;
 
 namespace Amethyst.Server.Entities.Players;
@@ -13,7 +14,7 @@ public sealed class PlayerEntity : IServerEntity
 
         Name = "";
 
-        Network = new PlayerNetworkUtils(this);
+        AddModule(new PlayerNetworkModule(this, new()));
     }
 
     public int Index { get; }
@@ -22,7 +23,40 @@ public sealed class PlayerEntity : IServerEntity
 
     public PlayerUser? User { get; private set; }
 
-    public PlayerNetworkUtils Network { get; }
+    private Dictionary<Type, object> _modules = new();
+
+    public void AddModule<TOperations>(IEntityModule<PlayerEntity, TOperations> module)
+        where TOperations : class
+    {
+        ArgumentNullException.ThrowIfNull(module);
+
+        if (module.BaseEntity != this)
+            throw new InvalidOperationException("Module entity does not match player entity.");
+
+        if (_modules.ContainsKey(module.GetType()))
+            throw new InvalidOperationException($"Module of type {module.GetType().Name} already exists.");
+
+        _modules.Add(module.GetType(), module);
+    }
+
+    public void RemoveModule<TOperations>()
+        where TOperations : class
+    {
+        if (!_modules.Remove(typeof(TOperations)))
+        {
+            throw new KeyNotFoundException($"Module of type {typeof(TOperations).Name} not found.");
+        }
+    }
+
+    public TModule GetModule<TModule>()
+    {
+        if (_modules.TryGetValue(typeof(TModule), out var module))
+        {
+            return (TModule)module;
+        }
+
+        throw new KeyNotFoundException($"Module of type {typeof(TModule).Name} not found.");
+    }
 
     public void SetUser(PlayerUser? user)
     {
@@ -42,4 +76,6 @@ public sealed class PlayerEntity : IServerEntity
         HookRegistry.GetHook<PlayerPostSetUserArgs>()
             ?.Invoke(new PlayerPostSetUserArgs(this, User));
     }
+
+    public PlayerNetworkModule GetNetwork() => GetModule<PlayerNetworkModule>();
 }

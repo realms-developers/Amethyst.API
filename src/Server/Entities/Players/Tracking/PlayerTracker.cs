@@ -7,13 +7,13 @@ public sealed class PlayerTracker : IEntityTracker<PlayerEntity>
 {
     public PlayerTracker()
     {
-        Manager = new PlayerTrackerManager(this);
+        Manager = new PlayerManager(this);
         Manager.AttachHooks();
     }
 
     public PlayerEntity this[int index] => _players[index];
 
-    public ITrackerManager<PlayerEntity>? Manager { get; }
+    public IEntityManager<PlayerEntity>? Manager { get; }
 
     internal PlayerEntity[] _players = new PlayerEntity[255];
 
