@@ -4,7 +4,5 @@ public interface IEntityTracker<TEntity> : IEnumerable<TEntity> where TEntity : 
 {
     TEntity this[int index] { get; }
 
-    IEnumerable<TEntity> ActiveEntities { get; }
-
     ITrackerManager<TEntity>? Manager { get; }
 }

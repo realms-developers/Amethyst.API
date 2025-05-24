@@ -15,12 +15,21 @@ public sealed class PlayerTrackerManager : ITrackerManager<PlayerEntity>
 
     private PlayerTracker _tracker;
 
+    public void AttachHooks()
+    {
+
+    }
+
+    public void DeattachHooks()
+    {
+    }
+
     public void Insert(int index, PlayerEntity entity)
     {
-        if (_tracker._activeEntities[index] != null)
+        if (_tracker._players[index] != null)
             throw new InvalidOperationException($"Player at index {index} already exists.");
 
-        _tracker._activeEntities[index] = entity;
+        _tracker._players[index] = entity;
 
         HookRegistry.GetHook<PlayerTrackerInsertArgs>()
             ?.Invoke(new PlayerTrackerInsertArgs(entity));
@@ -28,12 +37,12 @@ public sealed class PlayerTrackerManager : ITrackerManager<PlayerEntity>
 
     public void Remove(int index)
     {
-        if (_tracker._activeEntities[index] == null)
+        if (_tracker._players[index] == null)
             throw new InvalidOperationException($"Player at index {index} does not exist.");
 
         HookRegistry.GetHook<PlayerTrackerRemoveArgs>()
-            ?.Invoke(new PlayerTrackerRemoveArgs(_tracker._activeEntities[index]!));
+            ?.Invoke(new PlayerTrackerRemoveArgs(_tracker._players[index]!));
 
-        _tracker._activeEntities[index] = null!;
+        _tracker._players[index] = null!;
     }
 }

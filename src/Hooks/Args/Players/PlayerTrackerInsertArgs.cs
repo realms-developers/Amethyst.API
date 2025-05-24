@@ -1,7 +1,7 @@
 using Amethyst.Hooks.Autoloading;
-using Amethyst.Systems.Users.Players;
+using Amethyst.Server.Entities.Players;
 
-namespace Amethyst.Server.Entities.Players.Hooks;
+namespace Amethyst.Hooks.Args.Players;
 
 [AutoloadHook]
 public sealed class PlayerTrackerInsertArgs

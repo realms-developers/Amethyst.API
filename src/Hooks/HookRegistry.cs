@@ -1,9 +1,20 @@
 using System.Collections.Concurrent;
+using System.Reflection;
+using Amethyst.Hooks.Autoloading;
+using Amethyst.Hooks.MonoModHooks;
 
 namespace Amethyst.Hooks;
 
 public static class HookRegistry
 {
+    static HookRegistry()
+    {
+        AutoloadUtility.LoadFrom(typeof(HookRegistry).Assembly);
+
+        PlayerModHooks.AttachHooks();
+        ChatModHooks.AttachHooks();
+    }
+
     private static readonly ConcurrentDictionary<Type, object> _hooks = new();
 
     public static void RegisterHook<TArgs>(bool canBeCancelled, bool cancelByError = false)

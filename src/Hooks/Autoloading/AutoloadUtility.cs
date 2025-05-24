@@ -7,15 +7,19 @@ public static class AutoloadUtility
     public static void LoadFrom(Assembly assembly)
     {
         var types = assembly.GetTypes()
-            .Where(t => t.IsClass && !t.IsAbstract && t.GetCustomAttribute<AutoloadHookAttribute>() != null);
+            .Where(t => t.IsClass && !t.IsAbstract);
 
         var registerMethod = typeof(HookRegistry).GetMethod("Register", BindingFlags.Public | BindingFlags.Static)
             ?? throw new InvalidOperationException("Register method not found in HookRegistry.");
 
         foreach (var type in types)
         {
+            var attr = type.GetCustomAttribute<AutoloadHookAttribute>();
+            if (attr == null)
+                continue;
+
             var genericMethod = registerMethod.MakeGenericMethod(type);
-            genericMethod.Invoke(null, null);
+            genericMethod.Invoke(null, [attr.CanBeIgnored, attr.CanBeChanged]);
         }
     }
 }
