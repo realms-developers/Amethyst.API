@@ -1,5 +1,5 @@
-using Amethyst.Gameplay.Players;
 using Amethyst.Network;
+using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
 using Terraria;
 using Terraria.ID;
@@ -8,7 +8,7 @@ namespace Amethyst.Systems.Characters.Utilities;
 
 public static class CharacterUtilities
 {
-    public static Item TerrarifySlot(NetPlayer player, NetItem netItem, int slot)
+    public static Item TerrarifySlot(PlayerEntity player, NetItem netItem, int slot)
     {
         var item = new Item();
         item.SetDefaults(netItem.ID);

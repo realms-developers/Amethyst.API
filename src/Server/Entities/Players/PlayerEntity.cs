@@ -17,6 +17,7 @@ public sealed partial class PlayerEntity : IServerEntity
 
         NetworkOperations = new PlayerNetworkOperations();
         ModerationOperations = new PlayerModerationOperations();
+        GameplayOperations = new PlayerGameplayOperations();
     }
 
     public Player TPlayer => Main.player[Index];
@@ -31,6 +32,8 @@ public sealed partial class PlayerEntity : IServerEntity
     }
 
     public PlayerUser? User { get; private set; }
+
+    internal Dictionary<string, DateTime> _notifyDelay = [];
 
     public void SetUser(PlayerUser? user)
     {
@@ -49,5 +52,23 @@ public sealed partial class PlayerEntity : IServerEntity
 
         HookRegistry.GetHook<PlayerPostSetUserArgs>()
             ?.Invoke(new PlayerPostSetUserArgs(this, User));
+    }
+
+    public bool CanNotify(string messageType, TimeSpan delay)
+    {
+        if (!_notifyDelay.TryGetValue(messageType, out DateTime value))
+        {
+            value = DateTime.UtcNow.Add(delay);
+            _notifyDelay.Add(messageType, value);
+            return true;
+        }
+
+        if (value < DateTime.UtcNow)
+        {
+            _notifyDelay[messageType] = DateTime.UtcNow.Add(delay);
+            return true;
+        }
+
+        return false;
     }
 }

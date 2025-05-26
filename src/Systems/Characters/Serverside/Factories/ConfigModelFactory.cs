@@ -1,4 +1,4 @@
-using Amethyst.Gameplay.Players;
+using Amethyst.Server.Entities.Players;
 using Amethyst.Storages;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Enums;
@@ -11,7 +11,7 @@ public sealed class ConfigModelFactory : IDefaultModelFactory
 {
     public void Initialize() { }
 
-    public ICharacterModel CreateModel(NetPlayer player)
+    public ICharacterModel CreateModel(PlayerEntity player)
     {
         EmptyCharacterModel model = new EmptyCharacterModel();
         model.Name = player.Name;
@@ -22,7 +22,7 @@ public sealed class ConfigModelFactory : IDefaultModelFactory
         return model;
     }
 
-    private void CopyPlayerInfo(NetPlayer player, ref EmptyCharacterModel model)
+    private void CopyPlayerInfo(PlayerEntity player, ref EmptyCharacterModel model)
     {
         model.Hair = (byte)player.TPlayer.hair;
         model.HairDye = player.TPlayer.hairDye;

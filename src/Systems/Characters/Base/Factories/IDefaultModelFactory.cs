@@ -1,8 +1,8 @@
-using Amethyst.Gameplay.Players;
+using Amethyst.Server.Entities.Players;
 
 namespace Amethyst.Systems.Characters.Base.Factories;
 
 public interface IDefaultModelFactory
 {
-    ICharacterModel CreateModel(NetPlayer player);
+    ICharacterModel CreateModel(PlayerEntity player);
 }

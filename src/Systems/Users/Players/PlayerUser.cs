@@ -1,3 +1,4 @@
+using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Users.Base;
@@ -39,7 +40,7 @@ public sealed class PlayerUser : IAmethystUser
 
     public int NetworkIndex { get; }
 
-    public PlayerEntity Player => PlayerManager.Tracker[NetworkIndex];
+    public PlayerEntity Player => EntityTrackers.Players[NetworkIndex];
 
     public string IP { get; set; }
 

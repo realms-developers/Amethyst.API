@@ -29,35 +29,17 @@ public sealed class PluginsRepositoryRuler : IRepositoryRuler
         _pluginCfg.Load();
     }
 
-    public bool ToggleExtension(string name)
+    public void AllowExtension(string name)
     {
-        bool isNowAllowed = false;
+        if (_pluginCfg.Data.AllowedPlugins.Contains(name))
+            return;
 
-        _pluginCfg.Modify((ref cfg) =>
-        {
-            isNowAllowed = !cfg.AllowedPlugins.Remove(name);
-
-            if (isNowAllowed)
-            {
-                cfg.AllowedPlugins.Add(name);
-            }
-        });
-
-        return isNowAllowed;
+        _pluginCfg.Data.AllowedPlugins.Add(name);
     }
-
-    public void AllowExtension(string name) => _pluginCfg.Modify((ref cfg) => cfg.AllowedPlugins.Add(name));
 
     public bool DisallowExtension(string name)
     {
-        bool removed = false;
-
-        _pluginCfg.Modify((ref cfg) =>
-        {
-            removed = cfg.AllowedPlugins.Remove(name);
-        });
-
-        return removed;
+        return _pluginCfg.Data.AllowedPlugins.Remove(name);
     }
 
     public bool IsExtensionAllowed(string name) => _pluginCfg.Data.AllowedPlugins.Contains(name);

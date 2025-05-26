@@ -1,5 +1,5 @@
-using Amethyst.Gameplay.Players;
 using Amethyst.Network;
+using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Enums;
 using Amethyst.Systems.Characters.Base.Interactions;
@@ -25,7 +25,7 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
 
     public ICharacterProvider Provider { get; }
 
-    public NetPlayer Player { get; }
+    public PlayerEntity Player { get; }
     public Player TPlayer { get; }
 
     public bool SetColor(SyncType? sync, PlayerColorType colorType, NetColor color)

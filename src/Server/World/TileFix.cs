@@ -9,11 +9,11 @@ using Terraria.Map;
 // terrashit
 #pragma warning disable CS8625
 
-namespace Amethyst.Infrastructure.Server;
+namespace Amethyst.Server.World;
 
 internal sealed class TileFix : WorldGen
 {
-    internal static void Initialize()
+    internal static void AttachHooks()
     {
         On.Terraria.IO.WorldFile.SaveWorldTiles += SaveWorldTiles;
         On.Terraria.WorldGen.clearWorld += OnClearWorld;

@@ -35,7 +35,7 @@ public sealed class PlayerMessageProvider : IMessageProvider
             .PackColor(color)
             .BuildPacket();
 
-        User.Player.Socket.SendPacket(packet);
+        User.Player.SendPacketBytes(packet);
     }
 
     public void ReplyMessage(string text) => ReplyMessage(text, Color.White);

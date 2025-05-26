@@ -1,8 +1,8 @@
 using System.CommandLine;
-using Amethyst.Infrastructure.CLI.Handlers;
-using Amethyst.Infrastructure.CLI.Input;
 using Amethyst.Infrastructure.CLI.LaunchConfiguration;
 using Amethyst.Infrastructure.Profiles;
+using Amethyst.Kernel;
+using Amethyst.Kernel.Console;
 
 namespace Amethyst.Infrastructure.Kernel;
 
@@ -14,7 +14,7 @@ internal static class AmethystKernel
     {
         SharedDependencyContext.Instance.PreloadAllDependencies();
 
-        InitializeConsole();
+        ConsoleHooks.AttachHooks();
         RootCommand rootCommand = CommandConfiguration.BuildRootCommand();
 
         rootCommand.Invoke(args);
@@ -24,12 +24,6 @@ internal static class AmethystKernel
             InitializeServer(Profile);
             return;
         }
-    }
-
-    private static void InitializeConsole()
-    {
-        CancelKeyHandler.Initialize();
-        CliInputHandler.Initialize();
     }
 
     private static void InitializeServer(ServerProfile profile)

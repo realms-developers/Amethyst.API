@@ -27,31 +27,17 @@ public sealed class ModulesRepositoryRuler : IRepositoryRuler
         _modulesCfg.Load();
     }
 
-    public bool ToggleExtension(string name)
+    public void AllowExtension(string name)
     {
-        bool isNowAllowed = false;
+        if (_modulesCfg.Data.AllowedModules.Contains(name))
+            return;
 
-        _modulesCfg.Modify((ref cfg) =>
-        {
-            isNowAllowed = !cfg.AllowedModules.Remove(name);
-
-            if (isNowAllowed)
-            {
-                cfg.AllowedModules.Add(name);
-            }
-        });
-
-        return isNowAllowed;
+        _modulesCfg.Data.AllowedModules.Add(name);
     }
-
-    public void AllowExtension(string name) =>
-        _modulesCfg.Modify((ref cfg) => cfg.AllowedModules.Add(name));
 
     public bool DisallowExtension(string name)
     {
-        bool removed = false;
-        _modulesCfg.Modify((ref cfg) => removed = cfg.AllowedModules.Remove(name));
-        return removed;
+        return _modulesCfg.Data.AllowedModules.Remove(name);
     }
 
     public bool IsExtensionAllowed(string name) =>

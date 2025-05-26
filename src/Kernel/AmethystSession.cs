@@ -1,17 +1,14 @@
-﻿using System.Diagnostics;
-using Amethyst.Extensions;
+﻿using Amethyst.Extensions;
 using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Base.Result;
-using Amethyst.Gameplay.Players;
-using Amethyst.Gameplay.Players.Auth;
 using Amethyst.Infrastructure.CLI;
 using Amethyst.Infrastructure.Kernel;
 using Amethyst.Infrastructure.Profiles;
-using Amethyst.Infrastructure.Server;
+using Amethyst.Server.Base;
+using Amethyst.Server.TerrariaAPI;
 using Amethyst.Text;
-using Terraria.IO;
 
-namespace Amethyst.Infrastructure;
+namespace Amethyst.Kernel;
 
 public static class AmethystSession
 {
@@ -22,72 +19,25 @@ public static class AmethystSession
 
     public static ServerProfile Profile { get; }
 
+    public static IServerLauncher Launcher { get; set; } = new TAPILauncher();
+
     internal static void StartServer()
     {
-        ServerLauncher.Initialize();
-
-        AmethystHooks.Initialize();
+        Launcher.Initialize();
 
         Localization.Load();
-
-        PlayerManager.Initialize();
-
-        //ExtensionsOrganizer.Initialize();
 
         ExtensionsOrganizer.LoadModules();
         ExtensionsOrganizer.LoadPlugins();
 
         PrintWelcome();
 
-        ServerLauncher.Start();
-    }
-
-    internal static void StopServer(bool force = false)
-    {
-        AmethystLog.System.Critical(nameof(AmethystSession), "Server is stopping...");
-
-        if (!ServerLauncher.IsStarted || force)
-        {
-            AmethystLog.System.Critical(nameof(AmethystSession),
-                $"{(ServerLauncher.IsStarted ? string.Empty : "Server was not fully loaded -> ")}Stopping forcefully...");
-
-            Environment.Exit(0);
-
-            return;
-        }
-
-        Stopwatch sw = new();
-
-        sw.Start();
-
-        WorldFile.SaveWorld();
-
-        sw.Stop();
-
-        AmethystLog.System.Info(nameof(AmethystSession), $"Saved world in {sw.Elapsed.TotalSeconds}s ({sw.ElapsedMilliseconds}ms).");
-
-        DeinitializeServer();
-
-        AmethystLog.System.Info(nameof(AmethystSession), "Exiting server...");
-
-        Environment.Exit(0);
-    }
-
-    internal static void DeinitializeServer()
-    {
-        foreach (NetPlayer plr in PlayerManager.Tracker.NonNullable)
-        {
-            plr.Kick("amethyst.serverStopped");
-            plr.Character?.Save();
-            plr.UnloadExtensions();
-
-            AmethystLog.System.Info(nameof(AmethystSession), $"Player {plr.Name} was deinitialized.");
-        }
+        Launcher.StartServer();
     }
 
     private static void PrintWelcome()
     {
-        Console.Clear();
+        System.Console.Clear();
 
         ModernConsole.WriteLine(@"
 $!b$m      __                   _   _               _
@@ -100,32 +50,13 @@ $!b$m                                     |___/         ");
         ModernConsole.WriteLine($"\n🛡️  $!b$mAmethyst v{typeof(AmethystSession).Assembly.GetName().Version} $!r$!bis distributed under the MIT License.");
         ModernConsole.WriteLine($"🛡️  You are free to use, modify and distribute the code, provided that the author is attributed.");
 
-        ModernConsole.WriteLine($"\n💾 Server with profile $!d$m'$!r$m{Profile.Name}$!d'$!r runs in {(Profile.DebugMode ? "$!b$rDebug" : "$!b$!gSafe")} $!rmode{(Profile.DisableFrameDebug ? " without frame debugging" : "")}.");
+        ModernConsole.WriteLine($"\n💾 Server with profile $!d$m'$!r$m{Profile.Name}$!d'$!r runs in {(Profile.DebugMode ? "$!b$rDebug" : "$!b$!gDefault")} $!rmode.");
 
         if (Profile.DebugMode)
         {
             ModernConsole.WriteLine("❗ $rThis means that more data needed for development will be logged to the console.");
             ModernConsole.WriteLine("❗ $rDebug-mode also provides $!b/grantroot $!r$rcommand that gives all permissions to player.");
             ModernConsole.WriteLine("❗ $r$!bDo not use this mode on public servers!");
-        }
-
-        ModernConsole.WriteLine($"\n⚙️  Using {(Profile.ForceUpdate ? "$gforced$!r game update cycle" : "free game update cycle")} with slots: $!b$y{Profile.MaxPlayers}$!r on $!b$y{Profile.Port}$!r");
-        ModernConsole.WriteLine($"⚙️  Player characters is {(Profile.SSCMode ? "$g$!bserver-side" : "$m$!bclient-side")} $!rand default language for players is: $!d$m'$!r$m{Profile.DefaultLanguage}$!d'");
-
-        if (Profile.WorldRecreate)
-        {
-            ModernConsole.WriteLine($"⚙️  $rServer will create $!b$m{Profile.GenerationRules.Width}$!rx$!b$m{Profile.GenerationRules.Height}$!r world with name $!d$m'$!r$m{Profile.GenerationRules.Name}$!d', evil: $g{Profile.GenerationRules.Evil}$!r, game mode: $!g{Profile.GenerationRules.GameMode}.\n");
-        }
-        else
-        {
-            ModernConsole.WriteLine($"⚙️  $gServer will load world located in $!d$m'$!r$m{Profile.WorldToLoad}$!d'.\n");
-        }
-
-
-        ModernConsole.WriteLine($"✔️  Loaded security rules:");
-        foreach (string line in PagesCollection.PageifyItems(SecurityManager.Rules.Select(p => p.Key), 100))
-        {
-            ModernConsole.WriteLine($"$!d   {line}");
         }
 
         IReadOnlyDictionary<IExtension, ExtensionHandleResult> loadedMod = ExtensionsOrganizer.Modules.Repositories
@@ -197,7 +128,7 @@ $!b$m                                     |___/         ");
 
             if (loadedModFailed.Any() || loadedPlugFailed.Any())
             {
-                Console.WriteLine('\n');
+                ModernConsole.WriteLine("\n");
 
             }
 
@@ -212,6 +143,6 @@ $!b$m                                     |___/         ");
             }
         }
 
-        Console.WriteLine('\n');
+        ModernConsole.WriteLine("\n");
     }
 }

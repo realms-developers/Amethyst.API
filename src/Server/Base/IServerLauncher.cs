@@ -4,8 +4,6 @@ public interface IServerLauncher
 {
     bool IsStarted { get; }
 
-    IServerSettings Settings  { get; }
-
     void Initialize();
 
     void StartServer();

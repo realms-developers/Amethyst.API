@@ -1,5 +1,5 @@
-using Amethyst.Gameplay.Players;
 using Amethyst.Network.Packets;
+using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Interactions;
 using Amethyst.Systems.Users.Players;
@@ -24,7 +24,7 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
 
     public ICharacterProvider Provider { get; }
 
-    public NetPlayer Player { get; }
+    public PlayerEntity Player { get; }
     public Player TPlayer { get; }
 
     public bool InReadonlyMode { get; set; }
