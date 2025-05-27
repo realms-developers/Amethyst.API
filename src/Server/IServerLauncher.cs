@@ -1,4 +1,4 @@
-namespace Amethyst.Server.Base;
+namespace Amethyst.Server;
 
 public interface IServerLauncher
 {

@@ -1,6 +1,7 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Server.Entities.Base;
+using Amethyst.Server.Network.Engine;
 using Amethyst.Systems.Users.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -9,9 +10,10 @@ namespace Amethyst.Server.Entities.Players;
 
 public sealed partial class PlayerEntity : IServerEntity
 {
-    public PlayerEntity(int index)
+    internal PlayerEntity(int index, NetworkClient client)
     {
         Index = index;
+        _client = client;
 
         Name = "";
 
@@ -33,6 +35,7 @@ public sealed partial class PlayerEntity : IServerEntity
 
     public PlayerUser? User { get; private set; }
 
+    internal NetworkClient _client;
     internal Dictionary<string, DateTime> _notifyDelay = [];
 
     public void SetUser(PlayerUser? user)

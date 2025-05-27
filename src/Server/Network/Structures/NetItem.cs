@@ -1,4 +1,4 @@
-namespace Amethyst.Network;
+namespace Amethyst.Server.Network.Structures;
 
 public struct NetItem(int id, short stack, byte prefix)
 {

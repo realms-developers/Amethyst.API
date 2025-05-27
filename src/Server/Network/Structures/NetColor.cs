@@ -1,7 +1,7 @@
 using System.Globalization;
 using Microsoft.Xna.Framework;
 
-namespace Amethyst.Network;
+namespace Amethyst.Server.Network.Structures;
 
 public struct NetColor
 {

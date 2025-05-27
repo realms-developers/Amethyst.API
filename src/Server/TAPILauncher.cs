@@ -1,9 +1,6 @@
 using System.Diagnostics;
-using System.Net;
 using Amethyst.Extensions;
 using Amethyst.Kernel;
-using Amethyst.Network.Managing;
-using Amethyst.Server.Base;
 using Amethyst.Server.World;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -12,7 +9,7 @@ using Terraria.IO;
 using Terraria.Localization;
 using Terraria.Utilities;
 
-namespace Amethyst.Server.TerrariaAPI;
+namespace Amethyst.Server;
 
 public sealed class TAPILauncher : IServerLauncher
 {

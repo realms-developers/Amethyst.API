@@ -38,26 +38,26 @@ public sealed class PlayerManager : IEntityManager<PlayerEntity>
         _tracker._players[index] = null!;
     }
 
-    public void AttachHooks()
-    {
-        HookRegistry.GetHook<PlayerSocketConnectArgs>().Register(OnPlayerConnect);
-        HookRegistry.GetHook<PlayerSocketDisconnectArgs>().Register(OnPlayerDisconnect);
-    }
+    // public void AttachHooks()
+    // {
+    //     HookRegistry.GetHook<PlayerSocketConnectArgs>().Register(OnPlayerConnect);
+    //     HookRegistry.GetHook<PlayerSocketDisconnectArgs>().Register(OnPlayerDisconnect);
+    // }
 
-    public void DeattachHooks()
-    {
-        HookRegistry.GetHook<PlayerSocketConnectArgs>().Unregister(OnPlayerConnect);
-        HookRegistry.GetHook<PlayerSocketDisconnectArgs>().Unregister(OnPlayerDisconnect);
-    }
+    // public void DeattachHooks()
+    // {
+    //     HookRegistry.GetHook<PlayerSocketConnectArgs>().Unregister(OnPlayerConnect);
+    //     HookRegistry.GetHook<PlayerSocketDisconnectArgs>().Unregister(OnPlayerDisconnect);
+    // }
 
-    private void OnPlayerConnect(in PlayerSocketConnectArgs args, HookResult<PlayerSocketConnectArgs> result)
-    {
-        PlayerEntity player = new PlayerEntity(args.Index);
-        Insert(args.Index, player);
-    }
+    // private void OnPlayerConnect(in PlayerSocketConnectArgs args, HookResult<PlayerSocketConnectArgs> result)
+    // {
+    //     PlayerEntity player = new PlayerEntity(args.Index);
+    //     Insert(args.Index, player);
+    // }
 
-    private void OnPlayerDisconnect(in PlayerSocketDisconnectArgs args, HookResult<PlayerSocketDisconnectArgs> result)
-    {
-        Remove(args.Index);
-    }
+    // private void OnPlayerDisconnect(in PlayerSocketDisconnectArgs args, HookResult<PlayerSocketDisconnectArgs> result)
+    // {
+    //     Remove(args.Index);
+    // }
 }

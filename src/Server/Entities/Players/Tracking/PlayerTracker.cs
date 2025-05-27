@@ -8,7 +8,7 @@ public sealed class PlayerTracker : IEntityTracker<PlayerEntity>
     public PlayerTracker()
     {
         Manager = new PlayerManager(this);
-        Manager.AttachHooks();
+        //Manager.AttachHooks();
     }
 
     public PlayerEntity this[int index] => _players[index];

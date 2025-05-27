@@ -1,5 +1,5 @@
-using Amethyst.Network;
 using Amethyst.Server.Entities.Base;
+using Amethyst.Server.Network.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -48,23 +48,24 @@ public sealed partial class PlayerEntity : IServerEntity
     {
         public static Action<PlayerEntity, string, byte, byte, byte> DefaultSendText { get; set; } = static (player, text, r, g, b) =>
         {
-            byte[] packet = new PacketWriter().SetType(82)
-                .PackUInt16(1) // text id
-                .PackByte(255)
-                .PackByte(0)
-                .PackString(text)
-                .PackByte(r)
-                .PackByte(g)
-                .PackByte(b)
-                .BuildPacket();
+            FastPacketWriter writer = new FastPacketWriter(82, 1024);
+            writer.WriteUInt16(1);
+            writer.WriteByte(255);
+            writer.WriteByte(0);
+            writer.WriteString(text);
+            writer.WriteByte(r);
+            writer.WriteByte(g);
+            writer.WriteByte(b);
 
-            player.SendPacketBytes(packet);
+            player.SendPacketBytes(writer.BuildPacket());
+
+            writer.Dispose();
         };
         public Action<PlayerEntity, string, byte, byte, byte>? SendText { get; set; }
 
         public static Action<PlayerEntity, byte[]> DefaultSendPacketBytes { get; set; } = static (player, bytes) =>
         {
-            Netplay.Clients[player.Index].Socket.AsyncSend(bytes, 0, bytes.Length, Netplay.Clients[player.Index].ServerWriteCallBack);
+            player._client.Send(bytes);
         };
         public Action<PlayerEntity, byte[]>? SendPacketBytes { get; set; }
 

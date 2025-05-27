@@ -1,16 +1,16 @@
 using System.Net;
 using Amethyst.Infrastructure.Profiles;
 using Amethyst.Kernel;
-using Amethyst.Network.Managing;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
+using Amethyst.Server.Network;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.IO;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
 
-namespace Amethyst.Server.TerrariaAPI;
+namespace Amethyst.Server;
 
 internal static class ServerUtils
 {
@@ -35,7 +35,6 @@ internal static class ServerUtils
 
         // Netplay.TcpListener = new RemadeTcpSocket();
         NetworkManager.Initialize();
-        NetworkManager.RequestListening();
 
         Main.maxNetPlayers = AmethystSession.Profile.MaxPlayers;
     }
@@ -61,7 +60,7 @@ internal static class ServerUtils
 
     internal static void UpdateTitle()
     {
-        string title = $"Amethyst API (Profile: {AmethystSession.Profile.Name}) - ";
+        string title = $"Amethyst API (Profile: {AmethystSession.Profile.Name}) on TerrariaAPI v{Main.versionNumber} - ";
 
         if (AmethystSession.Launcher.IsStarted)
         {

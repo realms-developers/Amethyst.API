@@ -1,6 +1,6 @@
 using Terraria;
 
-namespace Amethyst.Network;
+namespace Amethyst.Server.Network.Structures;
 
 public struct NetTile
 {

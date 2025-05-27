@@ -1,4 +1,4 @@
-namespace Amethyst.Network;
+namespace Amethyst.Server.Network.Enums;
 
 public enum TileInteractType : byte
 {

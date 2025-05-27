@@ -6,7 +6,4 @@ public interface IEntityManager<TEntity> where TEntity : IServerEntity
 
     void Insert(int index, TEntity entity);
     void Remove(int index);
-
-    void AttachHooks();
-    void DeattachHooks();
 }

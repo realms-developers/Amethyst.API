@@ -4,8 +4,7 @@ using Amethyst.Extensions.Base.Result;
 using Amethyst.Infrastructure.CLI;
 using Amethyst.Infrastructure.Kernel;
 using Amethyst.Infrastructure.Profiles;
-using Amethyst.Server.Base;
-using Amethyst.Server.TerrariaAPI;
+using Amethyst.Server;
 using Amethyst.Text;
 
 namespace Amethyst.Kernel;
