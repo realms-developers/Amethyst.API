@@ -49,7 +49,7 @@ public sealed partial class PlayerEntity : IServerEntity
 
         public static Action<PlayerEntity, int> DefaultHeal { get; set; } = static (player, amount) =>
         {
-            NetMessage.SendData((int)PacketTypes.PlayerHealOther, -1, -1, NetworkText.Empty, player.Index, amount);
+            NetMessage.SendData(66, -1, -1, NetworkText.Empty, player.Index, amount);
         };
         public Action<PlayerEntity, int>? Heal { get; set; }
 
