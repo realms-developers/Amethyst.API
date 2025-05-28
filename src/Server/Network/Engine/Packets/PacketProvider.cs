@@ -19,7 +19,15 @@ internal sealed class PacketProvider<TPacket>
 
         NetworkManager.RegisterHandlers.Add(typeof(TPacket), new PacketRegisterHandler<TPacket>(RegisterHandler));
         NetworkManager.UnregisterHandlers.Add(typeof(TPacket), new PacketUnregisterHandler<TPacket>(UnregisterHandler));
+        NetworkManager.SecurityRegisterHandlers.Add(typeof(TPacket), new PacketRegisterHandler<TPacket>(RegisterSecurityHandler));
+        NetworkManager.SecurityUnregisterHandlers.Add(typeof(TPacket), new PacketUnregisterHandler<TPacket>(UnregisterSecurityHandler));
+        NetworkManager.SetMainHandlers.Add(typeof(TPacket), new PacketSetMainHandler<TPacket>(SetMainHandler));
         NetworkManager.InvokeHandlers[(byte)_packet.PacketID] = Invoke;
+    }
+
+    private void SetMainHandler(PacketHook<TPacket>? hook)
+    {
+        _mainHandler = hook;
     }
 
     internal void RegisterHandler(PacketHook<TPacket> handler, int priority = 0)
@@ -33,6 +41,19 @@ internal sealed class PacketProvider<TPacket>
     internal void UnregisterHandler(PacketHook<TPacket> handler)
     {
         _handlers.Remove(handler);
+    }
+
+    internal void RegisterSecurityHandler(PacketHook<TPacket> handler, int priority = 0)
+    {
+        if (_securityHandlers.Contains(handler))
+            return;
+
+        _securityHandlers.Add(handler);
+        _securityHandlers.Sort((x, y) => priority.CompareTo(0));
+    }
+    internal void UnregisterSecurityHandler(PacketHook<TPacket> handler)
+    {
+        _securityHandlers.Remove(handler);
     }
 
     internal void Invoke(PlayerEntity plr, ReadOnlySpan<byte> data, ref bool ignore)
