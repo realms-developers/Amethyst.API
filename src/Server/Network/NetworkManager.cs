@@ -1,21 +1,19 @@
 using System.Net;
 using Amethyst.Kernel;
 using Amethyst.Server.Entities;
-using Amethyst.Server.Network.Engine;
-using Amethyst.Server.Network.Engine.Packets;
+using Amethyst.Server.Network.Core;
+using Amethyst.Server.Network.Core.Delegates;
+using Amethyst.Server.Network.Core.Packets;
 
 namespace Amethyst.Server.Network;
 
 public static class NetworkManager
 {
-    internal static List<object> Providers { get; } = new List<object>();
+    internal static Dictionary<Type, object> Providers = new Dictionary<Type, object>();
 
-    internal static Dictionary<Type, object> RegisterHandlers = new();
-    internal static Dictionary<Type, object> UnregisterHandlers = new();
-    internal static Dictionary<Type, object> SecurityRegisterHandlers = new();
-    internal static Dictionary<Type, object> SecurityUnregisterHandlers = new();
-    internal static Dictionary<Type, object> SetMainHandlers = new();
     internal static PacketInvokeHandler?[] InvokeHandlers = new PacketInvokeHandler?[256];
+    internal static List<PacketInvokeHandler>?[] DirectHandlers = new List<PacketInvokeHandler>?[256];
+    internal static List<PacketInvokeHandler> OverlapHandlers = new List<PacketInvokeHandler>();
 
     internal static AmethystTcpServer? TcpServer;
 
@@ -37,6 +35,30 @@ public static class NetworkManager
 
         try
         {
+            var ignore = false;
+
+            if (OverlapHandlers.Count > 0)
+            {
+                foreach (var handler in OverlapHandlers)
+                {
+                    handler(EntityTrackers.Players[client._index], data, ref ignore);
+
+                    if (ignore)
+                        return;
+                }
+            }
+
+            var directHandlers = DirectHandlers[data[2]];
+            if (directHandlers != null)
+            {
+                foreach (var handler in directHandlers)
+                {
+                    handler(EntityTrackers.Players[client._index], data, ref ignore);
+
+                    if (ignore)
+                        return;
+                }
+            }
 
             var packetId = data[2];
             if (InvokeHandlers[packetId] == null)
@@ -45,7 +67,6 @@ public static class NetworkManager
                 return;
             }
 
-            var ignore = false;
             var player = EntityTrackers.Players[client._index];
             InvokeHandlers[packetId]!(player, data, ref ignore);
         }
@@ -74,71 +95,34 @@ public static class NetworkManager
             }
 
             providerType.GetMethod("Hookup")?.Invoke(provider, null);
-            Providers.Add(provider);
+            Providers.Add(packetType, provider);
         }
     }
 
-    public static void RegisterPacketHandler<TPacket>(PacketHook<TPacket> hook, int priority = 0)
-    {
-        if (RegisterHandlers.TryGetValue(typeof(TPacket), out var handler))
-        {
-            var registerHandler = (PacketRegisterHandler<TPacket>)handler;
-            registerHandler(hook, priority);
-        }
-        else
-        {
-            AmethystLog.Network.Error(nameof(NetworkManager), $"No register handler found for packet type {typeof(TPacket).Name}");
-        }
-    }
+    public static void AddHandler<TPacket>(PacketHook<TPacket> hook, int priority = 0)
+        => InteractWithProvider<TPacket>(provider => provider.RegisterHandler(hook, priority));
 
-    public static void UnregisterPacketHandler<TPacket>(PacketHook<TPacket> hook)
-    {
-        if (UnregisterHandlers.TryGetValue(typeof(TPacket), out var handler))
-        {
-            var unregisterHandler = (PacketUnregisterHandler<TPacket>)handler;
-            unregisterHandler(hook);
-        }
-        else
-        {
-            AmethystLog.Network.Error(nameof(NetworkManager), $"No unregister handler found for packet type {typeof(TPacket).Name}");
-        }
-    }
+    public static void RemoveHandler<TPacket>(PacketHook<TPacket> hook)
+        => InteractWithProvider<TPacket>(provider => provider.UnregisterHandler(hook));
 
-    public static void RegisterSecurityPacketHandler<TPacket>(PacketHook<TPacket> hook, int priority = 0)
-    {
-        if (SecurityRegisterHandlers.TryGetValue(typeof(TPacket), out var handler))
-        {
-            var registerHandler = (PacketRegisterHandler<TPacket>)handler;
-            registerHandler(hook, priority);
-        }
-        else
-        {
-            AmethystLog.Network.Error(nameof(NetworkManager), $"No security register handler found for packet type {typeof(TPacket).Name}");
-        }
-    }
+    public static void AddSecurityHandler<TPacket>(PacketHook<TPacket> hook, int priority = 0)
+        => InteractWithProvider<TPacket>(provider => provider.RegisterSecurityHandler(hook, priority));
 
-    public static void UnregisterSecurityPacketHandler<TPacket>(PacketHook<TPacket> hook)
+    public static void RemoveSecurityHandler<TPacket>(PacketHook<TPacket> hook)
+        => InteractWithProvider<TPacket>(provider => provider.UnregisterSecurityHandler(hook));
+
+    public static void SetMainHandler<TPacket>(PacketHook<TPacket>? hook)
+        => InteractWithProvider<TPacket>(provider => provider.SetMainHandler(hook));
+
+    private static void InteractWithProvider<TPacket>(Action<PacketProvider<TPacket>> action)
     {
-        if (SecurityUnregisterHandlers.TryGetValue(typeof(TPacket), out var handler))
+        if (Providers.TryGetValue(typeof(TPacket), out var provider))
         {
-            var unregisterHandler = (PacketUnregisterHandler<TPacket>)handler;
-            unregisterHandler(hook);
+            action((PacketProvider<TPacket>)provider);
         }
         else
         {
-            AmethystLog.Network.Error(nameof(NetworkManager), $"No security unregister handler found for packet type {typeof(TPacket).Name}");
-        }
-    }
-    public static void SetMainPacketHandler<TPacket>(PacketHook<TPacket>? hook)
-    {
-        if (SetMainHandlers.TryGetValue(typeof(TPacket), out var handler))
-        {
-            var setMainHandler = (PacketSetMainHandler<TPacket>)handler;
-            setMainHandler(hook);
-        }
-        else
-        {
-            AmethystLog.Network.Error(nameof(NetworkManager), $"No set main handler found for packet type {typeof(TPacket).Name}");
+            AmethystLog.Network.Error(nameof(NetworkManager), $"No provider found for packet type {typeof(TPacket).Name}");
         }
     }
 }

@@ -1,7 +1,9 @@
+using Amethyst.Server.Network.Utilities;
 using Terraria;
 
 namespace Amethyst.Server.Network.Structures;
 
+#pragma warning disable CA1051
 public struct NetTile
 {
     public NetTile(BinaryReader reader)
@@ -89,7 +91,7 @@ public struct NetTile
         }
     }
 
-    public readonly void Serialize(ref PacketWriter packet)
+    public readonly void Serialize(FastPacketWriter packet)
     {
         BitsByte bitsByte1 = new();
 
@@ -117,61 +119,61 @@ public struct NetTile
         bitsByte3[2] = Invisible;
         bitsByte3[3] = InvisibleWall;
 
-        packet = packet.PackByte((byte)bitsByte1)
-            .PackByte((byte)bitsByte2)
-            .PackByte((byte)bitsByte3);
+        packet.WriteByte((byte)bitsByte1);
+        packet.WriteByte((byte)bitsByte2);
+        packet.WriteByte((byte)bitsByte3);
 
         if (bitsByte2[2])
         {
-            packet = packet.PackByte((byte)TileColor);
+            packet.WriteByte((byte)TileColor);
         }
 
         if (bitsByte2[3])
         {
-            packet = packet.PackByte((byte)WallColor);
+            packet.WriteByte((byte)WallColor);
         }
 
         if (Active)
         {
-            packet = packet.PackUInt16(TileID);
+            packet.WriteUInt16(TileID);
             if (Main.tileFrameImportant[TileID])
             {
-                packet = packet.PackInt16(FrameX)
-                    .PackInt16(FrameY);
+                packet.WriteInt16(FrameX);
+                packet.WriteInt16(FrameY);
             }
         }
 
         if (Wall > 0)
         {
-            packet = packet.PackUInt16(Wall);
+            packet.WriteUInt16(Wall);
         }
 
         if (Liquid > 0)
         {
-            packet = packet.PackByte(Liquid)
-                .PackByte(LiquidID);
+            packet.WriteByte(Liquid);
+            packet.WriteByte(LiquidID);
         }
     }
 
-    public bool Active { get; set; }
-    public ushort TileID { get; set; }
-    public short FrameX { get; set; }
-    public short FrameY { get; set; }
-    public ushort Wall { get; set; }
-    public byte Liquid { get; set; }
-    public byte LiquidID { get; set; }
-    public bool Wire { get; set; }
-    public bool Wire2 { get; set; }
-    public bool Wire3 { get; set; }
-    public bool Wire4 { get; set; }
-    public bool Inactive { get; set; }
-    public bool HalfBrick { get; set; }
-    public bool Actuator { get; set; }
-    public byte TileColor { get; set; }
-    public byte WallColor { get; set; }
-    public byte Slope { get; set; }
-    public bool Fullbright { get; set; }
-    public bool FullbrightWall { get; set; }
-    public bool Invisible { get; set; }
-    public bool InvisibleWall { get; set; }
+    public bool Active;
+    public ushort TileID;
+    public short FrameX;
+    public short FrameY;
+    public ushort Wall;
+    public byte Liquid;
+    public byte LiquidID;
+    public bool Wire;
+    public bool Wire2;
+    public bool Wire3;
+    public bool Wire4;
+    public bool Inactive;
+    public bool HalfBrick;
+    public bool Actuator;
+    public byte TileColor;
+    public byte WallColor;
+    public byte Slope;
+    public bool Fullbright;
+    public bool FullbrightWall;
+    public bool Invisible;
+    public bool InvisibleWall;
 }

@@ -1,10 +1,27 @@
+using Terraria;
+
 namespace Amethyst.Server.Network.Structures;
 
+#pragma warning disable CA1051
 public struct NetItem(int id, short stack, byte prefix)
 {
-    public int ID { get; set; } = id;
-    public short Stack { get; set; } = stack;
-    public byte Prefix { get; set; } = prefix;
+    public int ID = id;
+    public short Stack = stack;
+    public byte Prefix = prefix;
+
+    public static implicit operator Item(NetItem netItem)
+    {
+        var item = new Item();
+        item.SetDefaults(netItem.ID);
+        item.stack = netItem.Stack;
+        item.Prefix(netItem.Prefix);
+        return item;
+    }
+
+    public static implicit operator NetItem(Item item)
+    {
+        return new NetItem(item.type, (short)item.stack, item.prefix);
+    }
 
     public static bool operator ==(NetItem left, NetItem right)
     {

@@ -26,7 +26,23 @@ public struct NetColor
         B = (byte)(packedValue & 0xFF);
     }
 
-    public readonly Color ToXNA() => new(R, G, B);
+    public static implicit operator NetColor(Color color)
+        => new NetColor(color.R, color.G, color.B);
+
+    public static implicit operator Color(NetColor color)
+        => new NetColor(color.R, color.G, color.B);
+
+    public static implicit operator NetColor(string hex)
+        => new NetColor(hex);
+
+    public static implicit operator string(NetColor color)
+        => color.ToHex();
+
+    public static implicit operator NetColor(int packedValue)
+        => new NetColor(packedValue);
+
+    public static implicit operator int(NetColor color)
+        => color.ToPackedValue();
 
     public readonly string ToHex()
         => R.ToString("X2", CultureInfo.InvariantCulture) + G.ToString("X2", CultureInfo.InvariantCulture) + B.ToString("X2", CultureInfo.InvariantCulture);
