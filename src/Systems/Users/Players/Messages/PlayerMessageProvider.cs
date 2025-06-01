@@ -1,6 +1,6 @@
 using System.Globalization;
-using Amethyst.Server.Network.Structures;
-using Amethyst.Server.Network.Utilities;
+using Amethyst.Network.Structures;
+using Amethyst.Network.Utilities;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Text;
 using Microsoft.Xna.Framework;

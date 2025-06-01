@@ -3,7 +3,7 @@ using Amethyst.Infrastructure.Profiles;
 using Amethyst.Kernel;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
-using Amethyst.Server.Network;
+using Amethyst.Network;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.IO;

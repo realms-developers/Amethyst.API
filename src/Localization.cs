@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using Amethyst.Server.Network.Structures;
+using Amethyst.Network.Structures;
 using Newtonsoft.Json;
 using Terraria;
 using Terraria.ID;

@@ -1,4 +1,4 @@
-using Amethyst.Server.Network.Packets;
+using Amethyst.Network.Packets;
 
 namespace Amethyst.Systems.Characters.Base.Interactions;
 

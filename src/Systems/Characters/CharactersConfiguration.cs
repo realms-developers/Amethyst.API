@@ -1,4 +1,4 @@
-using Amethyst.Server.Network.Structures;
+using Amethyst.Network.Structures;
 using Amethyst.Storages.Config;
 using Terraria.ID;
 

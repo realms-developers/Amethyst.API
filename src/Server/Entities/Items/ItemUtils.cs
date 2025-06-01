@@ -1,10 +1,10 @@
-using Amethyst.Server.Network.Structures;
+using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Localization;
-using Amethyst.Server.Network.Packets;
+using Amethyst.Network.Packets;
 
 namespace Amethyst.Server.Entities.Items;
 

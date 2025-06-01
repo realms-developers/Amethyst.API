@@ -1,5 +1,5 @@
 using Amethyst.Server.Entities.Base;
-using Amethyst.Server.Network.Utilities;
+using Amethyst.Network.Utilities;
 using Terraria;
 using Terraria.ID;
 

@@ -1,4 +1,4 @@
-using Amethyst.Server.Network.Structures;
+using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Base;
 using Amethyst.Server.Entities.Players;
 using Microsoft.Xna.Framework;

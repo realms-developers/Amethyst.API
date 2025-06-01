@@ -3,7 +3,7 @@ using Amethyst.Server.Entities.Items;
 using Terraria.DataStructures;
 using Terraria;
 using Terraria.Localization;
-using Amethyst.Server.Network.Enums;
+using Amethyst.Network.Enums;
 
 namespace Amethyst.Server.Entities.Players;
 
