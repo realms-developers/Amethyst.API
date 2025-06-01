@@ -17,17 +17,19 @@ public sealed class SignSyncPacket : IPacket<SignSync>
 
         short SignIndex = reader.ReadInt16();
         short SignX = reader.ReadInt16();
-        short SignYString = reader.ReadInt16();
-        SignText byte = reader.ReadUNKNOWN();
-        PlayerIndex byte = reader.ReadUNKNOWN();
+        short SignY = reader.ReadInt16();
+        string SignText = reader.ReadString();
+        byte PlayerIndex = reader.ReadByte();
+        byte Flags = reader.ReadByte();
 
         return new SignSync
         {
             SignIndex = SignIndex,
             SignX = SignX,
-            SignYString = SignYString,
-            byte = byte,
-            byte = byte,
+            SignY = SignY,
+            SignText = SignText,
+            PlayerIndex = PlayerIndex,
+            Flags = Flags,
         };
     }
 
@@ -37,9 +39,10 @@ public sealed class SignSyncPacket : IPacket<SignSync>
 
         writer.WriteInt16(packet.SignIndex);
         writer.WriteInt16(packet.SignX);
-        writer.WriteInt16(packet.SignYString);
-        writer.WriteUNKNOWN(packet.byte);
-        writer.WriteUNKNOWN(packet.byte);
+        writer.WriteInt16(packet.SignY);
+        writer.WriteString(packet.SignText);
+        writer.WriteByte(packet.PlayerIndex);
+        writer.WriteByte(packet.Flags);
 
         return writer.BuildPacket();
     }
@@ -49,7 +52,8 @@ public struct SignSync
 {
     public short SignIndex;
     public short SignX;
-    public short SignYString;
-    public SignText byte;
-    public PlayerIndex byte;
+    public short SignY;
+    public string SignText;
+    public byte PlayerIndex;
+    public byte Flags;
 }

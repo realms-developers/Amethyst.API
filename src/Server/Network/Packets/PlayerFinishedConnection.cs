@@ -13,10 +13,6 @@ public sealed class PlayerFinishedConnectionPacket : IPacket<PlayerFinishedConne
 
     public PlayerFinishedConnection Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
-        FastPacketReader reader = new(data, offset);
-
-
-
         return new PlayerFinishedConnection
         {
 
@@ -25,9 +21,7 @@ public sealed class PlayerFinishedConnectionPacket : IPacket<PlayerFinishedConne
 
     public byte[] Serialize(PlayerFinishedConnection packet)
     {
-        FastPacketWriter writer = new(49, 128);
-
-
+        FastPacketWriter writer = new(49, 4);
 
         return writer.BuildPacket();
     }
@@ -35,5 +29,4 @@ public sealed class PlayerFinishedConnectionPacket : IPacket<PlayerFinishedConne
 
 public struct PlayerFinishedConnection
 {
-
 }

@@ -3,6 +3,7 @@
 #pragma warning disable CA1051
 
 using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Network.Utilities;
 
 namespace Amethyst.Server.Network.Packets;
@@ -17,10 +18,10 @@ public sealed class SoundPlayPacket : IPacket<SoundPlay>
 
         NetVector2 Position = reader.ReadNetVector2();
         ushort SoundKey = reader.ReadUInt16();
-        byte Flags = reader.ReadByte();
-        int? Style = reader.ReadUNKNOWN();
-        float? Volume = reader.ReadUNKNOWN();
-        float? Pitch = reader.ReadUNKNOWN();
+        NetBitsByte Flags = reader.ReadByte();
+        int? Style = Flags[0] ? reader.ReadInt32() : null;
+        float? Volume = Flags[1] ? Math.Clamp(reader.ReadSingle(), 0f, 1f) : null;
+        float? Pitch = Flags[2] ? Math.Clamp(reader.ReadSingle(), -1f, 1f) : null;
 
         return new SoundPlay
         {
@@ -40,9 +41,15 @@ public sealed class SoundPlayPacket : IPacket<SoundPlay>
         writer.WriteNetVector2(packet.Position);
         writer.WriteUInt16(packet.SoundKey);
         writer.WriteByte(packet.Flags);
-        writer.WriteUNKNOWN(packet.Style);
-        writer.WriteUNKNOWN(packet.Volume);
-        writer.WriteUNKNOWN(packet.Pitch);
+        NetBitsByte flags = packet.Flags;
+        if (flags[0])
+            writer.WriteInt32(packet.Style ?? 0);
+
+        if (flags[1])
+            writer.WriteSingle(packet.Volume.HasValue ? Math.Clamp(packet.Volume.Value, 0f, 1f) : 0f);
+
+        if (flags[2])
+            writer.WriteSingle(packet.Pitch.HasValue ? Math.Clamp(packet.Pitch.Value, -1f, 1f) : 0f);
 
         return writer.BuildPacket();
     }

@@ -1,4 +1,4 @@
-using Amethyst.Network;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Systems.Characters.Base.Enums;
 
 namespace Amethyst.Systems.Characters.Base.Interactions;

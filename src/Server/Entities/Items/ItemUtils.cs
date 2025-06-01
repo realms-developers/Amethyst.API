@@ -1,9 +1,10 @@
-using Amethyst.Network;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Entities.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Localization;
+using Amethyst.Server.Network.Packets;
 
 namespace Amethyst.Server.Entities.Items;
 
@@ -23,8 +24,6 @@ public static class ItemUtils
 
     public static void CreateLocalItem(PlayerEntity player, short itemIndex, int type, int stack, byte prefix)
     {
-        var network = player.GetNetwork();
-
         itemIndex = itemIndex == 400 ? FindFreeIndex() : itemIndex;
 
         if (itemIndex == -1)
@@ -32,30 +31,28 @@ public static class ItemUtils
             return;
         }
 
-        byte[] itemBasePacket = new PacketWriter().SetType(21)
-                                .PackInt16(itemIndex)
-                                .PackVector2(player.TPlayer.position)
-                                .PackVector2(Vector2.Zero)
-                                .PackInt16((short)stack)
-                                .PackByte(prefix)
-                                .PackByte(0)
-                                .PackInt16((short)type)
-                                .BuildPacket();
+        byte[] itemBasePacket = new ItemUpdatePacket().Serialize(new ItemUpdate()
+        {
+            ItemIndex = itemIndex,
+            Position = player.TPlayer.position,
+            Velocity = Vector2.Zero,
+            ItemStack = (short)stack,
+            ItemPrefix = prefix,
+            ItemType = (short)type
+        });
 
-        network.SendPacketBytes(itemBasePacket);
+        byte[] itemOwnPacket = new ItemOwnerPacket().Serialize(new ItemOwner()
+        {
+            ItemIndex = itemIndex,
+            PlayerIndex = (byte)player.Index
+        });
 
-        byte[] itemOwnPacket = new PacketWriter().SetType(22)
-                                .PackInt16(itemIndex)
-                                .PackByte((byte)player.Index)
-                                .BuildPacket();
-
-        network.SendPacketBytes(itemOwnPacket);
+        player.SendPacketBytes(itemBasePacket);
+        player.SendPacketBytes(itemOwnPacket);
     }
 
     public static void CreateLocalDecorativeItem(PlayerEntity player, short itemIndex, int type, int stack, byte prefix)
     {
-        var network = player.GetNetwork();
-
         itemIndex = itemIndex == 400 ? FindFreeIndex() : itemIndex;
 
         if (itemIndex == -1)
@@ -63,24 +60,25 @@ public static class ItemUtils
             return;
         }
 
-        byte[] itemBasePacket = new PacketWriter().SetType(21)
-                                .PackInt16(itemIndex)
-                                .PackVector2(player.TPlayer.position)
-                                .PackVector2(Vector2.Zero)
-                                .PackInt16((short)stack)
-                                .PackByte(prefix)
-                                .PackByte((byte)player.Index)
-                                .PackInt16((short)type)
-                                .BuildPacket();
+        byte[] itemBasePacket = new ItemUpdatePacket().Serialize(new ItemUpdate()
+        {
+            ItemIndex = itemIndex,
+            Position = player.TPlayer.position,
+            Velocity = Vector2.Zero,
+            ItemStack = (short)stack,
+            ItemPrefix = prefix,
+            ItemType = (short)type,
+            OwnIgnore = (byte)player.Index
+        });
 
-        network.SendPacketBytes(itemBasePacket);
+        byte[] itemOwnPacket = new ItemOwnerPacket().Serialize(new ItemOwner()
+        {
+            ItemIndex = itemIndex,
+            PlayerIndex = 254
+        });
 
-        byte[] itemOwnPacket = new PacketWriter().SetType(22)
-                                .PackInt16(itemIndex)
-                                .PackByte(254)
-                                .BuildPacket();
-
-        network.SendPacketBytes(itemOwnPacket);
+        player.SendPacketBytes(itemBasePacket);
+        player.SendPacketBytes(itemOwnPacket);
     }
 
     public static short FindFreeIndex()

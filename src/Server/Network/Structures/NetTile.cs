@@ -1,12 +1,13 @@
+#pragma warning disable CA1051
+
 using Amethyst.Server.Network.Utilities;
 using Terraria;
 
 namespace Amethyst.Server.Network.Structures;
 
-#pragma warning disable CA1051
 public struct NetTile
 {
-    public NetTile(BinaryReader reader)
+    public NetTile(FastPacketReader reader)
     {
         var bitsBytes = (BitsByte)reader.ReadByte();
         var bitsBytes2 = (BitsByte)reader.ReadByte();
@@ -91,7 +92,7 @@ public struct NetTile
         }
     }
 
-    public readonly void Serialize(FastPacketWriter packet)
+    public void Serialize(FastPacketWriter packet)
     {
         BitsByte bitsByte1 = new();
 

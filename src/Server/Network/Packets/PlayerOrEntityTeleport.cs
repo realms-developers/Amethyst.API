@@ -3,6 +3,7 @@
 #pragma warning disable CA1051
 
 using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Network.Utilities;
 
 namespace Amethyst.Server.Network.Packets;
@@ -15,21 +16,27 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
     {
         FastPacketReader reader = new(data, offset);
 
-        byte Flags = reader.ReadByte();
-        short EntityIndex = reader.ReadInt16();
-        float TargetX = reader.ReadSingle();
-        float TargetY = reader.ReadSingle();
-        byte Style = reader.ReadByte();
-        int? ExtraInfo = reader.ReadUNKNOWN();
+        NetBitsByte bitsByte = reader.ReadByte();
+        short entityIndex = reader.ReadInt16();
+        NetVector2 targetPosition = reader.ReadNetVector2();
+        byte style = 0;
+        int? extraInfo = null;
+        if (bitsByte[0])
+        {
+            style = reader.ReadByte();
+        }
+        if (bitsByte[1])
+        {
+            extraInfo = reader.ReadInt32();
+        }
 
         return new PlayerOrEntityTeleport
         {
-            Flags = Flags,
-            EntityIndex = EntityIndex,
-            TargetX = TargetX,
-            TargetY = TargetY,
-            Style = Style,
-            ExtraInfo = ExtraInfo,
+            Flags = bitsByte,
+            EntityIndex = entityIndex,
+            TargetPosition = targetPosition,
+            Style = style,
+            ExtraInfo = extraInfo
         };
     }
 
@@ -39,10 +46,26 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
 
         writer.WriteByte(packet.Flags);
         writer.WriteInt16(packet.EntityIndex);
-        writer.WriteSingle(packet.TargetX);
-        writer.WriteSingle(packet.TargetY);
-        writer.WriteByte(packet.Style);
-        writer.WriteUNKNOWN(packet.ExtraInfo);
+        writer.WriteNetVector2(packet.TargetPosition);
+        if (packet.Flags[0])
+        {
+            writer.WriteByte(packet.Style);
+        }
+        if (packet.Flags[1])
+        {
+            if (packet.ExtraInfo.HasValue)
+            {
+                writer.WriteInt32(packet.ExtraInfo.Value);
+            }
+            else
+            {
+                writer.WriteInt32(0); // Default value if ExtraInfo is null
+            }
+        }
+        else
+        {
+            writer.WriteInt32(0); // Default value if ExtraInfo is not used
+        }
 
         return writer.BuildPacket();
     }
@@ -50,10 +73,9 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
 
 public struct PlayerOrEntityTeleport
 {
-    public byte Flags;
+    public NetBitsByte Flags;
     public short EntityIndex;
-    public float TargetX;
-    public float TargetY;
+    public NetVector2 TargetPosition;
     public byte Style;
     public int? ExtraInfo;
 }

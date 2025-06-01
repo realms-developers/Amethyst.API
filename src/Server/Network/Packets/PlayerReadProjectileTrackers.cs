@@ -3,6 +3,7 @@
 #pragma warning disable CA1051
 
 using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Network.Utilities;
 
 namespace Amethyst.Server.Network.Packets;
@@ -16,8 +17,8 @@ public sealed class PlayerReadProjectileTrackersPacket : IPacket<PlayerReadProje
         FastPacketReader reader = new(data, offset);
 
         byte PlayerIndex = reader.ReadByte();
-        NetTrackerData PiggyBank = reader.ReadUNKNOWN();
-        NetTrackerData VoidLens = reader.ReadUNKNOWN();
+        NetTrackerData PiggyBank = reader.ReadNetTrackerData();
+        NetTrackerData VoidLens = reader.ReadNetTrackerData();
 
         return new PlayerReadProjectileTrackers
         {
@@ -32,8 +33,8 @@ public sealed class PlayerReadProjectileTrackersPacket : IPacket<PlayerReadProje
         FastPacketWriter writer = new(142, 128);
 
         writer.WriteByte(packet.PlayerIndex);
-        writer.WriteUNKNOWN(packet.PiggyBank);
-        writer.WriteUNKNOWN(packet.VoidLens);
+        writer.WriteNetTrackerData(packet.PiggyBank);
+        writer.WriteNetTrackerData(packet.VoidLens);
 
         return writer.BuildPacket();
     }

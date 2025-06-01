@@ -3,6 +3,7 @@
 #pragma warning disable CA1051
 
 using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Network.Utilities;
 
 namespace Amethyst.Server.Network.Packets;
@@ -15,6 +16,54 @@ public sealed class PlayerUpdatePacket : IPacket<PlayerUpdate>
     {
         FastPacketReader reader = new(data, offset);
 
+        /*
+            				Player player10 = Main.player[num138];
+				BitsByte bitsByte7 = reader.ReadByte();
+				BitsByte bitsByte8 = reader.ReadByte();
+				BitsByte bitsByte9 = reader.ReadByte();
+				BitsByte bitsByte10 = reader.ReadByte();
+				player10.controlUp = bitsByte7[0];
+				player10.controlDown = bitsByte7[1];
+				player10.controlLeft = bitsByte7[2];
+				player10.controlRight = bitsByte7[3];
+				player10.controlJump = bitsByte7[4];
+				player10.controlUseItem = bitsByte7[5];
+				player10.direction = (bitsByte7[6] ? 1 : (-1));
+				if (bitsByte8[0])
+				{
+					player10.pulley = true;
+					player10.pulleyDir = (byte)((!bitsByte8[1]) ? 1u : 2u);
+				}
+				else
+				{
+					player10.pulley = false;
+				}
+				player10.vortexStealthActive = bitsByte8[3];
+				player10.gravDir = (bitsByte8[4] ? 1 : (-1));
+				player10.TryTogglingShield(bitsByte8[5]);
+				player10.ghost = bitsByte8[6];
+				player10.selectedItem = reader.ReadByte();
+				player10.position = reader.ReadVector2();
+				if (bitsByte8[2])
+				{
+					player10.velocity = reader.ReadVector2();
+				}
+				else
+				{
+					player10.velocity = Vector2.Zero;
+				}
+				if (bitsByte9[6])
+				{
+					player10.PotionOfReturnOriginalUsePosition = reader.ReadVector2();
+					player10.PotionOfReturnHomePosition = reader.ReadVector2();
+				}
+				else
+				{
+					player10.PotionOfReturnOriginalUsePosition = null;
+					player10.PotionOfReturnHomePosition = null;
+				}
+        */
+
         byte PlayerIndex = reader.ReadByte();
         byte Flags = reader.ReadByte();
         byte Flags2 = reader.ReadByte();
@@ -22,9 +71,18 @@ public sealed class PlayerUpdatePacket : IPacket<PlayerUpdate>
         byte Flags4 = reader.ReadByte();
         byte SelectedItem = reader.ReadByte();
         NetVector2 Position = reader.ReadNetVector2();
-        NetVector2? Velocity = reader.ReadUNKNOWN();
-        NetVector2? PotionOriginalPosition = reader.ReadUNKNOWN();
-        NetVector2? PotionHomePosition = reader.ReadUNKNOWN();
+        NetVector2? Velocity = null;
+        if ((Flags2 & 0b00000100) != 0)
+        {
+            Velocity = reader.ReadNetVector2();
+        }
+        NetVector2? PotionOriginalPosition = null;
+        NetVector2? PotionHomePosition = null;
+        if ((Flags3 & 0b01000000) != 0)
+        {
+            PotionOriginalPosition = reader.ReadNetVector2();
+            PotionHomePosition = reader.ReadNetVector2();
+        }
 
         return new PlayerUpdate
         {
@@ -52,9 +110,16 @@ public sealed class PlayerUpdatePacket : IPacket<PlayerUpdate>
         writer.WriteByte(packet.Flags4);
         writer.WriteByte(packet.SelectedItem);
         writer.WriteNetVector2(packet.Position);
-        writer.WriteUNKNOWN(packet.Velocity);
-        writer.WriteUNKNOWN(packet.PotionOriginalPosition);
-        writer.WriteUNKNOWN(packet.PotionHomePosition);
+        if ((packet.Flags2 & 0b00000100) != 0 && packet.Velocity.HasValue)
+        {
+            writer.WriteNetVector2(packet.Velocity ?? new(0f, 0f));
+        }
+
+        if ((packet.Flags3 & 0b01000000) != 0)
+        {
+            writer.WriteNetVector2(packet.PotionOriginalPosition ?? new(0f, 0f));
+            writer.WriteNetVector2(packet.PotionHomePosition ?? new(0f, 0f));
+        }
 
         return writer.BuildPacket();
     }

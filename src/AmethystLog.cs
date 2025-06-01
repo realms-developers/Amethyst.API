@@ -1,4 +1,4 @@
-using Amethyst.Infrastructure;
+using Amethyst.Kernel;
 using Amethyst.Logging;
 
 namespace Amethyst;

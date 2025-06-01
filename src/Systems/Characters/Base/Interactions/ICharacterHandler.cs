@@ -1,4 +1,4 @@
-using Amethyst.Network.Packets;
+using Amethyst.Server.Network.Packets;
 
 namespace Amethyst.Systems.Characters.Base.Interactions;
 
@@ -8,9 +8,9 @@ public interface ICharacterHandler
 
     public bool InReadonlyMode { get; set; }
 
-    public void HandleSlot(IncomingPacket packet);
-    public void HandleSetLife(IncomingPacket packet);
-    public void HandleSetMana(IncomingPacket packet);
-    public void HandlePlayerInfo(IncomingPacket packet);
-    public void HandleQuests(IncomingPacket packet);
+    public void HandleSlot(PlayerSlot packet);
+    public void HandleSetLife(PlayerLife packet);
+    public void HandleSetMana(PlayerMana packet);
+    public void HandlePlayerInfo(PlayerInfo packet);
+    public void HandleQuests(PlayerTownNPCQuestsStats packet);
 }

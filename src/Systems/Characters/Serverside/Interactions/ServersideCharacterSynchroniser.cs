@@ -1,4 +1,4 @@
-using Amethyst.Network;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Enums;
@@ -6,6 +6,8 @@ using Amethyst.Systems.Characters.Base.Interactions;
 using Amethyst.Systems.Characters.Utilities;
 using Amethyst.Systems.Users.Players;
 using Terraria;
+using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Packets;
 
 namespace Amethyst.Systems.Characters.Serverside.Interactions;
 
@@ -50,12 +52,14 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
 
         CharacterUtilities.TerrarifySlot(Player, item, slot);
 
-        byte[] packet = new PacketWriter().SetType(5)
-            .PackByte((byte)Player.Index)
-            .PackInt16((short)slot) // index
-            .PackInt16(item.Stack)
-            .PackByte(item.Prefix)
-            .PackInt16((short)item.ID).BuildPacket();
+        byte[] packet = new PlayerSlotPacket().Serialize(new PlayerSlot
+        {
+            PlayerIndex = (byte)Player.Index,
+            SlotIndex = (short)slot,
+            ItemID = (short)item.ID,
+            ItemStack = item.Stack,
+            ItemPrefix = item.Prefix
+        });
 
         int remote = sync == SyncType.Local ? Player.Index : -1;
         int ignore = sync == SyncType.Exclude ? Player.Index : -1;
@@ -105,13 +109,13 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
         Player.TPlayer.hairDye = model.HairDye;
         Player.TPlayer.hideMisc = model.HideMisc;
         Player.TPlayer.hideVisibleAccessory = model.HideAccessories ?? new bool[10];
-        Player.TPlayer.hairColor = model.Colors[(byte)PlayerColorType.HairColor].ToXNA();
-        Player.TPlayer.skinColor = model.Colors[(byte)PlayerColorType.SkinColor].ToXNA();
-        Player.TPlayer.eyeColor = model.Colors[(byte)PlayerColorType.EyesColor].ToXNA();
-        Player.TPlayer.shirtColor = model.Colors[(byte)PlayerColorType.ShirtColor].ToXNA();
-        Player.TPlayer.underShirtColor = model.Colors[(byte)PlayerColorType.UndershirtColor].ToXNA();
-        Player.TPlayer.pantsColor = model.Colors[(byte)PlayerColorType.PantsColor].ToXNA();
-        Player.TPlayer.shoeColor = model.Colors[(byte)PlayerColorType.ShoesColor].ToXNA();
+        Player.TPlayer.hairColor = model.Colors[(byte)PlayerColorType.HairColor];
+        Player.TPlayer.skinColor = model.Colors[(byte)PlayerColorType.SkinColor];
+        Player.TPlayer.eyeColor = model.Colors[(byte)PlayerColorType.EyesColor];
+        Player.TPlayer.shirtColor = model.Colors[(byte)PlayerColorType.ShirtColor];
+        Player.TPlayer.underShirtColor = model.Colors[(byte)PlayerColorType.UnderShirtColor];
+        Player.TPlayer.pantsColor = model.Colors[(byte)PlayerColorType.PantsColor];
+        Player.TPlayer.shoeColor = model.Colors[(byte)PlayerColorType.ShoesColor];
 
         Player.TPlayer.difficulty = 0;
         Player.TPlayer.extraAccessory = model.Info1.HasFlag(PlayerInfo1.ExtraAccessory);

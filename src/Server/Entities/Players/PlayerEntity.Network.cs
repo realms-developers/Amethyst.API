@@ -1,6 +1,5 @@
 using Amethyst.Server.Entities.Base;
 using Amethyst.Server.Network.Utilities;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 
@@ -18,9 +17,6 @@ public sealed partial class PlayerEntity : IServerEntity
 
     public void SendRectangle(int x, int y, byte width, byte height, TileChangeType changeType = TileChangeType.None)
         => (NetworkOperations.SendTileSquare ?? PlayerNetworkOperations.DefaultSendTileSquare).Invoke(this, x, y, width, height, changeType);
-
-    public void SendMassTiles(in Rectangle rectangle)
-        => SendMassTiles(rectangle.X, rectangle.Y, rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
 
     public void SendMassTiles(int startX, int startY, int endX, int endY)
     {

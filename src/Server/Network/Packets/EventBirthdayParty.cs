@@ -13,21 +13,12 @@ public sealed class EventBirthdayPartyPacket : IPacket<EventBirthdayParty>
 
     public EventBirthdayParty Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
-        FastPacketReader reader = new(data, offset);
-
-        byte ... = reader.ReadByte();
-
-        return new EventBirthdayParty
-        {
-            ... = ...,
-        };
+        return new();
     }
 
     public byte[] Serialize(EventBirthdayParty packet)
     {
         FastPacketWriter writer = new(111, 128);
-
-        writer.WriteByte(packet....);
 
         return writer.BuildPacket();
     }
@@ -35,5 +26,4 @@ public sealed class EventBirthdayPartyPacket : IPacket<EventBirthdayParty>
 
 public struct EventBirthdayParty
 {
-    public byte ...;
 }

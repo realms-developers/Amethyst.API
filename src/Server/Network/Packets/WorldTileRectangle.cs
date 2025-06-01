@@ -3,6 +3,7 @@
 #pragma warning disable CA1051
 
 using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Network.Utilities;
 
 namespace Amethyst.Server.Network.Packets;
@@ -20,7 +21,11 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
         byte SizeX = reader.ReadByte();
         byte SizeY = reader.ReadByte();
         byte TileChangeType = reader.ReadByte();
-        byte ... = reader.ReadByte();
+        NetTile[,] Tiles = new NetTile[SizeX, SizeY];
+
+        for (int i = 0; i < SizeX; i++)
+        for (int j = 0; j < SizeY; j++)
+            Tiles[i, j] = new NetTile(reader);
 
         return new WorldTileRectangle
         {
@@ -29,7 +34,7 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
             SizeX = SizeX,
             SizeY = SizeY,
             TileChangeType = TileChangeType,
-            ... = ...,
+            Tiles = Tiles,
         };
     }
 
@@ -42,7 +47,9 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
         writer.WriteByte(packet.SizeX);
         writer.WriteByte(packet.SizeY);
         writer.WriteByte(packet.TileChangeType);
-        writer.WriteByte(packet....);
+        for (int i = 0; i < packet.SizeX; i++)
+        for (int j = 0; j < packet.SizeY; j++)
+            packet.Tiles[i, j].Serialize(writer);
 
         return writer.BuildPacket();
     }
@@ -55,5 +62,5 @@ public struct WorldTileRectangle
     public byte SizeX;
     public byte SizeY;
     public byte TileChangeType;
-    public byte ...;
+    public NetTile[,] Tiles;
 }

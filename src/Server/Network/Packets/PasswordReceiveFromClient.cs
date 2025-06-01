@@ -25,7 +25,7 @@ public sealed class PasswordReceiveFromClientPacket : IPacket<PasswordReceiveFro
 
     public byte[] Serialize(PasswordReceiveFromClient packet)
     {
-        FastPacketWriter writer = new(38, 128);
+        FastPacketWriter writer = new(38, 32);
 
         writer.WriteString(packet.Password);
 

@@ -17,13 +17,23 @@ public sealed class ChestSyncPacket : IPacket<ChestSync>
 
         short ChestIndex = reader.ReadInt16();
         short ChestX = reader.ReadInt16();
-        short ChestYstring? = reader.ReadInt16();
+        short ChestY = reader.ReadInt16();
+        byte NameLength = reader.ReadByte();
+        string Name = string.Empty;
+        if (NameLength > 0 & NameLength <= 20)
+        {
+            Name = reader.ReadString();
+
+            if (Name.Length != NameLength)
+                Name = string.Empty;
+        }
 
         return new ChestSync
         {
             ChestIndex = ChestIndex,
             ChestX = ChestX,
-            ChestYstring? = ChestYstring?,
+            ChestY = ChestY,
+            Name = Name,
         };
     }
 
@@ -33,7 +43,10 @@ public sealed class ChestSyncPacket : IPacket<ChestSync>
 
         writer.WriteInt16(packet.ChestIndex);
         writer.WriteInt16(packet.ChestX);
-        writer.WriteInt16(packet.ChestYstring?);
+        writer.WriteInt16(packet.ChestY);
+
+        writer.WriteByte((byte)(packet.Name?.Length ?? 0));
+        writer.WriteString(packet.Name ?? string.Empty);
 
         return writer.BuildPacket();
     }
@@ -43,5 +56,7 @@ public struct ChestSync
 {
     public short ChestIndex;
     public short ChestX;
-    public short ChestYstring?;
+    public short ChestY;
+
+    public string? Name;
 }

@@ -14,20 +14,14 @@ public sealed class PlayerNotifyQuestCompletePacket : IPacket<PlayerNotifyQuestC
     public PlayerNotifyQuestComplete Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
-
-        byte ... = reader.ReadByte();
-
         return new PlayerNotifyQuestComplete
         {
-            ... = ...,
         };
     }
 
     public byte[] Serialize(PlayerNotifyQuestComplete packet)
     {
-        FastPacketWriter writer = new(75, 128);
-
-        writer.WriteByte(packet....);
+        FastPacketWriter writer = new(75, 4);
 
         return writer.BuildPacket();
     }
@@ -35,5 +29,4 @@ public sealed class PlayerNotifyQuestCompletePacket : IPacket<PlayerNotifyQuestC
 
 public struct PlayerNotifyQuestComplete
 {
-    public byte ...;
 }

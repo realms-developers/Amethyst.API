@@ -6,7 +6,7 @@ public enum PlayerColorType
     SkinColor,
     EyesColor,
     ShirtColor,
-    UndershirtColor,
+    UnderShirtColor,
     PantsColor,
     ShoesColor
 }

@@ -1,5 +1,6 @@
 using System.Globalization;
-using Amethyst.Network;
+using Amethyst.Server.Network.Structures;
+using Amethyst.Server.Network.Utilities;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Text;
 using Microsoft.Xna.Framework;
@@ -23,19 +24,19 @@ public sealed class PlayerMessageProvider : IMessageProvider
 
     public string Language { get; set; }
 
-    public void SendMessage(string text) => SendMessage(text, Color.White);
+    public void SendMessage(string text) => SendMessage(text, new NetColor(255, 255, 255));
 
-    public void SendMessage(string text, Color color)
+    public void SendMessage(string text, NetColor color)
     {
-        byte[] packet = new PacketWriter().SetType(82)
-            .PackUInt16(1) // text id
-            .PackByte(255)
-            .PackByte(0)
-            .PackString(text)
-            .PackColor(color)
-            .BuildPacket();
+        var writer = new FastPacketWriter(82, 512);
 
-        User.Player.SendPacketBytes(packet);
+        writer.WriteUInt16(1);
+        writer.WriteByte(255);
+        writer.WriteByte(0);
+        writer.WriteString(text);
+        writer.WriteNetColor(color);
+
+        User.Player.SendPacketBytes(writer.BuildPacket());
     }
 
     public void ReplyMessage(string text) => ReplyMessage(text, Color.White);

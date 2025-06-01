@@ -7,25 +7,25 @@ using Amethyst.Server.Network.Utilities;
 
 namespace Amethyst.Server.Network.Packets;
 
-public sealed class PlayerIndexPacket : IPacket<PlayerIndex>
+public sealed class PlayerNetIndexPacket : IPacket<PlayerNetIndex>
 {
     public int PacketID => 3;
 
-    public PlayerIndex Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public PlayerNetIndex Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
         byte PlayerIndex = reader.ReadByte();
         bool SpecialFlag = reader.ReadBoolean();
 
-        return new PlayerIndex
+        return new PlayerNetIndex
         {
             PlayerIndex = PlayerIndex,
             SpecialFlag = SpecialFlag,
         };
     }
 
-    public byte[] Serialize(PlayerIndex packet)
+    public byte[] Serialize(PlayerNetIndex packet)
     {
         FastPacketWriter writer = new(3, 128);
 
@@ -36,7 +36,7 @@ public sealed class PlayerIndexPacket : IPacket<PlayerIndex>
     }
 }
 
-public struct PlayerIndex
+public struct PlayerNetIndex
 {
     public byte PlayerIndex;
     public bool SpecialFlag;

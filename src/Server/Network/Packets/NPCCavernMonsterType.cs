@@ -15,7 +15,11 @@ public sealed class NPCCavernMonsterTypePacket : IPacket<NPCCavernMonsterType>
     {
         FastPacketReader reader = new(data, offset);
 
-        ushort[2,3] NPCTypes = reader.ReadUNKNOWN();
+        ushort[][] NPCTypes = new ushort[3][];
+        for (int i = 0; i < NPCTypes.Length; i++)
+        {
+            NPCTypes[i] = reader.ReadUInt16Array(2);
+        }
 
         return new NPCCavernMonsterType
         {
@@ -27,7 +31,16 @@ public sealed class NPCCavernMonsterTypePacket : IPacket<NPCCavernMonsterType>
     {
         FastPacketWriter writer = new(136, 128);
 
-        writer.WriteUNKNOWN(packet.NPCTypes);
+        for (int i = 0; i < packet.NPCTypes.Length; i++)
+        {
+            for (int j = 0; j < packet.NPCTypes[i].Length; j++)
+            {
+                if (packet.NPCTypes[i].Length != 2)
+                {
+                    throw new ArgumentException("Each NPCTypes array must have exactly 2 elements.");
+                }
+            }
+        }
 
         return writer.BuildPacket();
     }
@@ -35,5 +48,5 @@ public sealed class NPCCavernMonsterTypePacket : IPacket<NPCCavernMonsterType>
 
 public struct NPCCavernMonsterType
 {
-    public ushort[2,3] NPCTypes;
+    public ushort[][] NPCTypes;
 }

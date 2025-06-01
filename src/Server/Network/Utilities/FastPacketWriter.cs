@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Amethyst.Server.Network.Structures;
 
 namespace Amethyst.Server.Network.Utilities;
 
@@ -40,10 +41,123 @@ public unsafe ref struct FastPacketWriter : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteNetColor(NetColor value)
+    {
+        Unsafe.Write(_ptr, value.ToPackedValue());
+        _ptr += 4;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteNetText(NetText value)
+    {
+        WriteByte(value.Mode);
+        WriteString(value.Text);
+
+        if (value.Mode != 0)
+        {
+            value.Substitutions ??= Array.Empty<NetText>();
+
+            WriteByte((byte)value.Substitutions.Length);
+            foreach (var substitution in value.Substitutions)
+            {
+                WriteNetText(substitution);
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteNetVector2(NetVector2 value)
+    {
+        WriteSingle(value.X);
+        WriteSingle(value.Y);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteNetDeathReason(NetDeathReason value)
+    {
+        NetBitsByte bitsByte = new();
+        bitsByte[0] = value.SourcePlayerIndex != -1;
+        bitsByte[1] = value.SourceNPCIndex != -1;
+        bitsByte[2] = value.SourceProjectileLocalIndex != -1;
+        bitsByte[3] = value.SourceOtherIndex != -1;
+        bitsByte[4] = value.SourceProjectileType != 0;
+        bitsByte[5] = value.SourceItemType != 0;
+        bitsByte[6] = value.SourceItemPrefix != 0;
+        bitsByte[7] = value.SourceCustomReason != null;
+        *_ptr = bitsByte.ByteValue;
+        _ptr++;
+        if (bitsByte[0])
+        {
+            Unsafe.Write(_ptr, (short)value.SourcePlayerIndex);
+            _ptr += 2;
+        }
+        if (bitsByte[1])
+        {
+            Unsafe.Write(_ptr, (short)value.SourceNPCIndex);
+            _ptr += 2;
+        }
+        if (bitsByte[2])
+        {
+            Unsafe.Write(_ptr, (short)value.SourceProjectileLocalIndex);
+            _ptr += 2;
+        }
+        if (bitsByte[3])
+        {
+            *(_ptr) = (byte)value.SourceOtherIndex;
+            _ptr++;
+        }
+        if (bitsByte[4])
+        {
+            Unsafe.Write(_ptr, (short)value.SourceProjectileType);
+            _ptr += 2;
+        }
+        if (bitsByte[5])
+        {
+            Unsafe.Write(_ptr, (short)value.SourceItemType);
+            _ptr += 2;
+        }
+        if (bitsByte[6])
+        {
+            *(_ptr) = (byte)value.SourceItemPrefix;
+            _ptr++;
+        }
+        if (bitsByte[7])
+        {
+            WriteString(value.SourceCustomReason!);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteNetTrackerData(NetTrackerData value)
+    {
+        WriteInt16(value.ExpectedOwner);
+
+        if (value.ExpectedOwner >= 0)
+        {
+            WriteInt16(value.ExpectedIdentity);
+            WriteInt16(value.ExpectedType);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteByte(byte value)
     {
         *(_ptr) = value;
         _ptr++;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteByteArray(byte[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            *(_ptr) = values[i];
+            _ptr++;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -54,10 +168,59 @@ public unsafe ref struct FastPacketWriter : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteSByteArray(sbyte[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            *(_ptr) = (byte)values[i];
+            _ptr++;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteBoolean(bool value)
+    {
+        *(_ptr) = value ? (byte)1 : (byte)0;
+        _ptr++;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteBooleanArray(bool[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            *(_ptr) = values[i] ? (byte)1 : (byte)0;
+            _ptr++;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteInt16(short value)
     {
         Unsafe.Write(_ptr, value);
         _ptr += 2;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteInt16Array(short[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            Unsafe.Write(_ptr, values[i]);
+            _ptr += 2;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -68,10 +231,38 @@ public unsafe ref struct FastPacketWriter : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteUInt16Array(ushort[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            Unsafe.Write(_ptr, values[i]);
+            _ptr += 2;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteInt32(int value)
     {
         Unsafe.Write(_ptr, value);
         _ptr += 4;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteInt32Array(int[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            Unsafe.Write(_ptr, values[i]);
+            _ptr += 4;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,10 +273,38 @@ public unsafe ref struct FastPacketWriter : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteUInt32Array(uint[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            Unsafe.Write(_ptr, values[i]);
+            _ptr += 4;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteInt64(long value)
     {
         Unsafe.Write(_ptr, value);
         _ptr += 8;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteInt64Array(long[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            Unsafe.Write(_ptr, values[i]);
+            _ptr += 8;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -96,6 +315,20 @@ public unsafe ref struct FastPacketWriter : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteUInt64Array(ulong[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            Unsafe.Write(_ptr, values[i]);
+            _ptr += 8;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteSingle(float value)
     {
         Unsafe.Write(_ptr, value);
@@ -103,10 +336,38 @@ public unsafe ref struct FastPacketWriter : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteSingleArray(float[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            Unsafe.Write(_ptr, values[i]);
+            _ptr += 4;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteDouble(double value)
     {
         Unsafe.Write(_ptr, value);
         _ptr += 8;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void WriteDoubleArray(double[] values)
+    {
+        if (values == null || values.Length == 0)
+            return;
+
+        int length = values.Length;
+        for (int i = 0; i < length; i++)
+        {
+            Unsafe.Write(_ptr, values[i]);
+            _ptr += 8;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

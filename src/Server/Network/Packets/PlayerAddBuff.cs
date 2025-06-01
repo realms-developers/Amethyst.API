@@ -29,7 +29,7 @@ public sealed class PlayerAddBuffPacket : IPacket<PlayerAddBuff>
 
     public byte[] Serialize(PlayerAddBuff packet)
     {
-        FastPacketWriter writer = new(55, 128);
+        FastPacketWriter writer = new(55, 16);
 
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteUInt16(packet.BuffType);

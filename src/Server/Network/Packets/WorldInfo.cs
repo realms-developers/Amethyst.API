@@ -27,7 +27,7 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
         int WorldID = reader.ReadInt32();
         string WorldName = reader.ReadString();
         byte GameMode = reader.ReadByte();
-        byte[16] WorldUID = reader.ReadUNKNOWN();
+        byte[] WorldUID = reader.ReadByteArray(16);
         ulong GeneratorVersion = reader.ReadUInt64();
         byte MoonType = reader.ReadByte();
         byte Background0 = reader.ReadByte();
@@ -62,9 +62,9 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
         byte BackgroundCaveStyle2 = reader.ReadByte();
         byte BackgroundCaveStyle3 = reader.ReadByte();
         byte BackgroundCaveStyle4 = reader.ReadByte();
-        byte[13] TreeTops = reader.ReadUNKNOWN();
+        byte[] TreeTops = reader.ReadByteArray(13);
         float MaxRaining = reader.ReadSingle();
-        byte Flags = reader.ReadByte();
+        byte Flags1 = reader.ReadByte();
         byte Flags2 = reader.ReadByte();
         byte Flags3 = reader.ReadByte();
         byte Flags4 = reader.ReadByte();
@@ -138,7 +138,7 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
             BackgroundCaveStyle4 = BackgroundCaveStyle4,
             TreeTops = TreeTops,
             MaxRaining = MaxRaining,
-            Flags = Flags,
+            Flags1 = Flags,
             Flags2 = Flags2,
             Flags3 = Flags3,
             Flags4 = Flags4,
@@ -179,7 +179,7 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
         writer.WriteInt32(packet.WorldID);
         writer.WriteString(packet.WorldName);
         writer.WriteByte(packet.GameMode);
-        writer.WriteUNKNOWN(packet.WorldUID);
+        writer.WriteByteArray(packet.WorldUID);
         writer.WriteUInt64(packet.GeneratorVersion);
         writer.WriteByte(packet.MoonType);
         writer.WriteByte(packet.Background0);
@@ -214,7 +214,7 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
         writer.WriteByte(packet.BackgroundCaveStyle2);
         writer.WriteByte(packet.BackgroundCaveStyle3);
         writer.WriteByte(packet.BackgroundCaveStyle4);
-        writer.WriteUNKNOWN(packet.TreeTops);
+        writer.WriteByteArray(packet.TreeTops);
         writer.WriteSingle(packet.MaxRaining);
         writer.WriteByte(packet.Flags);
         writer.WriteByte(packet.Flags2);
@@ -257,7 +257,7 @@ public struct WorldInfo
     public int WorldID;
     public string WorldName;
     public byte GameMode;
-    public byte[16] WorldUID;
+    public byte[] WorldUID;
     public ulong GeneratorVersion;
     public byte MoonType;
     public byte Background0;
@@ -292,9 +292,9 @@ public struct WorldInfo
     public byte BackgroundCaveStyle2;
     public byte BackgroundCaveStyle3;
     public byte BackgroundCaveStyle4;
-    public byte[13] TreeTops;
+    public byte[] TreeTops;
     public float MaxRaining;
-    public byte Flags;
+    public byte Flags1;
     public byte Flags2;
     public byte Flags3;
     public byte Flags4;

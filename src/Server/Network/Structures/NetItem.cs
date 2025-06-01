@@ -1,8 +1,9 @@
+#pragma warning disable CA1051
+
 using Terraria;
 
 namespace Amethyst.Server.Network.Structures;
 
-#pragma warning disable CA1051
 public struct NetItem(int id, short stack, byte prefix)
 {
     public int ID = id;

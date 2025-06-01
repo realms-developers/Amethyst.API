@@ -13,21 +13,14 @@ public sealed class PasswordNotifyClientPacket : IPacket<PasswordNotifyClient>
 
     public PasswordNotifyClient Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
-        FastPacketReader reader = new(data, offset);
-
-        byte ... = reader.ReadByte();
-
         return new PasswordNotifyClient
         {
-            ... = ...,
         };
     }
 
     public byte[] Serialize(PasswordNotifyClient packet)
     {
-        FastPacketWriter writer = new(37, 128);
-
-        writer.WriteByte(packet....);
+        FastPacketWriter writer = new(37, 4);
 
         return writer.BuildPacket();
     }
@@ -35,5 +28,4 @@ public sealed class PasswordNotifyClientPacket : IPacket<PasswordNotifyClient>
 
 public struct PasswordNotifyClient
 {
-    public byte ...;
 }

@@ -3,6 +3,7 @@
 #pragma warning disable CA1051
 
 using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Network.Utilities;
 
 namespace Amethyst.Server.Network.Packets;
@@ -16,10 +17,26 @@ public sealed class ShimmerEffectPacket : IPacket<ShimmerEffect>
         FastPacketReader reader = new(data, offset);
 
         byte EffectType = reader.ReadByte();
-        NetVector2 ItemShimmerPosition = reader.ReadNetVector2();
-        NetVector2 CoinPosition = reader.ReadNetVector2();
-        int CoinAmount = reader.ReadInt32();
-        int NPCIndex = reader.ReadInt32();
+        NetVector2? ItemShimmerPosition = null;
+        NetVector2? CoinPosition = null;
+        int? CoinAmount = null;
+        int? NPCIndex = null;
+
+        switch (EffectType)
+        {
+            case 0:
+                ItemShimmerPosition = reader.ReadNetVector2();
+                break;
+
+            case 1:
+                CoinPosition = reader.ReadNetVector2();
+                CoinAmount = reader.ReadInt32();
+                break;
+
+            case 2:
+                NPCIndex = reader.ReadInt32();
+                break;
+        }
 
         return new ShimmerEffect
         {
@@ -36,10 +53,36 @@ public sealed class ShimmerEffectPacket : IPacket<ShimmerEffect>
         FastPacketWriter writer = new(146, 128);
 
         writer.WriteByte(packet.EffectType);
-        writer.WriteNetVector2(packet.ItemShimmerPosition);
-        writer.WriteNetVector2(packet.CoinPosition);
-        writer.WriteInt32(packet.CoinAmount);
-        writer.WriteInt32(packet.NPCIndex);
+
+        switch (packet.EffectType)
+        {
+            case 0:
+                if (packet.ItemShimmerPosition.HasValue)
+                {
+                    writer.WriteNetVector2(packet.ItemShimmerPosition.Value);
+                }
+                else
+                {
+                    writer.WriteNetVector2(default);
+                }
+                break;
+
+            case 1:
+                if (packet.CoinPosition.HasValue)
+                {
+                    writer.WriteNetVector2(packet.CoinPosition.Value);
+                }
+                else
+                {
+                    writer.WriteNetVector2(default);
+                }
+                writer.WriteInt32(packet.CoinAmount ?? 0);
+                break;
+
+            case 2:
+                writer.WriteInt32(packet.NPCIndex ?? -1);
+                break;
+        }
 
         return writer.BuildPacket();
     }
@@ -48,8 +91,8 @@ public sealed class ShimmerEffectPacket : IPacket<ShimmerEffect>
 public struct ShimmerEffect
 {
     public byte EffectType;
-    public NetVector2 ItemShimmerPosition;
-    public NetVector2 CoinPosition;
-    public int CoinAmount;
-    public int NPCIndex;
+    public NetVector2? ItemShimmerPosition;
+    public NetVector2? CoinPosition;
+    public int? CoinAmount;
+    public int? NPCIndex;
 }

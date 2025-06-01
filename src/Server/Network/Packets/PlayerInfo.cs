@@ -3,6 +3,7 @@
 #pragma warning disable CA1051
 
 using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Network.Utilities;
 
 namespace Amethyst.Server.Network.Packets;
@@ -20,7 +21,7 @@ public sealed class PlayerInfoPacket : IPacket<PlayerInfo>
         byte HairID = reader.ReadByte();
         string Name = reader.ReadString();
         byte HairDyeID = reader.ReadByte();
-        bool[] AccessoryVisiblity = reader.ReadUNKNOWN();
+        bool[] AccessoryVisiblity = reader.ReadBooleanArray(10);
         byte MiscVisiblity = reader.ReadByte();
         NetColor HairColor = reader.ReadNetColor();
         NetColor SkinColor = reader.ReadNetColor();
@@ -64,7 +65,7 @@ public sealed class PlayerInfoPacket : IPacket<PlayerInfo>
         writer.WriteByte(packet.HairID);
         writer.WriteString(packet.Name);
         writer.WriteByte(packet.HairDyeID);
-        writer.WriteUNKNOWN(packet.AccessoryVisiblity);
+        writer.WriteBooleanArray(packet.AccessoryVisiblity);
         writer.WriteByte(packet.MiscVisiblity);
         writer.WriteNetColor(packet.HairColor);
         writer.WriteNetColor(packet.SkinColor);

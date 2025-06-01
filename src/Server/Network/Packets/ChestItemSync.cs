@@ -16,16 +16,18 @@ public sealed class ChestItemSyncPacket : IPacket<ChestItemSync>
         FastPacketReader reader = new(data, offset);
 
         short ChestIndex = reader.ReadInt16();
-        byte SlotIndexshort = reader.ReadByte();
-        ItemStack byte = reader.ReadUNKNOWN();
-        ItemPrefix short = reader.ReadUNKNOWN();
+        byte SlotIndex = reader.ReadByte();
+        short ItemStack = reader.ReadInt16();
+        byte ItemPrefix = reader.ReadByte();
+        short ItemType = reader.ReadInt16();
 
         return new ChestItemSync
         {
             ChestIndex = ChestIndex,
-            SlotIndexshort = SlotIndexshort,
-            byte = byte,
-            short = short,
+            SlotIndex = SlotIndex,
+            ItemStack = ItemStack,
+            ItemPrefix = ItemPrefix,
+            ItemID = ItemType,
         };
     }
 
@@ -34,9 +36,10 @@ public sealed class ChestItemSyncPacket : IPacket<ChestItemSync>
         FastPacketWriter writer = new(32, 128);
 
         writer.WriteInt16(packet.ChestIndex);
-        writer.WriteByte(packet.SlotIndexshort);
-        writer.WriteUNKNOWN(packet.byte);
-        writer.WriteUNKNOWN(packet.short);
+        writer.WriteByte(packet.SlotIndex);
+        writer.WriteInt16(packet.ItemStack);
+        writer.WriteByte(packet.ItemPrefix);
+        writer.WriteInt16(packet.ItemID);
 
         return writer.BuildPacket();
     }
@@ -45,7 +48,8 @@ public sealed class ChestItemSyncPacket : IPacket<ChestItemSync>
 public struct ChestItemSync
 {
     public short ChestIndex;
-    public byte SlotIndexshort;
-    public ItemStack byte;
-    public ItemPrefix short;
+    public byte SlotIndex;
+    public byte ItemPrefix;
+    public short ItemStack;
+    public short ItemID;
 }

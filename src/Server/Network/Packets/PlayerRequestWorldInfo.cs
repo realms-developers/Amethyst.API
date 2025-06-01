@@ -13,13 +13,8 @@ public sealed class PlayerRequestWorldInfoPacket : IPacket<PlayerRequestWorldInf
 
     public PlayerRequestWorldInfo Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
-        FastPacketReader reader = new(data, offset);
-
-
-
         return new PlayerRequestWorldInfo
         {
-
         };
     }
 
@@ -27,13 +22,10 @@ public sealed class PlayerRequestWorldInfoPacket : IPacket<PlayerRequestWorldInf
     {
         FastPacketWriter writer = new(6, 128);
 
-
-
         return writer.BuildPacket();
     }
 }
 
 public struct PlayerRequestWorldInfo
 {
-
 }

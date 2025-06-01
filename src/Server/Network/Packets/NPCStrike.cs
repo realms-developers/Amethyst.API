@@ -15,17 +15,19 @@ public sealed class NPCStrikePacket : IPacket<NPCStrike>
     {
         FastPacketReader reader = new(data, offset);
 
-        short NPCIndexshort = reader.ReadInt16();
-        Damage float = reader.ReadUNKNOWN();
-        Knockback byte = reader.ReadUNKNOWN();
-        HitContext byte = reader.ReadUNKNOWN();
+        short NPCIndex = reader.ReadInt16();
+        short Damage = reader.ReadInt16();
+        float Knockback = reader.ReadSingle();
+        byte HitContext = (byte)(reader.ReadByte() - 1);
+        bool IsCrit = reader.ReadBoolean();
 
         return new NPCStrike
         {
-            NPCIndexshort = NPCIndexshort,
-            float = float,
-            byte = byte,
-            byte = byte,
+            NPCIndex = NPCIndex,
+            Damage = Damage,
+            Knockback = Knockback,
+            HitContext = HitContext,
+            IsCrit = IsCrit
         };
     }
 
@@ -33,10 +35,11 @@ public sealed class NPCStrikePacket : IPacket<NPCStrike>
     {
         FastPacketWriter writer = new(28, 128);
 
-        writer.WriteInt16(packet.NPCIndexshort);
-        writer.WriteUNKNOWN(packet.float);
-        writer.WriteUNKNOWN(packet.byte);
-        writer.WriteUNKNOWN(packet.byte);
+        writer.WriteInt16(packet.NPCIndex);
+        writer.WriteInt16(packet.Damage);
+        writer.WriteSingle(packet.Knockback);
+        writer.WriteByte((byte)(packet.HitContext + 1));
+        writer.WriteBoolean(packet.IsCrit);
 
         return writer.BuildPacket();
     }
@@ -44,8 +47,9 @@ public sealed class NPCStrikePacket : IPacket<NPCStrike>
 
 public struct NPCStrike
 {
-    public short NPCIndexshort;
-    public Damage float;
-    public Knockback byte;
-    public HitContext byte;
+    public short NPCIndex;
+    public short Damage;
+    public float Knockback;
+    public byte HitContext;
+    public bool IsCrit;
 }

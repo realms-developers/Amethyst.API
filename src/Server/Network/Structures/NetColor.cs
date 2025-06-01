@@ -1,3 +1,5 @@
+#pragma warning disable CA1051
+
 using System.Globalization;
 using Microsoft.Xna.Framework;
 
@@ -50,7 +52,7 @@ public struct NetColor
     public readonly int ToPackedValue()
         => (R << 16) | (G << 8) | B;
 
-    public byte R { get; set; }
-    public byte G { get; set; }
-    public byte B { get; set; }
+    public byte R;
+    public byte G;
+    public byte B;
 }

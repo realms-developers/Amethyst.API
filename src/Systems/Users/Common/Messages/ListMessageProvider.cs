@@ -4,7 +4,7 @@ using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Text;
 
-namespace Amethyst.Systems.Users.Shared.Messages;
+namespace Amethyst.Systems.Users.Common.Messages;
 
 public sealed class ListMessageProvider : IMessageProvider
 {

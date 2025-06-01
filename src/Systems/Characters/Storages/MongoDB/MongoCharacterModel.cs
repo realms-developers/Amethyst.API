@@ -1,4 +1,4 @@
-using Amethyst.Network;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Storages.Mongo;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Enums;

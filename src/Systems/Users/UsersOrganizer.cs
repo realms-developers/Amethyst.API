@@ -8,7 +8,8 @@ using Amethyst.Systems.Users.Players;
 using Amethyst.Systems.Users.Players.Extensions;
 using Amethyst.Systems.Users.Players.Messages;
 using Amethyst.Systems.Users.Players.Permissions;
-using Amethyst.Systems.Users.Shared.Permissions;
+using Amethyst.Systems.Users.Players.Suspension;
+using Amethyst.Systems.Users.Common.Permissions;
 
 namespace Amethyst.Systems.Users;
 
@@ -25,7 +26,8 @@ public static class UsersOrganizer
     public static PlayersUsersService PlayerUsers { get; } = new PlayersUsersService(
         new PlayerMessageBuilder(),
         new PlayerPermissionBuilder(),
-        new PlayerExtensionBuilder());
+        new PlayerExtensionBuilder(),
+        new PlayerSuspensionBuilder());
 
     public static ArtificialUsersService ArtificialUsers { get; } = new ArtificialUsersService(
         new ArtificialMessageBuilder(),

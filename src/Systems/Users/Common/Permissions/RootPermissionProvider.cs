@@ -1,7 +1,7 @@
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Permissions;
 
-namespace Amethyst.Systems.Users.Shared.Permissions;
+namespace Amethyst.Systems.Users.Common.Permissions;
 
 public sealed class RootPermissionProvider : IPermissionProvider
 {

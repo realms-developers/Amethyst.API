@@ -16,8 +16,8 @@ public sealed class NPCSyncBuffsPacket : IPacket<NPCSyncBuffs>
         FastPacketReader reader = new(data, offset);
 
         short NPCIndex = reader.ReadInt16();
-        ushort[] BuffTypes = reader.ReadUNKNOWN();
-        short[] BuffTime = reader.ReadUNKNOWN();
+        ushort[] BuffTypes = reader.ReadUInt16Array(20);
+        short[] BuffTime = reader.ReadInt16Array(20);
 
         return new NPCSyncBuffs
         {
@@ -32,8 +32,8 @@ public sealed class NPCSyncBuffsPacket : IPacket<NPCSyncBuffs>
         FastPacketWriter writer = new(54, 128);
 
         writer.WriteInt16(packet.NPCIndex);
-        writer.WriteUNKNOWN(packet.BuffTypes);
-        writer.WriteUNKNOWN(packet.BuffTime);
+        writer.WriteUInt16Array(packet.BuffTypes);
+        writer.WriteInt16Array(packet.BuffTime);
 
         return writer.BuildPacket();
     }

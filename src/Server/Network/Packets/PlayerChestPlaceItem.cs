@@ -25,7 +25,7 @@ public sealed class PlayerChestPlaceItemPacket : IPacket<PlayerChestPlaceItem>
 
     public byte[] Serialize(PlayerChestPlaceItem packet)
     {
-        FastPacketWriter writer = new(85, 128);
+        FastPacketWriter writer = new(85, 8);
 
         writer.WriteInt16(packet.SlotIndex);
 

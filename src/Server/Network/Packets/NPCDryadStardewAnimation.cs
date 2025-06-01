@@ -13,27 +13,16 @@ public sealed class NPCDryadStardewAnimationPacket : IPacket<NPCDryadStardewAnim
 
     public NPCDryadStardewAnimation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
-        FastPacketReader reader = new(data, offset);
-
-        byte ... = reader.ReadByte();
-
-        return new NPCDryadStardewAnimation
-        {
-            ... = ...,
-        };
+        return new();
     }
 
     public byte[] Serialize(NPCDryadStardewAnimation packet)
     {
         FastPacketWriter writer = new(144, 128);
-
-        writer.WriteByte(packet....);
-
         return writer.BuildPacket();
     }
 }
 
 public struct NPCDryadStardewAnimation
 {
-    public byte ...;
 }

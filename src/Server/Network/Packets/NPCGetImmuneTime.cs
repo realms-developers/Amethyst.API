@@ -16,16 +16,21 @@ public sealed class NPCGetImmuneTimePacket : IPacket<NPCGetImmuneTime>
         FastPacketReader reader = new(data, offset);
 
         ushort NPCIndex = reader.ReadUInt16();
-        byte Flags = reader.ReadByte();
-        int? Time = reader.ReadUNKNOWN();
-        short? FromWho = reader.ReadUNKNOWN();
+        if (reader.ReadByte() == 1)
+        {
+            int? Time = reader.ReadInt32();
+            short? FromWho = reader.ReadInt16();
+            return new NPCGetImmuneTime
+            {
+                NPCIndex = NPCIndex,
+                Time = Time,
+                FromWho = FromWho,
+            };
+        }
 
         return new NPCGetImmuneTime
         {
-            NPCIndex = NPCIndex,
-            Flags = Flags,
-            Time = Time,
-            FromWho = FromWho,
+            NPCIndex = NPCIndex
         };
     }
 
@@ -34,9 +39,13 @@ public sealed class NPCGetImmuneTimePacket : IPacket<NPCGetImmuneTime>
         FastPacketWriter writer = new(131, 128);
 
         writer.WriteUInt16(packet.NPCIndex);
-        writer.WriteByte(packet.Flags);
-        writer.WriteUNKNOWN(packet.Time);
-        writer.WriteUNKNOWN(packet.FromWho);
+        bool hasValues = packet.Time.HasValue || packet.FromWho.HasValue;
+        writer.WriteByte(hasValues ? (byte)1 : (byte)0);
+        if (hasValues)
+        {
+            writer.WriteInt32(packet.Time!.Value);
+            writer.WriteInt16(packet.FromWho!.Value);
+        }
 
         return writer.BuildPacket();
     }
@@ -45,7 +54,6 @@ public sealed class NPCGetImmuneTimePacket : IPacket<NPCGetImmuneTime>
 public struct NPCGetImmuneTime
 {
     public ushort NPCIndex;
-    public byte Flags;
     public int? Time;
     public short? FromWho;
 }

@@ -15,7 +15,7 @@ public sealed class NPCTravelShopPacket : IPacket<NPCTravelShop>
     {
         FastPacketReader reader = new(data, offset);
 
-        short[40] Items = reader.ReadUNKNOWN();
+        short[] Items = reader.ReadInt16Array(40);
 
         return new NPCTravelShop
         {
@@ -27,7 +27,7 @@ public sealed class NPCTravelShopPacket : IPacket<NPCTravelShop>
     {
         FastPacketWriter writer = new(72, 128);
 
-        writer.WriteUNKNOWN(packet.Items);
+        writer.WriteInt16Array(packet.Items);
 
         return writer.BuildPacket();
     }
@@ -35,5 +35,5 @@ public sealed class NPCTravelShopPacket : IPacket<NPCTravelShop>
 
 public struct NPCTravelShop
 {
-    public short[40] Items;
+    public short[] Items;
 }

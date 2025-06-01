@@ -1,5 +1,3 @@
-using Microsoft.Xna.Framework;
-
 namespace Amethyst.Server.Entities.Players;
 
 public static class PlayerUtils

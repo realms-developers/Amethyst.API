@@ -3,7 +3,10 @@
 #pragma warning disable CA1051
 
 using Amethyst.Server.Network.Core.Packets;
+using Amethyst.Server.Network.Structures;
 using Amethyst.Server.Network.Utilities;
+using Terraria;
+using Terraria.ID;
 
 namespace Amethyst.Server.Network.Packets;
 
@@ -15,49 +18,121 @@ public sealed class NPCUpdatePacket : IPacket<NPCUpdate>
     {
         FastPacketReader reader = new(data, offset);
 
-        byte ... = reader.ReadByte();
-        short NPCIndex = reader.ReadInt16();
-        NetVector2 Position = reader.ReadNetVector2();
-        NetVector2 Velocity = reader.ReadNetVector2();
-        ushort Target = reader.ReadUInt16();
-        byte Flags = reader.ReadByte();
-        byte Flags2 = reader.ReadByte();
-        float[] AI = reader.ReadUNKNOWN();
-        short NPCType = reader.ReadInt16();
-        byte PlayerCountDifficultyOverridefloat = reader.ReadByte();
-        StrengthMultiplierOverrideint NPCLifebyte = reader.ReadUNKNOWN();
+        short npcIndex = reader.ReadInt16();
+        NetVector2 position = reader.ReadNetVector2();
+        NetVector2 velocity = reader.ReadNetVector2();
+        ushort target = reader.ReadUInt16();
+        if (target == 65535)
+        {
+            target = 0;
+        }
+        NetBitsByte bitsByte1 = reader.ReadByte();
+        NetBitsByte bitsByte2 = reader.ReadByte();
+        float[] ai = new float[NPC.maxAI];
+        for (int i = 0; i < NPC.maxAI; i++)
+        {
+            if (bitsByte1[i + 2])
+            {
+                ai[i] = reader.ReadSingle();
+            }
+            else
+            {
+                ai[i] = 0f;
+            }
+        }
+        short netID = reader.ReadInt16();
+        byte? playerCountForMultiplayerDifficultyOverride = 1;
+        if (bitsByte2[0])
+        {
+            playerCountForMultiplayerDifficultyOverride = reader.ReadByte();
+        }
+        float strengthMultiplier = 1f;
+        if (bitsByte2[2])
+        {
+            strengthMultiplier = reader.ReadSingle();
+        }
+        int life = 0;
+        if (!bitsByte1[7])
+        {
+            life = reader.ReadByte() switch
+            {
+                2 => reader.ReadInt16(),
+                4 => reader.ReadInt32(),
+                _ => reader.ReadSByte(),
+            };
+        }
 
         return new NPCUpdate
         {
-            ... = ...,
-            NPCIndex = NPCIndex,
-            Position = Position,
-            Velocity = Velocity,
-            Target = Target,
-            Flags = Flags,
-            Flags2 = Flags2,
-            AI = AI,
-            NPCType = NPCType,
-            PlayerCountDifficultyOverridefloat = PlayerCountDifficultyOverridefloat,
-            NPCLifebyte = NPCLifebyte,
+            NPCIndex = npcIndex,
+            Position = position,
+            Velocity = velocity,
+            Target = target,
+            BitsByte1 = bitsByte1,
+            BitsByte2 = bitsByte2,
+            AI = ai,
+            NetID = netID,
+            PlayerCountForMultiplayerDifficultyOverride = playerCountForMultiplayerDifficultyOverride,
+            StrengthMultiplier = strengthMultiplier,
+            Life = life
         };
     }
 
     public byte[] Serialize(NPCUpdate packet)
     {
-        FastPacketWriter writer = new(23, 128);
+        FastPacketWriter writer = new(23, 256);
 
-        writer.WriteByte(packet....);
         writer.WriteInt16(packet.NPCIndex);
         writer.WriteNetVector2(packet.Position);
         writer.WriteNetVector2(packet.Velocity);
-        writer.WriteUInt16(packet.Target);
-        writer.WriteByte(packet.Flags);
-        writer.WriteByte(packet.Flags2);
-        writer.WriteUNKNOWN(packet.AI);
-        writer.WriteInt16(packet.NPCType);
-        writer.WriteByte(packet.PlayerCountDifficultyOverridefloat);
-        writer.WriteUNKNOWN(packet.NPCLifebyte);
+        writer.WriteUInt16(packet.Target == 0 ? (ushort)65535 : packet.Target);
+        writer.WriteByte(packet.BitsByte1);
+        writer.WriteByte(packet.BitsByte2);
+        for (int i = 0; i < NPC.maxAI; i++)
+        {
+            if (packet.BitsByte1[i + 2])
+            {
+                writer.WriteSingle(packet.AI[i]);
+            }
+        }
+        writer.WriteInt16(packet.NetID);
+        if (packet.BitsByte2[0])
+        {
+            writer.WriteByte(packet.PlayerCountForMultiplayerDifficultyOverride ?? 1);
+        }
+        if (packet.BitsByte2[2])
+        {
+            writer.WriteSingle(packet.StrengthMultiplier);
+        }
+        if (!packet.BitsByte1[7])
+        {
+            byte b2 = 1;
+            if (packet.Life > 32767)
+            {
+                b2 = 4;
+            }
+            else if (packet.Life > 127)
+            {
+                b2 = 2;
+            }
+            writer.WriteByte(b2);
+            switch (b2)
+            {
+                case 2:
+                    writer.WriteInt16((short)packet.Life);
+                    break;
+                case 4:
+                    writer.WriteInt32(packet.Life);
+                    break;
+                default:
+                    writer.WriteSByte((sbyte)packet.Life);
+                    break;
+            }
+        }
+        if (packet.NetID >= 0 && packet.NetID < 688 && Main.npcCatchable[packet.NetID])
+        {
+            writer.WriteByte(packet.PlayerCountForMultiplayerDifficultyOverride ?? 0);
+        }
 
         return writer.BuildPacket();
     }
@@ -65,15 +140,15 @@ public sealed class NPCUpdatePacket : IPacket<NPCUpdate>
 
 public struct NPCUpdate
 {
-    public byte ...;
     public short NPCIndex;
     public NetVector2 Position;
     public NetVector2 Velocity;
     public ushort Target;
-    public byte Flags;
-    public byte Flags2;
+    public NetBitsByte BitsByte1;
+    public NetBitsByte BitsByte2;
     public float[] AI;
-    public short NPCType;
-    public byte PlayerCountDifficultyOverridefloat;
-    public StrengthMultiplierOverrideint NPCLifebyte;
+    public short NetID;
+    public byte? PlayerCountForMultiplayerDifficultyOverride;
+    public float StrengthMultiplier;
+    public int Life;
 }

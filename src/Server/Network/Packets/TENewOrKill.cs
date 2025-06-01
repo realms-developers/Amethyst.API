@@ -17,25 +17,17 @@ public sealed class TENewOrKillPacket : IPacket<TENewOrKill>
 
         int EntityID = reader.ReadInt32();
         bool IsCreate = reader.ReadBoolean();
-        NetTileEntity TileEntity = reader.ReadUNKNOWN();
 
         return new TENewOrKill
         {
             EntityID = EntityID,
-            IsCreate = IsCreate,
-            TileEntity = TileEntity,
+            IsCreate = IsCreate
         };
     }
 
     public byte[] Serialize(TENewOrKill packet)
     {
-        FastPacketWriter writer = new(86, 128);
-
-        writer.WriteInt32(packet.EntityID);
-        writer.WriteBoolean(packet.IsCreate);
-        writer.WriteUNKNOWN(packet.TileEntity);
-
-        return writer.BuildPacket();
+        throw new NotSupportedException("Serialization of this packet is not supported yet.");
     }
 }
 
@@ -43,5 +35,4 @@ public struct TENewOrKill
 {
     public int EntityID;
     public bool IsCreate;
-    public NetTileEntity TileEntity;
 }

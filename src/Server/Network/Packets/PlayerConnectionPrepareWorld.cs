@@ -13,27 +13,18 @@ public sealed class PlayerConnectionPrepareWorldPacket : IPacket<PlayerConnectio
 
     public PlayerConnectionPrepareWorld Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
-        FastPacketReader reader = new(data, offset);
-
-        byte ... = reader.ReadByte();
-
         return new PlayerConnectionPrepareWorld
         {
-            ... = ...,
         };
     }
 
     public byte[] Serialize(PlayerConnectionPrepareWorld packet)
     {
-        FastPacketWriter writer = new(129, 128);
-
-        writer.WriteByte(packet....);
-
+        FastPacketWriter writer = new(129, 4);
         return writer.BuildPacket();
     }
 }
 
 public struct PlayerConnectionPrepareWorld
 {
-    public byte ...;
 }

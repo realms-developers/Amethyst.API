@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using Amethyst.Network;
+using Amethyst.Server.Network.Structures;
 using Newtonsoft.Json;
 using Terraria;
 using Terraria.ID;
@@ -195,7 +195,7 @@ public static class Localization
             Regex regex = new(@"\[i(tem)?(?:\/s(?<Stack>\d{1,4}))?(?:\/p(?<Prefix>\d{1,3}))?:(?<NetID>-?\d{1,4})\]");
             Match match = regex.Match(tag);
             return !match.Success
-                ? null
+                ? default(NetItem?)
                 : new NetItem(
                 id: int.Parse(match.Groups["NetID"].Value, CultureInfo.InvariantCulture),
 

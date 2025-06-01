@@ -1,6 +1,7 @@
+#pragma warning disable CA1051
+
 namespace Amethyst.Server.Network.Structures;
 
-#pragma warning disable CA1051
 public struct NetVector2
 {
     public NetVector2(float x, float y)

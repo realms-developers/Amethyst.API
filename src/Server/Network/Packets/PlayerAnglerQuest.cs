@@ -27,7 +27,7 @@ public sealed class PlayerAnglerQuestPacket : IPacket<PlayerAnglerQuest>
 
     public byte[] Serialize(PlayerAnglerQuest packet)
     {
-        FastPacketWriter writer = new(74, 128);
+        FastPacketWriter writer = new(74, 8);
 
         writer.WriteByte(packet.QuestType);
         writer.WriteBoolean(packet.IsCompleted);

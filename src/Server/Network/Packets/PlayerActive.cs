@@ -27,7 +27,7 @@ public sealed class PlayerActivePacket : IPacket<PlayerActive>
 
     public byte[] Serialize(PlayerActive packet)
     {
-        FastPacketWriter writer = new(14, 128);
+        FastPacketWriter writer = new(14, 16);
 
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteByte(packet.State);
