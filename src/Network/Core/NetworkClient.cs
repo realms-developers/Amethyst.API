@@ -7,7 +7,7 @@ using Amethyst.Server.Entities;
 
 namespace Amethyst.Network.Core;
 
-internal class NetworkClient : IDisposable
+internal sealed class NetworkClient : IDisposable
 {
     internal int _index;
     internal Socket _socket;

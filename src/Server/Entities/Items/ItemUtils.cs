@@ -31,7 +31,7 @@ public static class ItemUtils
             return;
         }
 
-        byte[] itemBasePacket = new ItemUpdatePacket().Serialize(new ItemUpdate()
+        byte[] itemBasePacket = ItemUpdatePacket.Serialize(new ItemUpdate()
         {
             ItemIndex = itemIndex,
             Position = player.TPlayer.position,
@@ -41,7 +41,7 @@ public static class ItemUtils
             ItemType = (short)type
         });
 
-        byte[] itemOwnPacket = new ItemOwnerPacket().Serialize(new ItemOwner()
+        byte[] itemOwnPacket = ItemOwnerPacket.Serialize(new ItemOwner()
         {
             ItemIndex = itemIndex,
             PlayerIndex = (byte)player.Index
@@ -60,7 +60,7 @@ public static class ItemUtils
             return;
         }
 
-        byte[] itemBasePacket = new ItemUpdatePacket().Serialize(new ItemUpdate()
+        byte[] itemBasePacket = ItemUpdatePacket.Serialize(new ItemUpdate()
         {
             ItemIndex = itemIndex,
             Position = player.TPlayer.position,
@@ -71,7 +71,7 @@ public static class ItemUtils
             OwnIgnore = (byte)player.Index
         });
 
-        byte[] itemOwnPacket = new ItemOwnerPacket().Serialize(new ItemOwner()
+        byte[] itemOwnPacket = ItemOwnerPacket.Serialize(new ItemOwner()
         {
             ItemIndex = itemIndex,
             PlayerIndex = 254

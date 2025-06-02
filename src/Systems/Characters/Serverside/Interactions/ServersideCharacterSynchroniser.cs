@@ -52,7 +52,7 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
 
         CharacterUtilities.TerrarifySlot(Player, item, slot);
 
-        byte[] packet = new PlayerSlotPacket().Serialize(new PlayerSlot
+        byte[] packet = PlayerSlotPacket.Serialize(new PlayerSlot
         {
             PlayerIndex = (byte)Player.Index,
             SlotIndex = (short)slot,
