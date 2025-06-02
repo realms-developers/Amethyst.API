@@ -11,7 +11,7 @@ public sealed class NPCStrikePacket : IPacket<NPCStrike>
 {
     public int PacketID => 28;
 
-    public NPCStrike Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCStrike Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class NPCStrikePacket : IPacket<NPCStrike>
         };
     }
 
-    public byte[] Serialize(NPCStrike packet)
+    public static byte[] Serialize(NPCStrike packet)
     {
         FastPacketWriter writer = new(28, 128);
 

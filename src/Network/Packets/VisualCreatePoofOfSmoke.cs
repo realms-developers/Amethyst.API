@@ -11,7 +11,7 @@ public sealed class VisualCreatePoofOfSmokePacket : IPacket<VisualCreatePoofOfSm
 {
     public int PacketID => 106;
 
-    public VisualCreatePoofOfSmoke Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static VisualCreatePoofOfSmoke Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class VisualCreatePoofOfSmokePacket : IPacket<VisualCreatePoofOfSm
         };
     }
 
-    public byte[] Serialize(VisualCreatePoofOfSmoke packet)
+    public static byte[] Serialize(VisualCreatePoofOfSmoke packet)
     {
         FastPacketWriter writer = new(106, 128);
 

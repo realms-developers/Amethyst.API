@@ -20,23 +20,26 @@ public sealed class AmethystHook<TArgs>
 
     public bool CancelByError { get; set; }
 
-    internal List<HookHandler<TArgs>> Handlers { get; } = new();
+    internal List<HookHandler<TArgs>> _handlers = new List<HookHandler<TArgs>>();
+    internal HookHandler<TArgs>[] _ivkHandlers = [];
 
     public void Register(HookHandler<TArgs> handler)
     {
         ArgumentNullException.ThrowIfNull(handler);
 
-        if (Handlers.Contains(handler))
+        if (_ivkHandlers.Contains(handler))
             throw new InvalidOperationException($"Handler {handler.Method.Name} is already registered for hook {Name}.");
 
-        Handlers.Add(handler);
+        _handlers.Add(handler);
+        _ivkHandlers = _handlers.ToArray();
     }
 
     public void Unregister(HookHandler<TArgs> handler)
     {
         ArgumentNullException.ThrowIfNull(handler);
 
-        Handlers.Remove(handler);
+        _handlers.Remove(handler);
+        _ivkHandlers = _handlers.ToArray();
     }
 
     public HookResult<TArgs> Invoke(TArgs args)
@@ -45,7 +48,11 @@ public sealed class AmethystHook<TArgs>
 
         try
         {
-            Handlers.ForEach(p => p.Invoke(in args, result));
+            for (int i = 0; i < _ivkHandlers.Length; i++)
+            {
+                var handler = _ivkHandlers[i];
+                handler.Invoke(in args, result);
+            }
         }
         catch (Exception ex)
         {

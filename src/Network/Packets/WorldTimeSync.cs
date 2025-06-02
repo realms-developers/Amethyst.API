@@ -11,7 +11,7 @@ public sealed class WorldTimeSyncPacket : IPacket<WorldTimeSync>
 {
     public int PacketID => 18;
 
-    public WorldTimeSync Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldTimeSync Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class WorldTimeSyncPacket : IPacket<WorldTimeSync>
         };
     }
 
-    public byte[] Serialize(WorldTimeSync packet)
+    public static byte[] Serialize(WorldTimeSync packet)
     {
         FastPacketWriter writer = new(18, 128);
 

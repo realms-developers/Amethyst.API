@@ -12,7 +12,7 @@ public sealed class ServerStatusPacket : IPacket<ServerStatus>
 {
     public int PacketID => 9;
 
-    public ServerStatus Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ServerStatus Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -28,7 +28,7 @@ public sealed class ServerStatusPacket : IPacket<ServerStatus>
         };
     }
 
-    public byte[] Serialize(ServerStatus packet)
+    public static byte[] Serialize(ServerStatus packet)
     {
         FastPacketWriter writer = new(9, 128);
 

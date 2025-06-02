@@ -12,7 +12,7 @@ public sealed class VisualCreateCombatTextTextPacket : IPacket<VisualCreateComba
 {
     public int PacketID => 119;
 
-    public VisualCreateCombatTextText Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static VisualCreateCombatTextText Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -28,7 +28,7 @@ public sealed class VisualCreateCombatTextTextPacket : IPacket<VisualCreateComba
         };
     }
 
-    public byte[] Serialize(VisualCreateCombatTextText packet)
+    public static byte[] Serialize(VisualCreateCombatTextText packet)
     {
         FastPacketWriter writer = new(119, 128);
 

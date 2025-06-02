@@ -12,7 +12,7 @@ public sealed class ItemUpdateNoPickupPacket : IPacket<ItemUpdateNoPickup>
 {
     public int PacketID => 148;
 
-    public ItemUpdateNoPickup Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ItemUpdateNoPickup Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -38,7 +38,7 @@ public sealed class ItemUpdateNoPickupPacket : IPacket<ItemUpdateNoPickup>
         };
     }
 
-    public byte[] Serialize(ItemUpdateNoPickup packet)
+    public static byte[] Serialize(ItemUpdateNoPickup packet)
     {
         FastPacketWriter writer = new(148, 128);
 

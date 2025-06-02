@@ -12,7 +12,7 @@ public sealed class ShimmerEffectPacket : IPacket<ShimmerEffect>
 {
     public int PacketID => 146;
 
-    public ShimmerEffect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ShimmerEffect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -48,7 +48,7 @@ public sealed class ShimmerEffectPacket : IPacket<ShimmerEffect>
         };
     }
 
-    public byte[] Serialize(ShimmerEffect packet)
+    public static byte[] Serialize(ShimmerEffect packet)
     {
         FastPacketWriter writer = new(146, 128);
 

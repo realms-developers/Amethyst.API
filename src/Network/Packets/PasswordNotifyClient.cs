@@ -11,14 +11,14 @@ public sealed class PasswordNotifyClientPacket : IPacket<PasswordNotifyClient>
 {
     public int PacketID => 37;
 
-    public PasswordNotifyClient Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PasswordNotifyClient Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         return new PasswordNotifyClient
         {
         };
     }
 
-    public byte[] Serialize(PasswordNotifyClient packet)
+    public static byte[] Serialize(PasswordNotifyClient packet)
     {
         FastPacketWriter writer = new(37, 4);
 

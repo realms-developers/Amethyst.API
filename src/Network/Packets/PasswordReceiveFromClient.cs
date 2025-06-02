@@ -11,7 +11,7 @@ public sealed class PasswordReceiveFromClientPacket : IPacket<PasswordReceiveFro
 {
     public int PacketID => 38;
 
-    public PasswordReceiveFromClient Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PasswordReceiveFromClient Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class PasswordReceiveFromClientPacket : IPacket<PasswordReceiveFro
         };
     }
 
-    public byte[] Serialize(PasswordReceiveFromClient packet)
+    public static byte[] Serialize(PasswordReceiveFromClient packet)
     {
         FastPacketWriter writer = new(38, 32);
 

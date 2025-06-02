@@ -11,7 +11,7 @@ public sealed class PlayerDodgePacket : IPacket<PlayerDodge>
 {
     public int PacketID => 62;
 
-    public PlayerDodge Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerDodge Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerDodgePacket : IPacket<PlayerDodge>
         };
     }
 
-    public byte[] Serialize(PlayerDodge packet)
+    public static byte[] Serialize(PlayerDodge packet)
     {
         FastPacketWriter writer = new(62, 128);
 

@@ -12,7 +12,7 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
 {
     public int PacketID => 20;
 
-    public WorldTileRectangle Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldTileRectangle Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -38,7 +38,7 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
         };
     }
 
-    public byte[] Serialize(WorldTileRectangle packet)
+    public static byte[] Serialize(WorldTileRectangle packet)
     {
         FastPacketWriter writer = new(20, 128);
 

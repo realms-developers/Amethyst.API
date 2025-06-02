@@ -11,7 +11,7 @@ public sealed class PlayerItemTeleportPacket : IPacket<PlayerItemTeleport>
 {
     public int PacketID => 73;
 
-    public PlayerItemTeleport Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerItemTeleport Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class PlayerItemTeleportPacket : IPacket<PlayerItemTeleport>
         };
     }
 
-    public byte[] Serialize(PlayerItemTeleport packet)
+    public static byte[] Serialize(PlayerItemTeleport packet)
     {
         FastPacketWriter writer = new(73, 128);
 

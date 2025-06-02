@@ -11,7 +11,7 @@ public sealed class NPCFishOutPacket : IPacket<NPCFishOut>
 {
     public int PacketID => 130;
 
-    public NPCFishOut Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCFishOut Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class NPCFishOutPacket : IPacket<NPCFishOut>
         };
     }
 
-    public byte[] Serialize(NPCFishOut packet)
+    public static byte[] Serialize(NPCFishOut packet)
     {
         FastPacketWriter writer = new(130, 128);
 

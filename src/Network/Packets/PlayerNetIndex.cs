@@ -11,7 +11,7 @@ public sealed class PlayerNetIndexPacket : IPacket<PlayerNetIndex>
 {
     public int PacketID => 3;
 
-    public PlayerNetIndex Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerNetIndex Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerNetIndexPacket : IPacket<PlayerNetIndex>
         };
     }
 
-    public byte[] Serialize(PlayerNetIndex packet)
+    public static byte[] Serialize(PlayerNetIndex packet)
     {
         FastPacketWriter writer = new(3, 128);
 

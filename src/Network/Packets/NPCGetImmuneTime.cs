@@ -11,7 +11,7 @@ public sealed class NPCGetImmuneTimePacket : IPacket<NPCGetImmuneTime>
 {
     public int PacketID => 131;
 
-    public NPCGetImmuneTime Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCGetImmuneTime Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -34,7 +34,7 @@ public sealed class NPCGetImmuneTimePacket : IPacket<NPCGetImmuneTime>
         };
     }
 
-    public byte[] Serialize(NPCGetImmuneTime packet)
+    public static byte[] Serialize(NPCGetImmuneTime packet)
     {
         FastPacketWriter writer = new(131, 128);
 

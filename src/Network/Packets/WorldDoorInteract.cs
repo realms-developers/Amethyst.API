@@ -11,7 +11,7 @@ public sealed class WorldDoorInteractPacket : IPacket<WorldDoorInteract>
 {
     public int PacketID => 19;
 
-    public WorldDoorInteract Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldDoorInteract Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class WorldDoorInteractPacket : IPacket<WorldDoorInteract>
         };
     }
 
-    public byte[] Serialize(WorldDoorInteract packet)
+    public static byte[] Serialize(WorldDoorInteract packet)
     {
         FastPacketWriter writer = new(19, 128);
 

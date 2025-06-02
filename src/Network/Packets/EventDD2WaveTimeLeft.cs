@@ -11,7 +11,7 @@ public sealed class EventDD2WaveTimeLeftPacket : IPacket<EventDD2WaveTimeLeft>
 {
     public int PacketID => 116;
 
-    public EventDD2WaveTimeLeft Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static EventDD2WaveTimeLeft Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class EventDD2WaveTimeLeftPacket : IPacket<EventDD2WaveTimeLeft>
         };
     }
 
-    public byte[] Serialize(EventDD2WaveTimeLeft packet)
+    public static byte[] Serialize(EventDD2WaveTimeLeft packet)
     {
         FastPacketWriter writer = new(116, 128);
 

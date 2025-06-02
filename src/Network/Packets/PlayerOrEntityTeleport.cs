@@ -12,7 +12,7 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
 {
     public int PacketID => 65;
 
-    public PlayerOrEntityTeleport Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerOrEntityTeleport Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -40,7 +40,7 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
         };
     }
 
-    public byte[] Serialize(PlayerOrEntityTeleport packet)
+    public static byte[] Serialize(PlayerOrEntityTeleport packet)
     {
         FastPacketWriter writer = new(65, 128);
 

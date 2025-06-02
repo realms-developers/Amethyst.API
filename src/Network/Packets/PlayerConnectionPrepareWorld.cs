@@ -11,14 +11,14 @@ public sealed class PlayerConnectionPrepareWorldPacket : IPacket<PlayerConnectio
 {
     public int PacketID => 129;
 
-    public PlayerConnectionPrepareWorld Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerConnectionPrepareWorld Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         return new PlayerConnectionPrepareWorld
         {
         };
     }
 
-    public byte[] Serialize(PlayerConnectionPrepareWorld packet)
+    public static byte[] Serialize(PlayerConnectionPrepareWorld packet)
     {
         FastPacketWriter writer = new(129, 4);
         return writer.BuildPacket();

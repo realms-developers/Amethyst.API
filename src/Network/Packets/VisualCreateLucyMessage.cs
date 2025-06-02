@@ -12,7 +12,7 @@ public sealed class VisualCreateLucyMessagePacket : IPacket<VisualCreateLucyMess
 {
     public int PacketID => 141;
 
-    public VisualCreateLucyMessage Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static VisualCreateLucyMessage Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -32,7 +32,7 @@ public sealed class VisualCreateLucyMessagePacket : IPacket<VisualCreateLucyMess
         };
     }
 
-    public byte[] Serialize(VisualCreateLucyMessage packet)
+    public static byte[] Serialize(VisualCreateLucyMessage packet)
     {
         FastPacketWriter writer = new(141, 128);
 

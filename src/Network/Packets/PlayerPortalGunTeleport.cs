@@ -12,7 +12,7 @@ public sealed class PlayerPortalGunTeleportPacket : IPacket<PlayerPortalGunTelep
 {
     public int PacketID => 96;
 
-    public PlayerPortalGunTeleport Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerPortalGunTeleport Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -30,7 +30,7 @@ public sealed class PlayerPortalGunTeleportPacket : IPacket<PlayerPortalGunTelep
         };
     }
 
-    public byte[] Serialize(PlayerPortalGunTeleport packet)
+    public static byte[] Serialize(PlayerPortalGunTeleport packet)
     {
         FastPacketWriter writer = new(96, 128);
 

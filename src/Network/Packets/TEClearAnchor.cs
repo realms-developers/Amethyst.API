@@ -11,7 +11,7 @@ public sealed class TEClearAnchorPacket : IPacket<TEClearAnchor>
 {
     public int PacketID => 122;
 
-    public TEClearAnchor Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static TEClearAnchor Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class TEClearAnchorPacket : IPacket<TEClearAnchor>
         };
     }
 
-    public byte[] Serialize(TEClearAnchor packet)
+    public static byte[] Serialize(TEClearAnchor packet)
     {
         FastPacketWriter writer = new(122, 128);
 

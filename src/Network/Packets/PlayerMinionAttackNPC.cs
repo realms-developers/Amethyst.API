@@ -11,7 +11,7 @@ public sealed class PlayerMinionAttackNPCPacket : IPacket<PlayerMinionAttackNPC>
 {
     public int PacketID => 115;
 
-    public PlayerMinionAttackNPC Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerMinionAttackNPC Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerMinionAttackNPCPacket : IPacket<PlayerMinionAttackNPC>
         };
     }
 
-    public byte[] Serialize(PlayerMinionAttackNPC packet)
+    public static byte[] Serialize(PlayerMinionAttackNPC packet)
     {
         FastPacketWriter writer = new(115, 128);
 

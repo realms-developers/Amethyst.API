@@ -11,7 +11,7 @@ public sealed class PlayerLoadoutPacket : IPacket<PlayerLoadout>
 {
     public int PacketID => 147;
 
-    public PlayerLoadout Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerLoadout Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerLoadoutPacket : IPacket<PlayerLoadout>
         };
     }
 
-    public byte[] Serialize(PlayerLoadout packet)
+    public static byte[] Serialize(PlayerLoadout packet)
     {
         FastPacketWriter writer = new(147, 128);
 

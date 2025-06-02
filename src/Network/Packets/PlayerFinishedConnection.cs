@@ -11,7 +11,7 @@ public sealed class PlayerFinishedConnectionPacket : IPacket<PlayerFinishedConne
 {
     public int PacketID => 49;
 
-    public PlayerFinishedConnection Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerFinishedConnection Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         return new PlayerFinishedConnection
         {
@@ -19,7 +19,7 @@ public sealed class PlayerFinishedConnectionPacket : IPacket<PlayerFinishedConne
         };
     }
 
-    public byte[] Serialize(PlayerFinishedConnection packet)
+    public static byte[] Serialize(PlayerFinishedConnection packet)
     {
         FastPacketWriter writer = new(49, 4);
 

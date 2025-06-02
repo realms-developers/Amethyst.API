@@ -11,7 +11,7 @@ public sealed class PlayerShootFromCannonPacket : IPacket<PlayerShootFromCannon>
 {
     public int PacketID => 108;
 
-    public PlayerShootFromCannon Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerShootFromCannon Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -35,7 +35,7 @@ public sealed class PlayerShootFromCannonPacket : IPacket<PlayerShootFromCannon>
         };
     }
 
-    public byte[] Serialize(PlayerShootFromCannon packet)
+    public static byte[] Serialize(PlayerShootFromCannon packet)
     {
         FastPacketWriter writer = new(108, 128);
 

@@ -11,7 +11,7 @@ public sealed class PlayerImmuneAlphaPacket : IPacket<PlayerImmuneAlpha>
 {
     public int PacketID => 135;
 
-    public PlayerImmuneAlpha Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerImmuneAlpha Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class PlayerImmuneAlphaPacket : IPacket<PlayerImmuneAlpha>
         };
     }
 
-    public byte[] Serialize(PlayerImmuneAlpha packet)
+    public static byte[] Serialize(PlayerImmuneAlpha packet)
     {
         FastPacketWriter writer = new(135, 128);
 

@@ -11,7 +11,7 @@ public sealed class NPCKillCountPacket : IPacket<NPCKillCount>
 {
     public int PacketID => 83;
 
-    public NPCKillCount Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCKillCount Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class NPCKillCountPacket : IPacket<NPCKillCount>
         };
     }
 
-    public byte[] Serialize(NPCKillCount packet)
+    public static byte[] Serialize(NPCKillCount packet)
     {
         FastPacketWriter writer = new(83, 128);
 

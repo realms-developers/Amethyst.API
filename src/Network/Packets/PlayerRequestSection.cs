@@ -11,7 +11,7 @@ public sealed class PlayerRequestSectionPacket : IPacket<PlayerRequestSection>
 {
     public int PacketID => 8;
 
-    public PlayerRequestSection Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerRequestSection Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerRequestSectionPacket : IPacket<PlayerRequestSection>
         };
     }
 
-    public byte[] Serialize(PlayerRequestSection packet)
+    public static byte[] Serialize(PlayerRequestSection packet)
     {
         FastPacketWriter writer = new(8, 128);
 

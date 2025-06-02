@@ -11,7 +11,7 @@ public sealed class EventInvokeV2Packet : IPacket<EventInvokeV2>
 {
     public int PacketID => 61;
 
-    public EventInvokeV2 Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static EventInvokeV2 Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class EventInvokeV2Packet : IPacket<EventInvokeV2>
         };
     }
 
-    public byte[] Serialize(EventInvokeV2 packet)
+    public static byte[] Serialize(EventInvokeV2 packet)
     {
         FastPacketWriter writer = new(61, 128);
 

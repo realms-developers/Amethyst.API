@@ -11,7 +11,7 @@ public sealed class EventCreditsOrTransformPacket : IPacket<EventCreditsOrTransf
 {
     public int PacketID => 140;
 
-    public EventCreditsOrTransform Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static EventCreditsOrTransform Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class EventCreditsOrTransformPacket : IPacket<EventCreditsOrTransf
         };
     }
 
-    public byte[] Serialize(EventCreditsOrTransform packet)
+    public static byte[] Serialize(EventCreditsOrTransform packet)
     {
         FastPacketWriter writer = new(140, 128);
 

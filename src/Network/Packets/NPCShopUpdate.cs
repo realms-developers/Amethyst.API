@@ -11,7 +11,7 @@ public sealed class NPCShopUpdatePacket : IPacket<NPCShopUpdate>
 {
     public int PacketID => 104;
 
-    public NPCShopUpdate Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCShopUpdate Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -33,7 +33,7 @@ public sealed class NPCShopUpdatePacket : IPacket<NPCShopUpdate>
         };
     }
 
-    public byte[] Serialize(NPCShopUpdate packet)
+    public static byte[] Serialize(NPCShopUpdate packet)
     {
         FastPacketWriter writer = new(104, 128);
 

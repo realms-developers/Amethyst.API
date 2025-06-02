@@ -11,7 +11,7 @@ public sealed class TENewOrKillPacket : IPacket<TENewOrKill>
 {
     public int PacketID => 86;
 
-    public TENewOrKill Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static TENewOrKill Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class TENewOrKillPacket : IPacket<TENewOrKill>
         };
     }
 
-    public byte[] Serialize(TENewOrKill packet)
+    public static byte[] Serialize(TENewOrKill packet)
     {
         throw new NotSupportedException("Serialization of this packet is not supported yet.");
     }

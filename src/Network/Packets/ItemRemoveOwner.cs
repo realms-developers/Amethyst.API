@@ -11,7 +11,7 @@ public sealed class ItemRemoveOwnerPacket : IPacket<ItemRemoveOwner>
 {
     public int PacketID => 39;
 
-    public ItemRemoveOwner Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ItemRemoveOwner Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class ItemRemoveOwnerPacket : IPacket<ItemRemoveOwner>
         };
     }
 
-    public byte[] Serialize(ItemRemoveOwner packet)
+    public static byte[] Serialize(ItemRemoveOwner packet)
     {
         FastPacketWriter writer = new(39, 128);
 

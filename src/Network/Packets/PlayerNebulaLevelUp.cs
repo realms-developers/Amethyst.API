@@ -12,7 +12,7 @@ public sealed class PlayerNebulaLevelUpPacket : IPacket<PlayerNebulaLevelUp>
 {
     public int PacketID => 102;
 
-    public PlayerNebulaLevelUp Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerNebulaLevelUp Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -28,7 +28,7 @@ public sealed class PlayerNebulaLevelUpPacket : IPacket<PlayerNebulaLevelUp>
         };
     }
 
-    public byte[] Serialize(PlayerNebulaLevelUp packet)
+    public static byte[] Serialize(PlayerNebulaLevelUp packet)
     {
         FastPacketWriter writer = new(102, 128);
 

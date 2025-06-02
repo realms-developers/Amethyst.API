@@ -11,7 +11,7 @@ public sealed class VisualCreateTemporaryAnimationPacket : IPacket<VisualCreateT
 {
     public int PacketID => 77;
 
-    public VisualCreateTemporaryAnimation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static VisualCreateTemporaryAnimation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class VisualCreateTemporaryAnimationPacket : IPacket<VisualCreateT
         };
     }
 
-    public byte[] Serialize(VisualCreateTemporaryAnimation packet)
+    public static byte[] Serialize(VisualCreateTemporaryAnimation packet)
     {
         FastPacketWriter writer = new(77, 128);
 

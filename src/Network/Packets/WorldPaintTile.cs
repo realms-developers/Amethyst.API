@@ -11,7 +11,7 @@ public sealed class WorldPaintTilePacket : IPacket<WorldPaintTile>
 {
     public int PacketID => 63;
 
-    public WorldPaintTile Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldPaintTile Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class WorldPaintTilePacket : IPacket<WorldPaintTile>
         };
     }
 
-    public byte[] Serialize(WorldPaintTile packet)
+    public static byte[] Serialize(WorldPaintTile packet)
     {
         FastPacketWriter writer = new(63, 128);
 

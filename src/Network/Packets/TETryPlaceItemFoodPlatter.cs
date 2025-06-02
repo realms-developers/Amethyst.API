@@ -11,7 +11,7 @@ public sealed class TETryPlaceItemFoodPlatterPacket : IPacket<TETryPlaceItemFood
 {
     public int PacketID => 133;
 
-    public TETryPlaceItemFoodPlatter Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static TETryPlaceItemFoodPlatter Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class TETryPlaceItemFoodPlatterPacket : IPacket<TETryPlaceItemFood
         };
     }
 
-    public byte[] Serialize(TETryPlaceItemFoodPlatter packet)
+    public static byte[] Serialize(TETryPlaceItemFoodPlatter packet)
     {
         FastPacketWriter writer = new(133, 128);
 

@@ -11,7 +11,7 @@ public sealed class PlayerManaPacket : IPacket<PlayerMana>
 {
     public int PacketID => 42;
 
-    public PlayerMana Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerMana Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class PlayerManaPacket : IPacket<PlayerMana>
         };
     }
 
-    public byte[] Serialize(PlayerMana packet)
+    public static byte[] Serialize(PlayerMana packet)
     {
         FastPacketWriter writer = new(42, 128);
 

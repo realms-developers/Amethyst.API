@@ -11,7 +11,7 @@ public sealed class PlayerAnglerQuestPacket : IPacket<PlayerAnglerQuest>
 {
     public int PacketID => 74;
 
-    public PlayerAnglerQuest Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerAnglerQuest Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerAnglerQuestPacket : IPacket<PlayerAnglerQuest>
         };
     }
 
-    public byte[] Serialize(PlayerAnglerQuest packet)
+    public static byte[] Serialize(PlayerAnglerQuest packet)
     {
         FastPacketWriter writer = new(74, 8);
 

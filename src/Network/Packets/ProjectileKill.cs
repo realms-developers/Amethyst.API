@@ -11,7 +11,7 @@ public sealed class ProjectileKillPacket : IPacket<ProjectileKill>
 {
     public int PacketID => 29;
 
-    public ProjectileKill Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ProjectileKill Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class ProjectileKillPacket : IPacket<ProjectileKill>
         };
     }
 
-    public byte[] Serialize(ProjectileKill packet)
+    public static byte[] Serialize(ProjectileKill packet)
     {
         FastPacketWriter writer = new(29, 128);
 

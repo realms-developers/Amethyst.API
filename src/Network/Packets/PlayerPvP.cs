@@ -11,7 +11,7 @@ public sealed class PlayerPvPPacket : IPacket<PlayerPvP>
 {
     public int PacketID => 30;
 
-    public PlayerPvP Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerPvP Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerPvPPacket : IPacket<PlayerPvP>
         };
     }
 
-    public byte[] Serialize(PlayerPvP packet)
+    public static byte[] Serialize(PlayerPvP packet)
     {
         FastPacketWriter writer = new(30, 128);
 

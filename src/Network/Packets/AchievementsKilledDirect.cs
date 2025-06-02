@@ -11,7 +11,12 @@ public sealed class AchievementsKilledDirectPacket : IPacket<AchievementsKilledD
 {
     public int PacketID => 97;
 
-    public AchievementsKilledDirect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    // create regex for replacing: FROM
+    // public static <ANYTYPE> Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    //  TO
+    // public static <ANYTYPE> Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    //
+    public static AchievementsKilledDirect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +28,7 @@ public sealed class AchievementsKilledDirectPacket : IPacket<AchievementsKilledD
         };
     }
 
-    public byte[] Serialize(AchievementsKilledDirect packet)
+    public static byte[] Serialize(AchievementsKilledDirect packet)
     {
         FastPacketWriter writer = new(97, 128);
 

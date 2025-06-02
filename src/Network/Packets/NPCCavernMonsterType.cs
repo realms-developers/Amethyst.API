@@ -11,7 +11,7 @@ public sealed class NPCCavernMonsterTypePacket : IPacket<NPCCavernMonsterType>
 {
     public int PacketID => 136;
 
-    public NPCCavernMonsterType Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCCavernMonsterType Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class NPCCavernMonsterTypePacket : IPacket<NPCCavernMonsterType>
         };
     }
 
-    public byte[] Serialize(NPCCavernMonsterType packet)
+    public static byte[] Serialize(NPCCavernMonsterType packet)
     {
         FastPacketWriter writer = new(136, 128);
 

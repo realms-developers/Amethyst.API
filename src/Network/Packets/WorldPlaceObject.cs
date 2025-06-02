@@ -11,7 +11,7 @@ public sealed class WorldPlaceObjectPacket : IPacket<WorldPlaceObject>
 {
     public int PacketID => 79;
 
-    public WorldPlaceObject Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldPlaceObject Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -35,7 +35,7 @@ public sealed class WorldPlaceObjectPacket : IPacket<WorldPlaceObject>
         };
     }
 
-    public byte[] Serialize(WorldPlaceObject packet)
+    public static byte[] Serialize(WorldPlaceObject packet)
     {
         FastPacketWriter writer = new(79, 128);
 

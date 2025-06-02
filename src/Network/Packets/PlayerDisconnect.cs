@@ -12,7 +12,7 @@ public sealed class PlayerDisconnectPacket : IPacket<PlayerDisconnect>
 {
     public int PacketID => 2;
 
-    public PlayerDisconnect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerDisconnect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -24,7 +24,7 @@ public sealed class PlayerDisconnectPacket : IPacket<PlayerDisconnect>
         };
     }
 
-    public byte[] Serialize(PlayerDisconnect packet)
+    public static byte[] Serialize(PlayerDisconnect packet)
     {
         FastPacketWriter writer = new(2, 128);
 

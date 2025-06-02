@@ -11,7 +11,7 @@ public sealed class NPCTowersStrengthPacket : IPacket<NPCTowersStrength>
 {
     public int PacketID => 101;
 
-    public NPCTowersStrength Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCTowersStrength Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class NPCTowersStrengthPacket : IPacket<NPCTowersStrength>
         };
     }
 
-    public byte[] Serialize(NPCTowersStrength packet)
+    public static byte[] Serialize(NPCTowersStrength packet)
     {
         FastPacketWriter writer = new(101, 128);
 

@@ -11,7 +11,7 @@ public sealed class PlayerStealthPacket : IPacket<PlayerStealth>
 {
     public int PacketID => 84;
 
-    public PlayerStealth Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerStealth Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerStealthPacket : IPacket<PlayerStealth>
         };
     }
 
-    public byte[] Serialize(PlayerStealth packet)
+    public static byte[] Serialize(PlayerStealth packet)
     {
         FastPacketWriter writer = new(84, 128);
 

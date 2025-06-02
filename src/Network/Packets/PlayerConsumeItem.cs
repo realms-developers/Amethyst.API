@@ -11,7 +11,7 @@ public sealed class PlayerConsumeItemPacket : IPacket<PlayerConsumeItem>
 {
     public int PacketID => 110;
 
-    public PlayerConsumeItem Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerConsumeItem Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class PlayerConsumeItemPacket : IPacket<PlayerConsumeItem>
         };
     }
 
-    public byte[] Serialize(PlayerConsumeItem packet)
+    public static byte[] Serialize(PlayerConsumeItem packet)
     {
         FastPacketWriter writer = new(110, 128);
 

@@ -9,14 +9,14 @@ internal static class InvokingUtility
 {
     internal static DynamicMethod CreateDynamicMethod(MethodInfo method)
     {
-        var dynamic = new DynamicMethod(
+        var dynamicMethod = new DynamicMethod(
             $"Invoker_{method.Name}",
             typeof(void),
             new[] { typeof(object[]) },
             method.DeclaringType!.Module, // нужен, если типы internal
             true);
 
-        ILGenerator il = dynamic.GetILGenerator();
+        ILGenerator il = dynamicMethod.GetILGenerator();
         var parameters = method.GetParameters();
 
 
@@ -36,7 +36,7 @@ internal static class InvokingUtility
         il.Emit(OpCodes.Call, method);
         il.Emit(OpCodes.Ret);
 
-        return dynamic;
+        return dynamicMethod;
     }
 
     internal static Action<object?[]> CreateInvoker(DynamicMethod method)

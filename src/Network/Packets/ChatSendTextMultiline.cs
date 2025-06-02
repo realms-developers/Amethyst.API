@@ -12,7 +12,7 @@ public sealed class ChatSendTextMultilinePacket : IPacket<ChatSendTextMultiline>
 {
     public int PacketID => 107;
 
-    public ChatSendTextMultiline Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ChatSendTextMultiline Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -28,7 +28,7 @@ public sealed class ChatSendTextMultilinePacket : IPacket<ChatSendTextMultiline>
         };
     }
 
-    public byte[] Serialize(ChatSendTextMultiline packet)
+    public static byte[] Serialize(ChatSendTextMultiline packet)
     {
         FastPacketWriter writer = new(107, 128);
 

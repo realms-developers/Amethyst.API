@@ -12,7 +12,7 @@ public sealed class ItemUpdatePacket : IPacket<ItemUpdate>
 {
     public int PacketID => 90;
 
-    public ItemUpdate Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ItemUpdate Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -36,7 +36,7 @@ public sealed class ItemUpdatePacket : IPacket<ItemUpdate>
         };
     }
 
-    public byte[] Serialize(ItemUpdate packet)
+    public static byte[] Serialize(ItemUpdate packet)
     {
         FastPacketWriter writer = new(90, 128);
 

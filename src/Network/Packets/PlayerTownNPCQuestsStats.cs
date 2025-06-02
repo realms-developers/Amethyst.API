@@ -11,7 +11,7 @@ public sealed class PlayerTownNPCQuestsStatsPacket : IPacket<PlayerTownNPCQuests
 {
     public int PacketID => 76;
 
-    public PlayerTownNPCQuestsStats Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerTownNPCQuestsStats Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class PlayerTownNPCQuestsStatsPacket : IPacket<PlayerTownNPCQuests
         };
     }
 
-    public byte[] Serialize(PlayerTownNPCQuestsStats packet)
+    public static byte[] Serialize(PlayerTownNPCQuestsStats packet)
     {
         FastPacketWriter writer = new(76, 128);
 

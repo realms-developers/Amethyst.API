@@ -12,7 +12,7 @@ public sealed class SoundPlayPacket : IPacket<SoundPlay>
 {
     public int PacketID => 132;
 
-    public SoundPlay Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static SoundPlay Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -34,7 +34,7 @@ public sealed class SoundPlayPacket : IPacket<SoundPlay>
         };
     }
 
-    public byte[] Serialize(SoundPlay packet)
+    public static byte[] Serialize(SoundPlay packet)
     {
         FastPacketWriter writer = new(132, 128);
 

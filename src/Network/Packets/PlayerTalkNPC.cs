@@ -11,7 +11,7 @@ public sealed class PlayerTalkNPCPacket : IPacket<PlayerTalkNPC>
 {
     public int PacketID => 40;
 
-    public PlayerTalkNPC Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerTalkNPC Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerTalkNPCPacket : IPacket<PlayerTalkNPC>
         };
     }
 
-    public byte[] Serialize(PlayerTalkNPC packet)
+    public static byte[] Serialize(PlayerTalkNPC packet)
     {
         FastPacketWriter writer = new(40, 128);
 

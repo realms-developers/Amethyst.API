@@ -12,7 +12,7 @@ public sealed class PlayerHurtPacket : IPacket<PlayerHurt>
 {
     public int PacketID => 117;
 
-    public PlayerHurt Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerHurt Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -34,7 +34,7 @@ public sealed class PlayerHurtPacket : IPacket<PlayerHurt>
         };
     }
 
-    public byte[] Serialize(PlayerHurt packet)
+    public static byte[] Serialize(PlayerHurt packet)
     {
         FastPacketWriter writer = new(117, 128);
 

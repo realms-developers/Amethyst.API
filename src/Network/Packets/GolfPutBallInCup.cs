@@ -11,7 +11,7 @@ public sealed class GolfPutBallInCupPacket : IPacket<GolfPutBallInCup>
 {
     public int PacketID => 128;
 
-    public GolfPutBallInCup Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static GolfPutBallInCup Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class GolfPutBallInCupPacket : IPacket<GolfPutBallInCup>
         };
     }
 
-    public byte[] Serialize(GolfPutBallInCup packet)
+    public static byte[] Serialize(GolfPutBallInCup packet)
     {
         FastPacketWriter writer = new(128, 128);
 

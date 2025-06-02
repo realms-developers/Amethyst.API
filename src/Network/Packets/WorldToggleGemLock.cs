@@ -11,7 +11,7 @@ public sealed class WorldToggleGemLockPacket : IPacket<WorldToggleGemLock>
 {
     public int PacketID => 105;
 
-    public WorldToggleGemLock Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldToggleGemLock Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class WorldToggleGemLockPacket : IPacket<WorldToggleGemLock>
         };
     }
 
-    public byte[] Serialize(WorldToggleGemLock packet)
+    public static byte[] Serialize(WorldToggleGemLock packet)
     {
         FastPacketWriter writer = new(105, 128);
 

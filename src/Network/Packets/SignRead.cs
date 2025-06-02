@@ -11,7 +11,7 @@ public sealed class SignReadPacket : IPacket<SignRead>
 {
     public int PacketID => 46;
 
-    public SignRead Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static SignRead Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class SignReadPacket : IPacket<SignRead>
         };
     }
 
-    public byte[] Serialize(SignRead packet)
+    public static byte[] Serialize(SignRead packet)
     {
         FastPacketWriter writer = new(46, 128);
 

@@ -11,10 +11,10 @@ public sealed class EventDD2AttemptSkipWaitTimePacket : IPacket<EventDD2AttemptS
 {
     public int PacketID => 143;
 
-    public EventDD2AttemptSkipWaitTime Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static EventDD2AttemptSkipWaitTime Deserialize(ReadOnlySpan<byte> data, int offset = 0)
         => new();
 
-    public byte[] Serialize(EventDD2AttemptSkipWaitTime packet)
+    public static byte[] Serialize(EventDD2AttemptSkipWaitTime packet)
     {
         FastPacketWriter writer = new(143, 4);
         return writer.BuildPacket();

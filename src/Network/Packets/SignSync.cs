@@ -11,7 +11,7 @@ public sealed class SignSyncPacket : IPacket<SignSync>
 {
     public int PacketID => 47;
 
-    public SignSync Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static SignSync Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -33,7 +33,7 @@ public sealed class SignSyncPacket : IPacket<SignSync>
         };
     }
 
-    public byte[] Serialize(SignSync packet)
+    public static byte[] Serialize(SignSync packet)
     {
         FastPacketWriter writer = new(47, 128);
 

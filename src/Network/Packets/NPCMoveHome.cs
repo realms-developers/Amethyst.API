@@ -11,7 +11,7 @@ public sealed class NPCMoveHomePacket : IPacket<NPCMoveHome>
 {
     public int PacketID => 60;
 
-    public NPCMoveHome Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCMoveHome Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class NPCMoveHomePacket : IPacket<NPCMoveHome>
         };
     }
 
-    public byte[] Serialize(NPCMoveHome packet)
+    public static byte[] Serialize(NPCMoveHome packet)
     {
         FastPacketWriter writer = new(60, 128);
 

@@ -11,12 +11,12 @@ public sealed class EventBirthdayPartyPacket : IPacket<EventBirthdayParty>
 {
     public int PacketID => 111;
 
-    public EventBirthdayParty Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static EventBirthdayParty Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         return new();
     }
 
-    public byte[] Serialize(EventBirthdayParty packet)
+    public static byte[] Serialize(EventBirthdayParty packet)
     {
         FastPacketWriter writer = new(111, 128);
 

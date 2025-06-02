@@ -11,7 +11,7 @@ public sealed class NPCNameAndVariationPacket : IPacket<NPCNameAndVariation>
 {
     public int PacketID => 56;
 
-    public NPCNameAndVariation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCNameAndVariation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class NPCNameAndVariationPacket : IPacket<NPCNameAndVariation>
         };
     }
 
-    public byte[] Serialize(NPCNameAndVariation packet)
+    public static byte[] Serialize(NPCNameAndVariation packet)
     {
         FastPacketWriter writer = new(56, 128);
 

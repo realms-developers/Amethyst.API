@@ -11,7 +11,7 @@ public sealed class PlayerItemRotationPacket : IPacket<PlayerItemRotation>
 {
     public int PacketID => 41;
 
-    public PlayerItemRotation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerItemRotation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class PlayerItemRotationPacket : IPacket<PlayerItemRotation>
         };
     }
 
-    public byte[] Serialize(PlayerItemRotation packet)
+    public static byte[] Serialize(PlayerItemRotation packet)
     {
         FastPacketWriter writer = new(41, 128);
 

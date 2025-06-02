@@ -11,10 +11,10 @@ public sealed class EventDD2WipePacket : IPacket<EventDD2Wipe>
 {
     public int PacketID => 114;
 
-    public EventDD2Wipe Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static EventDD2Wipe Deserialize(ReadOnlySpan<byte> data, int offset = 0)
         => new();
 
-    public byte[] Serialize(EventDD2Wipe packet)
+    public static byte[] Serialize(EventDD2Wipe packet)
     {
         FastPacketWriter writer = new(114, 4);
 

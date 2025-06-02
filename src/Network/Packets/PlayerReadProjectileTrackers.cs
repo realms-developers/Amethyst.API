@@ -12,7 +12,7 @@ public sealed class PlayerReadProjectileTrackersPacket : IPacket<PlayerReadProje
 {
     public int PacketID => 142;
 
-    public PlayerReadProjectileTrackers Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerReadProjectileTrackers Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -28,7 +28,7 @@ public sealed class PlayerReadProjectileTrackersPacket : IPacket<PlayerReadProje
         };
     }
 
-    public byte[] Serialize(PlayerReadProjectileTrackers packet)
+    public static byte[] Serialize(PlayerReadProjectileTrackers packet)
     {
         FastPacketWriter writer = new(142, 128);
 

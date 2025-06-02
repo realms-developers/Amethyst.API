@@ -11,7 +11,7 @@ public sealed class ReadNetModulePacket : IPacket<ReadNetModule>
 {
     public int PacketID => 82;
 
-    public ReadNetModule Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ReadNetModule Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class ReadNetModulePacket : IPacket<ReadNetModule>
         };
     }
 
-    public byte[] Serialize(ReadNetModule packet)
+    public static byte[] Serialize(ReadNetModule packet)
     {
         FastPacketWriter writer = new(82, 128);
 

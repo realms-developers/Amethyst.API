@@ -12,7 +12,7 @@ public sealed class NPCRevengeMarkerAddPacket : IPacket<NPCRevengeMarkerAdd>
 {
     public int PacketID => 126;
 
-    public NPCRevengeMarkerAdd Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCRevengeMarkerAdd Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -40,7 +40,7 @@ public sealed class NPCRevengeMarkerAddPacket : IPacket<NPCRevengeMarkerAdd>
         };
     }
 
-    public byte[] Serialize(NPCRevengeMarkerAdd packet)
+    public static byte[] Serialize(NPCRevengeMarkerAdd packet)
     {
         FastPacketWriter writer = new(126, 128);
 

@@ -11,7 +11,7 @@ public sealed class PlayerLifeHealEffectPacket : IPacket<PlayerLifeHealEffect>
 {
     public int PacketID => 66;
 
-    public PlayerLifeHealEffect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerLifeHealEffect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerLifeHealEffectPacket : IPacket<PlayerLifeHealEffect>
         };
     }
 
-    public byte[] Serialize(PlayerLifeHealEffect packet)
+    public static byte[] Serialize(PlayerLifeHealEffect packet)
     {
         FastPacketWriter writer = new(66, 128);
 

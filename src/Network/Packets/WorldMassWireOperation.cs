@@ -11,7 +11,7 @@ public sealed class WorldMassWireOperationPacket : IPacket<WorldMassWireOperatio
 {
     public int PacketID => 109;
 
-    public WorldMassWireOperation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldMassWireOperation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class WorldMassWireOperationPacket : IPacket<WorldMassWireOperatio
         };
     }
 
-    public byte[] Serialize(WorldMassWireOperation packet)
+    public static byte[] Serialize(WorldMassWireOperation packet)
     {
         FastPacketWriter writer = new(109, 128);
 

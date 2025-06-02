@@ -11,7 +11,7 @@ public sealed class PlayerSyncBuffsPacket : IPacket<PlayerSyncBuffs>
 {
     public int PacketID => 50;
 
-    public PlayerSyncBuffs Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerSyncBuffs Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class PlayerSyncBuffsPacket : IPacket<PlayerSyncBuffs>
         };
     }
 
-    public byte[] Serialize(PlayerSyncBuffs packet)
+    public static byte[] Serialize(PlayerSyncBuffs packet)
     {
         FastPacketWriter writer = new(50, 128);
 

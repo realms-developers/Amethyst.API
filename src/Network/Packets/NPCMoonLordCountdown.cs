@@ -11,7 +11,7 @@ public sealed class NPCMoonLordCountdownPacket : IPacket<NPCMoonLordCountdown>
 {
     public int PacketID => 103;
 
-    public NPCMoonLordCountdown Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCMoonLordCountdown Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class NPCMoonLordCountdownPacket : IPacket<NPCMoonLordCountdown>
         };
     }
 
-    public byte[] Serialize(NPCMoonLordCountdown packet)
+    public static byte[] Serialize(NPCMoonLordCountdown packet)
     {
         FastPacketWriter writer = new(103, 128);
 

@@ -11,7 +11,7 @@ public sealed class NPCTravelShopPacket : IPacket<NPCTravelShop>
 {
     public int PacketID => 72;
 
-    public NPCTravelShop Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCTravelShop Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class NPCTravelShopPacket : IPacket<NPCTravelShop>
         };
     }
 
-    public byte[] Serialize(NPCTravelShop packet)
+    public static byte[] Serialize(NPCTravelShop packet)
     {
         FastPacketWriter writer = new(72, 128);
 

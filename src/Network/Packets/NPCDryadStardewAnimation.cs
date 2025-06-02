@@ -11,12 +11,12 @@ public sealed class NPCDryadStardewAnimationPacket : IPacket<NPCDryadStardewAnim
 {
     public int PacketID => 144;
 
-    public NPCDryadStardewAnimation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCDryadStardewAnimation Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         return new();
     }
 
-    public byte[] Serialize(NPCDryadStardewAnimation packet)
+    public static byte[] Serialize(NPCDryadStardewAnimation packet)
     {
         FastPacketWriter writer = new(144, 128);
         return writer.BuildPacket();

@@ -11,7 +11,7 @@ public sealed class PlayerSpawnPacket : IPacket<PlayerSpawn>
 {
     public int PacketID => 12;
 
-    public PlayerSpawn Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerSpawn Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -33,7 +33,7 @@ public sealed class PlayerSpawnPacket : IPacket<PlayerSpawn>
         };
     }
 
-    public byte[] Serialize(PlayerSpawn packet)
+    public static byte[] Serialize(PlayerSpawn packet)
     {
         FastPacketWriter writer = new(12, 128);
 

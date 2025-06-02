@@ -11,7 +11,7 @@ public sealed class VisualCreateEmoteBubblePacket : IPacket<VisualCreateEmoteBub
 {
     public int PacketID => 120;
 
-    public VisualCreateEmoteBubble Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static VisualCreateEmoteBubble Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class VisualCreateEmoteBubblePacket : IPacket<VisualCreateEmoteBub
         };
     }
 
-    public byte[] Serialize(VisualCreateEmoteBubble packet)
+    public static byte[] Serialize(VisualCreateEmoteBubble packet)
     {
         FastPacketWriter writer = new(120, 128);
 

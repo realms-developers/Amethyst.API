@@ -11,14 +11,14 @@ public sealed class PlayerRequestWorldInfoPacket : IPacket<PlayerRequestWorldInf
 {
     public int PacketID => 6;
 
-    public PlayerRequestWorldInfo Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerRequestWorldInfo Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         return new PlayerRequestWorldInfo
         {
         };
     }
 
-    public byte[] Serialize(PlayerRequestWorldInfo packet)
+    public static byte[] Serialize(PlayerRequestWorldInfo packet)
     {
         FastPacketWriter writer = new(6, 128);
 

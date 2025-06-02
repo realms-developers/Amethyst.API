@@ -11,7 +11,7 @@ public sealed class WorldTileInteractPacket : IPacket<WorldTileInteract>
 {
     public int PacketID => 17;
 
-    public WorldTileInteract Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldTileInteract Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class WorldTileInteractPacket : IPacket<WorldTileInteract>
         };
     }
 
-    public byte[] Serialize(WorldTileInteract packet)
+    public static byte[] Serialize(WorldTileInteract packet)
     {
         FastPacketWriter writer = new(17, 128);
 

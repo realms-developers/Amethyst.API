@@ -11,7 +11,7 @@ public sealed class PlayerSlotPacket : IPacket<PlayerSlot>
 {
     public int PacketID => 5;
 
-    public PlayerSlot Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerSlot Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class PlayerSlotPacket : IPacket<PlayerSlot>
         };
     }
 
-    public byte[] Serialize(PlayerSlot packet)
+    public static byte[] Serialize(PlayerSlot packet)
     {
         FastPacketWriter writer = new(5, 128);
 

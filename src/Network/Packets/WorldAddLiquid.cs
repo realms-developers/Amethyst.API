@@ -11,7 +11,7 @@ public sealed class WorldAddLiquidPacket : IPacket<WorldAddLiquid>
 {
     public int PacketID => 48;
 
-    public WorldAddLiquid Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldAddLiquid Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class WorldAddLiquidPacket : IPacket<WorldAddLiquid>
         };
     }
 
-    public byte[] Serialize(WorldAddLiquid packet)
+    public static byte[] Serialize(WorldAddLiquid packet)
     {
         FastPacketWriter writer = new(48, 128);
 

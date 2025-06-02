@@ -11,7 +11,7 @@ public sealed class WorldCorruptionsPacket : IPacket<WorldCorruptions>
 {
     public int PacketID => 57;
 
-    public WorldCorruptions Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldCorruptions Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class WorldCorruptionsPacket : IPacket<WorldCorruptions>
         };
     }
 
-    public byte[] Serialize(WorldCorruptions packet)
+    public static byte[] Serialize(WorldCorruptions packet)
     {
         FastPacketWriter writer = new(57, 128);
 

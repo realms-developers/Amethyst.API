@@ -12,7 +12,7 @@ public sealed class NPCMoneyPingPacket : IPacket<NPCMoneyPing>
 {
     public int PacketID => 92;
 
-    public NPCMoneyPing Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCMoneyPing Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -28,7 +28,7 @@ public sealed class NPCMoneyPingPacket : IPacket<NPCMoneyPing>
         };
     }
 
-    public byte[] Serialize(NPCMoneyPing packet)
+    public static byte[] Serialize(NPCMoneyPing packet)
     {
         FastPacketWriter writer = new(92, 128);
 

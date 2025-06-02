@@ -11,7 +11,7 @@ public sealed class WorldPaintWallPacket : IPacket<WorldPaintWall>
 {
     public int PacketID => 64;
 
-    public WorldPaintWall Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldPaintWall Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class WorldPaintWallPacket : IPacket<WorldPaintWall>
         };
     }
 
-    public byte[] Serialize(WorldPaintWall packet)
+    public static byte[] Serialize(WorldPaintWall packet)
     {
         FastPacketWriter writer = new(64, 128);
 

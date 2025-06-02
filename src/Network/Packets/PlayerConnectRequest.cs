@@ -11,7 +11,7 @@ public sealed class PlayerConnectRequestPacket : IPacket<PlayerConnectRequest>
 {
     public int PacketID => 1;
 
-    public PlayerConnectRequest Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerConnectRequest Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class PlayerConnectRequestPacket : IPacket<PlayerConnectRequest>
         };
     }
 
-    public byte[] Serialize(PlayerConnectRequest packet)
+    public static byte[] Serialize(PlayerConnectRequest packet)
     {
         FastPacketWriter writer = new(1, 128);
 

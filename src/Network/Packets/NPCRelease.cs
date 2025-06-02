@@ -11,7 +11,7 @@ public sealed class NPCReleasePacket : IPacket<NPCRelease>
 {
     public int PacketID => 71;
 
-    public NPCRelease Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCRelease Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class NPCReleasePacket : IPacket<NPCRelease>
         };
     }
 
-    public byte[] Serialize(NPCRelease packet)
+    public static byte[] Serialize(NPCRelease packet)
     {
         FastPacketWriter writer = new(71, 128);
 

@@ -11,7 +11,7 @@ public sealed class PlayerCountAsHostPacket : IPacket<PlayerCountAsHost>
 {
     public int PacketID => 139;
 
-    public PlayerCountAsHost Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerCountAsHost Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class PlayerCountAsHostPacket : IPacket<PlayerCountAsHost>
         };
     }
 
-    public byte[] Serialize(PlayerCountAsHost packet)
+    public static byte[] Serialize(PlayerCountAsHost packet)
     {
         FastPacketWriter writer = new(139, 128);
 

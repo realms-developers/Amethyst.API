@@ -11,7 +11,7 @@ public sealed class ChestInteractPacket : IPacket<ChestInteract>
 {
     public int PacketID => 34;
 
-    public ChestInteract Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ChestInteract Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class ChestInteractPacket : IPacket<ChestInteract>
         };
     }
 
-    public byte[] Serialize(ChestInteract packet)
+    public static byte[] Serialize(ChestInteract packet)
     {
         FastPacketWriter writer = new(34, 128);
 

@@ -11,7 +11,7 @@ public sealed class WorldWiringHitSwitchPacket : IPacket<WorldWiringHitSwitch>
 {
     public int PacketID => 59;
 
-    public WorldWiringHitSwitch Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldWiringHitSwitch Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class WorldWiringHitSwitchPacket : IPacket<WorldWiringHitSwitch>
         };
     }
 
-    public byte[] Serialize(WorldWiringHitSwitch packet)
+    public static byte[] Serialize(WorldWiringHitSwitch packet)
     {
         FastPacketWriter writer = new(59, 128);
 

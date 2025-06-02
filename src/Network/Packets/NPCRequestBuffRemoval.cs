@@ -11,7 +11,7 @@ public sealed class NPCRequestBuffRemovalPacket : IPacket<NPCRequestBuffRemoval>
 {
     public int PacketID => 137;
 
-    public NPCRequestBuffRemoval Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCRequestBuffRemoval Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class NPCRequestBuffRemovalPacket : IPacket<NPCRequestBuffRemoval>
         };
     }
 
-    public byte[] Serialize(NPCRequestBuffRemoval packet)
+    public static byte[] Serialize(NPCRequestBuffRemoval packet)
     {
         FastPacketWriter writer = new(137, 128);
 

@@ -11,7 +11,7 @@ public sealed class VisualCreateFXPacket : IPacket<VisualCreateFX>
 {
     public int PacketID => 112;
 
-    public VisualCreateFX Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static VisualCreateFX Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class VisualCreateFXPacket : IPacket<VisualCreateFX>
         };
     }
 
-    public byte[] Serialize(VisualCreateFX packet)
+    public static byte[] Serialize(VisualCreateFX packet)
     {
         FastPacketWriter writer = new(112, 128);
 

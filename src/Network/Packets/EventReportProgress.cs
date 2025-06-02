@@ -11,7 +11,7 @@ public sealed class EventReportProgressPacket : IPacket<EventReportProgress>
 {
     public int PacketID => 78;
 
-    public EventReportProgress Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static EventReportProgress Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class EventReportProgressPacket : IPacket<EventReportProgress>
         };
     }
 
-    public byte[] Serialize(EventReportProgress packet)
+    public static byte[] Serialize(EventReportProgress packet)
     {
         FastPacketWriter writer = new(78, 128);
 

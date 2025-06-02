@@ -11,7 +11,7 @@ public sealed class PlayerNotifyQuestCompletePacket : IPacket<PlayerNotifyQuestC
 {
     public int PacketID => 75;
 
-    public PlayerNotifyQuestComplete Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerNotifyQuestComplete Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
         return new PlayerNotifyQuestComplete
@@ -19,7 +19,7 @@ public sealed class PlayerNotifyQuestCompletePacket : IPacket<PlayerNotifyQuestC
         };
     }
 
-    public byte[] Serialize(PlayerNotifyQuestComplete packet)
+    public static byte[] Serialize(PlayerNotifyQuestComplete packet)
     {
         FastPacketWriter writer = new(75, 4);
 

@@ -11,7 +11,7 @@ public sealed class AchievementsProgressionEventPacket : IPacket<AchievementsPro
 {
     public int PacketID => 98;
 
-    public AchievementsProgressionEvent Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static AchievementsProgressionEvent Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -23,7 +23,7 @@ public sealed class AchievementsProgressionEventPacket : IPacket<AchievementsPro
         };
     }
 
-    public byte[] Serialize(AchievementsProgressionEvent packet)
+    public static byte[] Serialize(AchievementsProgressionEvent packet)
     {
         FastPacketWriter writer = new(98, 128);
 

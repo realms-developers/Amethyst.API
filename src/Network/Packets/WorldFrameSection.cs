@@ -11,7 +11,7 @@ public sealed class WorldFrameSectionPacket : IPacket<WorldFrameSection>
 {
     public int PacketID => 11;
 
-    public WorldFrameSection Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static WorldFrameSection Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class WorldFrameSectionPacket : IPacket<WorldFrameSection>
         };
     }
 
-    public byte[] Serialize(WorldFrameSection packet)
+    public static byte[] Serialize(WorldFrameSection packet)
     {
         FastPacketWriter writer = new(11, 128);
 

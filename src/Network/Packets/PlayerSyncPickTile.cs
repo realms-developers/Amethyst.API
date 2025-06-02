@@ -11,7 +11,7 @@ public sealed class PlayerSyncPickTilePacket : IPacket<PlayerSyncPickTile>
 {
     public int PacketID => 125;
 
-    public PlayerSyncPickTile Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerSyncPickTile Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -29,7 +29,7 @@ public sealed class PlayerSyncPickTilePacket : IPacket<PlayerSyncPickTile>
         };
     }
 
-    public byte[] Serialize(PlayerSyncPickTile packet)
+    public static byte[] Serialize(PlayerSyncPickTile packet)
     {
         FastPacketWriter writer = new(125, 128);
 

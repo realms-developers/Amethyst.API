@@ -11,7 +11,7 @@ public sealed class EventDD2TogglePacket : IPacket<EventDD2Toggle>
 {
     public int PacketID => 113;
 
-    public EventDD2Toggle Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static EventDD2Toggle Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class EventDD2TogglePacket : IPacket<EventDD2Toggle>
         };
     }
 
-    public byte[] Serialize(EventDD2Toggle packet)
+    public static byte[] Serialize(EventDD2Toggle packet)
     {
         FastPacketWriter writer = new(113, 128);
 

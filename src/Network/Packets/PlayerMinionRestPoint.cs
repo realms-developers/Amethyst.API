@@ -12,7 +12,7 @@ public sealed class PlayerMinionRestPointPacket : IPacket<PlayerMinionRestPoint>
 {
     public int PacketID => 99;
 
-    public PlayerMinionRestPoint Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static PlayerMinionRestPoint Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -26,7 +26,7 @@ public sealed class PlayerMinionRestPointPacket : IPacket<PlayerMinionRestPoint>
         };
     }
 
-    public byte[] Serialize(PlayerMinionRestPoint packet)
+    public static byte[] Serialize(PlayerMinionRestPoint packet)
     {
         FastPacketWriter writer = new(99, 128);
 

@@ -11,7 +11,7 @@ public sealed class TEPlaceEntityPacket : IPacket<TEPlaceEntity>
 {
     public int PacketID => 87;
 
-    public TEPlaceEntity Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static TEPlaceEntity Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -27,7 +27,7 @@ public sealed class TEPlaceEntityPacket : IPacket<TEPlaceEntity>
         };
     }
 
-    public byte[] Serialize(TEPlaceEntity packet)
+    public static byte[] Serialize(TEPlaceEntity packet)
     {
         FastPacketWriter writer = new(87, 128);
 

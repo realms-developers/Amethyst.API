@@ -11,7 +11,7 @@ public sealed class TETryPlaceItemWeaponsRackPacket : IPacket<TETryPlaceItemWeap
 {
     public int PacketID => 123;
 
-    public TETryPlaceItemWeaponsRack Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static TETryPlaceItemWeaponsRack Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -31,7 +31,7 @@ public sealed class TETryPlaceItemWeaponsRackPacket : IPacket<TETryPlaceItemWeap
         };
     }
 
-    public byte[] Serialize(TETryPlaceItemWeaponsRack packet)
+    public static byte[] Serialize(TETryPlaceItemWeaponsRack packet)
     {
         FastPacketWriter writer = new(123, 128);
 

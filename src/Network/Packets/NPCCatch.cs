@@ -11,7 +11,7 @@ public sealed class NPCCatchPacket : IPacket<NPCCatch>
 {
     public int PacketID => 70;
 
-    public NPCCatch Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static NPCCatch Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -25,7 +25,7 @@ public sealed class NPCCatchPacket : IPacket<NPCCatch>
         };
     }
 
-    public byte[] Serialize(NPCCatch packet)
+    public static byte[] Serialize(NPCCatch packet)
     {
         FastPacketWriter writer = new(70, 128);
 
