@@ -61,6 +61,18 @@ public sealed class ModulesRepository : IExtensionRepository
 
         foreach (string file in FileUtility.GetExtensions("modules"))
         {
+            if (!Ruler.IsExtensionAllowed(Path.GetFileName(file)))
+            {
+                var errorResult = new ExtensionHandleResult(Guid.Empty,
+                    ExtensionResult.NotAllowed,
+                    $"Module {Path.GetFileName(file)} is not allowed by the repository ruler.");
+                results.Add(errorResult);
+
+                AmethystLog.System.Warning(nameof(ModulesRepository),
+                    $"Module {Path.GetFileName(file)} is not allowed by the repository ruler.");
+                continue;
+            }
+
             Assembly assembly = ModuleLoadContext.Instance.LoadFromAssemblyPath(file);
             Type? ext = AssemblyUtility.TryFindExtensionType(assembly, out ExtensionMetadataAttribute? attribute);
 

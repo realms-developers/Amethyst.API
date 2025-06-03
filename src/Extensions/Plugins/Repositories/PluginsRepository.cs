@@ -59,6 +59,18 @@ public sealed class PluginsRepository : IExtensionRepository
 
         foreach (string file in FileUtility.GetExtensions("plugins"))
         {
+            if (!Ruler.IsExtensionAllowed(Path.GetFileName(file)))
+            {
+                var errorResult = new ExtensionHandleResult(Guid.Empty,
+                    ExtensionResult.NotAllowed,
+                    $"Plugin {Path.GetFileName(file)} is not allowed by the repository ruler.");
+                results.Add(errorResult);
+
+                AmethystLog.System.Warning(nameof(PluginsRepository),
+                    $"Plugin {Path.GetFileName(file)} is not allowed by the repository ruler.");
+                continue;
+            }
+
             try
             {
                 var context = new PluginLoadContext(file);

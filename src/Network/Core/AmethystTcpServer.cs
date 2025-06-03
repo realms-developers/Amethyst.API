@@ -3,6 +3,8 @@ using System.Net.Sockets;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Network.Utilities;
+using Amethyst.Network.Packets;
+using Amethyst.Network.Structures;
 
 namespace Amethyst.Network.Core;
 
@@ -14,7 +16,7 @@ internal sealed class AmethystTcpServer : IDisposable
     {
         _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         _listener.Bind(new IPEndPoint(ip, port));
-        _listener.Listen(128);
+        _listener.Listen(NetworkManager.SocketBacklog);
     }
 
     internal void Start()
@@ -24,6 +26,8 @@ internal sealed class AmethystTcpServer : IDisposable
 
     private void AcceptNext()
     {
+        Task.Delay(NetworkManager.SocketAcceptDelay);
+
         var args = new SocketAsyncEventArgs();
         args.Completed += OnAcceptCompleted;
         if (!_listener.AcceptAsync(args))
@@ -34,36 +38,48 @@ internal sealed class AmethystTcpServer : IDisposable
     {
         var client = e.AcceptSocket;
         e.Dispose();
-        AcceptNext();
         if (client != null) HandleClient(client);
+
+        AcceptNext();
     }
 
     private void HandleClient(Socket socket)
     {
-        for (int i = 0; i < 255; i++)
-        {
-            if (EntityTrackers.Players[i] == null)
-            {
-                var handler = new NetworkClient(i, socket, new byte[32000]);
-                EntityTrackers.Players.Manager!.Insert(i, new PlayerEntity(i, handler));
-                handler.Receive();
-                return;
-            }
-        }
-
-        var disconnectPacket = new FastPacketWriter(2, 64);
-        disconnectPacket.WriteString("Server is full.");
         try
         {
-            socket.Send(disconnectPacket.BuildPacket());
+            AmethystLog.Network.Info(nameof(AmethystTcpServer), $"Handling incoming connection from {socket.RemoteEndPoint}.");
+
+            if (NetworkManager.IsLocked)
+            {
+                socket.Send(PlayerDisconnectPacket.Serialize(new PlayerDisconnect()
+                {
+                    Reason = new NetText(0, "Server is locked", null)
+                }));
+                socket.Dispose();
+                return;
+            }
+
+            for (int i = 0; i < NetworkManager.MaxPlayers; i++)
+            {
+                if (EntityTrackers.Players[i] == null)
+                {
+                    var handler = new NetworkClient(i, socket, new byte[32000]);
+                    EntityTrackers.Players.Manager!.Insert(i, new PlayerEntity(i, handler));
+                    handler.Receive();
+                    return;
+                }
+            }
+
+            socket.Send(PlayerDisconnectPacket.Serialize(new PlayerDisconnect()
+            {
+                Reason = new NetText(0, "Server is full", null)
+            }));
+            socket.Dispose();
         }
-        catch (Exception)
-        {
-            // Handle send failure, possibly due to client disconnecting.
-        }
-        finally
+        catch
         {
             socket.Dispose();
+            AmethystLog.Network.Debug(nameof(AmethystTcpServer), "Failed to handle client connection");
         }
     }
 

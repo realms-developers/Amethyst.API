@@ -4,22 +4,39 @@ using Amethyst.Server.Entities;
 using Amethyst.Network.Core;
 using Amethyst.Network.Core.Delegates;
 using Amethyst.Network.Core.Packets;
+using Amethyst.Network.Engine.Patching;
 
 namespace Amethyst.Network;
 
 public static class NetworkManager
 {
+    public static bool IsLocked { get; set; } = true;
+    public static int MaxPlayers => AmethystSession.Profile.MaxPlayers;
+
+    public static int SocketAcceptDelay { get; set; } = 50;
+    public static int SocketBacklog { get; set; } = 8;
+
     internal static Dictionary<Type, object> Providers = new Dictionary<Type, object>();
 
     internal static PacketInvokeHandler?[] InvokeHandlers = new PacketInvokeHandler?[256];
     internal static List<PacketInvokeHandler>?[] DirectHandlers = new List<PacketInvokeHandler>?[256];
     internal static List<PacketInvokeHandler> OverlapHandlers = new List<PacketInvokeHandler>();
 
+    private static PacketInvokeHandler[][] _InvokeHandlers = new PacketInvokeHandler[256][];
+    private static PacketInvokeHandler[] _InvokeOverlapHandlers = [];
+
     internal static AmethystTcpServer? TcpServer;
 
-    public static void Initialize()
+    internal static void Initialize()
     {
         RegisterPacketHandlers();
+
+        for (int i = 0; i < _InvokeHandlers.Length; i++)
+        {
+            _InvokeHandlers[i] = [];
+        }
+
+        SocketPatching.Initialize();
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);
@@ -36,31 +53,33 @@ public static class NetworkManager
         try
         {
             var ignore = false;
-
-            if (OverlapHandlers.Count > 0)
-            {
-                foreach (var handler in OverlapHandlers)
-                {
-                    handler(EntityTrackers.Players[client._index], data, ref ignore);
-
-                    if (ignore)
-                        return;
-                }
-            }
-
-            var directHandlers = DirectHandlers[data[2]];
-            if (directHandlers != null)
-            {
-                foreach (var handler in directHandlers)
-                {
-                    handler(EntityTrackers.Players[client._index], data, ref ignore);
-
-                    if (ignore)
-                        return;
-                }
-            }
-
             var packetId = data[2];
+
+            if (_InvokeOverlapHandlers.Length > 0)
+            {
+                for (int i = 0; i < _InvokeOverlapHandlers.Length; i++)
+                {
+                    var handler = _InvokeOverlapHandlers[i];
+                    handler(EntityTrackers.Players[client._index], data, ref ignore);
+
+                    if (ignore)
+                        return;
+                }
+            }
+
+            var directHandlers = _InvokeHandlers[packetId];
+            if (directHandlers != null && directHandlers.Length > 0)
+            {
+                for (int i = 0; i < directHandlers.Length; i++)
+                {
+                    var handler = directHandlers[i];
+                    handler(EntityTrackers.Players[client._index], data, ref ignore);
+
+                    if (ignore)
+                        return;
+                }
+            }
+
             if (InvokeHandlers[packetId] == null)
             {
                 AmethystLog.Network.Error(nameof(NetworkManager), $"No handler registered for packet ID {packetId}");
@@ -97,6 +116,50 @@ public static class NetworkManager
             providerType.GetMethod("Hookup")?.Invoke(provider, null);
             Providers.Add(packetType, provider);
         }
+    }
+
+    public static void AddOverlapHandler(PacketInvokeHandler handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        OverlapHandlers.Add(handler);
+
+        _InvokeOverlapHandlers = OverlapHandlers.ToArray();
+    }
+
+    public static void RemoveOverlapHandler(PacketInvokeHandler handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        OverlapHandlers.Remove(handler);
+
+        _InvokeOverlapHandlers = OverlapHandlers.ToArray();
+    }
+
+    public static void AddDirectHandler(int packetType, PacketInvokeHandler handler)
+    {
+        DirectHandlers[packetType] ??= new List<PacketInvokeHandler>();
+        ArgumentNullException.ThrowIfNull(handler);
+
+        if (DirectHandlers[packetType]!.Contains(handler))
+        {
+            AmethystLog.Network.Error(nameof(NetworkManager), $"Handler {handler.Method.Name} is already registered for packet type {packetType}");
+            return;
+        }
+        DirectHandlers[packetType]!.Add(handler);
+
+        _InvokeHandlers[packetType] = DirectHandlers[packetType]!.ToArray();
+    }
+
+    public static void RemoveDirectHandler(int packetType, PacketInvokeHandler handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        if (DirectHandlers[packetType] == null || !DirectHandlers[packetType]!.Contains(handler))
+        {
+            AmethystLog.Network.Error(nameof(NetworkManager), $"Handler {handler.Method.Name} is not registered for packet type {packetType}");
+            return;
+        }
+        DirectHandlers[packetType]!.Remove(handler);
+
+        _InvokeHandlers[packetType] = DirectHandlers[packetType]!.ToArray();
     }
 
     public static void AddHandler<TPacket>(PacketHook<TPacket> hook, int priority = 0)

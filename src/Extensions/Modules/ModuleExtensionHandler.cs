@@ -10,14 +10,9 @@ public sealed class ModuleExtensionHandler(ModuleExtension extension) : IExtensi
 
     public ExtensionHandleResult Load()
     {
-        if (Extension.Repository.Ruler.IsExtensionAllowed(Extension.Metadata.Name))
-        {
-            Extension.Initializer();
+        Extension.Initializer();
 
-            return new ExtensionHandleResult(Extension.LoadIdentifier, ExtensionResult.SuccessOperation, "Module loaded successfully.");
-        }
-
-        return new ExtensionHandleResult(Extension.LoadIdentifier, ExtensionResult.NotAllowed, "Module is not allowed to be loaded.");
+        return new ExtensionHandleResult(Extension.LoadIdentifier, ExtensionResult.SuccessOperation, "Module loaded successfully.");
     }
 
     public ExtensionHandleResult Unload()
