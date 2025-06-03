@@ -1,7 +1,7 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Server.Entities.Base;
-using Amethyst.Network.Core;
+using Amethyst.Network.Engine;
 using Amethyst.Systems.Users.Players;
 using Microsoft.Xna.Framework;
 using Terraria;

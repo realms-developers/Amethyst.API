@@ -34,7 +34,7 @@ internal static class ServerUtils
         }
 
         // Netplay.TcpListener = new RemadeTcpSocket();
-        NetworkManager.Initialize();
+        NetworkManager.IsLocked = false;
 
         Main.maxNetPlayers = AmethystSession.Profile.MaxPlayers;
     }

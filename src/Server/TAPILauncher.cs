@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Amethyst.Extensions;
 using Amethyst.Kernel;
+using Amethyst.Network;
 using Amethyst.Server.World;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -30,6 +31,7 @@ public sealed class TAPILauncher : IServerLauncher
     {
         using var main = new Main();
 
+        NetworkManager.Initialize();
         LaunchInitializer.LoadParameters(main);
         LanguageManager.Instance.SetLanguage(GameCulture.DefaultCulture);
         Lang.InitializeLegacyLocalization();

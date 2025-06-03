@@ -1,5 +1,5 @@
 using System.Net;
-using Amethyst.Network.Core;
+using Amethyst.Network.Engine;
 using Terraria.Net;
 using Terraria.Net.Sockets;
 

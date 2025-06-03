@@ -1,10 +1,11 @@
 using System.Net;
 using Amethyst.Kernel;
 using Amethyst.Server.Entities;
-using Amethyst.Network.Core;
-using Amethyst.Network.Core.Delegates;
-using Amethyst.Network.Core.Packets;
+using Amethyst.Network.Engine;
+using Amethyst.Network.Engine.Delegates;
+using Amethyst.Network.Engine.Packets;
 using Amethyst.Network.Engine.Patching;
+using Amethyst.Network.Handling.Handshake;
 
 namespace Amethyst.Network;
 
@@ -36,7 +37,9 @@ public static class NetworkManager
             _InvokeHandlers[i] = [];
         }
 
-        SocketPatching.Initialize();
+        NetworkPatcher.Initialize();
+
+        HandshakeHandler.Initialize();
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);
@@ -52,9 +55,11 @@ public static class NetworkManager
 
         try
         {
+            AmethystLog.Network.Debug(nameof(NetworkClient), $"Begin handling packet {data[2]}");
             var ignore = false;
             var packetId = data[2];
 
+            AmethystLog.Network.Debug(nameof(NetworkClient), $"Init phase");
             if (_InvokeOverlapHandlers.Length > 0)
             {
                 for (int i = 0; i < _InvokeOverlapHandlers.Length; i++)
@@ -66,6 +71,7 @@ public static class NetworkManager
                         return;
                 }
             }
+            AmethystLog.Network.Debug(nameof(NetworkClient), $"Overlap invoke");
 
             var directHandlers = _InvokeHandlers[packetId];
             if (directHandlers != null && directHandlers.Length > 0)
@@ -79,7 +85,9 @@ public static class NetworkManager
                         return;
                 }
             }
+            AmethystLog.Network.Debug(nameof(NetworkClient), $"Direct invoke");
 
+            AmethystLog.Network.Debug(nameof(NetworkClient), $"Ivk handlers invoke");
             if (InvokeHandlers[packetId] == null)
             {
                 AmethystLog.Network.Error(nameof(NetworkManager), $"No handler registered for packet ID {packetId}");
@@ -88,6 +96,7 @@ public static class NetworkManager
 
             var player = EntityTrackers.Players[client._index];
             InvokeHandlers[packetId]!(player, data, ref ignore);
+            AmethystLog.Network.Debug(nameof(NetworkClient), $"End handling packet {data[2]}");
         }
         catch (Exception ex)
         {
@@ -100,21 +109,24 @@ public static class NetworkManager
     {
         foreach (var type in typeof(NetworkManager).Assembly.GetTypes())
         {
-            if (!type.IsSubclassOf(typeof(IPacket<>)))
+            if (type.Namespace != "Amethyst.Network.Packets"
+                || type.GetInterfaces().Any(p => p.Name.StartsWith("IPacket"))
+                || type.Assembly.GetType($"{type.FullName}Packet") == null)
                 continue;
 
-            var packetType = type.GetGenericArguments()[0];
-            var providerType = typeof(PacketProvider<>).MakeGenericType(packetType);
+
+            var providerType = typeof(PacketProvider<>).MakeGenericType(type);
             var provider = Activator.CreateInstance(providerType);
 
             if (provider == null)
             {
-                AmethystLog.Network.Error(nameof(NetworkManager), $"Failed to create instance of packet provider for {packetType.Name}");
+                AmethystLog.Network.Error(nameof(NetworkManager), $"Failed to create instance of packet provider for {type.Name}");
                 continue;
             }
 
             providerType.GetMethod("Hookup")?.Invoke(provider, null);
-            Providers.Add(packetType, provider);
+            Providers.Add(type, provider);
+            AmethystLog.Network.Debug(nameof(NetworkManager), $"Registered provider for packet type: {type.Name}");
         }
     }
 

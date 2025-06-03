@@ -6,7 +6,7 @@ using Amethyst.Network.Utilities;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 
-namespace Amethyst.Network.Core;
+namespace Amethyst.Network.Engine;
 
 internal sealed class AmethystTcpServer : IDisposable
 {
@@ -47,7 +47,7 @@ internal sealed class AmethystTcpServer : IDisposable
     {
         try
         {
-            AmethystLog.Network.Info(nameof(AmethystTcpServer), $"Handling incoming connection from {socket.RemoteEndPoint}.");
+            AmethystLog.Network.Warning(nameof(AmethystTcpServer), $"Handling incoming connection from {socket.RemoteEndPoint}.");
 
             if (NetworkManager.IsLocked)
             {
@@ -55,6 +55,7 @@ internal sealed class AmethystTcpServer : IDisposable
                 {
                     Reason = new NetText(0, "Server is locked", null)
                 }));
+                AmethystLog.Network.Error(nameof(AmethystTcpServer), $"Rejected connection from {socket.RemoteEndPoint} due to server lock.");
                 socket.Dispose();
                 return;
             }
@@ -65,7 +66,8 @@ internal sealed class AmethystTcpServer : IDisposable
                 {
                     var handler = new NetworkClient(i, socket, new byte[32000]);
                     EntityTrackers.Players.Manager!.Insert(i, new PlayerEntity(i, handler));
-                    handler.Receive();
+                    _ = Task.Run(handler.Receive);
+                    AmethystLog.Network.Info(nameof(AmethystTcpServer), $"Accepted connection from {socket.RemoteEndPoint} as player {i}.");
                     return;
                 }
             }
@@ -74,6 +76,7 @@ internal sealed class AmethystTcpServer : IDisposable
             {
                 Reason = new NetText(0, "Server is full", null)
             }));
+            AmethystLog.Network.Error(nameof(AmethystTcpServer), $"Rejected connection from {socket.RemoteEndPoint} due to server being full.");
             socket.Dispose();
         }
         catch

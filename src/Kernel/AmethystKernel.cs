@@ -35,6 +35,9 @@ internal static class AmethystKernel
 
         AppDomain.CurrentDomain.FirstChanceException += (sender, ex) =>
         {
+            if (ex.Exception is OperationCanceledException)
+                return;
+
             AmethystLog.Startup.Error(nameof(AmethystKernel), "Caught first-chance exception:");
             AmethystLog.Startup.Error(nameof(AmethystKernel), ex.Exception.ToString() ?? "No data");
         };

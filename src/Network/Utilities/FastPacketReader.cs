@@ -389,7 +389,7 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public string ReadString()
     {
-        int length = ReadInt32();
+        int length = ReadByte();
         if (length < 0 || length > _span.Length - (_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))))
             throw new ArgumentOutOfRangeException(nameof(length), "String length exceeds buffer length.");
 

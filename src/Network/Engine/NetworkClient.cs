@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Amethyst.Server.Entities;
 
-namespace Amethyst.Network.Core;
+namespace Amethyst.Network.Engine;
 
 internal sealed class NetworkClient : IDisposable
 {
@@ -30,16 +30,17 @@ internal sealed class NetworkClient : IDisposable
 
     private void HandleQueue()
     {
-        while (!_tokenSrc.IsCancellationRequested)
+        while (_disposed == false && !_tokenSrc.IsCancellationRequested)
         {
             try
             {
                 byte[] packet = _handleQueue.Take(_tokenSrc.Token);
 
-                bool handled = false;
-                NetworkManager.InvokeHandlers[packet[2]]?.Invoke(EntityTrackers.Players[_index], packet.AsSpan(3), ref handled);
+                NetworkManager.HandlePacket(this, packet);
             }
-            catch { }
+            catch
+            {
+            }
         }
     }
 
@@ -81,8 +82,10 @@ internal sealed class NetworkClient : IDisposable
 
         while (true)
         {
-            if (!TryGetFullPacket(_dataBuffer.AsSpan(0, _received), out ReadOnlySpan<byte> packet))
+            if (!TryGetFullPacket(_dataBuffer.AsSpan(_consumed, _received - _consumed), out ReadOnlySpan<byte> packet))
+            {
                 break;
+            }
 
             _handleQueue.Add(packet.ToArray());
 
@@ -118,9 +121,15 @@ internal sealed class NetworkClient : IDisposable
         return true;
     }
 
+    private bool _disposed;
     public void Dispose()
     {
+        if (_disposed)
+            return;
+        _disposed = true;
+
         try { _socket?.Shutdown(SocketShutdown.Both); } catch { }
+
         _socket?.Close();
         _args?.Dispose();
 

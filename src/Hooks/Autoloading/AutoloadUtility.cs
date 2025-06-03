@@ -9,7 +9,7 @@ public static class AutoloadUtility
         var types = assembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract);
 
-        var registerMethod = typeof(HookRegistry).GetMethod("Register", BindingFlags.Public | BindingFlags.Static)
+        var registerMethod = typeof(HookRegistry).GetMethod("RegisterHook", BindingFlags.Public | BindingFlags.Static)
             ?? throw new InvalidOperationException("Register method not found in HookRegistry.");
 
         foreach (var type in types)

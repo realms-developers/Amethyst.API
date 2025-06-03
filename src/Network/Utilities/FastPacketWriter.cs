@@ -375,12 +375,12 @@ public unsafe ref struct FastPacketWriter : IDisposable
     {
         if (value == null)
         {
-            WriteInt32(0);
+            WriteByte(0);
             return;
         }
 
         int length = value.Length;
-        WriteInt32(length);
+        WriteByte((byte)length);
 
         for (int i = 0; i < length; i++)
         {

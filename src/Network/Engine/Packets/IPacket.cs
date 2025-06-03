@@ -1,4 +1,4 @@
-namespace Amethyst.Network.Core.Packets;
+namespace Amethyst.Network.Engine.Packets;
 
 public interface IPacket<T>
 {
