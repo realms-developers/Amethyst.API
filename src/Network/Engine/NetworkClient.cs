@@ -37,7 +37,6 @@ internal sealed class NetworkClient : IDisposable
                 byte[] packet = _handleQueue.Take(_tokenSrc.Token);
 
                 NetworkManager.HandlePacket(this, packet);
-                Console.WriteLine($"Handled packet {packet[2]} with length {packet.Length} from client {_index}.");
                 ArrayPool<byte>.Shared.Return(packet);
             }
             catch
