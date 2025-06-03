@@ -55,11 +55,9 @@ public static class NetworkManager
 
         try
         {
-            AmethystLog.Network.Debug(nameof(NetworkClient), $"Begin handling packet {data[2]}");
             var ignore = false;
             var packetId = data[2];
 
-            AmethystLog.Network.Debug(nameof(NetworkClient), $"Init phase");
             if (_InvokeOverlapHandlers.Length > 0)
             {
                 for (int i = 0; i < _InvokeOverlapHandlers.Length; i++)
@@ -71,7 +69,6 @@ public static class NetworkManager
                         return;
                 }
             }
-            AmethystLog.Network.Debug(nameof(NetworkClient), $"Overlap invoke");
 
             var directHandlers = _InvokeHandlers[packetId];
             if (directHandlers != null && directHandlers.Length > 0)
@@ -85,18 +82,15 @@ public static class NetworkManager
                         return;
                 }
             }
-            AmethystLog.Network.Debug(nameof(NetworkClient), $"Direct invoke");
 
-            AmethystLog.Network.Debug(nameof(NetworkClient), $"Ivk handlers invoke");
             if (InvokeHandlers[packetId] == null)
             {
-                AmethystLog.Network.Error(nameof(NetworkManager), $"No handler registered for packet ID {packetId}");
+                AmethystLog.Network.Debug(nameof(NetworkManager), $"No main handler registered for packet ID {packetId}");
                 return;
             }
 
             var player = EntityTrackers.Players[client._index];
             InvokeHandlers[packetId]!(player, data, ref ignore);
-            AmethystLog.Network.Debug(nameof(NetworkClient), $"End handling packet {data[2]}");
         }
         catch (Exception ex)
         {
@@ -126,7 +120,6 @@ public static class NetworkManager
 
             providerType.GetMethod("Hookup")?.Invoke(provider, null);
             Providers.Add(type, provider);
-            AmethystLog.Network.Debug(nameof(NetworkManager), $"Registered provider for packet type: {type.Name}");
         }
     }
 

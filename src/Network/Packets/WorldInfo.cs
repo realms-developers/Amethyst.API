@@ -138,7 +138,7 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
             BackgroundCaveStyle4 = BackgroundCaveStyle4,
             TreeTops = TreeTops,
             MaxRaining = MaxRaining,
-            Flags1 = Flags,
+            Flags1 = Flags1,
             Flags2 = Flags2,
             Flags3 = Flags3,
             Flags4 = Flags4,

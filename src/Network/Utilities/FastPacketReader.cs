@@ -391,7 +391,10 @@ public unsafe ref struct FastPacketReader
     {
         int length = ReadByte();
         if (length < 0 || length > _span.Length - (_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))))
+        {
+            AmethystLog.Network.Error(nameof(FastPacketReader), $"Invalid string length read from packet [Text Length: {length}, Span Length: {_span.Length}, Pointer Position: {_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))}].");
             throw new ArgumentOutOfRangeException(nameof(length), "String length exceeds buffer length.");
+        }
 
         string value = System.Text.Encoding.UTF8.GetString(_ptr, length);
         _ptr += length;

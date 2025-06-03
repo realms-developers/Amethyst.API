@@ -78,7 +78,7 @@ internal sealed class PacketProvider<TPacket>
 
     internal void Invoke(PlayerEntity plr, ReadOnlySpan<byte> data, ref bool ignore)
     {
-        var packet = _deserializeFunc(data, 0);
+        var packet = _deserializeFunc(data, 3);
 
         for (int i = 0; i < _ivkSecurityHandlers.Length; i++)
         {

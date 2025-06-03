@@ -5,6 +5,7 @@ using Amethyst.Network.Engine;
 using Amethyst.Systems.Users.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Amethyst.Network.Handling;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -20,12 +21,19 @@ public sealed partial class PlayerEntity : IServerEntity
         NetworkOperations = new PlayerNetworkOperations();
         ModerationOperations = new PlayerModerationOperations();
         GameplayOperations = new PlayerGameplayOperations();
+
+        IP = client._socket.RemoteEndPoint?.ToString()?.Split(':')[0] ?? "0.0.0.0";
+        UUID = "";
     }
 
+    public ConnectionPhase ConnectionPhase { get; set; }
     public Player TPlayer => Main.player[Index];
     public int Index { get; }
     public bool Active { get; set; } = true;
-    public string Name { get; }
+    public string Name { get; set; }
+
+    public string IP { get; set; }
+    public string UUID { get; set; }
 
     public Vector2 Position
     {

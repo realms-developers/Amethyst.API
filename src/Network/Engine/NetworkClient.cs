@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Amethyst.Network.Utilities;
 using Amethyst.Server.Entities;
 
 namespace Amethyst.Network.Engine;
@@ -14,7 +15,6 @@ internal sealed class NetworkClient : IDisposable
     internal SocketAsyncEventArgs _args;
     internal byte[] _dataBuffer;
     internal int _received;
-    internal int _consumed;
     internal BlockingCollection<byte[]> _handleQueue = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>());
     internal CancellationTokenSource _tokenSrc = new CancellationTokenSource();
 
@@ -37,6 +37,8 @@ internal sealed class NetworkClient : IDisposable
                 byte[] packet = _handleQueue.Take(_tokenSrc.Token);
 
                 NetworkManager.HandlePacket(this, packet);
+                Console.WriteLine($"Handled packet {packet[2]} with length {packet.Length} from client {_index}.");
+                ArrayPool<byte>.Shared.Return(packet);
             }
             catch
             {
@@ -59,66 +61,95 @@ internal sealed class NetworkClient : IDisposable
         }
     }
 
+    private SocketAsyncEventArgs? _prevArgs;
     internal void Receive()
     {
-        var args = _args;
+        _prevArgs?.Dispose();
+        _prevArgs = null;
+
+        var args = new SocketAsyncEventArgs();
         args.SetBuffer(_dataBuffer, _received, _dataBuffer.Length - _received);
-        args.Completed += (_, _) => OnReceive();
+        args.Completed += OnReceiveCompleted;
 
         if (!_socket.ReceiveAsync(args))
-            OnReceive();
+        {
+            Task.Delay(5);
+            OnReceiveCompleted(null, args);
+        }
     }
 
-    private void OnReceive()
+    private void OnReceiveCompleted(object? _, SocketAsyncEventArgs e)
     {
-        int bytes = _args.BytesTransferred;
+        if (OnReceive(e))
+        {
+            if (_disposed)
+                return;
+
+            _prevArgs = e;
+            Receive();
+        }
+    }
+
+    private unsafe bool OnReceive(SocketAsyncEventArgs args)
+    {
+        int bytes = args.BytesTransferred;
         if (bytes <= 0)
         {
             Dispose();
-            return;
+            return false;
         }
 
         _received += bytes;
 
-        while (true)
+        if (_received < 2)
         {
-            if (!TryGetFullPacket(_dataBuffer.AsSpan(_consumed, _received - _consumed), out ReadOnlySpan<byte> packet))
-            {
-                break;
-            }
-
-            _handleQueue.Add(packet.ToArray());
-
-            int packetLen = Unsafe.ReadUnaligned<ushort>(ref MemoryMarshal.GetReference(packet));
-            _consumed += packetLen;
-
-            Thread.Sleep(1);
+            // not enough data to read the length
+            return true;
         }
 
-        if (_consumed > 0)
+        var span = _dataBuffer.AsSpan(0, 2);
+        ushort length = Unsafe.Read<ushort>((byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span)));
+
+        if (length < 3 || length > 1000)
         {
-            Buffer.BlockCopy(_dataBuffer, _consumed, _dataBuffer, 0, _received - _consumed);
-            _received -= _consumed;
-            _consumed = 0;
+            AmethystLog.Network.Error(nameof(NetworkClient), $"Received invalid packet length: {length}");
+            Dispose();
+            return false;
         }
 
-        Receive();
+        if (_received < length)
+        {
+            // not enough data to read the full packet
+            return true;
+        }
+
+        // We have a full packet
+        var data = ArrayPool<byte>.Shared.Rent(length);
+        Buffer.BlockCopy(_dataBuffer, 0, data, 0, length);
+        _handleQueue.Add(data);
+
+        if (_received > length)
+        {
+            // Shift the remaining data to the start of the buffer
+            ShiftBuffer(length);
+        }
+        else
+        {
+            // Reset the buffer if we received exactly the length of the packet
+            _received = 0;
+        }
+
+        return true;
     }
 
-    internal static bool TryGetFullPacket(ReadOnlySpan<byte> buffer, out ReadOnlySpan<byte> packet)
+    private void ShiftBuffer(int length)
     {
-        packet = default;
-
-        if (buffer.Length < 3)
-            return false;
-
-        ushort length = Unsafe.ReadUnaligned<ushort>(ref MemoryMarshal.GetReference(buffer));
-
-        if (length < 3 || buffer.Length < length)
-            return false;
-
-        packet = buffer.Slice(0, length);
-        return true;
+        if (_received - length > 0)
+        {
+            Buffer.BlockCopy(_dataBuffer, length, _dataBuffer, 0, _received - length);
+        }
+        _received -= length;
+        Array.Clear(_dataBuffer, _received, _dataBuffer.Length - _received);
     }
 
     private bool _disposed;
