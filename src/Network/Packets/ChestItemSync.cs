@@ -41,7 +41,7 @@ public sealed class ChestItemSyncPacket : IPacket<ChestItemSync>
         writer.WriteByte(packet.ItemPrefix);
         writer.WriteInt16(packet.ItemID);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -44,7 +44,7 @@ public sealed class SignSyncPacket : IPacket<SignSync>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteByte(packet.Flags);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

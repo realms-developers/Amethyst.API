@@ -38,7 +38,7 @@ public sealed class NPCTowersStrengthPacket : IPacket<NPCTowersStrength>
         writer.WriteUInt16(packet.NebulaStrength);
         writer.WriteUInt16(packet.StardustStrength);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

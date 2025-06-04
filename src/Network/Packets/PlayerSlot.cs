@@ -41,7 +41,7 @@ public sealed class PlayerSlotPacket : IPacket<PlayerSlot>
         writer.WriteByte(packet.ItemPrefix);
         writer.WriteInt16(packet.ItemID);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -32,7 +32,7 @@ public sealed class PlayerAnglerQuestPacket : IPacket<PlayerAnglerQuest>
         writer.WriteByte(packet.QuestType);
         writer.WriteBoolean(packet.IsCompleted);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

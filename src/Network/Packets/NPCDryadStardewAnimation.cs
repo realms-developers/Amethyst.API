@@ -19,7 +19,7 @@ public sealed class NPCDryadStardewAnimationPacket : IPacket<NPCDryadStardewAnim
     public static byte[] Serialize(NPCDryadStardewAnimation packet)
     {
         FastPacketWriter writer = new(144, 128);
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

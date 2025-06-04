@@ -47,7 +47,7 @@ public sealed class PlayerLuckPacket : IPacket<PlayerLuck>
         writer.WriteSingle(packet.EquipmentBonus);
         writer.WriteSingle(packet.CoinLuck);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

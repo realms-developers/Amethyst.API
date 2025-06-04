@@ -29,7 +29,7 @@ public sealed class PlayerItemTeleportPacket : IPacket<PlayerItemTeleport>
 
         writer.WriteByte(packet.TeleportStyle);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

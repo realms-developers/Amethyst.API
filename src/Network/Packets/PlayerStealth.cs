@@ -32,7 +32,7 @@ public sealed class PlayerStealthPacket : IPacket<PlayerStealth>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteSingle(packet.Stealth);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Amethyst.Extensions;
 using Amethyst.Kernel;
 using Amethyst.Network;
+using Amethyst.Network.Handling;
 using Amethyst.Server.World;
 using Microsoft.Xna.Framework;
 using Terraria;

@@ -35,7 +35,7 @@ public sealed class NPCSyncBuffsPacket : IPacket<NPCSyncBuffs>
         writer.WriteUInt16Array(packet.BuffTypes);
         writer.WriteInt16Array(packet.BuffTime);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

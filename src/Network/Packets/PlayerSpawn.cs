@@ -44,7 +44,7 @@ public sealed class PlayerSpawnPacket : IPacket<PlayerSpawn>
         writer.WriteInt16(packet.DeathsPvE);
         writer.WriteInt16(packet.DeathsPvP);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

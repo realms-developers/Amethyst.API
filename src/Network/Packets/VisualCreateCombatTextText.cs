@@ -36,7 +36,7 @@ public sealed class VisualCreateCombatTextTextPacket : IPacket<VisualCreateComba
         writer.WriteNetColor(packet.NetColor);
         writer.WriteNetText(packet.Text);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

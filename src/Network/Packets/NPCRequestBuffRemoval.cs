@@ -32,7 +32,7 @@ public sealed class NPCRequestBuffRemovalPacket : IPacket<NPCRequestBuffRemoval>
         writer.WriteInt16(packet.NPCIndex);
         writer.WriteUInt16(packet.TargetBuffType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

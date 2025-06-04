@@ -29,7 +29,7 @@ public sealed class PlayerConnectRequestPacket : IPacket<PlayerConnectRequest>
 
         writer.WriteString(packet.Protocol);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

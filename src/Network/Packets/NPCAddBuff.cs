@@ -35,7 +35,7 @@ public sealed class NPCAddBuffPacket : IPacket<NPCAddBuff>
         writer.WriteUInt16(packet.BuffType);
         writer.WriteInt16(packet.BuffTime);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

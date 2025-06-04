@@ -32,7 +32,7 @@ public sealed class PlayerSetTeamPacket : IPacket<PlayerSetTeam>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteByte(packet.TeamIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

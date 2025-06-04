@@ -48,7 +48,7 @@ public sealed class ChestSyncPacket : IPacket<ChestSync>
         writer.WriteByte((byte)(packet.Name?.Length ?? 0));
         writer.WriteString(packet.Name ?? string.Empty);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

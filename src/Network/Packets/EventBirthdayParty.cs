@@ -20,7 +20,7 @@ public sealed class EventBirthdayPartyPacket : IPacket<EventBirthdayParty>
     {
         FastPacketWriter writer = new(111, 128);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

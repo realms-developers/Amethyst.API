@@ -6,6 +6,9 @@ using Amethyst.Network.Engine.Delegates;
 using Amethyst.Network.Engine.Packets;
 using Amethyst.Network.Engine.Patching;
 using Amethyst.Network.Handling.Handshake;
+using Amethyst.Server.Entities.Players;
+using Amethyst.Network.Packets;
+using Terraria;
 
 namespace Amethyst.Network;
 
@@ -14,8 +17,9 @@ public static class NetworkManager
     public static bool IsLocked { get; set; } = true;
     public static int MaxPlayers => AmethystSession.Profile.MaxPlayers;
 
-    public static int SocketAcceptDelay { get; set; } = 50;
-    public static int SocketBacklog { get; set; } = 8;
+    public static int SocketAcceptDelay { get; set; } = 1000;
+    public static int SocketBacklog { get; set; } = 32;
+    public static int SocketLiveCheck { get; set; } = 2000;
 
     internal static Dictionary<Type, object> Providers = new Dictionary<Type, object>();
 
@@ -27,6 +31,27 @@ public static class NetworkManager
     private static PacketInvokeHandler[] _InvokeOverlapHandlers = [];
 
     internal static AmethystTcpServer? TcpServer;
+
+    private static Timer SocketLifeUpdate = new Timer(static (state) =>
+    {
+        foreach (PlayerEntity plr in EntityTrackers.Players)
+        {
+            try
+            {
+                plr.SendPacketBytes(WorldTimeSyncPacket.Serialize(new WorldTimeSync
+                {
+                    Time = (int)Main.time,
+                    IsDay = (byte)(Main.dayTime ? 1 : 0),
+                    SunModY = Main.sunModY,
+                    MoonModY = Main.moonModY
+                }));
+            }
+            catch
+            {
+                plr.Kick("network.socketWasClosed");
+            }
+        }
+    }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(SocketLiveCheck));
 
     internal static void Initialize()
     {

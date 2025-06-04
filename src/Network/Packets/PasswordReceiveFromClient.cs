@@ -29,7 +29,7 @@ public sealed class PasswordReceiveFromClientPacket : IPacket<PasswordReceiveFro
 
         writer.WriteString(packet.Password);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

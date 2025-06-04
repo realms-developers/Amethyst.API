@@ -165,7 +165,7 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
 
     public static byte[] Serialize(WorldInfo packet)
     {
-        FastPacketWriter writer = new(7, 128);
+        FastPacketWriter writer = new(7, 200 + packet.WorldName.Length);
 
         writer.WriteInt32(packet.Time);
         writer.WriteByte(packet.Flags);
@@ -239,7 +239,7 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
         writer.WriteUInt64(packet.LobbyID);
         writer.WriteSingle(packet.IntendedSeverity);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -32,7 +32,7 @@ public sealed class PlayerLifeHealEffectPacket : IPacket<PlayerLifeHealEffect>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteInt16(packet.Count);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -54,7 +54,7 @@ public sealed class ItemUpdateShimmerPacket : IPacket<ItemUpdateShimmer>
         writer.WriteBoolean(packet.IsShimmered);
         writer.WriteSingle(packet.ShimmerTime);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

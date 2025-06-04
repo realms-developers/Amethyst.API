@@ -32,7 +32,7 @@ public sealed class WorldWiringHitSwitchPacket : IPacket<WorldWiringHitSwitch>
         writer.WriteInt16(packet.TileX);
         writer.WriteInt16(packet.TileY);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

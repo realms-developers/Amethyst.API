@@ -23,7 +23,7 @@ public sealed class PlayerNotifyQuestCompletePacket : IPacket<PlayerNotifyQuestC
     {
         FastPacketWriter writer = new(75, 4);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

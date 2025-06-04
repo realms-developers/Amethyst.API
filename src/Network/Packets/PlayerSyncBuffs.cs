@@ -29,7 +29,7 @@ public sealed class PlayerSyncBuffsPacket : IPacket<PlayerSyncBuffs>
 
         writer.WriteUInt16Array(packet.BuffData);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

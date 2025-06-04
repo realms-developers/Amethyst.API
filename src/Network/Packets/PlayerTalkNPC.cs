@@ -32,7 +32,7 @@ public sealed class PlayerTalkNPCPacket : IPacket<PlayerTalkNPC>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteInt16(packet.NPCIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

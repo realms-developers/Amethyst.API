@@ -29,7 +29,7 @@ public sealed class PlayerChestPlaceItemPacket : IPacket<PlayerChestPlaceItem>
 
         writer.WriteInt16(packet.SlotIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

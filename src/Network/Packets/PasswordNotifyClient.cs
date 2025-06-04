@@ -22,7 +22,7 @@ public sealed class PasswordNotifyClientPacket : IPacket<PasswordNotifyClient>
     {
         FastPacketWriter writer = new(37, 4);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

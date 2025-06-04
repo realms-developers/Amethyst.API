@@ -38,7 +38,7 @@ public sealed class NPCReleasePacket : IPacket<NPCRelease>
         writer.WriteInt16(packet.NPCType);
         writer.WriteByte(packet.NPCStyle);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

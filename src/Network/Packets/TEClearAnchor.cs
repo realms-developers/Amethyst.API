@@ -32,7 +32,7 @@ public sealed class TEClearAnchorPacket : IPacket<TEClearAnchor>
         writer.WriteInt32(packet.TEIndex);
         writer.WriteByte(packet.PlayerIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -36,7 +36,7 @@ public sealed class PlayerNebulaLevelUpPacket : IPacket<PlayerNebulaLevelUp>
         writer.WriteUInt16(packet.Type);
         writer.WriteNetVector2(packet.Position);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

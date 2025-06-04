@@ -22,7 +22,7 @@ public sealed class PlayerRequestWorldInfoPacket : IPacket<PlayerRequestWorldInf
     {
         FastPacketWriter writer = new(6, 128);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

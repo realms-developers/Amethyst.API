@@ -35,7 +35,7 @@ public sealed class PlayerLifePacket : IPacket<PlayerLife>
         writer.WriteInt16(packet.LifeCount);
         writer.WriteInt16(packet.LifeMax);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

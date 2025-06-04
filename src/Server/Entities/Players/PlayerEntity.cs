@@ -24,12 +24,14 @@ public sealed partial class PlayerEntity : IServerEntity
 
         IP = client._socket.RemoteEndPoint?.ToString()?.Split(':')[0] ?? "0.0.0.0";
         UUID = "";
+
+        Phase = ConnectionPhase.WaitingProtocol;
     }
 
-    public ConnectionPhase ConnectionPhase { get; set; }
+    public ConnectionPhase Phase { get; set; }
     public Player TPlayer => Main.player[Index];
     public int Index { get; }
-    public bool Active { get; set; } = true;
+    public bool Active => Phase != ConnectionPhase.Disconnected;
     public string Name { get; set; }
 
     public string IP { get; set; }
@@ -81,5 +83,12 @@ public sealed partial class PlayerEntity : IServerEntity
         }
 
         return false;
+    }
+
+    public void CloseSocket()
+    {
+        _client.Dispose();
+        Phase = ConnectionPhase.Disconnected;
+        AmethystLog.Network.Info(nameof(PlayerEntity), $"Player #{Index} disconnected from {_client._socket.RemoteEndPoint}");
     }
 }

@@ -33,7 +33,7 @@ public sealed class PlayerMinionRestPointPacket : IPacket<PlayerMinionRestPoint>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteNetVector2(packet.Position);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

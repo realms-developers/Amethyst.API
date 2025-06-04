@@ -1,6 +1,7 @@
+using Amethyst.Network.Handling;
+using Amethyst.Network.Packets;
+using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Base;
-using Terraria;
-using Terraria.Localization;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -15,7 +16,14 @@ public sealed partial class PlayerEntity : IServerEntity
     {
         public static Action<PlayerEntity, string> DefaultKick { get; set; } = static (player, reason) =>
         {
-            NetMessage.SendData(2, player.Index, -1, NetworkText.FromLiteral(reason));
+            player.SendPacketBytes(PlayerDisconnectPacket.Serialize(
+                new PlayerDisconnect
+                {
+                    Reason = new NetText(0, reason, null)
+                }
+            ));
+
+            player.Phase = ConnectionPhase.Disconnected;
         };
         public Action<PlayerEntity, string>? Kick { get; set; }
     }

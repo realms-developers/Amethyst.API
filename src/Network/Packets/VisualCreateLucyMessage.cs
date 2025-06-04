@@ -42,7 +42,7 @@ public sealed class VisualCreateLucyMessagePacket : IPacket<VisualCreateLucyMess
         writer.WriteInt32(packet.X);
         writer.WriteInt32(packet.Y);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

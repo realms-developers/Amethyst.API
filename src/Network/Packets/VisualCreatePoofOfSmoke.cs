@@ -29,7 +29,7 @@ public sealed class VisualCreatePoofOfSmokePacket : IPacket<VisualCreatePoofOfSm
 
         writer.WriteUInt64(packet.HalfVector2Value);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -32,7 +32,7 @@ public sealed class ProjectileKillPortalPacket : IPacket<ProjectileKillPortal>
         writer.WriteUInt16(packet.PlayerIndex);
         writer.WriteByte(packet.AI1Type);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

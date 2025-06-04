@@ -32,7 +32,7 @@ public sealed class EventInvokeV2Packet : IPacket<EventInvokeV2>
         writer.WriteInt16(packet.PlayerIndex);
         writer.WriteInt16(packet.EventOrBossType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

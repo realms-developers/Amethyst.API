@@ -32,7 +32,7 @@ public sealed class PlayerPvPPacket : IPacket<PlayerPvP>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteBoolean(packet.IsInPvP);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

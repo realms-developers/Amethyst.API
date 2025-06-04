@@ -44,7 +44,7 @@ public sealed class NPCShopUpdatePacket : IPacket<NPCShopUpdate>
         writer.WriteInt32(packet.Value);
         writer.WriteBoolean(packet.BuyOnce);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

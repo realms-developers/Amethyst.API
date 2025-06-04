@@ -38,7 +38,7 @@ public sealed class PlayerSyncPickTilePacket : IPacket<PlayerSyncPickTile>
         writer.WriteInt16(packet.TileY);
         writer.WriteByte(packet.PickDamage);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

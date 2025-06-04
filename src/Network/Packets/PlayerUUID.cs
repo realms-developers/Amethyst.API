@@ -29,7 +29,7 @@ public sealed class PlayerUUIDPacket : IPacket<PlayerUUID>
 
         writer.WriteString(packet.UUID);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -38,7 +38,7 @@ public sealed class WorldFrameSectionPacket : IPacket<WorldFrameSection>
         writer.WriteInt16(packet.EndX);
         writer.WriteInt16(packet.EndY);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -147,7 +147,7 @@ public sealed class ItemPatchPacket : IPacket<ItemPatch>
         if (packet.NotAmmo != null)
             writer.WriteBoolean(packet.NotAmmo.Value);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

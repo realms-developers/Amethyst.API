@@ -84,7 +84,7 @@ public sealed class ShimmerEffectPacket : IPacket<ShimmerEffect>
                 break;
         }
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

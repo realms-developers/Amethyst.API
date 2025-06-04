@@ -41,7 +41,7 @@ public sealed class GolfPutBallInCupPacket : IPacket<GolfPutBallInCup>
         writer.WriteUInt16(packet.HitCount);
         writer.WriteUInt16(packet.ProjectileID);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

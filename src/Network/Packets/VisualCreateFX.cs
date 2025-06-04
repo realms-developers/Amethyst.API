@@ -41,7 +41,7 @@ public sealed class VisualCreateFXPacket : IPacket<VisualCreateFX>
         writer.WriteByte(packet.ExtraValue1);
         writer.WriteInt16(packet.ExtraValue2);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

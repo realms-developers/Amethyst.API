@@ -36,7 +36,7 @@ public sealed class PlayerMessageProvider : IMessageProvider
         writer.WriteString(text);
         writer.WriteNetColor(color);
 
-        User.Player.SendPacketBytes(writer.BuildPacket());
+        User.Player.SendPacketBytes(writer.Build());
     }
 
     public void ReplyMessage(string text) => ReplyMessage(text, Color.White);

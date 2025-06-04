@@ -21,7 +21,7 @@ public sealed class PlayerConnectionPrepareWorldPacket : IPacket<PlayerConnectio
     public static byte[] Serialize(PlayerConnectionPrepareWorld packet)
     {
         FastPacketWriter writer = new(129, 4);
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

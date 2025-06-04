@@ -121,7 +121,7 @@ public sealed class PlayerUpdatePacket : IPacket<PlayerUpdate>
             writer.WriteNetVector2(packet.PotionHomePosition ?? new(0f, 0f));
         }
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

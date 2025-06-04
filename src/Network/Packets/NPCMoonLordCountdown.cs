@@ -32,7 +32,7 @@ public sealed class NPCMoonLordCountdownPacket : IPacket<NPCMoonLordCountdown>
         writer.WriteInt32(packet.MaxCountdown);
         writer.WriteInt32(packet.CurrentCountdown);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

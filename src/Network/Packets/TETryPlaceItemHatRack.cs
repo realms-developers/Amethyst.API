@@ -44,7 +44,7 @@ public sealed class TETryPlaceItemHatRackPacket : IPacket<TETryPlaceItemHatRack>
         writer.WriteUInt16(packet.ItemStack);
         writer.WriteByte(packet.Prefix);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -32,7 +32,7 @@ public sealed class SignReadPacket : IPacket<SignRead>
         writer.WriteInt16(packet.SignX);
         writer.WriteInt16(packet.SignY);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

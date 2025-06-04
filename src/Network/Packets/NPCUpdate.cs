@@ -134,7 +134,7 @@ public sealed class NPCUpdatePacket : IPacket<NPCUpdate>
             writer.WriteByte(packet.PlayerCountForMultiplayerDifficultyOverride ?? 0);
         }
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

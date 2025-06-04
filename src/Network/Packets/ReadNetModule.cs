@@ -29,7 +29,7 @@ public sealed class ReadNetModulePacket : IPacket<ReadNetModule>
 
         writer.WriteUInt16(packet.NetModuleType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

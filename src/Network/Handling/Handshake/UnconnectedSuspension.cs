@@ -11,6 +11,6 @@ public sealed class UnconnectedSuspension : ISuspension
     public bool IsSuspended(IAmethystUser user)
     {
         var plrUser = (PlayerUser)user;
-        return plrUser.Player.ConnectionPhase != ConnectionPhase.Connected;
+        return plrUser.Player.Phase != ConnectionPhase.Connected;
     }
 }

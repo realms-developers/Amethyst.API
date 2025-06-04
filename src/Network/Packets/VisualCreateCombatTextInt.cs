@@ -36,7 +36,7 @@ public sealed class VisualCreateCombatTextIntPacket : IPacket<VisualCreateCombat
         writer.WriteNetColor(packet.NetColor);
         writer.WriteInt32(packet.Amount);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

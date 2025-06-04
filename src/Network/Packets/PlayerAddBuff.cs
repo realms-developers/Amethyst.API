@@ -35,7 +35,7 @@ public sealed class PlayerAddBuffPacket : IPacket<PlayerAddBuff>
         writer.WriteUInt16(packet.BuffType);
         writer.WriteInt32(packet.BuffTime);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

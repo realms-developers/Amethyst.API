@@ -18,7 +18,7 @@ public sealed class EventDD2WipePacket : IPacket<EventDD2Wipe>
     {
         FastPacketWriter writer = new(114, 4);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

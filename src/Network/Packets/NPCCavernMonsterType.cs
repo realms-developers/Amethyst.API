@@ -42,7 +42,7 @@ public sealed class NPCCavernMonsterTypePacket : IPacket<NPCCavernMonsterType>
             }
         }
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

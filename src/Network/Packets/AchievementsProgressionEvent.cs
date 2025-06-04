@@ -29,7 +29,7 @@ public sealed class AchievementsProgressionEventPacket : IPacket<AchievementsPro
 
         writer.WriteInt16(packet.Value);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

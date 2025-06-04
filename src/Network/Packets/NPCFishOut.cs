@@ -35,7 +35,7 @@ public sealed class NPCFishOutPacket : IPacket<NPCFishOut>
         writer.WriteUInt16(packet.TileY);
         writer.WriteInt16(packet.NPCType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -41,7 +41,7 @@ public sealed class WorldTileInteractPacket : IPacket<WorldTileInteract>
         writer.WriteInt16(packet.Type);
         writer.WriteByte(packet.Flags);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

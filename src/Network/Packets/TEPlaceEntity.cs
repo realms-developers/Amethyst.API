@@ -35,7 +35,7 @@ public sealed class TEPlaceEntityPacket : IPacket<TEPlaceEntity>
         writer.WriteInt16(packet.Y);
         writer.WriteByte(packet.Type);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

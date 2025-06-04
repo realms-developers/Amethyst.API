@@ -32,7 +32,7 @@ public sealed class ProjectileKillPacket : IPacket<ProjectileKill>
         writer.WriteInt16(packet.ProjectileIdentity);
         writer.WriteByte(packet.OwnerIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

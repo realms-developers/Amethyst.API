@@ -32,7 +32,7 @@ public sealed class ChestSetPlayerIndexPacket : IPacket<ChestSetPlayerIndex>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteInt16(packet.ChestIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

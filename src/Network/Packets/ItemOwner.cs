@@ -32,7 +32,7 @@ public sealed class ItemOwnerPacket : IPacket<ItemOwner>
         writer.WriteInt16(packet.ItemIndex);
         writer.WriteByte(packet.PlayerIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -29,7 +29,7 @@ public sealed class NPCRevengeMarkerRemovePacket : IPacket<NPCRevengeMarkerRemov
 
         writer.WriteInt32(packet.UniqueID);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

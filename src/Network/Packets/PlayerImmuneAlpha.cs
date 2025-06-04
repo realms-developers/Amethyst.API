@@ -29,7 +29,7 @@ public sealed class PlayerImmuneAlphaPacket : IPacket<PlayerImmuneAlpha>
 
         writer.WriteByte(packet.PlayerIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

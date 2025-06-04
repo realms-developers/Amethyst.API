@@ -36,7 +36,7 @@ public sealed class NPCMoneyPingPacket : IPacket<NPCMoneyPing>
         writer.WriteInt32(packet.ExtraValue);
         writer.WriteNetVector2(packet.Position);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

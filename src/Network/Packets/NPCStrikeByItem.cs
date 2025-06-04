@@ -32,7 +32,7 @@ public sealed class NPCStrikeByItemPacket : IPacket<NPCStrikeByItem>
         writer.WriteInt16(packet.NPCIndex);
         writer.WriteByte(packet.PlayerIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -35,7 +35,7 @@ public sealed class WorldToggleGemLockPacket : IPacket<WorldToggleGemLock>
         writer.WriteInt16(packet.TileY);
         writer.WriteBoolean(packet.IsOn);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

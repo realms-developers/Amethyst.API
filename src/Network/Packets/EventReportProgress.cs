@@ -38,7 +38,7 @@ public sealed class EventReportProgressPacket : IPacket<EventReportProgress>
         writer.WriteInt32(packet.Icon);
         writer.WriteInt32(packet.ProgressWave);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

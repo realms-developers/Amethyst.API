@@ -45,7 +45,7 @@ public sealed class PlayerHurtPacket : IPacket<PlayerHurt>
         writer.WriteByte(packet.Flags);
         writer.WriteSByte(packet.CooldownCounter);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

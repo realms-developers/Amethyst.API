@@ -54,7 +54,7 @@ public sealed class NPCRevengeMarkerAddPacket : IPacket<NPCRevengeMarkerAdd>
         writer.WriteSingle(packet.BaseValue);
         writer.WriteBoolean(packet.IsSpawnedFromStatue);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

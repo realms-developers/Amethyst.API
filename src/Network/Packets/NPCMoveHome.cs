@@ -38,7 +38,7 @@ public sealed class NPCMoveHomePacket : IPacket<NPCMoveHome>
         writer.WriteInt16(packet.TileY);
         writer.WriteByte(packet.Action);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

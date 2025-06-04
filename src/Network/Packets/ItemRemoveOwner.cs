@@ -29,7 +29,7 @@ public sealed class ItemRemoveOwnerPacket : IPacket<ItemRemoveOwner>
 
         writer.WriteInt16(packet.ItemIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

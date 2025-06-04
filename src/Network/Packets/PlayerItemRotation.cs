@@ -35,7 +35,7 @@ public sealed class PlayerItemRotationPacket : IPacket<PlayerItemRotation>
         writer.WriteSingle(packet.Rotation);
         writer.WriteInt16(packet.Animation);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

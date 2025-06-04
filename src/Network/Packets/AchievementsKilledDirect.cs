@@ -34,7 +34,7 @@ public sealed class AchievementsKilledDirectPacket : IPacket<AchievementsKilledD
 
         writer.WriteInt16(packet.NPCType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

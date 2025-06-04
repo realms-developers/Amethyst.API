@@ -23,7 +23,7 @@ public sealed class PlayerFinishedConnectionPacket : IPacket<PlayerFinishedConne
     {
         FastPacketWriter writer = new(49, 4);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

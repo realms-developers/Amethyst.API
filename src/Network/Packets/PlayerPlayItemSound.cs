@@ -32,7 +32,7 @@ public sealed class PlayerPlayItemSoundPacket : IPacket<PlayerPlayItemSound>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteSingle(packet.Depth);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

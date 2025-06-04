@@ -38,7 +38,7 @@ public sealed class WorldPaintWallPacket : IPacket<WorldPaintWall>
         writer.WriteByte(packet.IsCoating);
         writer.WriteByte(packet.PaintType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

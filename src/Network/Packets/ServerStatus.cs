@@ -36,7 +36,7 @@ public sealed class ServerStatusPacket : IPacket<ServerStatus>
         writer.WriteNetText(packet.StatusText);
         writer.WriteByte(packet.StatusFlags);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

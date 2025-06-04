@@ -1,10 +1,12 @@
 using Amethyst.Kernel;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
+using Amethyst.Network.Utilities;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Users;
 using Amethyst.Systems.Users.Players;
+using MongoDB.Driver;
 using Terraria;
 using Terraria.ID;
 
@@ -16,15 +18,44 @@ public static class HandshakeHandler
 
     internal static void Initialize()
     {
-        NetworkManager.SetMainHandler<PlayerConnectRequest>(OnPlayerConnectRequest);
-        NetworkManager.SetMainHandler<PlayerInfo>(OnPlayerInfoRequest);
-        NetworkManager.SetMainHandler<PlayerUUID>(OnPlayerUUIDRequest);
-        NetworkManager.SetMainHandler<PlayerRequestWorldInfo>(OnPlayerRequestWorldInfo);
+        NetworkManager.AddHandler<PlayerConnectRequest>(OnPlayerConnectRequest);
+        NetworkManager.AddHandler<PlayerInfo>(OnPlayerInfoRequest);
+        NetworkManager.AddHandler<PlayerUUID>(OnPlayerUUIDRequest);
+        NetworkManager.AddHandler<PlayerRequestWorldInfo>(OnPlayerRequestWorldInfo);
+        NetworkManager.AddHandler<PlayerRequestSection>(OnPlayerRequestSection);
+        NetworkManager.AddHandler<PlayerSpawn>(OnPlayerSpawn);
+    }
+
+    private static void OnPlayerSpawn(PlayerEntity plr, ref PlayerSpawn packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    {
+        if (plr.Phase != ConnectionPhase.WaitingPlayerSpawn)
+        {
+            return;
+        }
+
+
+        plr.SendPacketBytes(PlayerConnectionPrepareWorldPacket.Serialize(new()));
+        plr.Phase = ConnectionPhase.Connected;
+        AmethystLog.Network.Info(nameof(HandshakeHandler), $"Player {plr.Name} was spawned in the world.");
+    }
+
+    private static void OnPlayerRequestSection(PlayerEntity plr, ref PlayerRequestSection packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    {
+        if (plr.Phase != ConnectionPhase.WaitingSectionRequest)
+        {
+            return;
+        }
+
+        PacketSendingUtility.SendFullWorld(plr, packet.TileX, packet.TileY);
+
+        plr.SendPacketBytes(PlayerFinishedConnectionPacket.Serialize(new()));
+        plr.Phase = ConnectionPhase.WaitingPlayerSpawn;
+        AmethystLog.Network.Info(nameof(HandshakeHandler), $"Player #{plr.Index} connected with Name: {plr.Name}, IP: {plr.IP}");
     }
 
     private static void OnPlayerRequestWorldInfo(PlayerEntity plr, ref PlayerRequestWorldInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.ConnectionPhase != ConnectionPhase.WaitingWorldInfoRequest)
+        if (plr.Phase != ConnectionPhase.WaitingWorldInfoRequest)
         {
             return;
         }
@@ -32,12 +63,14 @@ public static class HandshakeHandler
         byte[] data = PacketSendingUtility.CreateWorldInfoPacket();
         plr.SendPacketBytes(data);
 
-        plr.ConnectionPhase = ConnectionPhase.WaitingSectionRequest;
+        // TODO: sync invasion
+
+        plr.Phase = ConnectionPhase.WaitingSectionRequest;
     }
 
     private static void OnPlayerUUIDRequest(PlayerEntity plr, ref PlayerUUID packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.ConnectionPhase != ConnectionPhase.WaitingUUID)
+        if (plr.Phase != ConnectionPhase.WaitingUUID)
         {
             return;
         }
@@ -67,7 +100,8 @@ public static class HandshakeHandler
         }
 
         plr.UUID = uuid;
-        plr.ConnectionPhase = ConnectionPhase.WaitingWorldInfoRequest;
+
+        plr.Phase = ConnectionPhase.WaitingWorldInfoRequest;
 
         PlayerUserMetadata userMetadata = new PlayerUserMetadata(plr.Name, plr.IP, plr.UUID, plr.Index);
         PlayerUser user = UsersOrganizer.PlayerUsers.CreateUser(userMetadata);
@@ -77,7 +111,7 @@ public static class HandshakeHandler
 
     private static void OnPlayerInfoRequest(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.ConnectionPhase != ConnectionPhase.WaitingPlayerInfo)
+        if (plr.Phase != ConnectionPhase.WaitingPlayerInfo)
         {
             return;
         }
@@ -137,13 +171,12 @@ public static class HandshakeHandler
         }
 
         plr.Name = packet.Name;
-        plr.ConnectionPhase = ConnectionPhase.WaitingUUID;
-        AmethystLog.Network.Info(nameof(HandshakeHandler), $"Player #{plr.Index} was identified as '{packet.Name}'");
+        plr.Phase = ConnectionPhase.WaitingUUID;
     }
 
     public static void OnPlayerConnectRequest(PlayerEntity plr, ref PlayerConnectRequest packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.ConnectionPhase != ConnectionPhase.WaitingProtocol)
+        if (plr.Phase != ConnectionPhase.WaitingProtocol)
         {
             return;
         }
@@ -176,7 +209,6 @@ public static class HandshakeHandler
         });
 
         plr.SendPacketBytes(data);
-        AmethystLog.Network.Info(nameof(HandshakeHandler), $"Player #{plr.Index} connected with protocol: {packet.Protocol}");
-        plr.ConnectionPhase = ConnectionPhase.WaitingPlayerInfo;
+        plr.Phase = ConnectionPhase.WaitingPlayerInfo;
     }
 }

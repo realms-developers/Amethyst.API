@@ -38,7 +38,7 @@ public sealed class ChestSetNamePacket : IPacket<ChestSetName>
         writer.WriteInt16(packet.ChestY);
         writer.WriteString(packet.ChestName);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

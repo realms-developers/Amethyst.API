@@ -30,7 +30,7 @@ public sealed class PlayerDisconnectPacket : IPacket<PlayerDisconnect>
 
         writer.WriteNetText(packet.Reason);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

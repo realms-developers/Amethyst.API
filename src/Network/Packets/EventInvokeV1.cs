@@ -32,7 +32,7 @@ public sealed class EventInvokeV1Packet : IPacket<EventInvokeV1>
         writer.WriteByte(packet.EventType);
         writer.WriteByte(packet.EventAdditionalValue);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

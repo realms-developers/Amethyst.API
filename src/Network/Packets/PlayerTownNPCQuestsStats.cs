@@ -35,7 +35,7 @@ public sealed class PlayerTownNPCQuestsStatsPacket : IPacket<PlayerTownNPCQuests
         writer.WriteInt32(packet.AnglerQuests);
         writer.WriteInt32(packet.GolferScore);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

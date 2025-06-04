@@ -48,7 +48,7 @@ public sealed class ItemUpdatePacket : IPacket<ItemUpdate>
         writer.WriteByte(packet.OwnIgnore);
         writer.WriteInt16(packet.ItemType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

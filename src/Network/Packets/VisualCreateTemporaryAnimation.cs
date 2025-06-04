@@ -38,7 +38,7 @@ public sealed class VisualCreateTemporaryAnimationPacket : IPacket<VisualCreateT
         writer.WriteInt16(packet.X);
         writer.WriteInt16(packet.Y);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

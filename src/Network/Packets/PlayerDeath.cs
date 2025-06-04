@@ -39,7 +39,7 @@ public sealed class PlayerDeathPacket : IPacket<PlayerDeath>
         writer.WriteInt16(packet.Damage);
         writer.WriteByte(packet.HitDirectionbool);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

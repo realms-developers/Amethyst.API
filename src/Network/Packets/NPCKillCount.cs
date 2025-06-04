@@ -32,7 +32,7 @@ public sealed class NPCKillCountPacket : IPacket<NPCKillCount>
         writer.WriteInt16(packet.NPCIndex);
         writer.WriteInt32(packet.KillCount);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

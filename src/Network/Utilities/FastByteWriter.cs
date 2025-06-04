@@ -7,13 +7,13 @@ namespace Amethyst.Network.Utilities;
 // DONT TOUCH THIS CLASS UNLESS YOU KNOW WHAT YOU ARE DOING
 // This class is designed for high-perfomance, NOT for flexibility and perfect code.
 
-public unsafe ref struct FastPacketWriter : IDisposable
+public unsafe ref struct FastByteWriter : IDisposable
 {
     private byte[] _buffer;
     private GCHandle _handle;
     private byte* _ptr;
 
-    public FastPacketWriter()
+    public FastByteWriter()
     {
         throw new InvalidOperationException("Use the constructor with packet type or capacity.");
     }
@@ -23,19 +23,17 @@ public unsafe ref struct FastPacketWriter : IDisposable
     /// It is designed for high-performance packet writing operations.
     /// </summary>
     /// <param name="capacity">Buffer capacity</param>
-    public FastPacketWriter(byte packetType, int capacity = 1024)
+    public FastByteWriter(int capacity = 1024)
     {
         _buffer = new byte[capacity];
         _handle = GCHandle.Alloc(_buffer, GCHandleType.Pinned);
-        _ptr = (byte*)_handle.AddrOfPinnedObject() + 2;
-        WriteByte(packetType);
+        _ptr = (byte*)_handle.AddrOfPinnedObject();
     }
-    public FastPacketWriter(byte packetType, byte[] buffer)
+    public FastByteWriter(byte[] array)
     {
-        _buffer = buffer;
+        _buffer = array;
         _handle = GCHandle.Alloc(_buffer, GCHandleType.Pinned);
-        _ptr = (byte*)_handle.AddrOfPinnedObject() + 2;
-        WriteByte(packetType);
+        _ptr = (byte*)_handle.AddrOfPinnedObject();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -396,13 +394,15 @@ public unsafe ref struct FastPacketWriter : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void WriteByteSpan(ReadOnlySpan<byte> values)
+    public void WriteByteSpan(Span<byte> values)
     {
         Buffer.MemoryCopy(
             source: Unsafe.AsPointer(ref MemoryMarshal.GetReference(values)),
             destination: _ptr,
             destinationSizeInBytes: values.Length,
             sourceBytesToCopy: values.Length);
+
+        _ptr += values.Length;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -413,6 +413,8 @@ public unsafe ref struct FastPacketWriter : IDisposable
             destination: _ptr,
             destinationSizeInBytes: length,
             sourceBytesToCopy: length);
+
+        _ptr += length;
     }
 
     public void EnsureCapacity(int additionalCapacity)

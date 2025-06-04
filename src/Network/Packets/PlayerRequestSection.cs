@@ -32,7 +32,7 @@ public sealed class PlayerRequestSectionPacket : IPacket<PlayerRequestSection>
         writer.WriteInt32(packet.TileX);
         writer.WriteInt32(packet.TileY);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

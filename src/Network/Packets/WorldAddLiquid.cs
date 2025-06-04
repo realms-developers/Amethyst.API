@@ -38,7 +38,7 @@ public sealed class WorldAddLiquidPacket : IPacket<WorldAddLiquid>
         writer.WriteByte(packet.LiquidCount);
         writer.WriteByte(packet.LiquidType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

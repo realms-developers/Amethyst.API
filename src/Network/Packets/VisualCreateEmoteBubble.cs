@@ -32,7 +32,7 @@ public sealed class VisualCreateEmoteBubblePacket : IPacket<VisualCreateEmoteBub
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteByte(packet.EmoteID);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

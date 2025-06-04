@@ -36,7 +36,7 @@ public sealed class PlayerReadProjectileTrackersPacket : IPacket<PlayerReadProje
         writer.WriteNetTrackerData(packet.PiggyBank);
         writer.WriteNetTrackerData(packet.VoidLens);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

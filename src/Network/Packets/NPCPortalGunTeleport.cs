@@ -39,7 +39,7 @@ public sealed class NPCPortalGunTeleportPacket : IPacket<NPCPortalGunTeleport>
         writer.WriteNetVector2(packet.Position);
         writer.WriteNetVector2(packet.Velocity);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

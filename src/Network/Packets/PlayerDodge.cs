@@ -32,7 +32,7 @@ public sealed class PlayerDodgePacket : IPacket<PlayerDodge>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteByte(packet.DodgeType);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

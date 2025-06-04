@@ -35,7 +35,7 @@ public sealed class WorldCorruptionsPacket : IPacket<WorldCorruptions>
         writer.WriteByte(packet.Evil);
         writer.WriteByte(packet.Blood);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

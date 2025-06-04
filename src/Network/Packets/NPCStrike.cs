@@ -41,7 +41,7 @@ public sealed class NPCStrikePacket : IPacket<NPCStrike>
         writer.WriteByte((byte)(packet.HitContext + 1));
         writer.WriteBoolean(packet.IsCrit);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

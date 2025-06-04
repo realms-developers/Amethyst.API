@@ -64,7 +64,7 @@ internal sealed class AmethystTcpServer : IDisposable
             {
                 if (EntityTrackers.Players[i] == null)
                 {
-                    var handler = new NetworkClient(i, socket, new byte[32000]);
+                    var handler = new NetworkClient(i, socket, new byte[131070]);
                     EntityTrackers.Players.Manager!.Insert(i, new PlayerEntity(i, handler));
                     _ = Task.Run(handler.Receive);
                     AmethystLog.Network.Info(nameof(AmethystTcpServer), $"Accepted connection from {socket.RemoteEndPoint} as player {i}.");

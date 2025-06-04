@@ -38,7 +38,7 @@ public sealed class WorldTimeSyncPacket : IPacket<WorldTimeSync>
         writer.WriteInt16(packet.SunModY);
         writer.WriteInt16(packet.MoonModY);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -35,7 +35,7 @@ public sealed class PlayerManaPacket : IPacket<PlayerMana>
         writer.WriteInt16(packet.ManaCount);
         writer.WriteInt16(packet.ManaMax);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

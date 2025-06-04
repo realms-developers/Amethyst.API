@@ -32,7 +32,7 @@ public sealed class PlayerActivePacket : IPacket<PlayerActive>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteByte(packet.State);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

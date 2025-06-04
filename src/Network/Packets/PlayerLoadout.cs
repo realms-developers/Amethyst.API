@@ -32,7 +32,7 @@ public sealed class PlayerLoadoutPacket : IPacket<PlayerLoadout>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteByte(packet.LoadoutIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

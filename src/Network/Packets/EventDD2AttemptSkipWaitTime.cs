@@ -17,7 +17,7 @@ public sealed class EventDD2AttemptSkipWaitTimePacket : IPacket<EventDD2AttemptS
     public static byte[] Serialize(EventDD2AttemptSkipWaitTime packet)
     {
         FastPacketWriter writer = new(143, 4);
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

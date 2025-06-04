@@ -44,7 +44,7 @@ public sealed class PlayerZonePacket : IPacket<PlayerZone>
         writer.WriteByte(packet.Zone4);
         writer.WriteByte(packet.Zone5);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

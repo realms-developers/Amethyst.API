@@ -32,7 +32,7 @@ public sealed class PlayerNetIndexPacket : IPacket<PlayerNetIndex>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteBoolean(packet.SpecialFlag);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

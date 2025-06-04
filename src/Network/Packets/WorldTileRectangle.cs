@@ -51,7 +51,7 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
         for (int j = 0; j < packet.SizeY; j++)
             packet.Tiles[i, j].Serialize(writer);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

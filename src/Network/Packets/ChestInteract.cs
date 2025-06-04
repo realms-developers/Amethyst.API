@@ -41,7 +41,7 @@ public sealed class ChestInteractPacket : IPacket<ChestInteract>
         writer.WriteInt16(packet.ChestStyle);
         writer.WriteByte(packet.ChestAdditionalValue);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

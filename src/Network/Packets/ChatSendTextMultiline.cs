@@ -36,7 +36,7 @@ public sealed class ChatSendTextMultilinePacket : IPacket<ChatSendTextMultiline>
         writer.WriteNetText(packet.Text);
         writer.WriteInt16(packet.WidthLimit);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

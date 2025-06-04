@@ -32,7 +32,7 @@ public sealed class PlayerCountAsHostPacket : IPacket<PlayerCountAsHost>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteBoolean(packet.IsHost);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

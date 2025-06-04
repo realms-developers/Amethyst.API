@@ -26,6 +26,9 @@
     <None Include="..\deps\TerrariaAPI.Hooks.dll" Pack="true" PackagePath="lib/net9.0/" />
     <None Include="..\deps\TerrariaAPI.dll" Pack="true" PackagePath="lib/net9.0/" />
 
+    <Reference Include="Ionic.Zip.CF">
+      <HintPath>..\deps\Ionic.Zip.CF.dll</HintPath>
+    </Reference>
     <Reference Include="TerrariaAPI">
       <HintPath>..\deps\TerrariaAPI.dll</HintPath>
     </Reference>

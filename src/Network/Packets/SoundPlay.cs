@@ -51,7 +51,7 @@ public sealed class SoundPlayPacket : IPacket<SoundPlay>
         if (flags[2])
             writer.WriteSingle(packet.Pitch.HasValue ? Math.Clamp(packet.Pitch.Value, -1f, 1f) : 0f);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

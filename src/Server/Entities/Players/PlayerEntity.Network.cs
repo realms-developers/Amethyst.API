@@ -15,6 +15,9 @@ public sealed partial class PlayerEntity : IServerEntity
     public void SendPacketBytes(byte[] data)
         => (NetworkOperations.SendPacketBytes ?? PlayerNetworkOperations.DefaultSendPacketBytes).Invoke(this, data);
 
+    public void SendPacketBytes(byte[] data, int offset, int count)
+        => (NetworkOperations.SendPacketBytes ?? PlayerNetworkOperations.DefaultSendPacketBytes).Invoke(this, data);
+
     public void SendRectangle(int x, int y, byte width, byte height, TileChangeType changeType = TileChangeType.None)
         => (NetworkOperations.SendTileSquare ?? PlayerNetworkOperations.DefaultSendTileSquare).Invoke(this, x, y, width, height, changeType);
 
@@ -53,7 +56,7 @@ public sealed partial class PlayerEntity : IServerEntity
             writer.WriteByte(g);
             writer.WriteByte(b);
 
-            player.SendPacketBytes(writer.BuildPacket());
+            player.SendPacketBytes(writer.Build());
 
             writer.Dispose();
         };
@@ -64,6 +67,12 @@ public sealed partial class PlayerEntity : IServerEntity
             player._client.Send(bytes);
         };
         public Action<PlayerEntity, byte[]>? SendPacketBytes { get; set; }
+
+        public static Action<PlayerEntity, byte[], int, int> DefaultSendPacketBytesOffsetCount { get; set; } = static (player, bytes, offset, count) =>
+        {
+            player._client.Send(bytes, offset, count);
+        };
+        public Action<PlayerEntity, byte[], int, int>? SendPacketBytesOffsetCount { get; set; }
 
         public static Action<PlayerEntity, int, int> DefaultRequestSendSection { get; set; } = static (player, sectionX, sectionY) =>
         {

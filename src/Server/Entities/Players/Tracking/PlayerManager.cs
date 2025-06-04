@@ -1,6 +1,7 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Hooks.Context;
+using Amethyst.Network;
 using Amethyst.Server.Entities.Base;
 
 namespace Amethyst.Server.Entities.Players.Tracking;
@@ -27,6 +28,8 @@ public sealed class PlayerManager : IEntityManager<PlayerEntity>
         _tracker._players[index] = entity;
 
         _insertHook.Invoke(new PlayerTrackerInsertArgs(entity));
+
+        AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count()}/{NetworkManager.MaxPlayers}] INS => player_{entity.Index}");
     }
 
     public void Remove(int index)
@@ -34,7 +37,8 @@ public sealed class PlayerManager : IEntityManager<PlayerEntity>
         if (_tracker._players[index] == null)
             throw new InvalidOperationException($"Player at index {index} does not exist.");
 
-        _removeHook.Invoke(new PlayerTrackerRemoveArgs(_tracker._players[index]!));
+        _removeHook.Invoke(new PlayerTrackerRemoveArgs(_tracker._players[index]));
+        AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count() - 1}/{NetworkManager.MaxPlayers}] RMV => player_{index} ({_tracker._players[index].Name ?? "not_identified"})");
 
         _tracker._players[index] = null!;
     }

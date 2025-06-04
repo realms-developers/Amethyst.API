@@ -32,7 +32,7 @@ public sealed class EventDD2TogglePacket : IPacket<EventDD2Toggle>
         writer.WriteInt16(packet.X);
         writer.WriteInt16(packet.Y);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

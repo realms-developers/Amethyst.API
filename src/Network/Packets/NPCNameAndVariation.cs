@@ -35,7 +35,7 @@ public sealed class NPCNameAndVariationPacket : IPacket<NPCNameAndVariation>
         writer.WriteString(packet.Name);
         writer.WriteInt32(packet.Variation);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -47,7 +47,7 @@ public sealed class PlayerShootFromCannonPacket : IPacket<PlayerShootFromCannon>
         writer.WriteInt16(packet.Ammo);
         writer.WriteByte(packet.PlayerIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

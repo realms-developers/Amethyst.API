@@ -51,7 +51,7 @@ public sealed class ItemUpdateNoPickupPacket : IPacket<ItemUpdateNoPickup>
         writer.WriteInt16(packet.ItemType);
         writer.WriteByte(packet.TimeEnemiesNoPickup);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

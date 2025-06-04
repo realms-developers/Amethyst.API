@@ -78,7 +78,7 @@ public sealed class PlayerInfoPacket : IPacket<PlayerInfo>
         writer.WriteByte(packet.Flags2);
         writer.WriteByte(packet.Flags3);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

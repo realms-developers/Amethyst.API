@@ -205,7 +205,7 @@ public sealed class ProjectileUpdatePacket : IPacket<ProjectileUpdate>
             writer.WriteSingle(packet.AI[2]);
         }
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 
@@ -221,5 +221,5 @@ public struct ProjectileUpdate
     public int Damage;
     public float KnockBack;
     public int OriginalDamage;
-    public int ProjectileUUID; // This is a placeholder, adjust as needed.
+    public int ProjectileUUID;
 }

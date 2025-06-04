@@ -47,7 +47,7 @@ public sealed class WorldPlaceObjectPacket : IPacket<WorldPlaceObject>
         writer.WriteSByte(packet.Random);
         writer.WriteBoolean(packet.Direction);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

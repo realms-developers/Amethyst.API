@@ -29,7 +29,7 @@ public sealed class NPCTravelShopPacket : IPacket<NPCTravelShop>
 
         writer.WriteInt16Array(packet.Items);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

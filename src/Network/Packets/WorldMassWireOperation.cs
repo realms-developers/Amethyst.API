@@ -41,7 +41,7 @@ public sealed class WorldMassWireOperationPacket : IPacket<WorldMassWireOperatio
         writer.WriteInt16(packet.EndY);
         writer.WriteByte(packet.ToolMode);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

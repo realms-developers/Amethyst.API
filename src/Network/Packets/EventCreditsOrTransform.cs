@@ -32,7 +32,7 @@ public sealed class EventCreditsOrTransformPacket : IPacket<EventCreditsOrTransf
         writer.WriteByte(packet.EventType);
         writer.WriteInt32(packet.ExtraValue);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

@@ -29,7 +29,7 @@ public sealed class EventDD2WaveTimeLeftPacket : IPacket<EventDD2WaveTimeLeft>
 
         writer.WriteInt32(packet.Time);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

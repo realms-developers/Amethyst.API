@@ -17,6 +17,8 @@ internal sealed class NetworkClient : IDisposable
     internal int _received;
     internal BlockingCollection<byte[]> _handleQueue = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>());
     internal CancellationTokenSource _tokenSrc = new CancellationTokenSource();
+    private byte _prevPacket;
+    private int _prevPacketCount;
 
     internal NetworkClient(int index, Socket socket, byte[] buffer)
     {
@@ -54,9 +56,40 @@ internal sealed class NetworkClient : IDisposable
             e.Dispose();
         };
 
-        if (!_socket.SendAsync(args))
+        try
+        {
+            if (!_socket.SendAsync(args))
+            {
+                args.Dispose();
+            }
+        }
+        catch
         {
             args.Dispose();
+            Dispose();
+        }
+    }
+
+    internal void Send(byte[] data, int offset, int count)
+    {
+        var args = new SocketAsyncEventArgs();
+        args.SetBuffer(data, offset, count);
+        args.Completed += (_, e) =>
+        {
+            e.Dispose();
+        };
+
+        try
+        {
+            if (!_socket.SendAsync(args))
+            {
+                args.Dispose();
+            }
+        }
+        catch
+        {
+            args.Dispose();
+            Dispose();
         }
     }
 
@@ -106,50 +139,56 @@ internal sealed class NetworkClient : IDisposable
             return true;
         }
 
-        var span = _dataBuffer.AsSpan(0, 2);
-        ushort length = Unsafe.Read<ushort>((byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span)));
-
-        if (length < 3 || length > 1000)
+        while (_received > 2)
         {
-            AmethystLog.Network.Error(nameof(NetworkClient), $"Received invalid packet length: {length}");
-            Dispose();
-            return false;
-        }
+            var span = _dataBuffer.AsSpan(0, 2);
+            ushort length = Unsafe.Read<ushort>((byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span)));
 
-        if (_received < length)
-        {
-            // not enough data to read the full packet
-            return true;
-        }
+            if (length < 3 || length > 1000)
+            {
+                AmethystLog.Network.Error(nameof(NetworkClient), $"Received invalid packet length: {length}");
+                Dispose();
+                return false;
+            }
 
-        // We have a full packet
-        var data = ArrayPool<byte>.Shared.Rent(length);
-        Buffer.BlockCopy(_dataBuffer, 0, data, 0, length);
-        _handleQueue.Add(data);
+            // if (_prevPacket != _dataBuffer[2])
+            // {
+            //     _prevPacket = _dataBuffer[2];
+            //     _prevPacketCount = 0;
+            //     AmethystLog.Network.Debug(nameof(NetworkClient), $"Received packet: {_dataBuffer[2]} from client #{_index}, left: {_received - length}, recv: {_received}, len: {length}");
+            // }
+            // else
+            // {
+            //     _prevPacketCount++;
+            //     AmethystLog.Network.Debug(nameof(NetworkClient), $"Received packet: {_dataBuffer[2]} ({_prevPacketCount}) from client #{_index}, left: {_received - length}, recv: {_received}, len: {length}");
+            // }
 
-        if (_received > length)
-        {
-            // Shift the remaining data to the start of the buffer
-            ShiftBuffer(length);
-        }
-        else
-        {
-            // Reset the buffer if we received exactly the length of the packet
-            _received = 0;
+            if (_received < length)
+            {
+                // not enough data to read the full packet
+                return true;
+            }
+
+            var data = ArrayPool<byte>.Shared.Rent(length);
+            Buffer.BlockCopy(_dataBuffer, 0, data, 0, length);
+            _handleQueue.Add(data);
+
+            Buffer.BlockCopy(_dataBuffer, length, _dataBuffer, 0, _received - length);
+            _received -= length;
         }
 
         return true;
     }
 
-    private void ShiftBuffer(int length)
-    {
-        if (_received - length > 0)
-        {
-            Buffer.BlockCopy(_dataBuffer, length, _dataBuffer, 0, _received - length);
-        }
-        _received -= length;
-        Array.Clear(_dataBuffer, _received, _dataBuffer.Length - _received);
-    }
+    // private void ShiftBuffer(int length)
+    // {
+    //     if (_received - length > 0)
+    //     {
+    //         Buffer.BlockCopy(_dataBuffer, length, _dataBuffer, 0, _received - length);
+    //     }
+    //     _received -= length;
+    //     Array.Clear(_dataBuffer, _received, _dataBuffer.Length - _received);
+    // }
 
     private bool _disposed;
     public void Dispose()
@@ -157,6 +196,8 @@ internal sealed class NetworkClient : IDisposable
         if (_disposed)
             return;
         _disposed = true;
+
+        EntityTrackers.Players.Manager?.Remove(_index);
 
         try { _socket?.Shutdown(SocketShutdown.Both); } catch { }
 

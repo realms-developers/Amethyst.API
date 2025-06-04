@@ -47,7 +47,7 @@ public sealed class NPCGetImmuneTimePacket : IPacket<NPCGetImmuneTime>
             writer.WriteInt16(packet.FromWho!.Value);
         }
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

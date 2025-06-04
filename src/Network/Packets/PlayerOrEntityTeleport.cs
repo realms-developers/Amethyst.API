@@ -67,7 +67,7 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
             writer.WriteInt32(0); // Default value if ExtraInfo is not used
         }
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

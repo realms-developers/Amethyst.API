@@ -7,7 +7,7 @@ using Terraria.GameContent.Events;
 
 namespace Amethyst.Network.Handling;
 
-public static class PacketSendingUtility
+public static partial class PacketSendingUtility
 {
     public static byte[] CreateWorldInfoPacket()
     {

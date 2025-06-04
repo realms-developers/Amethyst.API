@@ -41,7 +41,7 @@ public sealed class TETryPlaceItemFoodPlatterPacket : IPacket<TETryPlaceItemFood
         writer.WriteByte(packet.ItemPrefix);
         writer.WriteInt16(packet.ItemStack);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 

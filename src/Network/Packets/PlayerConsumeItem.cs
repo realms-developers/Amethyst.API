@@ -35,7 +35,7 @@ public sealed class PlayerConsumeItemPacket : IPacket<PlayerConsumeItem>
         writer.WriteInt16(packet.ItemCount);
         writer.WriteByte(packet.PlayerIndex);
 
-        return writer.BuildPacket();
+        return writer.Build();
     }
 }
 
