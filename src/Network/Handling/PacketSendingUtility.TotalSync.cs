@@ -56,7 +56,6 @@ public static partial class PacketSendingUtility
 
                 byte[] buffer = CompressTileBlock(i * 200, j * 150, 200, 150);
                 entity.SendPacketBytes(buffer);
-                Console.WriteLine($"built: {buffer[2]}, len: {buffer.Length}");
             }
         }
     }

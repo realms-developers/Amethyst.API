@@ -60,8 +60,7 @@ public static class HandshakeHandler
             return;
         }
 
-        byte[] data = PacketSendingUtility.CreateWorldInfoPacket();
-        plr.SendPacketBytes(data);
+        plr.SendPacketBytes(PacketSendingUtility.CreateWorldInfoPacket());
 
         // TODO: sync invasion
 

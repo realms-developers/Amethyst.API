@@ -403,6 +403,8 @@ public unsafe ref struct FastPacketWriter : IDisposable
             destination: _ptr,
             destinationSizeInBytes: values.Length,
             sourceBytesToCopy: values.Length);
+
+        _ptr += values.Length;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -413,6 +415,8 @@ public unsafe ref struct FastPacketWriter : IDisposable
             destination: _ptr,
             destinationSizeInBytes: length,
             sourceBytesToCopy: length);
+
+        _ptr += length;
     }
 
     public void EnsureCapacity(int additionalCapacity)
