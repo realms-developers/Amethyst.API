@@ -1,7 +1,7 @@
 using Amethyst.Storages.Config;
 using Terraria;
 
-namespace Amethyst.Server.Entities.Players.Handshake;
+namespace Amethyst.Network.Handling.Handshake;
 
 public sealed class HandshakeConfiguration
 {

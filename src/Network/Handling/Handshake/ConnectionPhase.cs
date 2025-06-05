@@ -1,4 +1,4 @@
-namespace Amethyst.Server.Entities.Players.Handshake;
+namespace Amethyst.Network.Handling.Handshake;
 
 public enum ConnectionPhase
 {

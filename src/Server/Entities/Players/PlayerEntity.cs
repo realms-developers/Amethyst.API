@@ -4,7 +4,7 @@ using Amethyst.Server.Entities.Base;
 using Amethyst.Network.Engine;
 using Amethyst.Systems.Users.Players;
 using Terraria;
-using Amethyst.Server.Entities.Players.Handshake;
+using Amethyst.Network.Handling.Handshake;
 
 namespace Amethyst.Server.Entities.Players;
 

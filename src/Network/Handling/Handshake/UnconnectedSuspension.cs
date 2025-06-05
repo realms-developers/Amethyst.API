@@ -2,7 +2,7 @@ using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Suspension;
 using Amethyst.Systems.Users.Players;
 
-namespace Amethyst.Server.Entities.Players.Handshake;
+namespace Amethyst.Network.Handling.Handshake;
 
 public sealed class UnconnectedSuspension : ISuspension
 {

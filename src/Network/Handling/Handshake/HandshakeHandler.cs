@@ -1,15 +1,16 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Kernel;
-using Amethyst.Network;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
+using Amethyst.Server.Entities;
+using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Users;
 using Amethyst.Systems.Users.Players;
 using MongoDB.Driver;
 using Terraria;
 
-namespace Amethyst.Server.Entities.Players.Handshake;
+namespace Amethyst.Network.Handling.Handshake;
 
 public static class HandshakeHandler
 {

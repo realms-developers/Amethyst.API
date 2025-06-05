@@ -8,7 +8,7 @@ using Amethyst.Network.Engine.Patching;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Network.Packets;
 using Terraria;
-using Amethyst.Server.Entities.Players.Handshake;
+using Amethyst.Network.Handling.Handshake;
 
 namespace Amethyst.Network;
 

@@ -1,4 +1,3 @@
-using Amethyst.Kernel;
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Commands;
 using Amethyst.Systems.Users.Common.Commands;
@@ -14,6 +13,6 @@ public sealed class ArtificialCommandBuilder : IProviderBuilder<ICommandProvider
             throw new InvalidOperationException("User must be a ArtificialUser to build a command provider.");
         }
 
-        return new CommonCommandProvider(ArtificialUser, 500, AmethystSession.Profile.DebugMode ? ["shared", "debug"] : ["shared"]);
+        return new CommonCommandProvider(ArtificialUser, 500, ["shared"]);
     }
 }

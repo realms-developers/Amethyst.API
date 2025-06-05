@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Base.Metadata;
 using Amethyst.Systems.Users.Base;
-using Amethyst.Systems.Users.Base.Commands;
 
 namespace Amethyst.Systems.Commands;
 
