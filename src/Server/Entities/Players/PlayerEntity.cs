@@ -3,13 +3,12 @@ using Amethyst.Hooks.Args.Players;
 using Amethyst.Server.Entities.Base;
 using Amethyst.Network.Engine;
 using Amethyst.Systems.Users.Players;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Amethyst.Network.Handling;
+using Amethyst.Server.Entities.Players.Handshake;
 
 namespace Amethyst.Server.Entities.Players;
 
-public sealed partial class PlayerEntity : IServerEntity
+public sealed partial class PlayerEntity : IServerEntity, IDisposable
 {
     internal PlayerEntity(int index, NetworkClient client)
     {
@@ -36,12 +35,6 @@ public sealed partial class PlayerEntity : IServerEntity
 
     public string IP { get; set; }
     public string UUID { get; set; }
-
-    public Vector2 Position
-    {
-        get => TPlayer.position;
-        set => TPlayer.position = value;
-    }
 
     public PlayerUser? User { get; private set; }
 
@@ -90,5 +83,10 @@ public sealed partial class PlayerEntity : IServerEntity
         _client.Dispose();
         Phase = ConnectionPhase.Disconnected;
         AmethystLog.Network.Info(nameof(PlayerEntity), $"Player #{Index} disconnected from {_client._socket.RemoteEndPoint}");
+    }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
     }
 }

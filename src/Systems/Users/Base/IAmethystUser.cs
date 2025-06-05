@@ -3,6 +3,7 @@ using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Users.Base.Suspension;
+using Amethyst.Systems.Users.Base.Commands;
 
 namespace Amethyst.Systems.Users.Base;
 
@@ -15,6 +16,8 @@ public interface IAmethystUser
     IPermissionProvider Permissions { get; }
 
     IExtensionProvider Extensions { get; }
+
+    ICommandProvider Commands { get; }
 
     ICharacterProvider? Character { get; }
 

@@ -1,16 +1,15 @@
+using Amethyst.Hooks;
+using Amethyst.Hooks.Args.Players;
 using Amethyst.Kernel;
+using Amethyst.Network;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
-using Amethyst.Network.Utilities;
-using Amethyst.Server.Entities;
-using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Users;
 using Amethyst.Systems.Users.Players;
 using MongoDB.Driver;
 using Terraria;
-using Terraria.ID;
 
-namespace Amethyst.Network.Handling.Handshake;
+namespace Amethyst.Server.Entities.Players.Handshake;
 
 public static class HandshakeHandler
 {
@@ -18,15 +17,16 @@ public static class HandshakeHandler
 
     internal static void Initialize()
     {
-        NetworkManager.AddHandler<PlayerConnectRequest>(OnPlayerConnectRequest);
+        NetworkManager.SetMainHandler<PlayerConnectRequest>(OnPlayerConnectRequest);
+        NetworkManager.SetMainHandler<PlayerUUID>(OnPlayerUUIDRequest);
+        NetworkManager.SetMainHandler<PlayerRequestWorldInfo>(OnPlayerRequestWorldInfo);
+        NetworkManager.SetMainHandler<PlayerRequestSection>(OnPlayerRequestSection);
+
         NetworkManager.AddHandler<PlayerInfo>(OnPlayerInfoRequest);
-        NetworkManager.AddHandler<PlayerUUID>(OnPlayerUUIDRequest);
-        NetworkManager.AddHandler<PlayerRequestWorldInfo>(OnPlayerRequestWorldInfo);
-        NetworkManager.AddHandler<PlayerRequestSection>(OnPlayerRequestSection);
         NetworkManager.AddHandler<PlayerSpawn>(OnPlayerSpawn);
     }
 
-    private static void OnPlayerSpawn(PlayerEntity plr, ref PlayerSpawn packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public static void OnPlayerSpawn(PlayerEntity plr, ref PlayerSpawn packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingPlayerSpawn)
         {
@@ -36,10 +36,12 @@ public static class HandshakeHandler
 
         plr.SendPacketBytes(PlayerConnectionPrepareWorldPacket.Serialize(new()));
         plr.Phase = ConnectionPhase.Connected;
-        AmethystLog.Network.Info(nameof(HandshakeHandler), $"Player {plr.Name} was spawned in the world.");
+
+        HookRegistry.GetHook<PlayerFullyJoinedArgs>()
+            ?.Invoke(new PlayerFullyJoinedArgs(plr));
     }
 
-    private static void OnPlayerRequestSection(PlayerEntity plr, ref PlayerRequestSection packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public static void OnPlayerRequestSection(PlayerEntity plr, ref PlayerRequestSection packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingSectionRequest)
         {
@@ -50,10 +52,9 @@ public static class HandshakeHandler
 
         plr.SendPacketBytes(PlayerFinishedConnectionPacket.Serialize(new()));
         plr.Phase = ConnectionPhase.WaitingPlayerSpawn;
-        AmethystLog.Network.Info(nameof(HandshakeHandler), $"Player #{plr.Index} connected with Name: {plr.Name}, IP: {plr.IP}");
     }
 
-    private static void OnPlayerRequestWorldInfo(PlayerEntity plr, ref PlayerRequestWorldInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public static void OnPlayerRequestWorldInfo(PlayerEntity plr, ref PlayerRequestWorldInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingWorldInfoRequest)
         {
@@ -67,7 +68,7 @@ public static class HandshakeHandler
         plr.Phase = ConnectionPhase.WaitingSectionRequest;
     }
 
-    private static void OnPlayerUUIDRequest(PlayerEntity plr, ref PlayerUUID packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public static void OnPlayerUUIDRequest(PlayerEntity plr, ref PlayerUUID packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingUUID)
         {
@@ -108,7 +109,7 @@ public static class HandshakeHandler
         user.Suspensions!.Suspend(Suspension);
     }
 
-    private static void OnPlayerInfoRequest(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public static void OnPlayerInfoRequest(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingPlayerInfo)
         {

@@ -1,8 +1,8 @@
 using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Base.Result;
-using Amethyst.Extensions.Hooks;
 using Amethyst.Extensions.Plugins.Services;
 using Amethyst.Hooks;
+using Amethyst.Hooks.Args.Extensions;
 
 namespace Amethyst.Extensions.Plugins;
 

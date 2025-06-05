@@ -8,7 +8,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Tile_Entities;
 using Terraria.ID;
 
-namespace Amethyst.Network.Handling;
+namespace Amethyst.Network;
 
 public static partial class PacketSendingUtility
 {
@@ -27,7 +27,8 @@ public static partial class PacketSendingUtility
     // so we need to use semaphore to prevent this
     private static readonly SemaphoreSlim _sectionPacketSemaphore = new(1, 1);
 
-    public static byte[] CompressTileBlock(int xStart, int yStart, short width, short height)
+    public static Func<int, int, short, short, byte[]> CompressTileBlock { get; set; } = DirectCompressTileBlock;
+    public static byte[] DirectCompressTileBlock(int xStart, int yStart, short width, short height)
     {
         _sectionPacketSemaphore.Wait();
 

@@ -1,6 +1,6 @@
 using Amethyst.Storages.Config;
 
-namespace Amethyst.Network.Handling.Packets;
+namespace Amethyst.Network;
 
 public sealed class PacketsNetworkConfiguration
 {

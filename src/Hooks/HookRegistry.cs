@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
-using System.Reflection;
 using Amethyst.Hooks.Autoloading;
-using Amethyst.Hooks.MonoModHooks;
+using Amethyst.Server.Hooks;
 
 namespace Amethyst.Hooks;
 
@@ -11,7 +10,6 @@ public static class HookRegistry
     {
         AutoloadUtility.LoadFrom(typeof(HookRegistry).Assembly);
 
-        PlayerModHooks.AttachHooks();
         ChatModHooks.AttachHooks();
     }
 

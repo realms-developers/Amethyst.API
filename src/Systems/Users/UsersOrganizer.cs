@@ -10,6 +10,8 @@ using Amethyst.Systems.Users.Players.Messages;
 using Amethyst.Systems.Users.Players.Permissions;
 using Amethyst.Systems.Users.Players.Suspension;
 using Amethyst.Systems.Users.Common.Permissions;
+using Amethyst.Systems.Users.Players.Commands;
+using Amethyst.Systems.Users.Artificial.Commands;
 
 namespace Amethyst.Systems.Users;
 
@@ -21,18 +23,23 @@ public static class UsersOrganizer
 
         IPermissionProvider rootProvider = new RootPermissionProvider(ConsoleUser);
         ConsoleUser.Permissions.AddChild(rootProvider);
+
+        ConsoleUser.Commands.Repositories.Clear();
+        ConsoleUser.Commands.Repositories.AddRange(["shared", "root", "debug"]);
     }
 
     public static PlayersUsersService PlayerUsers { get; } = new PlayersUsersService(
         new PlayerMessageBuilder(),
         new PlayerPermissionBuilder(),
         new PlayerExtensionBuilder(),
-        new PlayerSuspensionBuilder());
+        new PlayerSuspensionBuilder(),
+        new PlayerCommandBuilder());
 
     public static ArtificialUsersService ArtificialUsers { get; } = new ArtificialUsersService(
         new ArtificialMessageBuilder(),
         new ArtificialPermissionBuilder(),
-        new ArtificialExtensionBuilder());
+        new ArtificialExtensionBuilder(),
+        new ArtificialCommandBuilder());
 
     public static IAmethystUser ConsoleUser { get; }
 }

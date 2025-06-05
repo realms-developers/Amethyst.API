@@ -1,15 +1,15 @@
 using Amethyst.Kernel;
-using Amethyst.Network.Handling.Packets;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 using Terraria;
 using Terraria.GameContent.Events;
 
-namespace Amethyst.Network.Handling;
+namespace Amethyst.Network;
 
 public static partial class PacketSendingUtility
 {
-    public static byte[] CreateWorldInfoPacket()
+    public static Func<byte[]> CreateWorldInfoPacket { get; set; } = DirectCreateWorldInfoPacket;
+    public static byte[] DirectCreateWorldInfoPacket()
     {
         NetBitsByte flags = 0;
         flags[0] = Main.dayTime;

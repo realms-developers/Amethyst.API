@@ -1,37 +1,46 @@
+using System.Diagnostics;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Base.Metadata;
 using Amethyst.Systems.Users.Base;
+using Amethyst.Systems.Users.Base.Commands;
 
 namespace Amethyst.Systems.Commands;
 
 public static class CommandsUtility
 {
-    public static void RunCommand(CommandRepository[] repositories, IAmethystUser user, string commandText)
+    public static CompletedCommandInfo? RunCommand(CommandRepository[] repositories, IAmethystUser user, string commandText)
     {
         foreach (var repository in repositories)
         {
-            var command = repository.FindCommand(commandText);
+            var command = repository.FindCommand(commandText, out string remainingText);
             if (command != null)
             {
-                try
-                {
-                    var ctx = command.Invoker.CreateContext(user, SplitByArguments(commandText));
-                    if (!command.Metadata.Rules.HasFlag(CommandRules.NoLogging))
-                        AmethystLog.System.Info($"Commands<{user.Name}>", $"{commandText} [{string.Join(", ", repositories)}]");
-                    command.Invoker.Invoke(ctx);
-                }
-                catch (Exception ex)
-                {
-                    user.Messages.ReplyError("commands.error_tellDevelopers");
-
-                    AmethystLog.System.Info($"Commands<{user.Name}>", $"");
-                    AmethystLog.System.Error($"Commands<{user.Name}>", $"Error while executing command: {ex.ToString()}");
-                }
-                return;
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                RunCommand(command, user, remainingText);
+                stopwatch.Stop();
+                return new CompletedCommandInfo(command, remainingText, stopwatch.Elapsed, DateTimeOffset.Now);
             }
         }
 
         user.Messages.ReplyError("commands.commandNotFound");
+        return null;
+    }
+    public static void RunCommand(ICommand command, IAmethystUser user, string commandText)
+    {
+        try
+        {
+            var ctx = command.Invoker.CreateContext(user, SplitByArguments(commandText));
+            if (!command.Metadata.Rules.HasFlag(CommandRules.NoLogging))
+                AmethystLog.System.Info($"Commands<{user.Name}>", $"{commandText} [{command.Repository.Name}]");
+            command.Invoker.Invoke(ctx);
+        }
+        catch (Exception ex)
+        {
+            user.Messages.ReplyError("commands.error_tellDevelopers");
+
+            AmethystLog.System.Info($"Commands<{user.Name}>", $"");
+            AmethystLog.System.Error($"Commands<{user.Name}>", $"Error while executing command: {ex.ToString()}");
+        }
     }
 
     public static string[] SplitByArguments(string commandText)

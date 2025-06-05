@@ -5,10 +5,10 @@ using Amethyst.Network.Engine;
 using Amethyst.Network.Engine.Delegates;
 using Amethyst.Network.Engine.Packets;
 using Amethyst.Network.Engine.Patching;
-using Amethyst.Network.Handling.Handshake;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Network.Packets;
 using Terraria;
+using Amethyst.Server.Entities.Players.Handshake;
 
 namespace Amethyst.Network;
 

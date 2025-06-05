@@ -2,7 +2,7 @@ using Amethyst.Extensions.Base.Result;
 using Amethyst.Extensions.Plugins;
 using Amethyst.Hooks.Autoloading;
 
-namespace Amethyst.Extensions.Hooks;
+namespace Amethyst.Hooks.Args.Extensions;
 
 [AutoloadHook]
 public sealed class PluginDeinitializeArgs

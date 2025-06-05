@@ -40,6 +40,7 @@ public sealed class PlayerManager : IEntityManager<PlayerEntity>
         _removeHook.Invoke(new PlayerTrackerRemoveArgs(_tracker._players[index]));
         AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count() - 1}/{NetworkManager.MaxPlayers}] RMV => player_{index} ({_tracker._players[index].Name ?? "not_identified"})");
 
+        _tracker._players[index].Dispose();
         _tracker._players[index] = null!;
     }
 }

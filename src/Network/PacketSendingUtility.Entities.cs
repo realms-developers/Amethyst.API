@@ -4,11 +4,13 @@ using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Players;
 using Terraria;
 
-namespace Amethyst.Network.Handling;
+namespace Amethyst.Network;
 
 public static partial class PacketSendingUtility
 {
-    public static void SyncNPC(PlayerEntity entity, int npcId)
+    public static Action<PlayerEntity, int> SyncNPC { get; set; } = DirectSyncNPC;
+
+    public static void DirectSyncNPC(PlayerEntity entity, int npcId)
     {
         var npc = Main.npc[npcId];
         if (npc == null || !npc.active)
@@ -64,7 +66,8 @@ public static partial class PacketSendingUtility
         entity.SendPacketBytes(data);
     }
 
-    public static void SyncProjectile(PlayerEntity entity, int projectileId)
+    public static Action<PlayerEntity, int> SyncProjectile { get; set; } = DirectSyncProjectile;
+    public static void DirectSyncProjectile(PlayerEntity entity, int projectileId)
     {
         var projectile = Main.projectile[projectileId];
         if (projectile == null || !projectile.active)
@@ -90,7 +93,8 @@ public static partial class PacketSendingUtility
         entity.SendPacketBytes(data);
     }
 
-    public static void SyncItem(PlayerEntity entity, int itemId)
+    public static Action<PlayerEntity, int> SyncItem { get; set; } = DirectSyncItem;
+    public static void DirectSyncItem(PlayerEntity entity, int itemId)
     {
         var item = Main.item[itemId];
         if (item == null || !item.active)

@@ -1,8 +1,9 @@
+using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Chat;
 using Microsoft.Xna.Framework;
 using Terraria.Localization;
 
-namespace Amethyst.Hooks.MonoModHooks;
+namespace Amethyst.Server.Hooks;
 
 public static class ChatModHooks
 {

@@ -48,8 +48,10 @@ public sealed class CommandRepository
             : _commands.FirstOrDefault(c => c.Metadata.Names.Contains(name));
     }
 
-    public ICommand? FindCommand(string fullText)
+    public ICommand? FindCommand(string fullText, out string remainingText)
     {
+        remainingText = string.Empty;
+
         if (string.IsNullOrEmpty(fullText))
             throw new ArgumentNullException(nameof(fullText));
 
@@ -73,6 +75,9 @@ public sealed class CommandRepository
                         continue;
                     }
                 }
+
+                remainingText = fullText.Length > name.Length ? fullText.Substring(name.Length + 1) : fullText.Substring(name.Length);
+                return cmd;
             }
         }
 

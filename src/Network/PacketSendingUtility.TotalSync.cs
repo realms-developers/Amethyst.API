@@ -2,11 +2,12 @@
 using Amethyst.Server.Entities.Players;
 using Terraria;
 
-namespace Amethyst.Network.Handling;
+namespace Amethyst.Network;
 
 public static partial class PacketSendingUtility
 {
-    public static void SendFullWorld(PlayerEntity entity, int spawnX = -1, int spawnY = -1)
+    public static Action<PlayerEntity, int, int> SendFullWorld { get; set; } = DirectSendFullWorld;
+    public static void DirectSendFullWorld(PlayerEntity entity, int spawnX = -1, int spawnY = -1)
     {
         if (spawnX != -1 && spawnY != -1)
         {
@@ -17,7 +18,8 @@ public static partial class PacketSendingUtility
         LoadEntities(entity);
     }
 
-    public static void LoadEntities(PlayerEntity entity)
+    public static Action<PlayerEntity> LoadEntities { get; set; } = DirectLoadEntities;
+    public static void DirectLoadEntities(PlayerEntity entity)
     {
         for (int i = 0; i < Main.maxNPCs; i++)
         {
@@ -35,7 +37,8 @@ public static partial class PacketSendingUtility
         }
     }
 
-    public static void LoadSection(PlayerEntity entity, int sectionX, int sectionY, short sectionsWidth, short sectionsHeight)
+    public static Action<PlayerEntity, int, int, short, short> LoadSection { get; set; } = DirectLoadSection;
+    public static void DirectLoadSection(PlayerEntity entity, int sectionX, int sectionY, short sectionsWidth, short sectionsHeight)
     {
         int maxX = Main.maxTilesX / 200;
         int maxY = Main.maxTilesX / 150;

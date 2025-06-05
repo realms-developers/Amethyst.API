@@ -17,7 +17,7 @@ public static class CommandsOrganizer
         { "debug", new CommandRepository("debug") }
     };
 
-    private static readonly string[] _defRepos = { "def", "root", "debug" };
+    private static readonly string[] _defRepos = { "shared", "root", "debug" };
 
     public static void AddRepository(CommandRepository repository)
     {

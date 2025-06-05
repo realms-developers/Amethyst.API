@@ -4,9 +4,9 @@ using Amethyst.Server.Entities.Players;
 namespace Amethyst.Hooks.Args.Players;
 
 [AutoloadHook]
-public sealed class PlayerGreetArgs
+public sealed class PlayerFullyJoinedArgs
 {
-    public PlayerGreetArgs(PlayerEntity player)
+    public PlayerFullyJoinedArgs(PlayerEntity player)
     {
         Player = player;
     }
