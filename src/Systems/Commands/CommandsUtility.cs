@@ -33,7 +33,7 @@ public static class CommandsUtility
         {
             var ctx = command.Invoker.CreateContext(user, SplitByArguments(args));
             if (!command.Metadata.Rules.HasFlag(CommandRules.NoLogging))
-                AmethystLog.System.Info($"Commands<{user.Name}>", $"/{command.Metadata.Names.First() ?? "unknown"} -> [{string.Join(" ", ctx.Args.Select(p => $"[{p}]"))}] [{command.Repository.Name}]");
+                AmethystLog.System.Info($"Commands<{user.Name}>", $"/{command.Metadata.Names.First() ?? "unknown"} -> [{string.Join(", ", ctx.Args.Select(p => $"\"{p}\""))}] [{command.Repository.Name}]");
             command.Invoker.Invoke(ctx);
         }
         catch (Exception ex)
