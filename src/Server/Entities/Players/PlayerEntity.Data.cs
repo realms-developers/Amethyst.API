@@ -1,3 +1,4 @@
+using Amethyst.Network.Packets;
 using Amethyst.Server.Entities.Base;
 using Microsoft.Xna.Framework;
 
@@ -5,6 +6,8 @@ namespace Amethyst.Server.Entities.Players;
 
 public sealed partial class PlayerEntity : IServerEntity
 {
+    public PlayerInfo TempPlayerInfo { get; set; }
+
     public ref int Life => ref TPlayer.statLife;
     public ref int MaxLife => ref TPlayer.statLifeMax;
 

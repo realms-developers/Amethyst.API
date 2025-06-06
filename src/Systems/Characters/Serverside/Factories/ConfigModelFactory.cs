@@ -24,16 +24,17 @@ public sealed class ConfigModelFactory : IDefaultModelFactory
 
     private void CopyPlayerInfo(PlayerEntity player, ref EmptyCharacterModel model)
     {
-        model.Hair = (byte)player.TPlayer.hair;
-        model.HairDye = player.TPlayer.hairDye;
+        model.Hair = player.TempPlayerInfo.HairID;
+        model.HairDye = player.TempPlayerInfo.HairDyeID;
+        model.SkinVariant = player.TempPlayerInfo.SkinVariant;
 
-        model.Colors[(byte)PlayerColorType.SkinColor] = new(player.TPlayer.skinColor.R, player.TPlayer.skinColor.G, player.TPlayer.skinColor.B);
-        model.Colors[(byte)PlayerColorType.HairColor] = new(player.TPlayer.hairColor.R, player.TPlayer.hairColor.G, player.TPlayer.hairColor.B);
-        model.Colors[(byte)PlayerColorType.ShirtColor] = new(player.TPlayer.shirtColor.R, player.TPlayer.shirtColor.G, player.TPlayer.shirtColor.B);
-        model.Colors[(byte)PlayerColorType.UnderShirtColor] = new(player.TPlayer.underShirtColor.R, player.TPlayer.underShirtColor.G, player.TPlayer.underShirtColor.B);
-        model.Colors[(byte)PlayerColorType.PantsColor] = new(player.TPlayer.pantsColor.R, player.TPlayer.pantsColor.G, player.TPlayer.pantsColor.B);
-        model.Colors[(byte)PlayerColorType.ShoesColor] = new(player.TPlayer.shoeColor.R, player.TPlayer.shoeColor.G, player.TPlayer.shoeColor.B);
-        model.Colors[(byte)PlayerColorType.EyesColor] = new(player.TPlayer.eyeColor.R, player.TPlayer.eyeColor.G, player.TPlayer.eyeColor.B);
+        model.Colors[(byte)PlayerColorType.SkinColor] = player.TempPlayerInfo.SkinColor;
+        model.Colors[(byte)PlayerColorType.HairColor] = player.TempPlayerInfo.HairColor;
+        model.Colors[(byte)PlayerColorType.ShirtColor] = player.TempPlayerInfo.ShirtColor;
+        model.Colors[(byte)PlayerColorType.UnderShirtColor] = player.TempPlayerInfo.UnderShirtColor;
+        model.Colors[(byte)PlayerColorType.PantsColor] = player.TempPlayerInfo.PantsColor;
+        model.Colors[(byte)PlayerColorType.ShoesColor] = player.TempPlayerInfo.ShoeColor;
+        model.Colors[(byte)PlayerColorType.EyesColor] = player.TempPlayerInfo.EyeColor;
     }
 
     private void CopyFromConfig(ref EmptyCharacterModel model)

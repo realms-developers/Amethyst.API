@@ -102,6 +102,7 @@ public sealed class TAPILauncher : IServerLauncher
         Stopwatch updateSw = new();
 
         List<double> timings = [];
+        AmethystLog.Startup.Verbose(nameof(TAPILauncher), $"Server started.");
 
         while (!Netplay.Disconnect)
         {

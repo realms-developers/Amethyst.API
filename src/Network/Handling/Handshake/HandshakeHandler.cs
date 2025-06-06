@@ -19,11 +19,11 @@ public static class HandshakeHandler
     internal static void Initialize()
     {
         NetworkManager.SetMainHandler<PlayerConnectRequest>(OnPlayerConnectRequest);
-        NetworkManager.SetMainHandler<PlayerUUID>(OnPlayerUUIDRequest);
+        NetworkManager.SetMainHandler<PlayerUUID>(OnPlayerUUID);
         NetworkManager.SetMainHandler<PlayerRequestWorldInfo>(OnPlayerRequestWorldInfo);
         NetworkManager.SetMainHandler<PlayerRequestSection>(OnPlayerRequestSection);
 
-        NetworkManager.AddHandler<PlayerInfo>(OnPlayerInfoRequest);
+        NetworkManager.AddHandler<PlayerInfo>(OnPlayerInfo);
         NetworkManager.AddHandler<PlayerSpawn>(OnPlayerSpawn);
     }
 
@@ -69,7 +69,7 @@ public static class HandshakeHandler
         plr.Phase = ConnectionPhase.WaitingSectionRequest;
     }
 
-    public static void OnPlayerUUIDRequest(PlayerEntity plr, ref PlayerUUID packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public static void OnPlayerUUID(PlayerEntity plr, ref PlayerUUID packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingUUID)
         {
@@ -110,7 +110,7 @@ public static class HandshakeHandler
         user.Suspensions!.Suspend(Suspension);
     }
 
-    public static void OnPlayerInfoRequest(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public static void OnPlayerInfo(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingPlayerInfo)
         {
@@ -172,6 +172,7 @@ public static class HandshakeHandler
         }
 
         plr.Name = packet.Name;
+        plr.TempPlayerInfo = packet;
         plr.Phase = ConnectionPhase.WaitingUUID;
     }
 

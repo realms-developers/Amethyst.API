@@ -61,23 +61,7 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
             ItemPrefix = item.Prefix
         });
 
-        int remote = sync == SyncType.Local ? Player.Index : -1;
-        int ignore = sync == SyncType.Exclude ? Player.Index : -1;
-
-        switch (sync)
-        {
-            case SyncType.Local:
-                Player.SendPacketBytes(packet);
-                break;
-
-            case SyncType.Exclude:
-                PlayerUtils.BroadcastPacketBytes(packet, Player.Index);
-                break;
-
-            case SyncType.Broadcast:
-                PlayerUtils.BroadcastPacketBytes(packet);
-                break;
-        }
+        SendPacket(sync, packet);
     }
 
     public void SyncLife(SyncType sync)
@@ -87,7 +71,13 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
         Player.TPlayer.statLifeMax = model.MaxLife;
         Player.TPlayer.statLifeMax2 = model.MaxLife;
 
-        NetMessage.TrySendData(16, sync == SyncType.Local ? Player.Index : -1, sync == SyncType.Exclude ? Player.Index : -1, Terraria.Localization.NetworkText.Empty, Player.Index);
+        byte[] packet = PlayerLifePacket.Serialize(new PlayerLife
+        {
+            PlayerIndex = (byte)Player.Index,
+            LifeCount = (short)Player.TPlayer.statLife,
+            LifeMax = (short)model.MaxLife
+        });
+        SendPacket(sync, packet);
     }
 
     public void SyncMana(SyncType sync)
@@ -97,7 +87,14 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
         Player.TPlayer.statManaMax = model.MaxMana;
         Player.TPlayer.statManaMax2 = model.MaxMana;
 
-        NetMessage.TrySendData(42, sync == SyncType.Local ? Player.Index : -1, sync == SyncType.Exclude ? Player.Index : -1, Terraria.Localization.NetworkText.Empty, Player.Index);
+
+        byte[] packet = PlayerManaPacket.Serialize(new PlayerMana
+        {
+            PlayerIndex = (byte)Player.Index,
+            ManaCount = (short)Player.TPlayer.statMana,
+            ManaMax = (short)model.MaxMana
+        });
+        SendPacket(sync, packet);
     }
 
     public void SyncPlayerInfo(SyncType sync)
@@ -134,6 +131,29 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
         Player.TPlayer.usedAmbrosia = model.Info3.HasFlag(PlayerInfo3.UsedAmbrosia);
         Player.TPlayer.ateArtisanBread = model.Info3.HasFlag(PlayerInfo3.AteArtisanBread);
 
+        byte[] packet = PlayerInfoPacket.Serialize(new PlayerInfo
+        {
+            PlayerIndex = (byte)Player.Index,
+            HairID = Provider.CurrentModel.Hair,
+            HairDyeID = Provider.CurrentModel.HairDye,
+            SkinVariant = Provider.CurrentModel.SkinVariant,
+            HairColor = Provider.CurrentModel.Colors[(byte)PlayerColorType.HairColor],
+
+            // HairDyeID = Player.TPlayer.hairDye,
+            // SkinVariant = Player.TPlayer.skinVariant,
+            // HairColor = Player.TPlayer.hairColor.PackedValue,
+            // SkinColor = Player.TPlayer.skinColor.PackedValue,
+            // ShirtColor = Player.TPlayer.shirtColor.PackedValue,
+            // UnderShirtColor = Player.TPlayer.underShirtColor.PackedValue,
+            // PantsColor = Player.TPlayer.pantsColor.PackedValue,
+            // ShoeColor = Player.TPlayer.shoeColor.PackedValue,
+            AccessoryVisiblity = Player.TPlayer.hideVisibleAccessory,
+            MiscVisiblity = Player.TPlayer.hideMisc,
+            Flags = (byte)model.Info1,
+            Flags2 = (byte)model.Info2,
+            Flags3 = (byte)model.Info3
+        });
+
         NetMessage.TrySendData(4, sync == SyncType.Local ? Player.Index : -1, sync == SyncType.Exclude ? Player.Index : -1, Terraria.Localization.NetworkText.Empty, Player.Index);
     }
 
@@ -142,5 +162,10 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
         Player.TPlayer.anglerQuestsFinished = Provider.CurrentModel.QuestsCompleted;
 
         NetMessage.TrySendData(76, sync == SyncType.Local ? Player.Index : -1, sync == SyncType.Exclude ? Player.Index : -1, Terraria.Localization.NetworkText.Empty, Player.Index);
+    }
+
+    private void SendPacket(SyncType syncType, byte[] data)
+    {
+
     }
 }

@@ -9,6 +9,7 @@ using Amethyst.Server.Entities.Players;
 using Amethyst.Network.Packets;
 using Terraria;
 using Amethyst.Network.Handling.Handshake;
+using Amethyst.Network.Handling.Characters;
 
 namespace Amethyst.Network;
 
@@ -65,6 +66,7 @@ public static class NetworkManager
         NetworkPatcher.Initialize();
 
         HandshakeHandler.Initialize();
+        CharactersHandler.Initialize();
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);

@@ -60,7 +60,7 @@ internal static class ServerUtils
 
     internal static void UpdateTitle()
     {
-        string title = $"Amethyst API (Profile: {AmethystSession.Profile.Name}) on TerrariaAPI v{Main.versionNumber} - ";
+        string title = $"Amethyst API (Profile: {AmethystSession.Profile.Name}) on TerrariaAPI {Main.versionNumber} - ";
 
         if (AmethystSession.Launcher.IsStarted)
         {
@@ -88,21 +88,8 @@ internal static class ServerUtils
     {
         Main.instance.SetWorld(path, false);
 
-        Task task = WorldGen.serverLoadWorld();
-        string oldStatusText = "None...";
-        while (!task.IsCompleted)
-        {
-            if (WorldFile.LastThrownLoadException == null)
-            {
-                if (oldStatusText != Main.AutogenProgress.Message)
-                {
-                    oldStatusText = Main.AutogenProgress.Message;
-
-                    AmethystLog.Startup.Verbose(nameof(TAPILauncher), $"Loading world '{path}': '{Main.AutogenProgress._totalProgress}'");
-                }
-            }
-            Thread.Sleep(100);
-        }
+        AmethystLog.Startup.Verbose(nameof(TAPILauncher), $"Loading world '{path}'...");
+        WorldGen.serverLoadWorld().Wait();
     }
 
     internal static void GenerateWorld()
