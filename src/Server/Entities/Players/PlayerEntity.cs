@@ -87,6 +87,7 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        User?.Character?.Save();
+        User?.Extensions.UnloadAll(User);
     }
 }

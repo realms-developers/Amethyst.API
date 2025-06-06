@@ -9,6 +9,9 @@ public static class CommandsUtility
 {
     public static CompletedCommandInfo? RunCommand(CommandRepository[] repositories, IAmethystUser user, string commandText)
     {
+        if (commandText.StartsWith('/'))
+            commandText = commandText[1..];
+
         foreach (var repository in repositories)
         {
             var command = repository.FindCommand(commandText, out string remainingText);

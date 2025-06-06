@@ -46,8 +46,7 @@ internal static class ServerUtils
             try
             {
                 plr.Kick("amethyst.serverStopped");
-                plr.User?.Character?.Save();
-                plr.User?.Extensions.UnloadAll(plr.User);
+                plr.Dispose();
             }
             catch (Exception ex)
             {

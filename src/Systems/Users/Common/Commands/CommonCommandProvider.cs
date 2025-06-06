@@ -29,6 +29,7 @@ public sealed class CommonCommandProvider : ICommandProvider
     {
         RunCommand(() =>
         {
+            AmethystLog.System.Debug("CCP", $"Running command '{commandText}' for user '{User.Name}'");
             return CommandsUtility.RunCommand(
                 CommandsOrganizer.Repositories.Where(repo => Repositories.Contains(repo.Name)).ToArray(),
                 User,
@@ -41,6 +42,7 @@ public sealed class CommonCommandProvider : ICommandProvider
     {
         RunCommand(() =>
         {
+            AmethystLog.System.Debug("CCP", $"Running command '{command.Metadata.Names.First()}' with args '{commandArgs}' for user '{User.Name}'");
             Stopwatch stopwatch = Stopwatch.StartNew();
             CommandsUtility.RunCommand(
                 command,

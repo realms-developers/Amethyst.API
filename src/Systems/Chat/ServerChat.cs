@@ -10,6 +10,15 @@ namespace Amethyst.Systems.Chat;
 
 public static class ServerChat
 {
+    static ServerChat()
+    {
+        RendererRegistry.Add(new PrimitiveRenderer());
+        OutputRegistry.Add(new PrimitiveOutput());
+
+        MessagePlayerJoined.AddOutput(new PlayerJoinHandler());
+        MessagePlayerLeft.AddOutput(new PlayerLeftHandler());
+    }
+
     public static ChatRegistry<IChatMessageHandler> HandlerRegistry { get; } = new();
     public static ChatRegistry<IChatMessageRenderer> RendererRegistry { get; } = new();
     public static ChatRegistry<IChatMessageOutput> OutputRegistry { get; } = new();
@@ -19,15 +28,6 @@ public static class ServerChat
 
     public static MiscMessageProvider<PlayerLeftMessageContext> MessagePlayerLeft { get; }
         = new(new PlayerLeftHandler());
-
-    internal static void Initialize()
-    {
-        RendererRegistry.Add(new PrimitiveRenderer());
-        OutputRegistry.Add(new PrimitiveOutput());
-
-        MessagePlayerJoined.AddOutput(new PlayerJoinHandler());
-        MessagePlayerLeft.AddOutput(new PlayerLeftHandler());
-    }
 
     public static void HandleMessage(PlayerEntity entity, string text)
     {

@@ -15,10 +15,10 @@ public sealed class CommandSyntax
         get
         {
             return _syntax.Count == 0
-                ? throw new KeyNotFoundException("No syntax available.")
+                ? null //throw new KeyNotFoundException("No syntax available.")
                 : _syntax.TryGetValue(culture, out var syntax) ? syntax :
                     _syntax.TryGetValue(_defaultCulture, out var defaultSyntax) ? defaultSyntax :
-                    throw new KeyNotFoundException($"No syntax available for culture {culture}.");
+                    null; //throw new KeyNotFoundException($"No syntax available for culture {culture}.");
         }
     }
 

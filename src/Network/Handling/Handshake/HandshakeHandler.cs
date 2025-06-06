@@ -106,8 +106,9 @@ public static class HandshakeHandler
 
         PlayerUserMetadata userMetadata = new PlayerUserMetadata(plr.Name, plr.IP, plr.UUID, plr.Index);
         PlayerUser user = UsersOrganizer.PlayerUsers.CreateUser(userMetadata);
-
         user.Suspensions!.Suspend(Suspension);
+
+        plr.SetUser(user);
     }
 
     public static void OnPlayerInfo(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)

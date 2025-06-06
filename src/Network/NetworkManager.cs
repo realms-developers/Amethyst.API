@@ -10,6 +10,7 @@ using Amethyst.Network.Packets;
 using Terraria;
 using Amethyst.Network.Handling.Handshake;
 using Amethyst.Network.Handling.Characters;
+using Amethyst.Network.Handling.Misc;
 
 namespace Amethyst.Network;
 
@@ -33,7 +34,7 @@ public static class NetworkManager
 
     internal static AmethystTcpServer? TcpServer;
 
-    private static Timer SocketLifeUpdate = new Timer(static (state) =>
+    private static readonly Timer _socketLifeUpdate = new Timer(static (state) =>
     {
         foreach (PlayerEntity plr in EntityTrackers.Players)
         {
@@ -67,6 +68,7 @@ public static class NetworkManager
 
         HandshakeHandler.Initialize();
         CharactersHandler.Initialize();
+        ChatHandler.Initialize();
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);
