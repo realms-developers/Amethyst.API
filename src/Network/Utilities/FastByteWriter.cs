@@ -384,13 +384,21 @@ public unsafe ref struct FastByteWriter : IDisposable
             return;
         }
 
-        int length = value.Length;
-        WriteByte((byte)length);
+        Span<byte> bytes = System.Text.Encoding.UTF8.GetBytes(value).AsSpan();
+        Write7BitEncodedInt(bytes.Length);
+        WriteByteSpan(bytes);
+    }
 
-        for (int i = 0; i < length; i++)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Write7BitEncodedInt(int value)
+    {
+        uint v = (uint)value;
+        while (v >= 0x80)
         {
-            WriteByte((byte)value[i]);
+            WriteByte((byte)(v | 0x80));
+            v >>= 7;
         }
+        WriteByte((byte)v);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

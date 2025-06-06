@@ -389,16 +389,35 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public string ReadString()
     {
-        int length = ReadByte();
-        if (length < 0 || length > _span.Length - (_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))))
-        {
-            AmethystLog.Network.Error(nameof(FastPacketReader), $"Invalid string length read from packet [Text Length: {length}, Span Length: {_span.Length}, Pointer Position: {_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))}].");
-            throw new ArgumentOutOfRangeException(nameof(length), "String length exceeds buffer length.");
-        }
+        int length = Read7BitEncodedInt();
+        if (length == 0)
+            return string.Empty;
 
         string value = System.Text.Encoding.UTF8.GetString(_ptr, length);
         _ptr += length;
         return value;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int Read7BitEncodedInt()
+    {
+        int count = 0;
+        int shift = 0;
+        byte b;
+
+        if (_ptr >= (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span)) + _span.Length)
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading 7-bit encoded integer.");
+
+        do
+        {
+            b = *_ptr;
+            _ptr++;
+            count |= (b & 0x7F) << shift;
+            shift += 7;
+        }
+        while ((b & 0x80) != 0);
+
+        return count;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
