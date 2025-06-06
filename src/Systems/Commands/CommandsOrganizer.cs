@@ -1,9 +1,15 @@
 using Amethyst.Systems.Commands.Base;
+using Amethyst.Systems.Commands.Dynamic.Parsing;
 
 namespace Amethyst.Systems.Commands;
 
 public static class CommandsOrganizer
 {
+    static CommandsOrganizer()
+    {
+        ParsingNode.Initialize();
+    }
+
     public static IReadOnlyList<CommandRepository> Repositories => _repositories.Values.ToList().AsReadOnly();
 
     public static CommandRepository Shared => _repositories["shared"];

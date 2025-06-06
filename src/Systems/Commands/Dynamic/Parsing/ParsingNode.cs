@@ -49,55 +49,63 @@ public static class ParsingNode
 
     private static ArgumentParser GenerateGenericParser(Type type)
     {
-        var genericType = type.GetGenericArguments()[0];
         var method = new DynamicMethod(
-            $"Parse_{genericType.Name}",
+            $"Parse_{type.Name}",
             typeof(object),
-            [typeof(string), typeof(string).MakeByRefType()],
+            [typeof(IAmethystUser), typeof(string), typeof(string).MakeByRefType()],
             typeof(ParsingNode).Module,
             skipVisibility: true
         );
 
         var il = method.GetILGenerator();
-        var tryParse = genericType.GetMethod(
+
+        var tryParseMethod = type.GetMethod(
             "TryParse",
-            [typeof(string), genericType.MakeByRefType()]
+            new[] { typeof(string), type.MakeByRefType() }
         );
 
-        if (tryParse == null)
-            throw new InvalidOperationException($"No TryParse method found for {genericType}");
-
-        // Declare local: <TYPE> value
-        var valueLocal = il.DeclareLocal(genericType);
-        // Declare local: bool result
+        var lblParseSuccess = il.DefineLabel();
+        var lblAfterParse = il.DefineLabel();
+        var valueLocal = il.DeclareLocal(type);
         var resultLocal = il.DeclareLocal(typeof(bool));
 
-        // Call <TYPE>.TryParse(input, out value)
-        il.Emit(OpCodes.Ldarg_0); // input
-        il.Emit(OpCodes.Ldloca_S, valueLocal); // out value
-        il.EmitCall(OpCodes.Call, tryParse, null);
+        il.Emit(OpCodes.Ldarg_1);
+        il.Emit(OpCodes.Ldloca_S, valueLocal);
+        il.Emit(OpCodes.Call, tryParseMethod!);
         il.Emit(OpCodes.Stloc, resultLocal);
 
-        // if (result)
-        var successLabel = il.DefineLabel();
         il.Emit(OpCodes.Ldloc, resultLocal);
-        il.Emit(OpCodes.Brtrue_S, successLabel);
+        il.Emit(OpCodes.Brtrue_S, lblParseSuccess);
 
-        // else: errorMessage = "PARSE_FAILED"; return null;
-        il.Emit(OpCodes.Ldarg_1); // ref errorMessage
+        il.Emit(OpCodes.Ldarg_2);
         il.Emit(OpCodes.Ldstr, "PARSE_FAILED");
         il.Emit(OpCodes.Stind_Ref);
-        il.Emit(OpCodes.Ldnull);
-        il.Emit(OpCodes.Ret);
 
-        // success: errorMessage = null; return value;
-        il.MarkLabel(successLabel);
-        il.Emit(OpCodes.Ldarg_1); // ref errorMessage
+        if (type.IsValueType)
+        {
+            var defaultLocal = il.DeclareLocal(type);
+            il.Emit(OpCodes.Ldloca_S, defaultLocal);
+            il.Emit(OpCodes.Initobj, type);
+            il.Emit(OpCodes.Ldloc, defaultLocal);
+            il.Emit(OpCodes.Box, type);
+        }
+        else
+        {
+            il.Emit(OpCodes.Ldnull);
+        }
+        il.Emit(OpCodes.Br_S, lblAfterParse);
+
+        il.MarkLabel(lblParseSuccess);
+
+        il.Emit(OpCodes.Ldarg_2);
         il.Emit(OpCodes.Ldnull);
         il.Emit(OpCodes.Stind_Ref);
+
         il.Emit(OpCodes.Ldloc, valueLocal);
-        if (genericType.IsValueType)
-            il.Emit(OpCodes.Box, genericType);
+        if (type.IsValueType)
+            il.Emit(OpCodes.Box, type);
+
+        il.MarkLabel(lblAfterParse);
         il.Emit(OpCodes.Ret);
 
         var parser = (ArgumentParser)method.CreateDelegate(typeof(ArgumentParser));

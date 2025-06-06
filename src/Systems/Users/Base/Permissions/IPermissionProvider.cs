@@ -6,8 +6,10 @@ public interface IPermissionProvider
 
     bool SupportsChildProviders { get; }
 
+    bool HasChild<T>() where T : IPermissionProvider;
     void AddChild(IPermissionProvider provider);
     void RemoveChild(IPermissionProvider provider);
+    void RemoveChild<T>() where T : IPermissionProvider;
 
     PermissionAccess HasPermission(string permission);
 

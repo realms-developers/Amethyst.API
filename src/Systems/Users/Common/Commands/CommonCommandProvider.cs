@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using Amethyst.Systems.Commands;
 using Amethyst.Systems.Commands.Base;
@@ -6,13 +7,15 @@ using Amethyst.Systems.Users.Base.Commands;
 
 namespace Amethyst.Systems.Users.Common.Commands;
 
-public sealed class CommonCommandProvider : ICommandProvider
+public sealed class CommonCommandProvider : ICommandProvider, IDisposable
 {
     public CommonCommandProvider(IAmethystUser user, int delay, List<string> repositories)
     {
         User = user;
         Delay = delay;
         Repositories = repositories;
+
+        _ = Task.Run(CommandQueueHandler);
     }
 
     public IAmethystUser User { get; }
@@ -23,13 +26,37 @@ public sealed class CommonCommandProvider : ICommandProvider
 
     public List<string> Repositories { get; set; }
 
-    private List<Task> _commandTasks = new();
+    private BlockingCollection<Func<CompletedCommandInfo?>> _commandQueue = new();
+    private CancellationTokenSource _cancellationTokenSource = new();
+
+    private void CommandQueueHandler()
+    {
+        while (!_cancellationTokenSource.IsCancellationRequested)
+        {
+            try
+            {
+                Func<CompletedCommandInfo?> commandFunc = _commandQueue.Take(_cancellationTokenSource.Token);
+                if (_cancellationTokenSource.IsCancellationRequested)
+                    break;
+
+                CompletedCommandInfo? info = commandFunc();
+                CompletedCommandInfo? last = History.GetLast();
+                if (info != null && info.CommandArgs != last?.CommandArgs)
+                {
+                    History.Add(info);
+                }
+
+                if (Delay > 0)
+                    Task.Delay(Delay).Wait();
+            }
+            catch {}
+        }
+    }
 
     public void RunCommand(string commandText)
     {
-        RunCommand(() =>
+        _commandQueue.Add(() =>
         {
-            AmethystLog.System.Debug("CCP", $"Running command '{commandText}' for user '{User.Name}'");
             return CommandsUtility.RunCommand(
                 CommandsOrganizer.Repositories.Where(repo => Repositories.Contains(repo.Name)).ToArray(),
                 User,
@@ -40,9 +67,8 @@ public sealed class CommonCommandProvider : ICommandProvider
 
     public void RunCommand(ICommand command, string commandArgs)
     {
-        RunCommand(() =>
+        _commandQueue.Add(() =>
         {
-            AmethystLog.System.Debug("CCP", $"Running command '{command.Metadata.Names.First()}' with args '{commandArgs}' for user '{User.Name}'");
             Stopwatch stopwatch = Stopwatch.StartNew();
             CommandsUtility.RunCommand(
                 command,
@@ -60,30 +86,10 @@ public sealed class CommonCommandProvider : ICommandProvider
         });
     }
 
-    private void RunCommand(Func<CompletedCommandInfo?> func)
+    public void Dispose()
     {
-        if (Delay == 0)
-        {
-            func();
-            return;
-        }
-
-        _commandTasks.Add(Task.Run(async () =>
-        {
-            if (_commandTasks.Count > 1)
-            {
-                await _commandTasks[_commandTasks.Count - 2];
-            }
-
-            CompletedCommandInfo? info = func();
-            CompletedCommandInfo? last = History.GetLast();
-            if (info != null && info.CommandArgs != last?.CommandArgs)
-            {
-                History.Add(info);
-            }
-
-            if (Delay > 0)
-                await Task.Delay(Delay);
-        }));
+        try {  _cancellationTokenSource.Cancel(); } catch { }
+        _cancellationTokenSource.Dispose();
+        _commandQueue.Dispose();
     }
 }

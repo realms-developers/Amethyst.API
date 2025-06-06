@@ -4,7 +4,6 @@ using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Base.Metadata;
 using Amethyst.Systems.Commands.Dynamic.Utilities;
 using Amethyst.Systems.Users.Base;
-using Extensions;
 
 namespace Amethyst.Systems.Commands.Dynamic;
 
@@ -57,7 +56,7 @@ public class DynamicCommandInvoker : ICommandInvoker
             return false;
         }
 
-        if (user.GetType() != Command.PreferredUser)
+        if (!Command.PreferredUser.IsInstanceOfType(user))
         {
             user.Messages.ReplyError("commands.wrongUserType");
             return false;

@@ -89,5 +89,22 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
     {
         User?.Character?.Save();
         User?.Extensions.UnloadAll(User);
+
+        if (User?.Commands is IDisposable disposableCommands)
+        {
+            disposableCommands.Dispose();
+        }
+        if (User?.Suspensions is IDisposable disposableSuspensions)
+        {
+            disposableSuspensions.Dispose();
+        }
+        if (User?.Messages is IDisposable disposableMessages)
+        {
+            disposableMessages.Dispose();
+        }
+        if (User?.Permissions is IDisposable disposablePermissions)
+        {
+            disposablePermissions.Dispose();
+        }
     }
 }

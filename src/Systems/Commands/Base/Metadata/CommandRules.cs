@@ -8,4 +8,6 @@ public enum CommandRules : byte
     Disabled = 1,
 
     NoLogging = 2,
+
+    Hidden = 4
 }

@@ -18,6 +18,11 @@ public sealed class PlayerPermissionProvider : IPermissionProvider
 
     public bool SupportsChildProviders => true;
 
+    public bool HasChild<T>() where T : IPermissionProvider
+    {
+        return _childProviders.Any(p => p is T);
+    }
+
     public void AddChild(IPermissionProvider provider)
     {
         ArgumentNullException.ThrowIfNull(provider);
@@ -36,6 +41,15 @@ public sealed class PlayerPermissionProvider : IPermissionProvider
             return;
 
         _childProviders.Remove(provider);
+    }
+
+    public void RemoveChild<T>() where T : IPermissionProvider
+    {
+        var provider = _childProviders.FirstOrDefault(p => p is T);
+        if (provider != null)
+        {
+            _childProviders.Remove(provider);
+        }
     }
 
     private PermissionAccess HandlePermission(Func<IPermissionProvider, PermissionAccess> action)

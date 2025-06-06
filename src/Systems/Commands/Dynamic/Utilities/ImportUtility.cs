@@ -10,20 +10,17 @@ internal static class ImportUtility
 {
     internal static Guid CoreIdentifier { get; } = Guid.NewGuid();
 
-    internal static IEnumerable<DynamicCommand> ImportFrom(Assembly assembly, Guid identifier)
+    internal static void ImportFrom(Assembly assembly, Guid identifier)
     {
         foreach (var type in assembly.GetTypes())
         {
-            foreach (var item in ImportFromType(type, identifier))
-            {
-                yield return item;
-            }
+            ImportFromType(type, identifier);
         }
     }
 
-    internal static IEnumerable<DynamicCommand> ImportFromType(Type type, Guid identifier)
+    internal static void ImportFromType(Type type, Guid identifier)
     {
-        var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
+        var methods = type.GetMethods();
         foreach (var method in methods)
         {
             var baseAttr = method.GetCustomAttribute<CommandAttribute>();
@@ -55,8 +52,6 @@ internal static class ImportUtility
             DynamicCommand command = new DynamicCommand(identifier, method, repo, metadata, userType);
 
             repo.Add(command);
-
-            yield return command;
         }
     }
 
@@ -70,7 +65,7 @@ internal static class ImportUtility
             return false;
 
         var parameters = method.GetParameters();
-        if (parameters.Length == 0)
+        if (parameters.Length < 2)
             return false;
 
         if (parameters[0].ParameterType == typeof(IAmethystUser))

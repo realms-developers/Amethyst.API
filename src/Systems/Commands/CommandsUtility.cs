@@ -10,7 +10,7 @@ public static class CommandsUtility
     public static CompletedCommandInfo? RunCommand(CommandRepository[] repositories, IAmethystUser user, string commandText)
     {
         if (commandText.StartsWith('/'))
-            commandText = commandText[1..];
+            commandText = commandText.Substring(1);
 
         foreach (var repository in repositories)
         {
@@ -27,13 +27,13 @@ public static class CommandsUtility
         user.Messages.ReplyError("commands.commandNotFound");
         return null;
     }
-    public static void RunCommand(ICommand command, IAmethystUser user, string commandText)
+    public static void RunCommand(ICommand command, IAmethystUser user, string args)
     {
         try
         {
-            var ctx = command.Invoker.CreateContext(user, SplitByArguments(commandText));
+            var ctx = command.Invoker.CreateContext(user, SplitByArguments(args));
             if (!command.Metadata.Rules.HasFlag(CommandRules.NoLogging))
-                AmethystLog.System.Info($"Commands<{user.Name}>", $"{commandText} [{command.Repository.Name}]");
+                AmethystLog.System.Info($"Commands<{user.Name}>", $"/{command.Metadata.Names.First() ?? "unknown"} -> [{string.Join(" ", ctx.Args.Select(p => $"[{p}]"))}] [{command.Repository.Name}]");
             command.Invoker.Invoke(ctx);
         }
         catch (Exception ex)
@@ -45,46 +45,36 @@ public static class CommandsUtility
         }
     }
 
-    public static string[] SplitByArguments(string commandText)
+    public static string[] SplitByArguments(string text)
     {
-        var args = new List<string>();
-        var current = new System.Text.StringBuilder();
-        bool inQuotes = false;
-        bool escape = false;
+        if (text.Length == 0)
+            return Array.Empty<string>();
 
-        for (int i = 0; i < commandText.Length; i++)
+        List<string> args = new List<string>();
+        args.Add("");
+        int index = 0;
+
+        bool blockSpace = false;
+        bool ignoreFormat = false;
+        foreach (char c in text)
         {
-            char c = commandText[i];
-
-            if (escape)
+            if (c == '"' && !ignoreFormat)
             {
-                current.Append(c);
-                escape = false;
+                blockSpace = !blockSpace;
+                ignoreFormat = false;
             }
-            else if (c == '\\')
+            else if (c == ' ' && !ignoreFormat && !blockSpace)
             {
-                escape = true;
+                args.Add("");
+                index++;
+                ignoreFormat = false;
             }
-            else if (c == '"')
-            {
-                inQuotes = !inQuotes;
-            }
-            else if (char.IsWhiteSpace(c) && !inQuotes)
-            {
-                if (current.Length > 0)
-                {
-                    args.Add(current.ToString());
-                    current.Clear();
-                }
-            }
+            else if (c == '\\' && !ignoreFormat) ignoreFormat = true;
             else
             {
-                current.Append(c);
+                args[index] += c;
             }
         }
-
-        if (current.Length > 0)
-            args.Add(current.ToString());
 
         return args.ToArray();
     }

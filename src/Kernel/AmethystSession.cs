@@ -5,6 +5,7 @@ using Amethyst.Infrastructure.CLI;
 using Amethyst.Infrastructure.Kernel;
 using Amethyst.Infrastructure.Profiles;
 using Amethyst.Server;
+using Amethyst.Systems.Commands.Dynamic.Utilities;
 using Amethyst.Text;
 
 namespace Amethyst.Kernel;
@@ -23,13 +24,14 @@ public static class AmethystSession
     internal static void StartServer()
     {
         Launcher.Initialize();
+        PrintWelcome();
 
         Localization.Load();
 
         ExtensionsOrganizer.LoadModules();
         ExtensionsOrganizer.LoadPlugins();
 
-        PrintWelcome();
+        ImportUtility.ImportFrom(typeof(AmethystSession).Assembly, ImportUtility.CoreIdentifier);
 
         Launcher.StartServer();
     }
@@ -54,7 +56,7 @@ $!b$m                                     |___/         ");
         if (Profile.DebugMode)
         {
             ModernConsole.WriteLine("❗ $rThis means that more data needed for development will be logged to the console.");
-            ModernConsole.WriteLine("❗ $rDebug-mode also provides $!b/grantroot $!r$rcommand that gives all permissions to player.");
+            ModernConsole.WriteLine("❗ $rDebug-mode also provides $!b/+root $!r$rcommand that gives all permissions to player.");
             ModernConsole.WriteLine("❗ $r$!bDo not use this mode on public servers!");
         }
 

@@ -10,15 +10,30 @@ internal static class InvokingUtility
     internal static DynamicMethod CreateDynamicMethod(MethodInfo method)
     {
         var dynamicMethod = new DynamicMethod(
-            $"Invoker_{method.Name}",
+            $"Invoker_{method.Name}_{Guid.NewGuid().ToString().Replace("-", "")}",
             typeof(void),
-            new[] { typeof(object[]) },
+            [typeof(object?[])],
             method.DeclaringType!.Module, // нужен, если типы internal
             true);
 
         ILGenerator il = dynamicMethod.GetILGenerator();
         var parameters = method.GetParameters();
 
+        if (parameters.Length != 0)
+        {
+            Label argsOk = il.DefineLabel();
+
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldlen);
+            il.Emit(OpCodes.Conv_I4);
+            il.Emit(OpCodes.Ldc_I4, parameters.Length);
+            il.Emit(OpCodes.Beq, argsOk);
+
+            il.Emit(OpCodes.Newobj, typeof(TargetParameterCountException).GetConstructor(Type.EmptyTypes)!);
+            il.Emit(OpCodes.Throw);
+
+            il.MarkLabel(argsOk);
+        }
 
         for (int i = 0; i < parameters.Length; i++)
         {
@@ -26,11 +41,37 @@ internal static class InvokingUtility
             il.Emit(OpCodes.Ldc_I4, i);
             il.Emit(OpCodes.Ldelem_Ref);
 
+            if (parameters[i].ParameterType.IsValueType)
+            {
+                Label notNull = il.DefineLabel();
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Brtrue_S, notNull);
+                il.Emit(OpCodes.Newobj, typeof(ArgumentNullException).GetConstructor(Type.EmptyTypes)!);
+                il.Emit(OpCodes.Throw);
+                il.MarkLabel(notNull);
+            }
+            else
+            {
+                Label next = il.DefineLabel();
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Brfalse_S, next);
+                il.Emit(OpCodes.Dup);
+                il.Emit(OpCodes.Isinst, parameters[i].ParameterType);
+                il.Emit(OpCodes.Brtrue_S, next);
+                il.Emit(OpCodes.Newobj, typeof(InvalidCastException).GetConstructor(Type.EmptyTypes)!);
+                il.Emit(OpCodes.Throw);
+                il.MarkLabel(next);
+            }
+
             Type paramType = parameters[i].ParameterType;
             if (paramType.IsValueType)
+            {
                 il.Emit(OpCodes.Unbox_Any, paramType);
+            }
             else
+            {
                 il.Emit(OpCodes.Castclass, paramType);
+            }
         }
 
         il.Emit(OpCodes.Call, method);
@@ -47,19 +88,19 @@ internal static class InvokingUtility
 
     internal static object?[]? CreateArguments(DynamicCommandInvoker invoker, CommandInvokeContext ctx)
     {
-        object?[] args = [ctx.User, ctx];
-
         var methodParameters = invoker.Method.GetParameters();
+        List<object?> args = [ctx.User, ctx];
+
         int offset = 2;
         for (int i = offset; i < methodParameters.Length; i++)
         {
             var parameter = methodParameters[i];
 
-            if (i >= ctx.Args.Length - offset)
+            if (i - offset >= ctx.Args.Length)
             {
                 if (methodParameters[i].IsOptional)
                 {
-                    args[i] = methodParameters[i].DefaultValue!;
+                    args.Add(methodParameters[i].DefaultValue!);
                     continue;
                 }
 
@@ -69,24 +110,29 @@ internal static class InvokingUtility
 
             var parser = ParsingNode.Parsers[parameter.ParameterType];
             var arg = parser(ctx.User, ctx.Args[i - offset], out var errorMessage);
-            if (errorMessage != null)
+            if (arg == null || errorMessage != null)
             {
-                if (invoker.Command.Metadata.syntax?[ctx.Messages.Language]?.Length > i)
+                if (invoker.Command.Metadata.Syntax?[ctx.Messages.Language]?.Length > i)
                 {
-                    ctx.Messages.ReplyError("commands.invalidSyntax+arg", invoker.Command.Metadata.syntax);
+                    ctx.Messages.ReplyError("commands.invalidSyntax+arg", invoker.Command.Metadata.Syntax);
                 }
                 else
                 {
                     ctx.Messages.ReplyError("commands.invalidSyntax");
                 }
 
-                ctx.Messages.ReplyError(errorMessage);
+                if (errorMessage != null)
+                    ctx.Messages.ReplyError(errorMessage);
+
                 return null;
             }
-            args[i] = arg;
+            else
+            {
+                args.Add(arg);
+            }
         }
 
-        return args;
+        return args.ToArray();
     }
 
 }

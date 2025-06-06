@@ -29,15 +29,19 @@ public sealed class CommandRepository
             return;
 
         _commands.Add(command);
+
+        AmethystLog.System.Info($"Commands<{Name}>", $"Command {command.Metadata.Names.First()} registered.");
     }
 
     public void Remove(ICommand command)
     {
+        AmethystLog.System.Info($"Commands<{Name}>", $"Command {command.Metadata.Names.First()} unregistered.");
         _commands.Remove(command);
     }
 
     public void Clear()
     {
+        AmethystLog.System.Info($"Commands", $"Commands was cleared.");
         _commands.Clear();
     }
 
@@ -68,15 +72,20 @@ public sealed class CommandRepository
                     continue;
                 }
 
+                bool skip = false;
                 for (int i = 0; i < cmdLines.Length; i++)
                 {
                     if (cmdLines[i] != textLines[i])
                     {
-                        continue;
+                        skip = true;
+                        break;
                     }
                 }
+                if (skip)
+                    continue;
 
                 remainingText = fullText.Length > name.Length ? fullText.Substring(name.Length + 1) : fullText.Substring(name.Length);
+
                 return cmd;
             }
         }

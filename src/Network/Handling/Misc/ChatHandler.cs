@@ -43,7 +43,7 @@ public static class ChatHandler
         }
         else if (cmd != "Say")
         {
-            plr.User?.Commands.RunCommand($"/{cmd}{(message.Length > 0 ? "" : " " + message)}");
+            plr.User?.Commands.RunCommand($"/{cmd.ToLowerInvariant()}{(message.Length == 0 ? "" : " " + message)}");
             return;
         }
 
