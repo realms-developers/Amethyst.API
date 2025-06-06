@@ -1,4 +1,4 @@
-using Amethyst.Network.Handling;
+using Amethyst.Network.Handling.Handshake;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Base;
