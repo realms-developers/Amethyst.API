@@ -31,7 +31,6 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
     public PlayerEntity Player { get; }
     public Player TPlayer { get; }
 
-
     public void SyncSlot(SyncType sync, int slot)
     {
         var model = Provider.CurrentModel;
@@ -60,7 +59,6 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
             ItemStack = item.Stack,
             ItemPrefix = item.Prefix
         });
-
         SendPacket(sync, packet);
     }
 
@@ -86,7 +84,6 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
 
         Player.TPlayer.statManaMax = model.MaxMana;
         Player.TPlayer.statManaMax2 = model.MaxMana;
-
 
         byte[] packet = PlayerManaPacket.Serialize(new PlayerMana
         {
@@ -134,38 +131,51 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
         byte[] packet = PlayerInfoPacket.Serialize(new PlayerInfo
         {
             PlayerIndex = (byte)Player.Index,
-            HairID = Provider.CurrentModel.Hair,
-            HairDyeID = Provider.CurrentModel.HairDye,
-            SkinVariant = Provider.CurrentModel.SkinVariant,
-            HairColor = Provider.CurrentModel.Colors[(byte)PlayerColorType.HairColor],
-
-            // HairDyeID = Player.TPlayer.hairDye,
-            // SkinVariant = Player.TPlayer.skinVariant,
-            // HairColor = Player.TPlayer.hairColor.PackedValue,
-            // SkinColor = Player.TPlayer.skinColor.PackedValue,
-            // ShirtColor = Player.TPlayer.shirtColor.PackedValue,
-            // UnderShirtColor = Player.TPlayer.underShirtColor.PackedValue,
-            // PantsColor = Player.TPlayer.pantsColor.PackedValue,
-            // ShoeColor = Player.TPlayer.shoeColor.PackedValue,
-            AccessoryVisiblity = Player.TPlayer.hideVisibleAccessory,
-            MiscVisiblity = Player.TPlayer.hideMisc,
+            HairID = model.Hair,
+            HairDyeID = model.HairDye,
+            SkinVariant = model.SkinVariant,
+            HairColor = model.Colors[(byte)PlayerColorType.HairColor],
+            SkinColor = model.Colors[(byte)PlayerColorType.SkinColor],
+            ShirtColor = model.Colors[(byte)PlayerColorType.ShirtColor],
+            UnderShirtColor = model.Colors[(byte)PlayerColorType.UnderShirtColor],
+            PantsColor = model.Colors[(byte)PlayerColorType.PantsColor],
+            ShoeColor = model.Colors[(byte)PlayerColorType.ShoesColor],
+            AccessoryVisiblity = model.HideAccessories ?? new bool[10],
+            MiscVisiblity = model.HideMisc,
             Flags = (byte)model.Info1,
             Flags2 = (byte)model.Info2,
             Flags3 = (byte)model.Info3
         });
-
-        NetMessage.TrySendData(4, sync == SyncType.Local ? Player.Index : -1, sync == SyncType.Exclude ? Player.Index : -1, Terraria.Localization.NetworkText.Empty, Player.Index);
+        SendPacket(sync, packet);
     }
 
     public void SyncQuests(SyncType sync)
     {
         Player.TPlayer.anglerQuestsFinished = Provider.CurrentModel.QuestsCompleted;
 
-        NetMessage.TrySendData(76, sync == SyncType.Local ? Player.Index : -1, sync == SyncType.Exclude ? Player.Index : -1, Terraria.Localization.NetworkText.Empty, Player.Index);
+        byte[] packet = PlayerTownNPCQuestsStatsPacket.Serialize(new PlayerTownNPCQuestsStats
+        {
+            PlayerIndex = (byte)Player.Index,
+            AnglerQuests = Player.TPlayer.anglerQuestsFinished
+        });
+        SendPacket(sync, packet);
     }
 
-    private void SendPacket(SyncType syncType, byte[] data)
+    private void SendPacket(SyncType syncType, byte[] packet)
     {
+        switch (syncType)
+        {
+            case SyncType.Local:
+                Player.SendPacketBytes(packet);
+                break;
 
+            case SyncType.Exclude:
+                PlayerUtils.BroadcastPacketBytes(packet, Player.Index);
+                break;
+
+            case SyncType.Broadcast:
+                PlayerUtils.BroadcastPacketBytes(packet);
+                break;
+        }
     }
 }
