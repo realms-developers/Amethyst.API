@@ -47,41 +47,32 @@ internal sealed class NetworkClient : IDisposable
         }
     }
 
-    private SemaphoreSlim _sendSemaphore = new SemaphoreSlim(1, 1);
     internal void Send(byte[] data)
     {
         Send(data, 0, data.Length);
     }
 
-    private int _totalSent;
-    internal async void Send(byte[] data, int offset, int count)
+    internal void Send(byte[] data, int offset, int count)
     {
-        _socket.Send(data, offset, count, SocketFlags.None);
-        // await _sendSemaphore.WaitAsync(_tokenSrc.Token);
-        // var args = new SocketAsyncEventArgs();
-        // args.SetBuffer(data, offset, count);
-        // _totalSent += count;
-        // args.Completed += (_, e) =>
-        // {
-        //     Console.WriteLine($"Sent {e.BytesTransferred} bytes, total sent: {_totalSent}");
-        //     e.Dispose();
-        //     _sendSemaphore.Release();
-        // };
+        var args = new SocketAsyncEventArgs();
+        args.SetBuffer(data, offset, count);
+        args.Completed += (_, e) =>
+        {
+            e.Dispose();
+        };
 
-        // try
-        // {
-        //     if (!_socket.SendAsync(args))
-        //     {
-        //         args.Dispose();
-        //         _sendSemaphore.Release();
-        //     }
-        // }
-        // catch
-        // {
-        //     args.Dispose();
-        //     Dispose();
-        //     _sendSemaphore.Release();
-        // }
+        try
+        {
+            if (!_socket.SendAsync(args))
+            {
+                args.Dispose();
+            }
+        }
+        catch
+        {
+            args.Dispose();
+            Dispose();
+        }
     }
 
     private SocketAsyncEventArgs? _prevArgs;
