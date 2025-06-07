@@ -54,7 +54,7 @@ public static partial class PacketSendingUtility
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error compressing tile block: {ex.Message}");
+            AmethystLog.Network.Error(nameof(PacketSendingUtility), $"Error compressing tile block ({xStart}:{yStart} -> {width}:{height}): {ex}");
             return Array.Empty<byte>();
         }
         finally
