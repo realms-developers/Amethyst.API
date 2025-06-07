@@ -163,8 +163,6 @@ public static class NetworkCommands
                       : Localization.Get("amethyst.def.disabled", ctx.Messages.Language));
     }
 
-    // after this
-
     [Command(["netcfg syncplayers"], "amethyst.desc.networkRulerSyncPlayers")]
     [CommandRepository("network")]
     [CommandPermission("amethyst.network.rulerSyncPlayers")]

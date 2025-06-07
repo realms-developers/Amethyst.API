@@ -111,5 +111,10 @@
     "amethyst.networkManagement.handlersTitle": "Сетевые обработчики",
     "amethyst.desc.networkHandlerStatus": "Показать статус сетевого обработчика.",
     "amethyst.networkManagement.handlerStatus": "Обработчик \"{0}\": {1}",
-
+    "amethyst.desc.networkRulerSyncPlayers": "Включить или отключить синхронизацию игроков.",
+    "amethyst.networkManagement.syncPlayersSet": "Синхронизация игроков: {0}.",
+    "amethyst.desc.networkRulerWorldName": "Установить поддельное имя мира для сети.",
+    "amethyst.networkManagement.worldNameSet": "Имя мира установлено на \"{0}\".",
+    "amethyst.desc.networkRulerWorldID": "Установить поддельный идентификатор мира для сети.",
+    "amethyst.networkManagement.worldIDSet": "Идентификатор мира установлен на {0}.",
 }

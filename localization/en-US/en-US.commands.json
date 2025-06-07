@@ -110,5 +110,11 @@
     "amethyst.networkManagement.noHandlers": "No available handlers.",
     "amethyst.networkManagement.handlersTitle": "Network Handlers",
     "amethyst.desc.networkHandlerStatus": "Show the status of a network handler.",
-    "amethyst.networkManagement.handlerStatus": "Handler \"{0}\": {1}"
+    "amethyst.networkManagement.handlerStatus": "Handler \"{0}\": {1}",
+    "amethyst.desc.networkRulerSyncPlayers": "Enable or disable player synchronization.",
+    "amethyst.networkManagement.syncPlayersSet": "Player synchronization: {0}.",
+    "amethyst.desc.networkRulerWorldName": "Set a fake world name for the network.",
+    "amethyst.networkManagement.worldNameSet": "World name set to \"{0}\".",
+    "amethyst.desc.networkRulerWorldID": "Set a fake world ID for the network.",
+    "amethyst.networkManagement.worldIDSet": "World ID set to {0}.",
 }
