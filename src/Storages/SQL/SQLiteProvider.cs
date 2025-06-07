@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Data.SQLite;
-using Amethyst.Core.Profiles;
+using Amethyst.Infrastructure.Profiles;
 
 namespace Amethyst.Storages.SQL;
 
