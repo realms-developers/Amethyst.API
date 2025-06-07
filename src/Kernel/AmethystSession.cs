@@ -5,6 +5,7 @@ using Amethyst.Infrastructure.CLI;
 using Amethyst.Infrastructure.Kernel;
 using Amethyst.Infrastructure.Profiles;
 using Amethyst.Server;
+using Amethyst.Systems.Characters;
 using Amethyst.Systems.Commands.Dynamic.Utilities;
 using Amethyst.Text;
 
@@ -32,6 +33,8 @@ public static class AmethystSession
         ExtensionsOrganizer.LoadPlugins();
 
         ImportUtility.ImportFrom(typeof(AmethystSession).Assembly, ImportUtility.CoreIdentifier);
+
+        CharactersSaver.Setup(TimeSpan.FromMinutes(1));
 
         Launcher.StartServer();
     }

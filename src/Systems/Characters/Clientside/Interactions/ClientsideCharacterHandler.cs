@@ -1,3 +1,4 @@
+
 using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
@@ -7,11 +8,11 @@ using Terraria;
 using Amethyst.Network.Packets;
 using Amethyst.Systems.Characters.Base.Enums;
 
-namespace Amethyst.Systems.Characters.Serverside.Interactions;
+namespace Amethyst.Systems.Characters.Clientside.Interactions;
 
-public sealed class ServersideCharacterHandler : ICharacterHandler
+public sealed class ClientsideCharacterHandler : ICharacterHandler
 {
-    public ServersideCharacterHandler(ICharacterProvider provider)
+    public ClientsideCharacterHandler(ICharacterProvider provider)
     {
         Provider = provider;
 
@@ -21,13 +22,18 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
 
     public ICharacterProvider Provider { get; }
 
-    public bool InReadonlyMode { get; set; }
+    public bool InReadonlyMode
+    {
+        get => false;
+        set
+        {
+            if (value)
+                throw new InvalidOperationException("Readonly mode is not supported on the clientside.");
+        }
+    }
 
     public void HandlePlayerInfo(PlayerInfo packet)
     {
-        if (InReadonlyMode)
-            return;
-
         var edit = Provider.Editor;
 
         edit.SetHides(null, packet.AccessoryVisiblity, packet.MiscVisiblity);
@@ -43,34 +49,16 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
     }
 
     public void HandleQuests(PlayerTownNPCQuestsStats packet)
-    {
-        if (InReadonlyMode)
-            return;
-
-        Provider.Editor.SetQuests(SyncType.Exclude, packet.AnglerQuests);
-    }
+        => Provider.Editor.SetQuests(SyncType.Exclude, packet.AnglerQuests);
 
     public void HandleSetLife(PlayerLife packet)
-    {
-        if (InReadonlyMode)
-            return;
-
-        Provider.Editor.SetLife(SyncType.Exclude, packet.LifeCount, packet.LifeMax);
-    }
+        => Provider.Editor.SetLife(SyncType.Exclude, packet.LifeCount, packet.LifeMax);
 
     public void HandleSetMana(PlayerMana packet)
-    {
-        if (InReadonlyMode)
-            return;
-
-        Provider.Editor.SetMana(SyncType.Exclude, packet.ManaCount, packet.ManaMax);
-    }
+        => Provider.Editor.SetMana(SyncType.Exclude, packet.ManaCount, packet.ManaMax);
 
     public void HandleSlot(PlayerSlot packet)
     {
-        if (InReadonlyMode)
-            return;
-
         var edit = Provider.Editor;
 
         if (packet.SlotIndex < 0 || packet.SlotIndex >= Provider.CurrentModel.Slots.Length)

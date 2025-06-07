@@ -6,11 +6,11 @@ using Amethyst.Systems.Characters.Base.Interactions;
 using Amethyst.Systems.Users.Players;
 using Terraria;
 
-namespace Amethyst.Systems.Characters.Serverside.Interactions;
+namespace Amethyst.Systems.Characters.Clientside.Interactions;
 
-public sealed class ServersideCharacterEditor : ICharacterEditor
+public sealed class ClientsideCharacterEditor : ICharacterEditor
 {
-    public ServersideCharacterEditor(ICharacterProvider provider)
+    public ClientsideCharacterEditor(ICharacterProvider provider)
     {
         Provider = provider;
 
@@ -28,17 +28,29 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
     public PlayerEntity Player { get; }
     public Player TPlayer { get; }
 
+    public void LoadModel(ICharacterModel model)
+    {
+        Provider.LoadModel(model);
+    }
+
+    public void SaveModel()
+    {
+    }
+
     public bool SetColor(SyncType? sync, PlayerColorType colorType, NetColor color)
     {
+        ThrowIfExclude(sync);
+
         Provider.CurrentModel.Colors[(byte)colorType] = color;
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
-
         return true;
     }
 
     public bool SetHides(SyncType? sync, bool[]? hideAccessories = null, byte? hideMisc = null)
     {
+        ThrowIfExclude(sync);
+
         if (hideAccessories != null)
         {
             for (int i = 0; i < hideAccessories.Length; i++)
@@ -49,12 +61,13 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
             Provider.CurrentModel.HideMisc = hideMisc.Value;
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
-
-        return true;
+        return false;
     }
 
     public bool SetLife(SyncType? sync, int? current, int? max)
     {
+        ThrowIfExclude(sync);
+
         if (current != null)
             Player.TPlayer.statLife = current.Value;
 
@@ -62,12 +75,13 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
             Provider.CurrentModel.MaxLife = max.Value;
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncLife);
-
-        return true;
+        return false;
     }
 
     public bool SetMana(SyncType? sync, int? current, int? max)
     {
+        ThrowIfExclude(sync);
+
         if (current != null)
             Player.TPlayer.statMana = current.Value;
 
@@ -75,56 +89,51 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
             Provider.CurrentModel.MaxMana = max.Value;
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncMana);
-
-        return true;
+        return false;
     }
 
     public bool SetQuests(SyncType? sync, int completed)
     {
+        ThrowIfExclude(sync);
+
         Provider.CurrentModel.QuestsCompleted = completed;
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncQuests);
-
-        return true;
+        return false;
     }
 
     public bool SetSkin(SyncType? sync, byte? hairId = null, byte? hairColor = null, byte? skinVariant = null)
     {
-        if (hairId != null)
-            Provider.CurrentModel.Hair = hairId.Value;
-
-        if (hairColor != null)
-            Provider.CurrentModel.HairDye = hairColor.Value;
-
-        if (skinVariant != null)
-            Provider.CurrentModel.SkinVariant = skinVariant.Value;
+        ThrowIfExclude(sync);
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
-
-        return true;
+        return false;
     }
 
     public bool SetSlot(SyncType? sync, int slot, NetItem item)
     {
+        ThrowIfExclude(sync);
+
         if (slot >= 59 && slot <= 88)
         {
             int fixedSlot = 260 + 30 * Provider.LoadoutIndex + (slot - 59);
             SetSlot(sync, fixedSlot, item);
 
-            if (sync != null) // if sync is null, then sync not needed
-                Provider.Synchronizer.SyncSlot(SyncType.Exclude, fixedSlot); // there is Exclude sync, because its not needed to sync with owner (it can break something)
+            if (sync != null)
+                Provider.Synchronizer.SyncSlot(SyncType.Exclude, fixedSlot);
         }
 
         Provider.CurrentModel.Slots[slot] = item;
 
         if (sync != null)
             Provider.Synchronizer.SyncSlot(sync.Value, slot);
-
-        return true;
+        return false;
     }
 
     public bool SetStats(SyncType? sync, PlayerInfo1? stats1 = null, PlayerInfo2? stats2 = null, PlayerInfo3? stats3 = null)
     {
+        ThrowIfExclude(sync);
+
         if (stats1 != null)
             Provider.CurrentModel.Info1 = stats1.Value;
 
@@ -135,8 +144,13 @@ public sealed class ServersideCharacterEditor : ICharacterEditor
             Provider.CurrentModel.Info3 = stats3.Value;
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
+        return false;
+    }
 
-        return true;
+    private void ThrowIfExclude(SyncType? sync)
+    {
+        if (sync != null && sync != SyncType.Exclude)
+            throw new InvalidOperationException("ClientsideCharacterEditor does not support edit.");
     }
 
     private void SyncIfNeeded(SyncType? sync, Action<SyncType> action)

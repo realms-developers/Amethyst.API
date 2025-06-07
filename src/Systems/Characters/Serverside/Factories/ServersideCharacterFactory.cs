@@ -10,6 +10,11 @@ namespace Amethyst.Systems.Characters.Serverside.Factories;
 
 public sealed class ServersideCharacterFactory : ICharacterFactory<ServersideCharacterProvider>
 {
+    static ServersideCharacterFactory()
+    {
+        MongoCharacterModel.Storage ??= new MongoCharactersStorage();
+    }
+
     public IInteractionFactory<ICharacterEditor> EditorFactory { get; set; } = new ServersideEditorFactory();
 
     public IInteractionFactory<ICharacterHandler> HandlerFactory { get; set; } = new ServersideHandlerFactory();
@@ -50,7 +55,7 @@ public sealed class ServersideCharacterFactory : ICharacterFactory<ServersideCha
 
         if (model is null)
         {
-            model = ModelFactory.CreateModel(user.Player);
+            model = Storage.Convert(ModelFactory.CreateModel(user.Player));
             Storage.SaveModel(model);
         }
 

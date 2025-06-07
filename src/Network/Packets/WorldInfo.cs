@@ -216,7 +216,7 @@ public sealed class WorldInfoPacket : IPacket<WorldInfo>
         writer.WriteByte(packet.BackgroundCaveStyle4);
         writer.WriteByteArray(packet.TreeTops);
         writer.WriteSingle(packet.MaxRaining);
-        writer.WriteByte(packet.Flags);
+        writer.WriteByte(packet.Flags1);
         writer.WriteByte(packet.Flags2);
         writer.WriteByte(packet.Flags3);
         writer.WriteByte(packet.Flags4);

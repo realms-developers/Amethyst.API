@@ -16,7 +16,7 @@ public static partial class PacketSendingUtility
         flags[1] = Main.bloodMoon;
         flags[2] = Main.eclipse;
 
-        BitsByte flags1 = (byte)0;
+        NetBitsByte flags1 = (byte)0;
         flags1[0] = WorldGen.shadowOrbSmashed;
         flags1[1] = NPC.downedBoss1;
         flags1[2] = NPC.downedBoss2;
@@ -26,7 +26,7 @@ public static partial class PacketSendingUtility
         flags1[6] = AmethystSession.Profile.SSCMode;
         flags1[7] = NPC.downedPlantBoss;
 
-        BitsByte flags2 = (byte)0;
+        NetBitsByte flags2 = (byte)0;
         flags2[0] = NPC.downedMechBoss1;
         flags2[1] = NPC.downedMechBoss2;
         flags2[2] = NPC.downedMechBoss3;
@@ -36,7 +36,7 @@ public static partial class PacketSendingUtility
         flags2[6] = Main.pumpkinMoon;
         flags2[7] = Main.snowMoon;
 
-        BitsByte flags3 = (byte)0;
+        NetBitsByte flags3 = (byte)0;
         flags3[1] = Main.fastForwardTimeToDawn;
         flags3[2] = Main.slimeRain;
         flags3[3] = NPC.downedSlimeKing;
@@ -45,7 +45,7 @@ public static partial class PacketSendingUtility
         flags3[6] = NPC.downedMartians;
         flags3[7] = NPC.downedAncientCultist;
 
-        BitsByte flags4 = (byte)0;
+        NetBitsByte flags4 = (byte)0;
         flags4[0] = NPC.downedMoonlord;
         flags4[1] = NPC.downedHalloweenKing;
         flags4[2] = NPC.downedHalloweenTree;
@@ -55,7 +55,7 @@ public static partial class PacketSendingUtility
         flags4[6] = NPC.downedGolemBoss;
         flags4[7] = BirthdayParty.PartyIsUp;
 
-        BitsByte flags5 = (byte)0;
+        NetBitsByte flags5 = (byte)0;
         flags5[0] = NPC.downedPirates;
         flags5[1] = NPC.downedFrost;
         flags5[2] = NPC.downedGoblins;
@@ -65,7 +65,7 @@ public static partial class PacketSendingUtility
         flags5[6] = DD2Event.DownedInvasionT2;
         flags5[7] = DD2Event.DownedInvasionT3;
 
-        BitsByte flags6 = (byte)0;
+        NetBitsByte flags6 = (byte)0;
         flags6[0] = NPC.combatBookWasUsed;
         flags6[1] = LanternNight.LanternsUp;
         flags6[2] = NPC.downedTowerSolar;
@@ -75,7 +75,7 @@ public static partial class PacketSendingUtility
         flags6[6] = Main.forceHalloweenForToday;
         flags6[7] = Main.forceXMasForToday;
 
-        BitsByte flags7 = (byte)0;
+        NetBitsByte flags7 = (byte)0;
         flags7[0] = NPC.boughtCat;
         flags7[1] = NPC.boughtDog;
         flags7[2] = NPC.boughtBunny;
@@ -85,7 +85,7 @@ public static partial class PacketSendingUtility
         flags7[6] = NPC.downedQueenSlime;
         flags7[7] = Main.getGoodWorld;
 
-        BitsByte flags8 = (byte)0;
+        NetBitsByte flags8 = (byte)0;
         flags8[0] = Main.tenthAnniversaryWorld;
         flags8[1] = Main.dontStarveWorld;
         flags8[2] = NPC.downedDeerclops;
@@ -95,7 +95,7 @@ public static partial class PacketSendingUtility
         flags8[6] = NPC.combatBookVolumeTwoWasUsed;
         flags8[7] = NPC.peddlersSatchelWasUsed;
 
-        BitsByte flags9 = (byte)0;
+        NetBitsByte flags9 = (byte)0;
         flags9[0] = NPC.unlockedSlimeGreenSpawn;
         flags9[1] = NPC.unlockedSlimeOldSpawn;
         flags9[2] = NPC.unlockedSlimePurpleSpawn;
@@ -105,7 +105,7 @@ public static partial class PacketSendingUtility
         flags9[6] = NPC.unlockedSlimeCopperSpawn;
         flags9[7] = Main.fastForwardTimeToDusk;
 
-        BitsByte flags10 = (byte)0;
+        NetBitsByte flags10 = (byte)0;
         flags10[0] = Main.noTrapsWorld;
         flags10[1] = Main.zenithWorld;
         flags10[2] = NPC.unlockedTruffleSpawn;

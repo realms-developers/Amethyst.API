@@ -1,3 +1,5 @@
+using Amethyst.Network;
+using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Enums;
 using Amethyst.Systems.Characters.Base.Interactions;
@@ -14,10 +16,18 @@ public sealed class ServersideCharacterProvider : ICharacterProvider
     {
         User = user;
 
+        if (user is not PlayerUser playerUser)
+        {
+            throw new ArgumentException("User must be a player user.", nameof(user));
+        }
+        Player = playerUser.Player;
+
         _model = new EmptyCharacterModel();
     }
 
     public IAmethystUser User { get; }
+
+    public PlayerEntity Player { get; }
 
     public bool CanSaveModel => true;
 
@@ -29,6 +39,8 @@ public sealed class ServersideCharacterProvider : ICharacterProvider
 
     public ICharacterSynchroniser Synchronizer { get; set; } = null!;
 
+    public int LoadoutIndex { get; set; }
+
     private ICharacterModel _model = null!;
 
     public void LoadModel(ICharacterModel model)
@@ -37,7 +49,8 @@ public sealed class ServersideCharacterProvider : ICharacterProvider
 
         _model = model;
 
-        NetMessage.SendData(7, ((PlayerUser)User).NetworkIndex);
+        byte[] packet = PacketSendingUtility.CreateWorldInfoPacket();
+        Player.SendPacketBytes(packet);
 
         for (int i = 0; i < _model.Slots.Length; i++)
         {

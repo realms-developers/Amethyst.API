@@ -87,7 +87,11 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
 
     public void Dispose()
     {
-        User?.Character?.Save();
+        if (User?.Character?.CanSaveModel == true)
+        {
+            User.Character.Save();
+        }
+
         User?.Extensions.UnloadAll(User);
 
         if (User?.Commands is IDisposable disposableCommands)

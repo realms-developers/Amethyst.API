@@ -78,23 +78,32 @@ internal sealed class PacketProvider<TPacket>
 
     internal void Invoke(PlayerEntity plr, ReadOnlySpan<byte> data, ref bool ignore)
     {
-        var packet = _deserializeFunc(data, 3);
-
-        for (int i = 0; i < _ivkSecurityHandlers.Length; i++)
+        try
         {
-            _ivkSecurityHandlers[i](plr, ref packet, data, ref ignore);
+            var packet = _deserializeFunc(data, 3);
+
+            for (int i = 0; i < _ivkSecurityHandlers.Length; i++)
+            {
+                _ivkSecurityHandlers[i](plr, ref packet, data, ref ignore);
+                if (ignore)
+                    return;
+            }
+
+            for (int i = 0; i < _ivkHandlers.Length; i++)
+            {
+                _ivkHandlers[i](plr, ref packet, data, ref ignore);
+            }
+
             if (ignore)
                 return;
-        }
 
-        for (int i = 0; i < _ivkHandlers.Length; i++)
+            _mainHandler?.Invoke(plr, ref packet, data, ref ignore);
+        }
+        catch (Exception ex)
         {
-            _ivkHandlers[i](plr, ref packet, data, ref ignore);
-        }
-
-        if (ignore)
+            AmethystLog.Network.Error(nameof(PacketProvider<TPacket>), $"Error while invoking packet {typeof(TPacket).Name} for player {plr.Index}: {ex}");
+            ignore = true;
             return;
-
-        _mainHandler?.Invoke(plr, ref packet, data, ref ignore);
+        }
     }
 }

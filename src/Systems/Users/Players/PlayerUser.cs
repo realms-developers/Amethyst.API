@@ -31,17 +31,17 @@ public sealed class PlayerUser : IAmethystUser
 
     public string Name { get; }
 
-    public IMessageProvider Messages { get; }
+    public IMessageProvider Messages { get; set; }
 
-    public IPermissionProvider Permissions { get; }
+    public IPermissionProvider Permissions { get; set; }
 
-    public IExtensionProvider Extensions { get; }
+    public IExtensionProvider Extensions { get; set; }
 
-    public ICommandProvider Commands { get; }
+    public ICommandProvider Commands { get; set; }
 
-    public ICharacterProvider? Character { get; }
+    public ICharacterProvider? Character { get; set; }
 
-    public ISuspensionProvider? Suspensions { get; }
+    public ISuspensionProvider? Suspensions { get; set; }
 
     public int NetworkIndex { get; }
 

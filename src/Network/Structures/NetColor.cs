@@ -32,7 +32,7 @@ public struct NetColor
         => new NetColor(color.R, color.G, color.B);
 
     public static implicit operator Color(NetColor color)
-        => new NetColor(color.R, color.G, color.B);
+        => new Color(color.R, color.G, color.B);
 
     public static implicit operator NetColor(string hex)
         => new NetColor(hex);

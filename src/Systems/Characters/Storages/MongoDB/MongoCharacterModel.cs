@@ -7,11 +7,16 @@ namespace Amethyst.Systems.Characters.Storages.MongoDB;
 
 public sealed class MongoCharacterModel : DataModel, ICharacterModel
 {
+    public static MongoCharactersStorage Storage { get; set; } = null!;
+
     public MongoCharacterModel(string name) : base(name)
     {
         Slots = new NetItem[350];
         Colors = new NetColor[8];
         HideAccessories = new bool[10];
+
+        MaxLife = 100;
+        MaxMana = 20;
     }
 
     public NetItem[] Slots { get; set; }
@@ -42,9 +47,11 @@ public sealed class MongoCharacterModel : DataModel, ICharacterModel
 
     public override void Save()
     {
+        Storage?.SaveModel(this);
     }
 
     public override void Remove()
     {
+        Storage?.RemoveModel(this);
     }
 }

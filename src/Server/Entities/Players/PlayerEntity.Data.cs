@@ -7,6 +7,7 @@ namespace Amethyst.Server.Entities.Players;
 public sealed partial class PlayerEntity : IServerEntity
 {
     public PlayerInfo TempPlayerInfo { get; set; }
+    public int TempLoadoutIndex { get; set; }
 
     public ref int Life => ref TPlayer.statLife;
     public ref int MaxLife => ref TPlayer.statLifeMax;

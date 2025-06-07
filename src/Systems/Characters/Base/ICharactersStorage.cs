@@ -8,4 +8,9 @@ public interface ICharactersStorage
     void RemoveModel(ICharacterModel character);
 
     ICharacterModel? GetModel(string name);
+
+    ICharacterModel Convert(ICharacterModel model)
+    {
+        return model;
+    }
 }

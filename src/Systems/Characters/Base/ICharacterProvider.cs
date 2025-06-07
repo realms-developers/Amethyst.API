@@ -17,6 +17,8 @@ public interface ICharacterProvider
 
     public ICharacterSynchroniser Synchronizer { get; set; }
 
+    public int LoadoutIndex { get; set; }
+
     public void LoadModel(ICharacterModel model);
 
     public void Save();

@@ -85,10 +85,13 @@ public static class CharacterUtilities
 
     public static void CopyCharacter(ICharacterModel from, ref ICharacterModel to)
     {
+
+        Console.WriteLine("Copying character data...");
         for (int i = 0; i < from.Slots.Length; i++)
         {
             to.Slots[i] = new NetItem(from.Slots[i].ID, from.Slots[i].Stack, from.Slots[i].Prefix);
         }
+        Console.WriteLine("Slot was copied");
 
         to.MaxLife = from.MaxLife;
         to.MaxMana = from.MaxMana;
@@ -99,19 +102,23 @@ public static class CharacterUtilities
         to.Hair = from.Hair;
         to.HairDye = from.HairDye;
         to.HideAccessories = new bool[from.HideAccessories.Length];
+        Console.WriteLine("HideAccessories was copied");
 
         for (int i = 0; i < from.HideAccessories.Length; i++)
         {
             to.HideAccessories[i] = from.HideAccessories[i];
         }
+        Console.WriteLine("HideAccessories was copied 2");
 
         to.HideMisc = from.HideMisc;
         to.Colors = new NetColor[from.Colors.Length];
 
+        Console.WriteLine("Colors was copied");
         for (int i = 0; i < from.Colors.Length; i++)
         {
             to.Colors[i] = new NetColor(from.Colors[i].R, from.Colors[i].G, from.Colors[i].B);
         }
+        Console.WriteLine("Colors was copied 2");
 
         to.QuestsCompleted = from.QuestsCompleted;
     }
