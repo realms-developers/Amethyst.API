@@ -17,7 +17,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 
     public IReadOnlyList<TextPage> Pages => _pages.AsReadOnly();
 
-    public static List<string> PageifyItems(IEnumerable<string> items, int maxLineLength = 80)
+    public static List<string> AsList(IEnumerable<string> items, int maxLineLength = 80)
     {
         List<string> lines = [];
         StringBuilder currentLine = new(maxLineLength);
@@ -46,10 +46,10 @@ public sealed class PagesCollection : IEnumerable<TextPage>
         return lines;
     }
 
-    public static PagesCollection CreateFromList(IEnumerable<string> items, int maxLineLength = 80, int linesPerPage = 5)
-        => SplitByPages(PageifyItems(items, maxLineLength), linesPerPage);
+    public static PagesCollection AsListPage(IEnumerable<string> items, int maxLineLength = 80, int linesPerPage = 5)
+        => AsPage(AsList(items, maxLineLength), linesPerPage);
 
-    public static PagesCollection SplitByPages(IEnumerable<string> lines, int linesPerPage = 5)
+    public static PagesCollection AsPage(IEnumerable<string> lines, int linesPerPage = 5)
     {
         List<TextPage> pages = [];
         List<string> lineList = [.. lines];

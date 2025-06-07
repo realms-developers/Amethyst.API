@@ -4,7 +4,9 @@ using Amethyst.Server.Entities.Base;
 using Amethyst.Network.Engine;
 using Amethyst.Systems.Users.Players;
 using Terraria;
-using Amethyst.Network.Handling.Handshake;
+using Amethyst.Network.Enums;
+using Amethyst.Network.Handling.Packets.Handshake;
+using Amethyst.Server.Entities.Players.Sections;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -25,6 +27,8 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
         UUID = "";
 
         Phase = ConnectionPhase.WaitingProtocol;
+
+        Sections = new PlayerSections(this);
     }
 
     public ConnectionPhase Phase { get; set; }
@@ -32,9 +36,14 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
     public int Index { get; }
     public bool Active => Phase != ConnectionPhase.Disconnected;
     public string Name { get; set; }
+    public PlayerSections Sections { get; }
 
     public string IP { get; set; }
     public string UUID { get; set; }
+
+    public string Protocol { get; internal set; } = "Unknown";
+
+    public PlatformType PlatformType { get; internal set; } = PlatformType.PC;
 
     public PlayerUser? User { get; private set; }
 

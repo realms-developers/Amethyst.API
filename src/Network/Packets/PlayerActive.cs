@@ -16,7 +16,7 @@ public sealed class PlayerActivePacket : IPacket<PlayerActive>
         FastPacketReader reader = new(data, offset);
 
         byte PlayerIndex = reader.ReadByte();
-        byte State = reader.ReadByte();
+        bool State = reader.ReadBoolean();
 
         return new PlayerActive
         {
@@ -30,7 +30,7 @@ public sealed class PlayerActivePacket : IPacket<PlayerActive>
         FastPacketWriter writer = new(14, 16);
 
         writer.WriteByte(packet.PlayerIndex);
-        writer.WriteByte(packet.State);
+        writer.WriteBoolean(packet.State);
 
         return writer.Build();
     }
@@ -39,5 +39,5 @@ public sealed class PlayerActivePacket : IPacket<PlayerActive>
 public struct PlayerActive
 {
     public byte PlayerIndex;
-    public byte State;
+    public bool State;
 }

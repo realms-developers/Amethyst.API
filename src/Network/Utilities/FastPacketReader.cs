@@ -390,7 +390,7 @@ public unsafe ref struct FastPacketReader
     public string ReadString()
     {
         int length = Read7BitEncodedInt();
-        if (length == 0)
+        if (length <= 0)
             return string.Empty;
 
         string value = System.Text.Encoding.UTF8.GetString(_ptr, length);

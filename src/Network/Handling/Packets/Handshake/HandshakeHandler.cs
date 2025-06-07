@@ -1,6 +1,7 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Kernel;
+using Amethyst.Network.Handling.Base;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Server.Entities;
@@ -10,13 +11,15 @@ using Amethyst.Systems.Users.Players;
 using MongoDB.Driver;
 using Terraria;
 
-namespace Amethyst.Network.Handling.Handshake;
+namespace Amethyst.Network.Handling.Packets.Handshake;
 
-public static class HandshakeHandler
+public sealed class HandshakeHandler : INetworkHandler
 {
     public static UnconnectedSuspension Suspension { get; } = new();
 
-    internal static void Initialize()
+    public string Name => "net.amethyst.HandshakeHandler";
+
+    public void Load()
     {
         NetworkManager.SetMainHandler<PlayerConnectRequest>(OnPlayerConnectRequest);
         NetworkManager.SetMainHandler<PlayerUUID>(OnPlayerUUID);
@@ -25,6 +28,17 @@ public static class HandshakeHandler
 
         NetworkManager.AddHandler<PlayerInfo>(OnPlayerInfo);
         NetworkManager.AddHandler<PlayerSpawn>(OnPlayerSpawn);
+    }
+
+    public void Unload()
+    {
+        NetworkManager.RemoveHandler<PlayerConnectRequest>(OnPlayerConnectRequest);
+        NetworkManager.RemoveHandler<PlayerUUID>(OnPlayerUUID);
+        NetworkManager.RemoveHandler<PlayerRequestWorldInfo>(OnPlayerRequestWorldInfo);
+        NetworkManager.RemoveHandler<PlayerRequestSection>(OnPlayerRequestSection);
+
+        NetworkManager.RemoveHandler<PlayerInfo>(OnPlayerInfo);
+        NetworkManager.RemoveHandler<PlayerSpawn>(OnPlayerSpawn);
     }
 
     public static void OnPlayerSpawn(PlayerEntity plr, ref PlayerSpawn packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
@@ -212,6 +226,7 @@ public static class HandshakeHandler
         });
 
         plr.SendPacketBytes(data);
+        plr.Protocol = packet.Protocol;
         plr.Phase = ConnectionPhase.WaitingPlayerInfo;
     }
 }

@@ -1,15 +1,22 @@
-using Amethyst.Network.Packets;
+using Amethyst.Network.Handling.Base;
 using Amethyst.Network.Utilities;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Chat;
 
-namespace Amethyst.Network.Handling.Misc;
+namespace Amethyst.Network.Handling.Packets.Chat;
 
-public static class ChatHandler
+public sealed class ChatHandler : INetworkHandler
 {
-    internal static void Initialize()
+    public string Name => "net.amethyst.ChatHandler";
+
+    public void Load()
     {
         NetworkManager.AddDirectHandler(82, OnReadNetModule);
+    }
+
+    public void Unload()
+    {
+        NetworkManager.RemoveDirectHandler(82, OnReadNetModule);
     }
 
     private static void OnReadNetModule(PlayerEntity plr, ReadOnlySpan<byte> rawPacket, ref bool ignore)

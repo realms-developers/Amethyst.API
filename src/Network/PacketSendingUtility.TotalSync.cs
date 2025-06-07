@@ -1,4 +1,6 @@
 
+using Amethyst.Network.Handling.Packets.Handshake;
+using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Terraria;
 
@@ -6,6 +8,27 @@ namespace Amethyst.Network;
 
 public static partial class PacketSendingUtility
 {
+    public static void ExcludeBroadcastConnected(int index, byte[] packet)
+    {
+        foreach (PlayerEntity player in EntityTrackers.Players)
+        {
+            if (player.Phase != ConnectionPhase.Connected || player.Index == index)
+                continue;
+
+            player.SendPacketBytes(packet);
+        }
+    }
+    public static void ExcludeBroadcastAll(int index, byte[] packet)
+    {
+        foreach (PlayerEntity player in EntityTrackers.Players)
+        {
+            if (player.Index == index)
+                continue;
+
+            player.SendPacketBytes(packet);
+        }
+    }
+
     public static Action<PlayerEntity, int, int> SendFullWorld { get; set; } = DirectSendFullWorld;
     public static void DirectSendFullWorld(PlayerEntity entity, int spawnX = -1, int spawnY = -1)
     {
@@ -40,6 +63,15 @@ public static partial class PacketSendingUtility
     public static Action<PlayerEntity, int, int, short, short> LoadSection { get; set; } = DirectLoadSection;
     public static void DirectLoadSection(PlayerEntity entity, int sectionX, int sectionY, short sectionsWidth, short sectionsHeight)
     {
+        if (sectionsWidth == 1 && sectionsHeight == 1)
+        {
+            entity.Sections.MarkAsSent(sectionX, sectionY);
+
+            byte[] buffer = CompressTileBlock(sectionX * 200, sectionY * 150, 200, 150);
+            entity.SendPacketBytes(buffer);
+            return;
+        }
+
         int maxX = Main.maxTilesX / 200;
         int maxY = Main.maxTilesX / 150;
 
@@ -52,10 +84,7 @@ public static partial class PacketSendingUtility
         {
             for (int j = startY; j <= endY; j++)
             {
-                if (Main.tile[i, j] == null)
-                {
-                    continue;
-                }
+                entity.Sections.MarkAsSent(i, j);
 
                 byte[] buffer = CompressTileBlock(i * 200, j * 150, 200, 150);
                 entity.SendPacketBytes(buffer);

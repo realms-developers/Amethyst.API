@@ -11,7 +11,7 @@ public sealed class PluginsRepositoryRuler : IRepositoryRuler
 
     public PluginsRepositoryRuler()
     {
-        _pluginCfg = new(typeof(PluginsConfiguration).FullName!, new());
+        _pluginCfg = new(nameof(PluginsConfiguration), new());
 
         _pluginCfg.Load();
 
@@ -24,7 +24,7 @@ public sealed class PluginsRepositoryRuler : IRepositoryRuler
 
     public PluginsRepositoryRuler(string identifier)
     {
-        _pluginCfg = new($"{typeof(PluginsConfiguration).FullName!}.{identifier}", new());
+        _pluginCfg = new($"{nameof(PluginsConfiguration)}.{identifier}", new());
 
         _pluginCfg.Load();
     }

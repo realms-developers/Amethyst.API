@@ -9,6 +9,21 @@ namespace Amethyst.Systems.Commands.Dynamic.Utilities;
 internal static class ImportUtility
 {
     internal static Guid CoreIdentifier { get; } = Guid.NewGuid();
+    internal static int CountSameNames(string name)
+    {
+        int count = 0;
+        foreach (var repo in CommandsOrganizer.Repositories)
+        {
+            foreach (var command in repo.RegisteredCommands)
+            {
+                count += command.Metadata.Names.Count(n => n.Contains('$') ?
+                    n.Split('$')[0].Equals(name, StringComparison.OrdinalIgnoreCase) :
+                    n.Equals(name, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        return count;
+    }
 
     internal static void ImportFrom(Assembly assembly, Guid identifier)
     {
@@ -27,6 +42,22 @@ internal static class ImportUtility
 
             if (baseAttr == null)
                 continue;
+
+            string[] names = baseAttr.Names;
+            for (int i = 0; i < baseAttr.Names.Length; i++)
+            {
+                string name = baseAttr.Names[i];
+
+                int index = CountSameNames(name);
+                if (index > 0)
+                {
+                    names[i] = $"{name}${index}";
+                }
+                else
+                {
+                    names[i] = name;
+                }
+            }
 
             if (!TryPreCreateCommand(method, out var userType))
             {

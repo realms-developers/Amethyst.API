@@ -2,6 +2,7 @@ using Amethyst.Server.Entities.Base;
 using Amethyst.Network.Utilities;
 using Terraria;
 using Terraria.ID;
+using Amethyst.Network;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -76,16 +77,16 @@ public sealed partial class PlayerEntity : IServerEntity
 
         public static Action<PlayerEntity, int, int> DefaultRequestSendSection { get; set; } = static (player, sectionX, sectionY) =>
         {
-            if (!Netplay.Clients[player.Index].TileSections[sectionX, sectionY])
+            if (!player.Sections.IsSent(sectionX, sectionY))
             {
-                NetMessage.SendSection(player.Index, sectionX, sectionY);
+                PacketSendingUtility.LoadSection(player, sectionX, sectionY, 1, 1);
             }
         };
         public Action<PlayerEntity, int, int>? RequestSendSection { get; set; }
 
         public static Action<PlayerEntity, int, int> DefaultSendSection { get; set; } = static (player, sectionX, sectionY) =>
         {
-            NetMessage.SendSection(player.Index, sectionX, sectionY);
+            PacketSendingUtility.LoadSection(player, sectionX, sectionY, 1, 1);
         };
         public Action<PlayerEntity, int, int>? SendSection { get; set; }
 

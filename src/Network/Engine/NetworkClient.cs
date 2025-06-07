@@ -47,50 +47,41 @@ internal sealed class NetworkClient : IDisposable
         }
     }
 
+    private SemaphoreSlim _sendSemaphore = new SemaphoreSlim(1, 1);
     internal void Send(byte[] data)
     {
-        var args = new SocketAsyncEventArgs();
-        args.SetBuffer(data, 0, data.Length);
-        args.Completed += (_, e) =>
-        {
-            e.Dispose();
-        };
-
-        try
-        {
-            if (!_socket.SendAsync(args))
-            {
-                args.Dispose();
-            }
-        }
-        catch
-        {
-            args.Dispose();
-            Dispose();
-        }
+        Send(data, 0, data.Length);
     }
 
-    internal void Send(byte[] data, int offset, int count)
+    private int _totalSent;
+    internal async void Send(byte[] data, int offset, int count)
     {
-        var args = new SocketAsyncEventArgs();
-        args.SetBuffer(data, offset, count);
-        args.Completed += (_, e) =>
-        {
-            e.Dispose();
-        };
+        _socket.Send(data, offset, count, SocketFlags.None);
+        // await _sendSemaphore.WaitAsync(_tokenSrc.Token);
+        // var args = new SocketAsyncEventArgs();
+        // args.SetBuffer(data, offset, count);
+        // _totalSent += count;
+        // args.Completed += (_, e) =>
+        // {
+        //     Console.WriteLine($"Sent {e.BytesTransferred} bytes, total sent: {_totalSent}");
+        //     e.Dispose();
+        //     _sendSemaphore.Release();
+        // };
 
-        try
-        {
-            if (!_socket.SendAsync(args))
-            {
-                args.Dispose();
-            }
-        }
-        catch
-        {
-            args.Dispose();
-            Dispose();
-        }
+        // try
+        // {
+        //     if (!_socket.SendAsync(args))
+        //     {
+        //         args.Dispose();
+        //         _sendSemaphore.Release();
+        //     }
+        // }
+        // catch
+        // {
+        //     args.Dispose();
+        //     Dispose();
+        //     _sendSemaphore.Release();
+        // }
     }
 
     private SocketAsyncEventArgs? _prevArgs;

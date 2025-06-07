@@ -1,6 +1,8 @@
 ﻿using Amethyst.Extensions;
 using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Base.Result;
+using Amethyst.Hooks;
+using Amethyst.Hooks.Args.Utility;
 using Amethyst.Infrastructure.CLI;
 using Amethyst.Infrastructure.Kernel;
 using Amethyst.Infrastructure.Profiles;
@@ -36,7 +38,16 @@ public static class AmethystSession
 
         CharactersSaver.Setup(TimeSpan.FromMinutes(1));
 
+        _secondTickTimer = new Timer(OnSecondTick, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
         Launcher.StartServer();
+    }
+
+    private static Timer? _secondTickTimer;
+    private static AmethystHook<SecondTickArgs> _secondTickHook = HookRegistry.GetHook<SecondTickArgs>();
+    private static void OnSecondTick(object? state)
+    {
+        _secondTickHook?.Invoke(new SecondTickArgs());
     }
 
     private static void PrintWelcome()
@@ -59,7 +70,7 @@ $!b$m                                     |___/         ");
         if (Profile.DebugMode)
         {
             ModernConsole.WriteLine("❗ $rThis means that more data needed for development will be logged to the console.");
-            ModernConsole.WriteLine("❗ $rDebug-mode also provides $!b/+root $!r$rcommand that gives all permissions to player.");
+            ModernConsole.WriteLine("❗ $rDebug-mode also provides $!b/groot $!r$rcommand that gives all permissions to player.");
             ModernConsole.WriteLine("❗ $r$!bDo not use this mode on public servers!");
         }
 
@@ -87,7 +98,7 @@ $!b$m                                     |___/         ");
                 .Where(d => d.Value.State == ExtensionResult.SuccessOperation)
                 .Select(d => d.Key.Metadata.Name);
 
-            foreach (string line in PagesCollection.PageifyItems(loadedModSuccess, 100))
+            foreach (string line in PagesCollection.AsList(loadedModSuccess, 100))
             {
                 ModernConsole.WriteLine($"$b   {line}");
             }
@@ -96,7 +107,7 @@ $!b$m                                     |___/         ");
                 .Where(d => d.Value.State == ExtensionResult.SuccessOperation)
                 .Select(d => d.Key.Metadata.Name);
 
-            foreach (string line in PagesCollection.PageifyItems(loadedPlugSuccess, 100))
+            foreach (string line in PagesCollection.AsList(loadedPlugSuccess, 100))
             {
                 ModernConsole.WriteLine($"$g   {line}");
             }
@@ -113,12 +124,12 @@ $!b$m                                     |___/         ");
             {
                 ModernConsole.WriteLine($"\n⭕ $!gSkipped$!r extensions: ($bmodules$!r, $gplugins$!r)");
 
-                foreach (string line in PagesCollection.PageifyItems(loadedModSkipped, 100))
+                foreach (string line in PagesCollection.AsList(loadedModSkipped, 100))
                 {
                     ModernConsole.WriteLine($"$!d$b   {line}");
                 }
 
-                foreach (string line in PagesCollection.PageifyItems(loadedPlugSkipped, 100))
+                foreach (string line in PagesCollection.AsList(loadedPlugSkipped, 100))
                 {
                     ModernConsole.WriteLine($"$!d$g   {line}");
                 }

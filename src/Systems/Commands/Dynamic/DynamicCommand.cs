@@ -22,7 +22,7 @@ public sealed class DynamicCommand : ICommand
 
     public ICommandInvoker Invoker { get; }
 
-    public CommandMetadata Metadata { get; }
+    public CommandMetadata Metadata { get; set; }
 
     public Type PreferredUser { get; }
 }

@@ -8,9 +8,13 @@ using Amethyst.Network.Engine.Patching;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Network.Packets;
 using Terraria;
-using Amethyst.Network.Handling.Handshake;
-using Amethyst.Network.Handling.Characters;
-using Amethyst.Network.Handling.Misc;
+using Amethyst.Network.Handling.Base;
+using Amethyst.Network.Handling.Packets.Characters;
+using Amethyst.Network.Handling.Packets.Chat;
+using Amethyst.Network.Handling.Packets.Handshake;
+using Amethyst.Network.Handling.Packets.Platform;
+using Amethyst.Network.Handling.Mechanism.Sections;
+using Amethyst.Network.Handling.Packets.Players;
 
 namespace Amethyst.Network;
 
@@ -21,7 +25,7 @@ public static class NetworkManager
 
     public static int SocketAcceptDelay { get; set; } = 1000;
     public static int SocketBacklog { get; set; } = 32;
-    public static int SocketLiveCheck { get; set; } = 2000;
+    public static int SocketLiveCheck { get; set; } = 1000;
 
     internal static Dictionary<Type, object> Providers = new Dictionary<Type, object>();
 
@@ -66,9 +70,12 @@ public static class NetworkManager
 
         NetworkPatcher.Initialize();
 
-        HandshakeHandler.Initialize();
-        CharactersHandler.Initialize();
-        ChatHandler.Initialize();
+        HandlerManager.RegisterHandler(new HandshakeHandler());
+        HandlerManager.RegisterHandler(new CharactersHandler());
+        HandlerManager.RegisterHandler(new ChatHandler());
+        HandlerManager.RegisterHandler(new PlatformHandler());
+        HandlerManager.RegisterHandler(new SectionHandler());
+        HandlerManager.RegisterHandler(new PlayersHandler());
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);

@@ -8,7 +8,7 @@ public sealed class CharactersConfiguration
 {
     static CharactersConfiguration() => Configuration.Load();
 
-    public static Configuration<CharactersConfiguration> Configuration { get; } = new("Characters", new());
+    public static Configuration<CharactersConfiguration> Configuration { get; } = new("CharactersConfiguration", new());
     public static CharactersConfiguration Instance => Configuration.Data;
 
     public string? MongoConnection { get; set; }

@@ -1,4 +1,4 @@
-using Amethyst.Network.Handling.Handshake;
+using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Base;
@@ -24,6 +24,14 @@ public sealed partial class PlayerEntity : IServerEntity
             ));
 
             player.Phase = ConnectionPhase.Disconnected;
+
+            AmethystLog.System.Error(nameof(PlayerEntity), $"Player {player.Name} ({player.Index}) has been kicked: {reason}");
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                player.CloseSocket();
+            });
         };
         public Action<PlayerEntity, string>? Kick { get; set; }
     }

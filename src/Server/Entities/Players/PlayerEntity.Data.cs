@@ -6,6 +6,7 @@ namespace Amethyst.Server.Entities.Players;
 
 public sealed partial class PlayerEntity : IServerEntity
 {
+    public PlayerUpdate? PlayerUpdateInfo { get; set; }
     public PlayerInfo TempPlayerInfo { get; set; }
     public int TempLoadoutIndex { get; set; }
 

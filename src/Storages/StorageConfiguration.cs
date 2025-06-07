@@ -6,7 +6,7 @@ public sealed class StorageConfiguration
 {
     static StorageConfiguration() => Configuration.Load();
 
-    public static Configuration<StorageConfiguration> Configuration { get; } = new(typeof(StorageConfiguration).FullName!, new());
+    public static Configuration<StorageConfiguration> Configuration { get; } = new(nameof(StorageConfiguration), new());
     public static StorageConfiguration Instance => Configuration.Data;
 
     public string MongoConnection { get; set; } = "mongodb://localhost:27017";

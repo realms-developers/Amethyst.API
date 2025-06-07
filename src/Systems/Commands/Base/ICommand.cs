@@ -8,7 +8,7 @@ public interface ICommand
 
     CommandRepository Repository { get; }
     ICommandInvoker Invoker { get; }
-    CommandMetadata Metadata { get; }
+    CommandMetadata Metadata { get; set; }
 
     // IAmethystUser - any
     // PlayerUser - only players

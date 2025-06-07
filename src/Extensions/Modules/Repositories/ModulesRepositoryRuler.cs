@@ -11,7 +11,7 @@ public sealed class ModulesRepositoryRuler : IRepositoryRuler
 
     public ModulesRepositoryRuler()
     {
-        _modulesCfg = new(typeof(ModulesConfiguration).FullName!, new());
+        _modulesCfg = new(nameof(ModulesConfiguration), new());
         _modulesCfg.Load();
 
         if (_modulesCfg.Data.AllowedModules.Count == 0)
@@ -23,7 +23,7 @@ public sealed class ModulesRepositoryRuler : IRepositoryRuler
 
     public ModulesRepositoryRuler(string identifier)
     {
-        _modulesCfg = new($"{typeof(ModulesConfiguration).FullName!}.{identifier}", new());
+        _modulesCfg = new($"{nameof(ModulesConfiguration)}.{identifier}", new());
         _modulesCfg.Load();
     }
 

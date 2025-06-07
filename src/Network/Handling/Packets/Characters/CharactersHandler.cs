@@ -2,15 +2,18 @@ using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Hooks.Context;
 using Amethyst.Kernel;
+using Amethyst.Network.Handling.Base;
 using Amethyst.Network.Packets;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters;
 
-namespace Amethyst.Network.Handling.Characters;
+namespace Amethyst.Network.Handling.Packets.Characters;
 
-public static class CharactersHandler
+public sealed class CharactersHandler : INetworkHandler
 {
-    internal static void Initialize()
+    public string Name => "net.amethyst.CharactersHandler";
+
+    public void Load()
     {
         NetworkManager.AddHandler<PlayerInfo>(OnPlayerInfo);
         NetworkManager.AddHandler<PlayerSlot>(OnPlayerSlot);
@@ -23,6 +26,21 @@ public static class CharactersHandler
             ?.Register(OnPlayerFullyJoined);
         HookRegistry.GetHook<PlayerSetUserArgs>()
             ?.Register(OnPlayerAuthorized);
+    }
+
+    public void Unload()
+    {
+        NetworkManager.RemoveHandler<PlayerInfo>(OnPlayerInfo);
+        NetworkManager.RemoveHandler<PlayerSlot>(OnPlayerSlot);
+        NetworkManager.RemoveHandler<PlayerLife>(OnPlayerLife);
+        NetworkManager.RemoveHandler<PlayerMana>(OnPlayerMana);
+        NetworkManager.RemoveHandler<PlayerTownNPCQuestsStats>(OnPlayerQuests);
+        NetworkManager.RemoveHandler<PlayerLoadout>(OnPlayerLoadout);
+
+        HookRegistry.GetHook<PlayerFullyJoinedArgs>()
+            ?.Unregister(OnPlayerFullyJoined);
+        HookRegistry.GetHook<PlayerSetUserArgs>()
+            ?.Unregister(OnPlayerAuthorized);
     }
 
     private static void OnPlayerAuthorized(in PlayerSetUserArgs args, HookResult<PlayerSetUserArgs> result)

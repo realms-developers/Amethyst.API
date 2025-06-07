@@ -11,7 +11,7 @@ using Terraria.IO;
 
 namespace Amethyst.Systems.Commands;
 
-public static class SystemCommands
+public static class BasicCommands
 {
     [Command(["groot"], "amethyst.desc.grantroot")]
     [CommandRepository("debug")]
@@ -20,12 +20,12 @@ public static class SystemCommands
         if (user.Permissions.SupportsChildProviders)
         {
             user.Permissions.AddChild(new RootPermissionProvider(user));
-            ctx.Messages.ReplySuccess("commands.grantedRoot");
+            ctx.Messages.ReplySuccess("amethyst.basic.grantedRoot");
             AmethystLog.System.Info($"Commands(/+root)", $"Granted root permission to user {user.Name}.");
         }
         else
         {
-            ctx.Messages.ReplyError("commands.noChildPermissionProviders");
+            ctx.Messages.ReplyError("amethyst.basic.noChildPermissionProviders");
             AmethystLog.System.Error($"Commands(/+root)", $"User {user.Name} does not support child permission providers.");
         }
     }
@@ -37,12 +37,12 @@ public static class SystemCommands
         if (user.Permissions.SupportsChildProviders)
         {
             user.Permissions.RemoveChild<RootPermissionProvider>();
-            ctx.Messages.ReplySuccess("commands.revokedRoot");
+            ctx.Messages.ReplySuccess("amethyst.basic.revokedRoot");
             AmethystLog.System.Info($"Commands(/-root)", $"Revoked root permission from user {user.Name}.");
         }
         else
         {
-            ctx.Messages.ReplyError("commands.noChildPermissionProviders");
+            ctx.Messages.ReplyError("amethyst.basic.noChildPermissionProviders");
             AmethystLog.System.Error($"Commands(/-root)", $"User {user.Name} does not support child permission providers.");
         }
     }
@@ -72,13 +72,13 @@ public static class SystemCommands
                    (p.Metadata.Permission == null || user.Permissions.HasPermission(p.Metadata.Permission) == Users.Base.Permissions.PermissionAccess.HasPermission);
         }
 
-        var pages = PagesCollection.SplitByPages(CommandsOrganizer.Repositories.Where(p => user.Commands.Repositories.Contains(p.Name))
+        var pages = PagesCollection.AsPage(CommandsOrganizer.Repositories.Where(p => user.Commands.Repositories.Contains(p.Name))
                 .SelectMany(repo => repo.RegisteredCommands)
                 .Where(WhereExpression)
                 .Select(p =>
                 $"[c/51db99:/{p.Metadata.Names.First()}]{(p.Metadata.Syntax?[ctx.Messages.Language] != null ? $" {string.Join(' ', p.Metadata.Syntax[ctx.Messages.Language]!)}" : "")} - {Localization.Get(p.Metadata.Description, user.Messages.Language)}"));
 
-        ctx.Messages.ReplyPage(pages, "commands.text.availableCommands", null, null, false, page);
+        ctx.Messages.ReplyPage(pages, "amethyst.basic.availableCommands", null, null, false, page);
     }
 
     [Command(["cmds"], "commands.desc.showCommands")]
@@ -95,17 +95,17 @@ public static class SystemCommands
                    (p.Metadata.Permission == null || user.Permissions.HasPermission(p.Metadata.Permission) == Users.Base.Permissions.PermissionAccess.HasPermission);
         }
 
-        var pages = PagesCollection.SplitByPages(CommandsOrganizer.Repositories.Where(p => user.Commands.Repositories.Contains(p.Name))
+        var pages = PagesCollection.AsPage(CommandsOrganizer.Repositories.Where(p => user.Commands.Repositories.Contains(p.Name))
                 .SelectMany(repo => repo.RegisteredCommands)
                 .Where(WhereExpression)
                 .Select(p =>
                 $"[c/51db99:/{p.Metadata.Names.First()}]{(p.Metadata.Syntax?[ctx.Messages.Language] != null ? $" {string.Join(' ', p.Metadata.Syntax[ctx.Messages.Language]!)}" : "")}"), 5);
         //.Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")}"));
 
-        ctx.Messages.ReplyPage(pages, "commands.text.availableCommands", null, null, false, page);
+        ctx.Messages.ReplyPage(pages, "amethyst.basic.availableCommands", null, null, false, page);
     }
 
-    [Command(["lang ru"], "установить русский язык.")]
+    [Command(["lang ru"], "Установить русский язык.")]
     public static void Russian(IAmethystUser user, CommandInvokeContext ctx)
     {
         user.Messages.Language = "ru-RU";

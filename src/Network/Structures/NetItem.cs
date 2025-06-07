@@ -4,9 +4,9 @@ using Terraria;
 
 namespace Amethyst.Network.Structures;
 
-public struct NetItem(int id, short stack, byte prefix)
+public struct NetItem(short id, short stack, byte prefix)
 {
-    public int ID = id;
+    public short ID = id;
     public short Stack = stack;
     public byte Prefix = prefix;
 
@@ -21,7 +21,7 @@ public struct NetItem(int id, short stack, byte prefix)
 
     public static implicit operator NetItem(Item item)
     {
-        return new NetItem(item.type, (short)item.stack, item.prefix);
+        return new NetItem((short)item.type, (short)item.stack, item.prefix);
     }
 
     public static bool operator ==(NetItem left, NetItem right)

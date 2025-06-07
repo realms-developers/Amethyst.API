@@ -1,13 +1,13 @@
 using Amethyst.Storages.Config;
 using Terraria;
 
-namespace Amethyst.Network.Handling.Handshake;
+namespace Amethyst.Network.Handling.Packets.Handshake;
 
 public sealed class HandshakeConfiguration
 {
     static HandshakeConfiguration() => Configuration.Load();
 
-    public static Configuration<HandshakeConfiguration> Configuration { get; } = new(typeof(HandshakeConfiguration).FullName!, new());
+    public static Configuration<HandshakeConfiguration> Configuration { get; } = new(nameof(HandshakeConfiguration), new());
     public static HandshakeConfiguration Instance => Configuration.Data;
 
     public string[] AllowedProtocols { get; set; } = ["Terraria" + Main.curRelease];

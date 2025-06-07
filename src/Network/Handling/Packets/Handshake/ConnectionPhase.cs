@@ -1,4 +1,4 @@
-namespace Amethyst.Network.Handling.Handshake;
+namespace Amethyst.Network.Handling.Packets.Handshake;
 
 public enum ConnectionPhase
 {

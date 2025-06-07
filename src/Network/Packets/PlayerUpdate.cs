@@ -110,15 +110,16 @@ public sealed class PlayerUpdatePacket : IPacket<PlayerUpdate>
         writer.WriteByte(packet.Flags4);
         writer.WriteByte(packet.SelectedItem);
         writer.WriteNetVector2(packet.Position);
-        if ((packet.Flags2 & 0b00000100) != 0 && packet.Velocity.HasValue)
+
+        if ((packet.Flags2 & 0b00000100) != 0)
         {
             writer.WriteNetVector2(packet.Velocity ?? new(0f, 0f));
         }
 
         if ((packet.Flags3 & 0b01000000) != 0)
         {
-            writer.WriteNetVector2(packet.PotionOriginalPosition ?? new(0f, 0f));
-            writer.WriteNetVector2(packet.PotionHomePosition ?? new(0f, 0f));
+            writer.WriteNetVector2(packet.PotionOriginalPosition ?? packet.Position);
+            writer.WriteNetVector2(packet.PotionHomePosition ?? packet.Position);
         }
 
         return writer.Build();

@@ -197,7 +197,7 @@ public static class Localization
             return !match.Success
                 ? default(NetItem?)
                 : new NetItem(
-                id: int.Parse(match.Groups["NetID"].Value, CultureInfo.InvariantCulture),
+                id: short.Parse(match.Groups["NetID"].Value, CultureInfo.InvariantCulture),
 
                 stack: string.IsNullOrWhiteSpace(match.Groups["Stack"].Value) ? (short)1 :
                     short.Parse(match.Groups["Stack"].Value, CultureInfo.InvariantCulture),

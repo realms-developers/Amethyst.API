@@ -74,15 +74,16 @@ public class DynamicCommandInvoker : ICommandInvoker
 
         if (user.Permissions == null)
         {
+            user.Messages.ReplyError("commands.noPermissionHandler");
             return false;
         }
 
-        if (user.Permissions.HasPermission(Command.Metadata.Permission) != Users.Base.Permissions.PermissionAccess.HasPermission)
+        if (user.Permissions.HasPermission(Command.Metadata.Permission) == Users.Base.Permissions.PermissionAccess.HasPermission)
         {
-            user.Messages.ReplyError("commands.noPermission");
-            return false;
+            return true;
         }
 
+        user.Messages.ReplyError("commands.noPermission");
         return false;
     }
 }
