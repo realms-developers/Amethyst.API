@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using Amethyst.Extensions;
 using Amethyst.Kernel;
+using Amethyst.Kernel.Console;
 using Amethyst.Network;
 using Amethyst.Network.Handling;
 using Amethyst.Server.World;
+using Amethyst.Systems.Console;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Initializers;
@@ -85,13 +87,6 @@ public sealed class TAPILauncher : IServerLauncher
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        // Netplay._serverThread = new Thread(Netplay.ServerLoop)
-        // {
-        //     IsBackground = true,
-        //     Name = "Server Loop Thread"
-        // };
-        // Netplay._serverThread.Start();
-
         _isStarted = true;
         ServerUtils.UpdateTitle();
 
@@ -103,6 +98,9 @@ public sealed class TAPILauncher : IServerLauncher
 
         List<double> timings = [];
         AmethystLog.Startup.Verbose(nameof(TAPILauncher), $"Server started.");
+
+        ConsoleCommandHandler.Attach();
+        _ = Task.Run(ConsoleHooks.InputTask);
 
         while (!Netplay.Disconnect)
         {
