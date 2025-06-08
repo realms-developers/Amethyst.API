@@ -31,7 +31,7 @@ public static class ItemUtils
             return;
         }
 
-        byte[] itemBasePacket = ItemUpdatePacket.Serialize(new ItemUpdate()
+        byte[] itemBasePacket = ItemUpdateInstancedPacket.Serialize(new ItemUpdateInstanced()
         {
             ItemIndex = itemIndex,
             Position = player.TPlayer.position,
@@ -60,7 +60,7 @@ public static class ItemUtils
             return;
         }
 
-        byte[] itemBasePacket = ItemUpdatePacket.Serialize(new ItemUpdate()
+        byte[] itemBasePacket = ItemUpdateInstancedPacket.Serialize(new ItemUpdateInstanced()
         {
             ItemIndex = itemIndex,
             Position = player.TPlayer.position,

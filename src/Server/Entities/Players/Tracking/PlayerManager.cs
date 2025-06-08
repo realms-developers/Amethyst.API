@@ -6,6 +6,7 @@ using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Server.Entities.Base;
 using Amethyst.Systems.Chat;
 using Amethyst.Systems.Chat.Misc.Context;
+using Terraria;
 
 namespace Amethyst.Server.Entities.Players.Tracking;
 
@@ -30,6 +31,10 @@ public sealed class PlayerManager : IEntityManager<PlayerEntity>
 
         _tracker._players[index] = entity;
 
+        Main.player[index] = new();
+        Main.player[index].active = true;
+        Main.player[index].whoAmI = index;
+
         _insertHook.Invoke(new PlayerTrackerInsertArgs(entity));
 
         AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count()}/{NetworkManager.MaxPlayers}] INS => player_{entity.Index}");
@@ -43,6 +48,9 @@ public sealed class PlayerManager : IEntityManager<PlayerEntity>
 
         if (plr.Phase == ConnectionPhase.Connected)
             ServerChat.MessagePlayerLeft.Invoke(new PlayerLeftMessageContext(plr));
+
+        if (Main.player[index] != null)
+            Main.player[index].active = false;
 
         _removeHook.Invoke(new PlayerTrackerRemoveArgs(plr));
         AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count() - 1}/{NetworkManager.MaxPlayers}] RMV => player_{index} ({plr.Name ?? "not_identified"})");

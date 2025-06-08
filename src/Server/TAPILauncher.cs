@@ -85,12 +85,12 @@ public sealed class TAPILauncher : IServerLauncher
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        Netplay._serverThread = new Thread(Netplay.ServerLoop)
-        {
-            IsBackground = true,
-            Name = "Server Loop Thread"
-        };
-        Netplay._serverThread.Start();
+        // Netplay._serverThread = new Thread(Netplay.ServerLoop)
+        // {
+        //     IsBackground = true,
+        //     Name = "Server Loop Thread"
+        // };
+        // Netplay._serverThread.Start();
 
         _isStarted = true;
         ServerUtils.UpdateTitle();

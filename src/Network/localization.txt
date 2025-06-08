@@ -1,3 +1,0 @@
-network.invalidPlayerUpdate
-network.invalidSelectedItem
-network.invalidPlayerIndex

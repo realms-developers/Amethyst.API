@@ -12,6 +12,7 @@ public unsafe ref struct FastPacketWriter : IDisposable
     private byte[] _buffer;
     private GCHandle _handle;
     private byte* _ptr;
+    private nint _startPos;
 
     public FastPacketWriter()
     {
@@ -30,11 +31,21 @@ public unsafe ref struct FastPacketWriter : IDisposable
         _ptr = (byte*)_handle.AddrOfPinnedObject() + 2;
         WriteByte(packetType);
     }
+
     public FastPacketWriter(byte packetType, byte[] buffer)
     {
         _buffer = buffer;
         _handle = GCHandle.Alloc(_buffer, GCHandleType.Pinned);
         _ptr = (byte*)_handle.AddrOfPinnedObject() + 2;
+        WriteByte(packetType);
+    }
+
+    public FastPacketWriter(byte packetType, byte* bytePointer)
+    {
+        _buffer = Array.Empty<byte>();
+
+        _startPos = (nint)bytePointer;
+        _ptr = bytePointer + 2;
         WriteByte(packetType);
     }
 
@@ -427,6 +438,18 @@ public unsafe ref struct FastPacketWriter : IDisposable
         _ptr += length;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public StrippedMemoryStream StreamOpen()
+    {
+        return new StrippedMemoryStream(_ptr);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void StreamClose(StrippedMemoryStream stream)
+    {
+        _ptr += stream.Position;
+    }
+
     public void EnsureCapacity(int additionalCapacity)
     {
         if (_ptr + additionalCapacity > (byte*)_handle.AddrOfPinnedObject() + _buffer.Length)
@@ -462,6 +485,29 @@ public unsafe ref struct FastPacketWriter : IDisposable
         WriteUInt16((ushort)length);
 
         return _buffer;
+    }
+
+    /// <summary>
+    /// Build the packet. Use it only with constructor with byte* parameter.
+    /// </summary>
+    /// <returns></returns>
+    public byte[] BuildFromStackalloc()
+    {
+        int length = (int)(_ptr - (byte*)_startPos);
+
+        _ptr = (byte*)_startPos;
+        WriteUInt16((ushort)length);
+
+        byte[] array = new byte[length];
+        fixed (byte* bytePtr = array)
+        {
+            Buffer.MemoryCopy(
+                source: _ptr,
+                destination: bytePtr,
+                destinationSizeInBytes: length,
+                sourceBytesToCopy: length);
+        }
+        return array;
     }
 
     public void Dispose()
