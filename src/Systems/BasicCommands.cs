@@ -1,5 +1,6 @@
 using Amethyst.Infrastructure.Kernel;
 using Amethyst.Kernel;
+using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Base.Metadata;
 using Amethyst.Systems.Commands.Dynamic.Attributes;
@@ -13,6 +14,36 @@ namespace Amethyst.Systems.Commands;
 
 public static class BasicCommands
 {
+    [Command(["giveroot"], "amethyst.desc.giveRoot")]
+    [CommandRepository("root")]
+    [CommandSyntax("en-US", "<player>")]
+    [CommandSyntax("ru-RU", "<игрок>")]
+    public static void GiveRoot(IAmethystUser user, CommandInvokeContext ctx, PlayerEntity player)
+    {
+        PlayerUser? plrUser = player.User;
+        if (plrUser == null)
+        {
+            ctx.Messages.ReplyError("amethyst.basic.playerUserNotFound", player.Name);
+            AmethystLog.System.Error($"Commands(/giveroot)", $"Player {player.Name} does not have a user associated with it.");
+            return;
+        }
+
+        if (plrUser.Permissions.SupportsChildProviders)
+        {
+            plrUser.Permissions.AddChild(new RootPermissionProvider(plrUser));
+            if (!plrUser.Commands.Repositories.Contains("root"))
+                plrUser.Commands.Repositories.Add("root");
+
+            ctx.Messages.ReplySuccess("amethyst.basic.givenRoot", player.Name);
+            AmethystLog.System.Info($"Commands(/giveroot)", $"Granted root permission to user {plrUser.Name}.");
+        }
+        else
+        {
+            ctx.Messages.ReplyError("amethyst.basic.noChildPermissionProviders");
+            AmethystLog.System.Error($"Commands(/giveroot)", $"Player {player.Name} does not support child permission providers.");
+        }
+    }
+
     [Command(["groot"], "amethyst.desc.grantroot")]
     [CommandRepository("debug")]
     public static void GrantRoot(PlayerUser user, CommandInvokeContext ctx)
@@ -20,6 +51,9 @@ public static class BasicCommands
         if (user.Permissions.SupportsChildProviders)
         {
             user.Permissions.AddChild(new RootPermissionProvider(user));
+            if (!user.Commands.Repositories.Contains("root"))
+                user.Commands.Repositories.Add("root");
+
             ctx.Messages.ReplySuccess("amethyst.basic.grantedRoot");
             AmethystLog.System.Info($"Commands(/+root)", $"Granted root permission to user {user.Name}.");
         }
@@ -36,7 +70,9 @@ public static class BasicCommands
     {
         if (user.Permissions.SupportsChildProviders)
         {
+            user.Commands.Repositories.Remove("root");
             user.Permissions.RemoveChild<RootPermissionProvider>();
+
             ctx.Messages.ReplySuccess("amethyst.basic.revokedRoot");
             AmethystLog.System.Info($"Commands(/-root)", $"Revoked root permission from user {user.Name}.");
         }

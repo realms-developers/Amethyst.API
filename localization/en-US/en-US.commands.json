@@ -117,4 +117,8 @@
     "amethyst.networkManagement.worldNameSet": "World name set to \"{0}\".",
     "amethyst.desc.networkRulerWorldID": "Set a fake world ID for the network.",
     "amethyst.networkManagement.worldIDSet": "World ID set to {0}.",
+
+    "amethyst.desc.giveRoot": "Grant root privileges to a player.",
+    "amethyst.basic.playerUserNotFound": "Player user \"{0}\" not found.",
+    "amethyst.basic.givenRoot": "Root privileges granted to player \"{0}\"."
 }

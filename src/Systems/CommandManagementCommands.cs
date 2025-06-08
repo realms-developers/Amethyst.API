@@ -10,7 +10,7 @@ namespace Amethyst.Systems;
 public static class CommandManagementCommands
 {
     [Command(["mcmd repos"], "amethyst.desc.commandManagementRepositories")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.repositories")]
     [CommandSyntax("en-US", "[page]")]
     [CommandSyntax("ru-RU", "[страница]")]
@@ -27,7 +27,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd repocmds"], "amethyst.desc.commandManagementRepositoryCommands")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.repositoryCommands")]
     [CommandSyntax("en-US", "<repository name>", "[page]")]
     [CommandSyntax("ru-RU", "<имя репозитория>", "[страница]")]
@@ -51,7 +51,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd info"], "amethyst.desc.commandManagementInfo")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.info")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
@@ -99,7 +99,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd assignrepo"], "amethyst.desc.commandManagementAssignRepository")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.assignRepository")]
     [CommandSyntax("en-US", "<repository name>")]
     [CommandSyntax("ru-RU", "<имя репозитория>")]
@@ -129,7 +129,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd unassignrepo"], "amethyst.desc.commandManagementUnassignRepository")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.unassignRepository")]
     [CommandSyntax("en-US", "<repository name>")]
     [CommandSyntax("ru-RU", "<имя репозитория>")]
@@ -159,7 +159,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd myrepos"], "amethyst.desc.commandManagementMyRepositories")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.myRepositories")]
     [CommandSyntax("en-US", "[page]")]
     [CommandSyntax("ru-RU", "[страница]")]
@@ -182,7 +182,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd disable", "mcmd disable"], "amethyst.desc.commandManagementSetDisabled")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.setDisabled")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
@@ -209,7 +209,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd enable", "mcmd enable"], "amethyst.desc.commandManagementSetEnabled")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.setEnabled")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
@@ -236,7 +236,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd hide", "mcmd hide"], "amethyst.desc.commandManagementSetHidden")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.setHidden")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
@@ -263,7 +263,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd show", "mcmd show"], "amethyst.desc.commandManagementSetShown")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.setShown")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
@@ -290,7 +290,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd setperm"], "amethyst.desc.commandManagementSetPermission")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.setPermission")]
     [CommandSyntax("en-US", "<command name>", "[permission]")]
     [CommandSyntax("ru-RU", "<имя команды>", "[разрешение]")]
@@ -319,7 +319,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd addname"], "amethyst.desc.commandManagementAddName")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.addName")]
     [CommandSyntax("en-US", "<command name>", "<new name>")]
     [CommandSyntax("ru-RU", "<имя команды>", "<новое имя>")]
@@ -346,7 +346,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd remname"], "amethyst.desc.commandManagementRemoveName")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.removeName")]
     [CommandSyntax("en-US", "<command name>", "<name to remove>")]
     [CommandSyntax("ru-RU", "<имя команды>", "<имя для удаления>")]
@@ -373,7 +373,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd rename"], "amethyst.desc.commandManagementRenameCommand")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.renameCommand")]
     [CommandSyntax("en-US", "<command name>", "<new name>")]
     [CommandSyntax("ru-RU", "<имя команды>", "<новое имя>")]
@@ -400,7 +400,7 @@ public static class CommandManagementCommands
     }
 
     [Command(["mcmd names"], "amethyst.desc.commandManagementCommandNames")]
-    [CommandRepository("shared")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.commandManagement.commandNames")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]

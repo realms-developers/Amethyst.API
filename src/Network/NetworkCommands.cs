@@ -12,7 +12,7 @@ namespace Amethyst.Network;
 public static class NetworkCommands
 {
     [Command(["net uinfo"], "amethyst.desc.networkUserInfo")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.userInfo")]
     [CommandSyntax("en-US", "<player>")]
     [CommandSyntax("ru-RU", "<игрок>")]
@@ -27,7 +27,7 @@ public static class NetworkCommands
     }
 
     [Command(["net close"], "amethyst.desc.networkClose")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.close")]
     [CommandSyntax("en-US", "<player>")]
     [CommandSyntax("ru-RU", "<игрок>")]
@@ -46,7 +46,7 @@ public static class NetworkCommands
     }
 
     [Command(["net lock"], "amethyst.desc.networkLock")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.lock")]
     public static void NetworkLock(IAmethystUser user, CommandInvokeContext ctx)
     {
@@ -61,7 +61,7 @@ public static class NetworkCommands
     }
 
     [Command(["net unlock"], "amethyst.desc.networkUnlock")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.unlock")]
     public static void NetworkUnlock(IAmethystUser user, CommandInvokeContext ctx)
     {
@@ -76,7 +76,7 @@ public static class NetworkCommands
     }
 
     [Command(["net socketacceptdelay"], "amethyst.desc.networkSocketAcceptDelay")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.socketAcceptDelay")]
     [CommandSyntax("en-US", "<delay>")]
     [CommandSyntax("ru-RU", "<задержка>")]
@@ -93,7 +93,7 @@ public static class NetworkCommands
     }
 
     [Command(["nethdlr enable"], "amethyst.desc.networkHandlerEnable")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.handlerEnable")]
     [CommandSyntax("en-US", "<handler>")]
     [CommandSyntax("ru-RU", "<обработчик>")]
@@ -110,7 +110,7 @@ public static class NetworkCommands
     }
 
     [Command(["nethdlr disable"], "amethyst.desc.networkHandlerDisable")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.handlerDisable")]
     [CommandSyntax("en-US", "<handler>")]
     [CommandSyntax("ru-RU", "<обработчик>")]
@@ -127,7 +127,7 @@ public static class NetworkCommands
     }
 
     [Command(["nethdlr list"], "amethyst.desc.networkHandlerList")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.handlerList")]
     [CommandSyntax("en-US", "[page]")]
     [CommandSyntax("ru-RU", "[страница]")]
@@ -144,7 +144,7 @@ public static class NetworkCommands
     }
 
     [Command(["nethdlr status"], "amethyst.desc.networkHandlerStatus")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.handlerStatus")]
     [CommandSyntax("en-US", "<handler>")]
     [CommandSyntax("ru-RU", "<обработчик>")]
@@ -164,7 +164,7 @@ public static class NetworkCommands
     }
 
     [Command(["netcfg syncplayers"], "amethyst.desc.networkRulerSyncPlayers")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.rulerSyncPlayers")]
     [CommandSyntax("en-US", "<true/false>")]
     public static void NetworkRulerSyncPlayers(IAmethystUser user, CommandInvokeContext ctx, bool sync)
@@ -176,7 +176,7 @@ public static class NetworkCommands
     }
 
     [Command(["netcfg worldname"], "amethyst.desc.networkRulerWorldName")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.rulerWorldName")]
     [CommandSyntax("en-US", "<name>")]
     [CommandSyntax("ru-RU", "<имя>")]
@@ -189,7 +189,7 @@ public static class NetworkCommands
     }
 
     [Command(["netcfg worldid"], "amethyst.desc.networkRulerWorldID")]
-    [CommandRepository("network")]
+    [CommandRepository("root")]
     [CommandPermission("amethyst.network.rulerWorldID")]
     [CommandSyntax("en-US", "<id>")]
     [CommandSyntax("ru-RU", "<идентификатор>")]

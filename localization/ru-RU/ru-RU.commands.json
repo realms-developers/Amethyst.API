@@ -117,4 +117,7 @@
     "amethyst.networkManagement.worldNameSet": "Имя мира установлено на \"{0}\".",
     "amethyst.desc.networkRulerWorldID": "Установить поддельный идентификатор мира для сети.",
     "amethyst.networkManagement.worldIDSet": "Идентификатор мира установлен на {0}.",
+    "amethyst.desc.giveRoot": "Выдать root-права игроку.",
+    "amethyst.basic.playerUserNotFound": "Пользователь-игрок \"{0}\" не найден.",
+    "amethyst.basic.givenRoot": "Root-права выданы игроку \"{0}\"."
 }
