@@ -14,10 +14,35 @@ public sealed class PlayersHandler : INetworkHandler
 
     public void Load()
     {
-        NetworkManager.AddHandler<PlayerUpdate>(OnPlayerUpdate);
+        NetworkManager.SetMainHandler<PlayerUpdate>(OnPlayerUpdate);
+        NetworkManager.SetMainHandler<PlayerItemRotation>(OnPlayerItemRotation);
+        NetworkManager.SetMainHandler<PlayerSpawn>(OnPlayerSpawn);
 
         HookRegistry.GetHook<PlayerFullyJoinedArgs>()
             ?.Register(SyncPlayer);
+    }
+
+    private void OnPlayerSpawn(PlayerEntity plr, ref PlayerSpawn packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void OnPlayerItemRotation(PlayerEntity plr, ref PlayerItemRotation packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    {
+        if (plr.Phase != ConnectionPhase.Connected)
+            return;
+
+        if (packet.PlayerIndex != plr.Index)
+        {
+            plr.Kick("network.invalidPlayerIndex");
+            ignore = true;
+            return;
+        }
+
+        if (HandlersConfiguration.Instance.SyncPlayers)
+        {
+            PacketSendingUtility.ExcludeBroadcastConnected(plr.Index, PlayerItemRotationPacket.Serialize(packet)); // Serialize, because rawPacket can be shitty
+        }
     }
 
     private void SyncPlayer(in PlayerFullyJoinedArgs args, HookResult<PlayerFullyJoinedArgs> result)
@@ -41,35 +66,15 @@ public sealed class PlayersHandler : INetworkHandler
             return;
         }
 
-        // TODO: use it in Amethyst.Security (in future)
-
-        // if (!packet.Position.IsValid() ||
-        //     (packet.Velocity != null && !packet.Velocity.Value.IsValid()) ||
-        //     (packet.PotionHomePosition != null && !packet.PotionHomePosition.Value.IsValid()) ||
-        //     (packet.PotionOriginalPosition != null && !packet.PotionOriginalPosition.Value.IsValid()))
-        // {
-        //     plr.Kick("network.invalidPlayerUpdate");
-        //     AmethystLog.Network.Debug(nameof(PlayersHandler), $"Player {plr.Index} sent an invalid PlayerUpdate packet (vectors): {packet.Position}, {packet.Velocity}, {packet.PotionHomePosition}, {packet.PotionOriginalPosition}");
-        //     ignore = true;
-        //     return;
-        // }
-
-        // if (packet.SelectedItem < 0 || packet.SelectedItem >= 59)
-        // {
-        //     plr.Kick("network.invalidSelectedItem");
-        //     ignore = true;
-        //     return;
-        // }
-
         plr.Position = packet.Position;
         plr.Velocity = packet.Velocity ?? new(0, 0);
 
         plr.PlayerUpdateInfo = packet;
 
-        // if (HandlersConfiguration.Instance.SyncPlayers)
-        // {
-        //     PacketSendingUtility.ExcludeBroadcastConnected(plr.Index, rawPacket.ToArray());
-        // }
+        if (HandlersConfiguration.Instance.SyncPlayers)
+        {
+            PacketSendingUtility.ExcludeBroadcastConnected(plr.Index, PlayerUpdatePacket.Serialize(packet)); // Serialize, because rawPacket can be shitty
+        }
     }
 
     public void Unload()
@@ -77,6 +82,7 @@ public sealed class PlayersHandler : INetworkHandler
         HookRegistry.GetHook<PlayerFullyJoinedArgs>()
             ?.Unregister(SyncPlayer);
 
-        NetworkManager.RemoveHandler<PlayerUpdate>(OnPlayerUpdate);
+        NetworkManager.SetMainHandler<PlayerItemRotation>(null);
+        NetworkManager.SetMainHandler<PlayerUpdate>(null);
     }
 }

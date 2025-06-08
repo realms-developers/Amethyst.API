@@ -41,7 +41,7 @@ public sealed class HandshakeHandler : INetworkHandler
         NetworkManager.RemoveHandler<PlayerSpawn>(OnPlayerSpawn);
     }
 
-    public static void OnPlayerSpawn(PlayerEntity plr, ref PlayerSpawn packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public void OnPlayerSpawn(PlayerEntity plr, ref PlayerSpawn packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingPlayerSpawn)
         {
@@ -56,7 +56,7 @@ public sealed class HandshakeHandler : INetworkHandler
             ?.Invoke(new PlayerFullyJoinedArgs(plr));
     }
 
-    public static void OnPlayerRequestSection(PlayerEntity plr, ref PlayerRequestSection packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public void OnPlayerRequestSection(PlayerEntity plr, ref PlayerRequestSection packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingSectionRequest)
         {
@@ -66,10 +66,11 @@ public sealed class HandshakeHandler : INetworkHandler
         PacketSendingUtility.SendFullWorld(plr, packet.TileX, packet.TileY);
 
         plr.SendPacketBytes(PlayerFinishedConnectionPacket.Serialize(new()));
+        plr.SetGodMode(false);
         plr.Phase = ConnectionPhase.WaitingPlayerSpawn;
     }
 
-    public static void OnPlayerRequestWorldInfo(PlayerEntity plr, ref PlayerRequestWorldInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public void OnPlayerRequestWorldInfo(PlayerEntity plr, ref PlayerRequestWorldInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingWorldInfoRequest)
         {
@@ -83,7 +84,7 @@ public sealed class HandshakeHandler : INetworkHandler
         plr.Phase = ConnectionPhase.WaitingSectionRequest;
     }
 
-    public static void OnPlayerUUID(PlayerEntity plr, ref PlayerUUID packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public void OnPlayerUUID(PlayerEntity plr, ref PlayerUUID packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingUUID)
         {
@@ -125,7 +126,7 @@ public sealed class HandshakeHandler : INetworkHandler
         plr.SetUser(user);
     }
 
-    public static void OnPlayerInfo(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public void OnPlayerInfo(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingPlayerInfo)
         {
@@ -187,11 +188,12 @@ public sealed class HandshakeHandler : INetworkHandler
         }
 
         plr.Name = packet.Name;
+        plr.Difficulty = (byte)difficulty;
         plr.TempPlayerInfo = packet;
         plr.Phase = ConnectionPhase.WaitingUUID;
     }
 
-    public static void OnPlayerConnectRequest(PlayerEntity plr, ref PlayerConnectRequest packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    public void OnPlayerConnectRequest(PlayerEntity plr, ref PlayerConnectRequest packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.WaitingProtocol)
         {

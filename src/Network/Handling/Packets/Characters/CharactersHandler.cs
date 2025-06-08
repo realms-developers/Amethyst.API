@@ -43,7 +43,7 @@ public sealed class CharactersHandler : INetworkHandler
             ?.Unregister(OnPlayerAuthorized);
     }
 
-    private static void OnPlayerAuthorized(in PlayerSetUserArgs args, HookResult<PlayerSetUserArgs> result)
+    private void OnPlayerAuthorized(in PlayerSetUserArgs args, HookResult<PlayerSetUserArgs> result)
     {
         var plr = args.Player;
 
@@ -68,7 +68,7 @@ public sealed class CharactersHandler : INetworkHandler
         }
     }
 
-    private static void OnPlayerLoadout(PlayerEntity plr, ref PlayerLoadout packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    private void OnPlayerLoadout(PlayerEntity plr, ref PlayerLoadout packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (packet.LoadoutIndex > 2 || packet.LoadoutIndex < 0)
         {
@@ -86,7 +86,7 @@ public sealed class CharactersHandler : INetworkHandler
         plr.User.Character.LoadoutIndex = packet.LoadoutIndex;
     }
 
-    private static void OnPlayerFullyJoined(in PlayerFullyJoinedArgs args, HookResult<PlayerFullyJoinedArgs> result)
+    private void OnPlayerFullyJoined(in PlayerFullyJoinedArgs args, HookResult<PlayerFullyJoinedArgs> result)
     {
         var plr = args.Player;
 
@@ -100,7 +100,7 @@ public sealed class CharactersHandler : INetworkHandler
         plr.User.Character.Handler.InReadonlyMode = false;
     }
 
-    private static void OnPlayerQuests(PlayerEntity plr, ref PlayerTownNPCQuestsStats packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    private void OnPlayerQuests(PlayerEntity plr, ref PlayerTownNPCQuestsStats packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != Handshake.ConnectionPhase.Connected)
             return;
@@ -108,7 +108,7 @@ public sealed class CharactersHandler : INetworkHandler
         plr.User?.Character?.Handler.HandleQuests(packet);
     }
 
-    private static void OnPlayerMana(PlayerEntity plr, ref PlayerMana packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    private void OnPlayerMana(PlayerEntity plr, ref PlayerMana packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != Handshake.ConnectionPhase.Connected)
             return;
@@ -116,7 +116,7 @@ public sealed class CharactersHandler : INetworkHandler
         plr.User?.Character?.Handler.HandleSetMana(packet);
     }
 
-    private static void OnPlayerLife(PlayerEntity plr, ref PlayerLife packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    private void OnPlayerLife(PlayerEntity plr, ref PlayerLife packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != Handshake.ConnectionPhase.Connected)
             return;
@@ -124,7 +124,7 @@ public sealed class CharactersHandler : INetworkHandler
         plr.User?.Character?.Handler.HandleSetLife(packet);
     }
 
-    private static void OnPlayerSlot(PlayerEntity plr, ref PlayerSlot packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    private void OnPlayerSlot(PlayerEntity plr, ref PlayerSlot packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != Handshake.ConnectionPhase.Connected)
             return;
@@ -132,7 +132,7 @@ public sealed class CharactersHandler : INetworkHandler
         plr.User?.Character?.Handler.HandleSlot(packet);
     }
 
-    private static void OnPlayerInfo(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    private void OnPlayerInfo(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != Handshake.ConnectionPhase.Connected)
             return;

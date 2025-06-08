@@ -1,6 +1,6 @@
 namespace Amethyst.Network.Enums;
 
-public enum ModuleTypes : int
+public enum ModuleID : int
 {
     Liquid = 0,
     NetText = 1,

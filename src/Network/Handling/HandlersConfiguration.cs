@@ -13,4 +13,7 @@ public sealed class HandlersConfiguration
     public List<string> DisabledHandlers { get; set; } = [];
 
     public bool SyncPlayers { get; set; } = true;
+
+    public bool ShowDeathReasons { get; set; } = true;
+    public int AutoRespawnSeconds { get; set; }
 }

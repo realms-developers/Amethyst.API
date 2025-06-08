@@ -19,7 +19,7 @@ public sealed class ChatHandler : INetworkHandler
         NetworkManager.RemoveDirectHandler(82, OnReadNetModule);
     }
 
-    private static void OnReadNetModule(PlayerEntity plr, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    private void OnReadNetModule(PlayerEntity plr, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         FastPacketReader reader = new FastPacketReader(rawPacket, 3);
         ushort type = reader.ReadUInt16();
