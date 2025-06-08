@@ -17,6 +17,8 @@ public static class ServerChat
 
         MessagePlayerJoined.AddOutput(new PlayerJoinHandler());
         MessagePlayerLeft.AddOutput(new PlayerLeftHandler());
+        MessagePlayerTeam.AddOutput(new PlayerTeamHandler());
+        MessagePlayerPvP.AddOutput(new PlayerPvPHandler());
     }
 
     public static ChatRegistry<IChatMessageHandler> HandlerRegistry { get; } = new();
@@ -28,6 +30,12 @@ public static class ServerChat
 
     public static MiscMessageProvider<PlayerLeftMessageContext> MessagePlayerLeft { get; }
         = new(new PlayerLeftHandler());
+
+    public static MiscMessageProvider<PlayerTeamMessageContext> MessagePlayerTeam { get; }
+        = new(new PlayerTeamHandler());
+
+    public static MiscMessageProvider<PlayerPvPMessageContext> MessagePlayerPvP { get; }
+        = new(new PlayerPvPHandler());
 
     public static void HandleMessage(PlayerEntity entity, string text)
     {

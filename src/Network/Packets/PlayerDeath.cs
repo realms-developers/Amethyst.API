@@ -19,14 +19,16 @@ public sealed class PlayerDeathPacket : IPacket<PlayerDeath>
         byte PlayerIndex = reader.ReadByte();
         NetDeathReason Reason = reader.ReadNetDeathReason();
         short Damage = reader.ReadInt16();
-        byte HitDirectionbool = reader.ReadByte();
+        byte HitDirection = reader.ReadByte();
+        bool PvP = reader.ReadByte() != 0;
 
         return new PlayerDeath
         {
             PlayerIndex = PlayerIndex,
             Reason = Reason,
             Damage = Damage,
-            HitDirectionbool = HitDirectionbool,
+            HitDirection = HitDirection,
+            PvP = PvP,
         };
     }
 
@@ -37,7 +39,8 @@ public sealed class PlayerDeathPacket : IPacket<PlayerDeath>
         writer.WriteByte(packet.PlayerIndex);
         writer.WriteNetDeathReason(packet.Reason);
         writer.WriteInt16(packet.Damage);
-        writer.WriteByte(packet.HitDirectionbool);
+        writer.WriteByte(packet.HitDirection);
+        writer.WriteBoolean(packet.PvP);
 
         return writer.Build();
     }
@@ -48,5 +51,6 @@ public struct PlayerDeath
     public byte PlayerIndex;
     public NetDeathReason Reason;
     public short Damage;
-    public byte HitDirectionbool;
+    public byte HitDirection;
+    public bool PvP;
 }

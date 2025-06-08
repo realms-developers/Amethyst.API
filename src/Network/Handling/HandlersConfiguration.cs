@@ -1,3 +1,4 @@
+using Amethyst.Network.Structures;
 using Amethyst.Storages.Config;
 
 namespace Amethyst.Network.Handling;
@@ -14,6 +15,6 @@ public sealed class HandlersConfiguration
 
     public bool SyncPlayers { get; set; } = true;
 
-    public bool ShowDeathReasons { get; set; } = true;
+    public bool DropTombstones { get; set; } = true;
     public int AutoRespawnSeconds { get; set; }
 }

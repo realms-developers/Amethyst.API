@@ -15,10 +15,12 @@ public sealed class PlayerSyncBuffsPacket : IPacket<PlayerSyncBuffs>
     {
         FastPacketReader reader = new(data, offset);
 
+        byte plrIndex = reader.ReadByte();
         ushort[] buffData = reader.ReadUInt16Array(44);
 
         return new PlayerSyncBuffs
         {
+            PlayerIndex = plrIndex,
             BuffData = buffData,
         };
     }
@@ -27,6 +29,7 @@ public sealed class PlayerSyncBuffsPacket : IPacket<PlayerSyncBuffs>
     {
         FastPacketWriter writer = new(50, 128);
 
+        writer.WriteByte(packet.PlayerIndex);
         writer.WriteUInt16Array(packet.BuffData);
 
         return writer.Build();
@@ -35,5 +38,6 @@ public sealed class PlayerSyncBuffsPacket : IPacket<PlayerSyncBuffs>
 
 public struct PlayerSyncBuffs
 {
+    public byte PlayerIndex;
     public ushort[] BuffData;
 }

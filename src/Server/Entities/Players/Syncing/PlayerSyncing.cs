@@ -1,6 +1,5 @@
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
-using Amethyst.Network.Utilities;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Enums;
 
@@ -9,7 +8,7 @@ namespace Amethyst.Server.Entities.Players.Syncing;
 public static class PlayerSyncing
 {
     public static List<Func<PlayerEntity, byte[]?>> SyncPacketCreators { get; }
-        = [SyncActive, SyncPlayerInfo, SyncUpdateInfo];
+        = [SyncActive, SyncPlayerInfo, SyncUpdateInfo, SyncPvP, SyncTeam];
     // TODO: add life, mana, loadout, buffs, and other packets
 
     public static Func<PlayerEntity, short, NetItem, byte[]?>? SyncSlotPacket { get; set; } = SyncSlot;
@@ -36,6 +35,34 @@ public static class PlayerSyncing
                 }
             }
         }
+    }
+
+    public static byte[]? SyncPvP(PlayerEntity player)
+    {
+        if (!player.IsInPvP)
+        {
+            return null;
+        }
+
+        return PlayerPvPPacket.Serialize(new PlayerPvP
+        {
+            PlayerIndex = (byte)player.Index,
+            IsInPvP = player.IsInPvP
+        });
+    }
+
+    public static byte[]? SyncTeam(PlayerEntity player)
+    {
+        if (player.Team == 0)
+        {
+            return null;
+        }
+
+        return PlayerSetTeamPacket.Serialize(new PlayerSetTeam
+        {
+            PlayerIndex = (byte)player.Index,
+            TeamIndex = (byte)player.Team
+        });
     }
 
     public static byte[]? SyncActive(PlayerEntity player)

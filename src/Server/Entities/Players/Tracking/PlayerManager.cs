@@ -2,7 +2,10 @@ using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Hooks.Context;
 using Amethyst.Network;
+using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Server.Entities.Base;
+using Amethyst.Systems.Chat;
+using Amethyst.Systems.Chat.Misc.Context;
 
 namespace Amethyst.Server.Entities.Players.Tracking;
 
@@ -34,13 +37,17 @@ public sealed class PlayerManager : IEntityManager<PlayerEntity>
 
     public void Remove(int index)
     {
-        if (_tracker._players[index] == null)
+        var plr = _tracker._players[index];
+        if (plr == null)
             throw new InvalidOperationException($"Player at index {index} does not exist.");
 
-        _removeHook.Invoke(new PlayerTrackerRemoveArgs(_tracker._players[index]));
-        AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count() - 1}/{NetworkManager.MaxPlayers}] RMV => player_{index} ({_tracker._players[index].Name ?? "not_identified"})");
+        if (plr.Phase == ConnectionPhase.Connected)
+            ServerChat.MessagePlayerLeft.Invoke(new PlayerLeftMessageContext(plr));
 
-        _tracker._players[index].Dispose();
+        _removeHook.Invoke(new PlayerTrackerRemoveArgs(plr));
+        AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count() - 1}/{NetworkManager.MaxPlayers}] RMV => player_{index} ({plr.Name ?? "not_identified"})");
+
+        plr.Dispose();
         _tracker._players[index] = null!;
     }
 }

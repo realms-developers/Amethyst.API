@@ -21,6 +21,7 @@ public sealed class PlayerSpawnPacket : IPacket<PlayerSpawn>
         int RespawnTimer = reader.ReadInt32();
         short DeathsPvE = reader.ReadInt16();
         short DeathsPvP = reader.ReadInt16();
+        byte SpawnContext = reader.ReadByte();
 
         return new PlayerSpawn
         {
@@ -30,6 +31,7 @@ public sealed class PlayerSpawnPacket : IPacket<PlayerSpawn>
             RespawnTimer = RespawnTimer,
             DeathsPvE = DeathsPvE,
             DeathsPvP = DeathsPvP,
+            SpawnContext = SpawnContext
         };
     }
 
@@ -43,6 +45,7 @@ public sealed class PlayerSpawnPacket : IPacket<PlayerSpawn>
         writer.WriteInt32(packet.RespawnTimer);
         writer.WriteInt16(packet.DeathsPvE);
         writer.WriteInt16(packet.DeathsPvP);
+        writer.WriteByte(packet.SpawnContext);
 
         return writer.Build();
     }
@@ -56,4 +59,5 @@ public struct PlayerSpawn
     public int RespawnTimer;
     public short DeathsPvE;
     public short DeathsPvP;
+    public byte SpawnContext;
 }

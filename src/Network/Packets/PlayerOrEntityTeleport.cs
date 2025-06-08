@@ -19,13 +19,10 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
         NetBitsByte bitsByte = reader.ReadByte();
         short entityIndex = reader.ReadInt16();
         NetVector2 targetPosition = reader.ReadNetVector2();
-        byte style = 0;
+        byte style = reader.ReadByte();
         int? extraInfo = null;
-        if (bitsByte[0])
-        {
-            style = reader.ReadByte();
-        }
-        if (bitsByte[1])
+
+        if (bitsByte[3])
         {
             extraInfo = reader.ReadInt32();
         }
@@ -47,11 +44,9 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
         writer.WriteByte(packet.Flags);
         writer.WriteInt16(packet.EntityIndex);
         writer.WriteNetVector2(packet.TargetPosition);
-        if (packet.Flags[0])
-        {
-            writer.WriteByte(packet.Style);
-        }
-        if (packet.Flags[1])
+        writer.WriteByte(packet.Style);
+
+        if (packet.Flags[3])
         {
             if (packet.ExtraInfo.HasValue)
             {
@@ -59,12 +54,8 @@ public sealed class PlayerOrEntityTeleportPacket : IPacket<PlayerOrEntityTelepor
             }
             else
             {
-                writer.WriteInt32(0); // Default value if ExtraInfo is null
+                writer.WriteInt32(0);
             }
-        }
-        else
-        {
-            writer.WriteInt32(0); // Default value if ExtraInfo is not used
         }
 
         return writer.Build();

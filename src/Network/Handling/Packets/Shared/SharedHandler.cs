@@ -1,0 +1,65 @@
+using Amethyst.Network.Handling.Base;
+using Amethyst.Network.Handling.Packets.Handshake;
+using Amethyst.Network.Packets;
+using Amethyst.Network.Structures;
+using Amethyst.Server.Entities;
+using Amethyst.Server.Entities.Players;
+using Terraria;
+
+namespace Amethyst.Network.Handling.Packets.Shared;
+
+public sealed class SharedHandler : INetworkHandler
+{
+    public string Name => "net.amethyst.SharedHandler";
+
+    public void Load()
+    {
+        NetworkManager.SetMainHandler<PlayerOrEntityTeleport>(OnPlayerOrEntityTeleport);
+    }
+
+    private void OnPlayerOrEntityTeleport(PlayerEntity plr, ref PlayerOrEntityTeleport packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    {
+        if (plr.Phase != ConnectionPhase.Connected)
+            return;
+
+        byte type = 0;
+        NetBitsByte bb = packet.Flags;
+        if (bb[0])
+        {
+            type++;
+        }
+        if (bb[1])
+        {
+            type += 2;
+        }
+
+        NetVector2 targetPosition = packet.TargetPosition;
+        if (bb[2])
+        {
+            targetPosition = EntityTrackers.Players[(byte)packet.EntityIndex]?.Position ?? targetPosition;
+        }
+
+        switch (type)
+        {
+            case 0:
+                plr.TPlayer.Teleport(packet.TargetPosition, packet.Style);
+                break;
+            case 1:
+                if (packet.EntityIndex < 0 || packet.EntityIndex > Main.npc.Length - 1)
+                {
+                    return;
+                }
+
+                Main.npc[packet.EntityIndex].Teleport(targetPosition, packet.Style, packet.ExtraInfo ?? 0);
+                break;
+            case 2:
+                plr.TPlayer.Teleport(targetPosition, packet.Style, packet.ExtraInfo ?? 0);
+                break;
+        }
+    }
+
+    public void Unload()
+    {
+        NetworkManager.SetMainHandler<PlayerOrEntityTeleport>(null);
+    }
+}

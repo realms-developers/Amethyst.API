@@ -6,6 +6,8 @@ using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
+using Amethyst.Systems.Chat;
+using Amethyst.Systems.Chat.Misc.Context;
 using Amethyst.Systems.Users;
 using Amethyst.Systems.Users.Players;
 using MongoDB.Driver;
@@ -48,9 +50,10 @@ public sealed class HandshakeHandler : INetworkHandler
             return;
         }
 
-
         plr.SendPacketBytes(PlayerConnectionPrepareWorldPacket.Serialize(new()));
         plr.Phase = ConnectionPhase.Connected;
+
+        ServerChat.MessagePlayerJoined.Invoke(new PlayerJoinedMessageContext(plr));
 
         HookRegistry.GetHook<PlayerFullyJoinedArgs>()
             ?.Invoke(new PlayerFullyJoinedArgs(plr));
@@ -151,7 +154,7 @@ public sealed class HandshakeHandler : INetworkHandler
             return;
         }
 
-        IEnumerable<char> invalidChars = name.Where(c => !cfg.NicknameFilter.Contains(c));
+        IEnumerable<char> invalidChars = name.ToLowerInvariant().Where(c => !cfg.NicknameFilter.Contains(c));
         if (cfg.EnableNicknameFilter && invalidChars.Any())
         {
             plr.Kick(Localization.Get("network.invalidCharsNickname", AmethystSession.Profile.DefaultLanguage)
