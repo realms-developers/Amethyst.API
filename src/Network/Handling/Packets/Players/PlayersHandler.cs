@@ -111,7 +111,6 @@ public sealed class PlayersHandler : INetworkHandler
 
     private void OnPlayerSetTeam(PlayerEntity plr, ref PlayerSetTeam packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        Console.WriteLine($"[OnPlayerSetTeam]> {packet.PlayerIndex}, {packet.TeamIndex}, {plr.Index}, {plr.Phase}");
         if (plr.Phase != ConnectionPhase.Connected)
             return;
 
@@ -132,7 +131,6 @@ public sealed class PlayersHandler : INetworkHandler
 
     private void OnPlayerPvP(PlayerEntity plr, ref PlayerPvP packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        Console.WriteLine($"[OnPlayerPvP]> {packet.PlayerIndex}, {packet.IsInPvP}, {plr.Index}, {plr.Phase}");
         if (plr.Phase != ConnectionPhase.Connected)
             return;
 
@@ -298,6 +296,7 @@ public sealed class PlayersHandler : INetworkHandler
 
         if (HandlersConfiguration.Instance.DropTombstones)
         {
+            Main.rand = new(DateTime.Now.Second);
             plr.TPlayer.DropTombstone(0, new("", Terraria.Localization.NetworkText.Mode.Literal), packet.HitDirection - 1);
         }
 

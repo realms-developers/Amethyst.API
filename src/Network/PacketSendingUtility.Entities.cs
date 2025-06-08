@@ -96,23 +96,97 @@ public static partial class PacketSendingUtility
     public static Action<PlayerEntity, int> SyncItem { get; set; } = DirectSyncItem;
     public static void DirectSyncItem(PlayerEntity entity, int itemId)
     {
+        byte[]? data = CreateSyncItemDefaultPacket(itemId);
+        if (data != null)
+        {
+            entity.SendPacketBytes(data);
+        }
+    }
+
+    public static byte[]? CreateSyncItemDefaultPacket(int itemId, byte ownIgnore = 0)
+    {
         var item = Main.item[itemId];
         if (item == null || !item.active)
         {
-            return;
+            return null;
         }
 
-        var packet = new ItemUpdate
+        var packet = new ItemUpdateInstanced
         {
             ItemIndex = (short)itemId,
             Position = item.position,
             Velocity = item.velocity,
             ItemStack = (short)item.stack,
             ItemPrefix = item.prefix,
-            OwnIgnore = (byte)item.ownIgnore,
+            OwnIgnore = ownIgnore,
             ItemType = (short)item.type
         };
-        byte[] data = ItemUpdatePacket.Serialize(packet);
-        entity.SendPacketBytes(data);
+        return ItemUpdateInstancedPacket.Serialize(packet);
+    }
+
+    public static byte[]? CreateSyncItemInstancedPacket(int itemId, byte ownIgnore = 0)
+    {
+        var item = Main.item[itemId];
+        if (item == null || !item.active)
+        {
+            return null;
+        }
+
+        var packet = new ItemUpdateInstanced
+        {
+            ItemIndex = (short)itemId,
+            Position = item.position,
+            Velocity = item.velocity,
+            ItemStack = (short)item.stack,
+            ItemPrefix = item.prefix,
+            OwnIgnore = ownIgnore,
+            ItemType = (short)item.type
+        };
+        return ItemUpdateInstancedPacket.Serialize(packet);
+    }
+
+    public static byte[]? CreateSyncItemShimmerPacket(int itemId, byte ownIgnore = 0)
+    {
+        var item = Main.item[itemId];
+        if (item == null || !item.active)
+        {
+            return null;
+        }
+
+        var packet = new ItemUpdateShimmer
+        {
+            ItemIndex = (short)itemId,
+            Position = item.position,
+            Velocity = item.velocity,
+            ItemStack = (short)item.stack,
+            ItemPrefix = item.prefix,
+            OwnIgnore = ownIgnore,
+            ItemType = (short)item.type,
+            ShimmerTime = item.shimmerTime,
+            IsShimmered = item.shimmered
+        };
+        return ItemUpdateShimmerPacket.Serialize(packet);
+    }
+
+    public static byte[]? CreateSyncItemNoPickupPacket(int itemId, byte ownIgnore = 0)
+    {
+        var item = Main.item[itemId];
+        if (item == null || !item.active)
+        {
+            return null;
+        }
+
+        var packet = new ItemUpdateNoPickup
+        {
+            ItemIndex = (short)itemId,
+            Position = item.position,
+            Velocity = item.velocity,
+            ItemStack = (short)item.stack,
+            ItemPrefix = item.prefix,
+            OwnIgnore = ownIgnore,
+            ItemType = (short)item.type,
+            TimeEnemiesNoPickup = (byte)item.timeLeftInWhichTheItemCannotBeTakenByEnemies,
+        };
+        return ItemUpdateNoPickupPacket.Serialize(packet);
     }
 }

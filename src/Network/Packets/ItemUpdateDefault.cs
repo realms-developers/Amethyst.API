@@ -8,11 +8,11 @@ using Amethyst.Network.Utilities;
 
 namespace Amethyst.Network.Packets;
 
-public sealed class ItemUpdateOldPacket : IPacket<ItemUpdateOld>
+public sealed class ItemUpdateDefaultPacket : IPacket<ItemUpdateDefault>
 {
     public int PacketID => 21;
 
-    public static ItemUpdateOld Deserialize(ReadOnlySpan<byte> data, int offset = 0)
+    public static ItemUpdateDefault Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
 
@@ -24,7 +24,7 @@ public sealed class ItemUpdateOldPacket : IPacket<ItemUpdateOld>
         byte OwnIgnore = reader.ReadByte();
         short ItemType = reader.ReadInt16();
 
-        return new ItemUpdateOld
+        return new ItemUpdateDefault
         {
             ItemIndex = ItemIndex,
             Position = Position,
@@ -36,7 +36,7 @@ public sealed class ItemUpdateOldPacket : IPacket<ItemUpdateOld>
         };
     }
 
-    public static byte[] Serialize(ItemUpdateOld packet)
+    public static byte[] Serialize(ItemUpdateDefault packet)
     {
         FastPacketWriter writer = new(21, 128);
 
@@ -52,7 +52,7 @@ public sealed class ItemUpdateOldPacket : IPacket<ItemUpdateOld>
     }
 }
 
-public struct ItemUpdateOld
+public struct ItemUpdateDefault
 {
     public short ItemIndex;
     public NetVector2 Position;
