@@ -4,14 +4,13 @@ using Amethyst.Extensions.Base.Metadata;
 using Amethyst.Extensions.Base.Repositories;
 using Amethyst.Extensions.Base.Result;
 using Amethyst.Extensions.Base.Utility;
-using Amethyst.Systems.Commands;
 using Amethyst.Systems.Commands.Dynamic.Utilities;
 
 namespace Amethyst.Extensions.Modules.Repositories;
 
 public sealed class ModulesRepository : IExtensionRepository
 {
-    public string Name => "StandardModuleRepository";
+    public string Name => "mdl.main";
 
     private readonly List<IExtension> _extensions = [];
     private readonly List<ExtensionHandleResult> _results = [];

@@ -120,5 +120,31 @@
 
     "amethyst.desc.giveRoot": "Grant root privileges to a player.",
     "amethyst.basic.playerUserNotFound": "Player user \"{0}\" not found.",
-    "amethyst.basic.givenRoot": "Root privileges granted to player \"{0}\"."
+    "amethyst.basic.givenRoot": "Root privileges granted to player \"{0}\".",
+
+    "amethyst.desc.extensionsPluginsList": "Show the list of all plugins.",
+    "amethyst.extensions.repositoryNotFound": "Extensions repository \"{0}\" not found.",
+    "amethyst.extensions.noPluginsLoaded": "No plugins loaded.",
+    "amethyst.extensions.pluginsListTitle": "Plugins List",
+    "amethyst.desc.extensionsPluginsAllow": "Allow plugin loading.",
+    "amethyst.extensions.pluginAlreadyAllowed": "Plugin \"{0}\" is already allowed.",
+    "amethyst.extensions.pluginAllowed": "Plugin \"{0}\" allowed.",
+    "amethyst.desc.extensionsPluginsDisallow": "Disallow plugin loading.",
+    "amethyst.extensions.pluginAlreadyDisallowed": "Plugin \"{0}\" is already disallowed.",
+    "amethyst.extensions.pluginDisallowed": "Plugin \"{0}\" disallowed.",
+    "amethyst.desc.extensionsPluginsReload": "Reload all plugins.",
+    "amethyst.extensions.pluginsRequestedReload": "Plugins reload requested.",
+    "amethyst.desc.extensionsPluginsLoad": "Load all plugins.",
+    "amethyst.extensions.pluginsRequestedLoad": "Plugins load requested.",
+    "amethyst.desc.extensionsPluginsUnload": "Unload all plugins.",
+    "amethyst.extensions.pluginsRequestedUnload": "Plugins unload requested.",
+    "amethyst.desc.extensionsModulesList": "Show the list of all modules.",
+    "amethyst.extensions.noModulesLoaded": "No modules loaded.",
+    "amethyst.extensions.modulesListTitle": "Modules List",
+    "amethyst.desc.extensionsModulesAllow": "Allow module loading.",
+    "amethyst.extensions.moduleAlreadyAllowed": "Module \"{0}\" is already allowed.",
+    "amethyst.extensions.moduleAllowed": "Module \"{0}\" allowed.",
+    "amethyst.desc.extensionsModulesDisallow": "Disallow module loading.",
+    "amethyst.extensions.moduleAlreadyDisallowed": "Module \"{0}\" is already disallowed.",
+    "amethyst.extensions.moduleDisallowed": "Module \"{0}\" disallowed."
 }

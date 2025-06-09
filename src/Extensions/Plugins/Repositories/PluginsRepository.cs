@@ -9,7 +9,7 @@ namespace Amethyst.Extensions.Plugins.Repositories;
 
 public sealed class PluginsRepository : IExtensionRepository
 {
-    public string Name => "StandardPluginsRepository";
+    public string Name => "plg.main";
 
     private readonly List<IExtension> _extensions = [];
     private readonly List<ExtensionHandleResult> _results = [];
