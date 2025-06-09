@@ -14,6 +14,6 @@ public sealed class PlayerCommandBuilder : IProviderBuilder<ICommandProvider>
             throw new InvalidOperationException("User must be a PlayerUser to build a command provider.");
         }
 
-        return new CommonCommandProvider(playerUser, 500, AmethystSession.Profile.DebugMode ? ["shared", "debug"] : ["shared"]);
+        return new CommonCommandProvider(playerUser, 100, AmethystSession.Profile.DebugMode ? ["shared", "debug"] : ["shared"]);
     }
 }

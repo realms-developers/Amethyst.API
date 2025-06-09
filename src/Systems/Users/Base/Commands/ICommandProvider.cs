@@ -1,10 +1,13 @@
 using Amethyst.Systems.Commands.Base;
+using Amethyst.Text;
 
 namespace Amethyst.Systems.Users.Base.Commands;
 
 public interface ICommandProvider
 {
     public CommandHistory History { get; }
+
+    public PagesCollection? ActivePage { get; set; }
 
     public int Delay { get; set; }
 

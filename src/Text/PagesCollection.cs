@@ -12,12 +12,18 @@ public sealed class PagesCollection : IEnumerable<TextPage>
 {
     private readonly List<TextPage> _pages = [];
 
-    public PagesCollection(IEnumerable<TextPage> pages) => _pages.AddRange(pages);
+    public PagesCollection(IEnumerable<TextPage> pages, bool supportsSeeCommand)
+    {
+        _pages = [.. pages];
+        SupportsSeeCommand = supportsSeeCommand;
+    }
     public PagesCollection() { }
 
     public IReadOnlyList<TextPage> Pages => _pages.AsReadOnly();
 
-    public static List<string> AsList(IEnumerable<string> items, int maxLineLength = 80)
+    public bool SupportsSeeCommand { get; }
+
+    public static List<string> ToList(IEnumerable<string> items, int maxLineLength = 80)
     {
         List<string> lines = [];
         StringBuilder currentLine = new(maxLineLength);
@@ -46,10 +52,10 @@ public sealed class PagesCollection : IEnumerable<TextPage>
         return lines;
     }
 
-    public static PagesCollection AsListPage(IEnumerable<string> items, int maxLineLength = 80, int linesPerPage = 5)
-        => AsPage(AsList(items, maxLineLength), linesPerPage);
+    public static PagesCollection AsListPage(IEnumerable<string> items, int maxLineLength = 80, int linesPerPage = 5, bool supportsSeeCommand = true)
+        => AsPage(ToList(items, maxLineLength), linesPerPage, supportsSeeCommand);
 
-    public static PagesCollection AsPage(IEnumerable<string> lines, int linesPerPage = 5)
+    public static PagesCollection AsPage(IEnumerable<string> lines, int linesPerPage = 5, bool supportsSeeCommand = true)
     {
         List<TextPage> pages = [];
         List<string> lineList = [.. lines];
@@ -65,9 +71,7 @@ public sealed class PagesCollection : IEnumerable<TextPage>
             pages.Add(new TextPage($"#{i + 1}", pageLines, null, false));
         }
 
-#pragma warning disable IDE0306
-        return new(pages);
-#pragma warning restore IDE0306
+        return new(pages, supportsSeeCommand);
     }
 
     public void SendPage(IAmethystUser user, IMessageProvider provider, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)

@@ -4,6 +4,7 @@ using Amethyst.Systems.Commands;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Commands;
+using Amethyst.Text;
 
 namespace Amethyst.Systems.Users.Common.Commands;
 
@@ -21,6 +22,8 @@ public sealed class CommonCommandProvider : ICommandProvider, IDisposable
     public IAmethystUser User { get; }
 
     public CommandHistory History { get; } = new();
+
+    public PagesCollection? ActivePage { get; set; }
 
     public int Delay { get; set; }
 
@@ -41,7 +44,7 @@ public sealed class CommonCommandProvider : ICommandProvider, IDisposable
 
                 CompletedCommandInfo? info = commandFunc();
                 CompletedCommandInfo? last = History.GetLast();
-                if (info != null && info.CommandArgs != last?.CommandArgs)
+                if (info != null)
                 {
                     History.Add(info);
                 }

@@ -58,5 +58,11 @@ public sealed class PlayerMessageProvider : IMessageProvider
         => ReplyMessage(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args), WarningColor);
 
     public void ReplyPage(PagesCollection pages, string? header, string? footer, object[]? footerArgs, bool showPageName, int page = 0)
-        => pages.SendPage(User, this, header, footer, footerArgs, showPageName, page);
+    {
+        if (pages.Pages.Count > 0)
+        {
+            User.Commands.ActivePage = pages;
+        }
+        pages.SendPage(User, this, header, footer, footerArgs, showPageName, page);
+    }
 }

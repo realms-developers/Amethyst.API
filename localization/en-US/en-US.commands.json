@@ -146,5 +146,12 @@
     "amethyst.extensions.moduleAllowed": "Module \"{0}\" allowed.",
     "amethyst.desc.extensionsModulesDisallow": "Disallow module loading.",
     "amethyst.extensions.moduleAlreadyDisallowed": "Module \"{0}\" is already disallowed.",
-    "amethyst.extensions.moduleDisallowed": "Module \"{0}\" disallowed."
+    "amethyst.extensions.moduleDisallowed": "Module \"{0}\" disallowed.",
+
+    "amethyst.desc.seePage": "Show the last active page.",
+    "amethyst.basic.noActivePage": "No active page.",
+    "amethyst.activePage": "Active page",
+
+    "amethyst.desc.repeatLastCommand": "Repeat the last executed command.",
+    "amethyst.basic.noLastCommand": "No last executed command.",
 }

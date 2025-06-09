@@ -145,5 +145,12 @@
     "amethyst.extensions.moduleAllowed": "Модуль \"{0}\" разрешён.",
     "amethyst.desc.extensionsModulesDisallow": "Запретить загрузку модуля.",
     "amethyst.extensions.moduleAlreadyDisallowed": "Модуль \"{0}\" уже запрещён.",
-    "amethyst.extensions.moduleDisallowed": "Модуль \"{0}\" запрещён."
+    "amethyst.extensions.moduleDisallowed": "Модуль \"{0}\" запрещён.",
+
+    "amethyst.desc.seePage": "Показать последнюю активную страницу.",
+    "amethyst.basic.noActivePage": "Нет активной страницы.",
+    "amethyst.activePage": "Активная страница",
+
+    "amethyst.desc.repeatLastCommand": "Повторить последнюю выполненную команду.",
+    "amethyst.basic.noLastCommand": "Нет последней выполненной команды.",
 }

@@ -13,6 +13,6 @@ public sealed class ArtificialCommandBuilder : IProviderBuilder<ICommandProvider
             throw new InvalidOperationException("User must be a ArtificialUser to build a command provider.");
         }
 
-        return new CommonCommandProvider(ArtificialUser, 500, ["shared"]);
+        return new CommonCommandProvider(ArtificialUser, 0, ["shared"]);
     }
 }

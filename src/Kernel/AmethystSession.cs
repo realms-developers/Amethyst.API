@@ -98,7 +98,7 @@ $!b$m                                     |___/         ");
                 .Where(d => d.Value.State == ExtensionResult.SuccessOperation)
                 .Select(d => d.Key.Metadata.Name);
 
-            foreach (string line in PagesCollection.AsList(loadedModSuccess, 100))
+            foreach (string line in PagesCollection.ToList(loadedModSuccess, 100))
             {
                 ModernConsole.WriteLine($"$b   {line}");
             }
@@ -107,7 +107,7 @@ $!b$m                                     |___/         ");
                 .Where(d => d.Value.State == ExtensionResult.SuccessOperation)
                 .Select(d => d.Key.Metadata.Name);
 
-            foreach (string line in PagesCollection.AsList(loadedPlugSuccess, 100))
+            foreach (string line in PagesCollection.ToList(loadedPlugSuccess, 100))
             {
                 ModernConsole.WriteLine($"$g   {line}");
             }
@@ -124,12 +124,12 @@ $!b$m                                     |___/         ");
             {
                 ModernConsole.WriteLine($"\n⭕ $!gSkipped$!r extensions: ($bmodules$!r, $gplugins$!r)");
 
-                foreach (string line in PagesCollection.AsList(loadedModSkipped, 100))
+                foreach (string line in PagesCollection.ToList(loadedModSkipped, 100))
                 {
                     ModernConsole.WriteLine($"$!d$b   {line}");
                 }
 
-                foreach (string line in PagesCollection.AsList(loadedPlugSkipped, 100))
+                foreach (string line in PagesCollection.ToList(loadedPlugSkipped, 100))
                 {
                     ModernConsole.WriteLine($"$!d$g   {line}");
                 }
