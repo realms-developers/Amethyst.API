@@ -17,6 +17,8 @@ namespace Amethyst.Server;
 
 public sealed class TAPILauncher : IServerLauncher
 {
+    public static int TPS { get; private set; }
+
     public bool IsStarted => _isStarted;
 
     private bool _isStarted;
@@ -102,6 +104,9 @@ public sealed class TAPILauncher : IServerLauncher
         ConsoleCommandHandler.Attach();
         _ = Task.Run(ConsoleHooks.InputTask);
 
+        int tpsCounter = 0;
+        Timer? tpsTimer = null;
+
         while (!Netplay.Disconnect)
         {
             double totalMilliseconds = stopwatch.Elapsed.TotalMilliseconds;
@@ -113,6 +118,7 @@ public sealed class TAPILauncher : IServerLauncher
                 stopwatch.Start();
                 if (Netplay.HasClients || AmethystSession.Profile.ForceUpdate)
                 {
+                    tpsCounter++;
                     if (AmethystSession.Profile.DebugMode)
                     {
                         updateSw.Start();
@@ -121,25 +127,25 @@ public sealed class TAPILauncher : IServerLauncher
 
                         timings.Add(updateSw.Elapsed.TotalMilliseconds);
                         updateSw.Reset();
-
-                        if (timings.Count == 180)
+                        tpsTimer ??= new Timer(_ =>
                         {
-                            IOrderedEnumerable<double> ordered = timings.OrderBy(p => p);
-
-                            double totalMs = 0;
-                            foreach (double ms in ordered)
-                            {
-                                totalMs += ms;
-                            }
+                            int tps = Interlocked.Exchange(ref tpsCounter, 0);
+                            TPS = tps;
 
                             if (!AmethystSession.Profile.DisableFrameDebug)
                             {
-                                AmethystLog.Main.Debug(
-                                    nameof(TAPILauncher), $"Game Update: [Min-Max range: {Math.Ceiling(ordered.First())}-{Math.Ceiling(ordered.Last())}ms] average: {Math.Ceiling(totalMs / 180)}ms, total: {(int)totalMs}ms");
+                                IOrderedEnumerable<double> ordered = timings.OrderBy(p => p);
+
+                                double totalMs = 0;
+                                foreach (double ms in ordered)
+                                {
+                                    totalMs += ms;
+                                }
+                                AmethystLog.Main.Debug(nameof(TAPILauncher), $"TPS: {tps} Game Update: [Min-Max range: {Math.Ceiling(ordered.First())}-{Math.Ceiling(ordered.Last())}ms] average: {Math.Ceiling(totalMs / 180)}ms, total: {(int)totalMs}ms");
                             }
 
                             timings.Clear();
-                        }
+                        }, null, 1000, 1000);
                     }
                     else
                     {
@@ -161,11 +167,11 @@ public sealed class TAPILauncher : IServerLauncher
                     if (num10 > 1)
                     {
                         Thread.Sleep(num10 - 1);
-                        if (!Netplay.HasClients)
-                        {
-                            num7 = 0.0;
-                            Thread.Sleep(10);
-                        }
+                        // if (!Netplay.HasClients)
+                        // {
+                        //     num7 = 0.0;
+                        //     Thread.Sleep(10);
+                        // }
                     }
                 }
             }
