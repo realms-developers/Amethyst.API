@@ -13,7 +13,7 @@ public sealed unsafe class StrippedMemoryStream : Stream
     internal byte* _ptr;
     internal int ptrOffset;
 
-    public override bool CanRead => false;
+    public override bool CanRead => true;
 
     public override bool CanSeek => false;
 
@@ -33,7 +33,20 @@ public sealed unsafe class StrippedMemoryStream : Stream
 
     public override int Read(byte[] buffer, int offset, int count)
     {
-        return 0;
+        var span = buffer.AsSpan(offset, count);
+        if (span.Length == 0)
+        {
+            return 0;
+        }
+
+        var spanPtr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+        Buffer.MemoryCopy(
+            source: _ptr + ptrOffset,
+            destination: spanPtr,
+            destinationSizeInBytes: count,
+            sourceBytesToCopy: count);
+
+        return count;
     }
 
     public override long Seek(long offset, SeekOrigin origin)

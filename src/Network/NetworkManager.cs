@@ -17,6 +17,7 @@ using Amethyst.Network.Handling.Packets.Shared;
 using Terraria;
 using Amethyst.Network.Handling.Packets.Items;
 using Amethyst.Network.Handling.NetMessagePatch;
+using Amethyst.Network.Handling.Packets.NPCs;
 
 namespace Amethyst.Network;
 
@@ -80,6 +81,7 @@ public static class NetworkManager
         HandlerManager.RegisterHandler(new PlayersHandler());
         HandlerManager.RegisterHandler(new SharedHandler());
         HandlerManager.RegisterHandler(new ItemsHandler());
+        HandlerManager.RegisterHandler(new NPCsHandler());
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);
