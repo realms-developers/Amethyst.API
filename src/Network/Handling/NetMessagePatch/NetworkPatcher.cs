@@ -17,10 +17,23 @@ internal sealed class NetworkPatcher : NetMessage
     internal static unsafe void Initialize()
     {
         On.Terraria.NetMessage.SendData += SendDataPatched;
-        AmethystLog.Network.Verbose(nameof(NetworkPatcher), "Patched => Terraria.NetMessage.SendData.");
     }
 
-    private static unsafe void SendDataPatched(On.Terraria.NetMessage.orig_SendData orig, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+    private static void SendDataPatched(On.Terraria.NetMessage.orig_SendData orig, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+    {
+        Task.Run(() =>
+        {
+            try
+            {
+                SendDataTask(msgType, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7);
+            }
+            catch (Exception ex)
+            {
+                AmethystLog.Network.Error(nameof(NetworkPatcher), $"Failed to send data packet: {ex}");
+            }
+        });
+    }
+    public static unsafe void SendDataTask(int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
     {
         if (msgType == 7)
         {
