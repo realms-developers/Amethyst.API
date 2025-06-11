@@ -10,7 +10,7 @@ namespace Amethyst.Network.Handling.Packets.NPCs;
 
 public sealed class NPCsHandler : INetworkHandler
 {
-    public string Name => "NPCsHandler";
+    public string Name => "net.amethyst.NPCsHandler";
 
     public void Load()
     {
