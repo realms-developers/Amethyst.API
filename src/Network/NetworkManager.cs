@@ -86,6 +86,7 @@ public static class NetworkManager
         HandlerManager.RegisterHandler(new NPCsHandler());
         HandlerManager.RegisterHandler(new ProjectilesHandler());
         HandlerManager.RegisterHandler(new SignsHandler());
+        HandlerManager.RegisterHandler(new ChestsHandler());
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);

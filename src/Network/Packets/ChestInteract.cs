@@ -19,7 +19,7 @@ public sealed class ChestInteractPacket : IPacket<ChestInteract>
         short ChestX = reader.ReadInt16();
         short ChestY = reader.ReadInt16();
         short ChestStyle = reader.ReadInt16();
-        byte ChestAdditionalValue = reader.ReadByte();
+        short ChestAdditionalValue = reader.ReadInt16();
 
         return new ChestInteract
         {
@@ -33,13 +33,13 @@ public sealed class ChestInteractPacket : IPacket<ChestInteract>
 
     public static byte[] Serialize(ChestInteract packet)
     {
-        FastPacketWriter writer = new(34, 128);
+        FastPacketWriter writer = new(34, 64);
 
         writer.WriteByte(packet.Action);
         writer.WriteInt16(packet.ChestX);
         writer.WriteInt16(packet.ChestY);
         writer.WriteInt16(packet.ChestStyle);
-        writer.WriteByte(packet.ChestAdditionalValue);
+        writer.WriteInt16(packet.ChestAdditionalValue);
 
         return writer.Build();
     }
@@ -51,5 +51,5 @@ public struct ChestInteract
     public short ChestX;
     public short ChestY;
     public short ChestStyle;
-    public byte ChestAdditionalValue;
+    public short ChestAdditionalValue;
 }
