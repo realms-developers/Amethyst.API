@@ -13,7 +13,7 @@ using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Network.Handling.Packets.Platform;
 using Amethyst.Network.Handling.Mechanism.Sections;
 using Amethyst.Network.Handling.Packets.Players;
-using Amethyst.Network.Handling.Packets.Shared;
+using Amethyst.Network.Handling.Packets.Other;
 using Terraria;
 using Amethyst.Network.Handling.Packets.Items;
 using Amethyst.Network.Handling.NetMessagePatch;
@@ -79,7 +79,7 @@ public static class NetworkManager
         HandlerManager.RegisterHandler(new PlatformHandler());
         HandlerManager.RegisterHandler(new SectionHandler());
         HandlerManager.RegisterHandler(new PlayersHandler());
-        HandlerManager.RegisterHandler(new SharedHandler());
+        HandlerManager.RegisterHandler(new OtherHandler());
         HandlerManager.RegisterHandler(new ItemsHandler());
         HandlerManager.RegisterHandler(new NPCsHandler());
 

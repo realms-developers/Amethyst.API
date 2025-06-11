@@ -11,11 +11,6 @@ public sealed class AchievementsKilledDirectPacket : IPacket<AchievementsKilledD
 {
     public int PacketID => 97;
 
-    // create regex for replacing: FROM
-    // public static <ANYTYPE> Deserialize(ReadOnlySpan<byte> data, int offset = 0)
-    //  TO
-    // public static <ANYTYPE> Deserialize(ReadOnlySpan<byte> data, int offset = 0)
-    //
     public static AchievementsKilledDirect Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);

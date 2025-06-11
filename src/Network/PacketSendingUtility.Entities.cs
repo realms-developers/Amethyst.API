@@ -77,7 +77,7 @@ public static partial class PacketSendingUtility
 
         var packet = new ProjectileUpdate
         {
-            ProjectileIndex = (short)projectileId,
+            ProjectileIdentity = (short)projectileId,
             Position = projectile.position,
             Velocity = projectile.velocity,
             OwnerID = (byte)projectile.owner,

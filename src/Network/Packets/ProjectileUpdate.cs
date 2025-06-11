@@ -39,7 +39,7 @@ public sealed class ProjectileUpdatePacket : IPacket<ProjectileUpdate>
 
         return new ProjectileUpdate
         {
-            ProjectileIndex = projectileIdx,
+            ProjectileIdentity = projectileIdx,
             Position = position,
             Velocity = velocity,
             OwnerID = ownerID,
@@ -57,83 +57,7 @@ public sealed class ProjectileUpdatePacket : IPacket<ProjectileUpdate>
     {
         FastPacketWriter writer = new(27, 128);
 
-        /*
-
-				Projectile projectile = Main.projectile[number];
-				writer.Write((short)projectile.identity);
-				writer.WriteVector2(projectile.position);
-				writer.WriteVector2(projectile.velocity);
-				writer.Write((byte)projectile.owner);
-				writer.Write((short)projectile.type);
-				BitsByte bitsByte23 = (byte)0;
-				BitsByte bitsByte24 = (byte)0;
-				bitsByte23[0] = projectile.ai[0] != 0f;
-				bitsByte23[1] = projectile.ai[1] != 0f;
-				bitsByte24[0] = projectile.ai[2] != 0f;
-				if (projectile.bannerIdToRespondTo != 0)
-				{
-					bitsByte23[3] = true;
-				}
-				if (projectile.damage != 0)
-				{
-					bitsByte23[4] = true;
-				}
-				if (projectile.knockBack != 0f)
-				{
-					bitsByte23[5] = true;
-				}
-				if (projectile.type > 0 && projectile.type < ProjectileID.Count && ProjectileID.Sets.NeedsUUID[projectile.type])
-				{
-					bitsByte23[7] = true;
-				}
-				if (projectile.originalDamage != 0)
-				{
-					bitsByte23[6] = true;
-				}
-				if ((byte)bitsByte24 != 0)
-				{
-					bitsByte23[2] = true;
-				}
-				writer.Write(bitsByte23);
-				if (bitsByte23[2])
-				{
-					writer.Write(bitsByte24);
-				}
-				if (bitsByte23[0])
-				{
-					writer.Write(projectile.ai[0]);
-				}
-				if (bitsByte23[1])
-				{
-					writer.Write(projectile.ai[1]);
-				}
-				if (bitsByte23[3])
-				{
-					writer.Write((ushort)projectile.bannerIdToRespondTo);
-				}
-				if (bitsByte23[4])
-				{
-					writer.Write((short)projectile.damage);
-				}
-				if (bitsByte23[5])
-				{
-					writer.Write(projectile.knockBack);
-				}
-				if (bitsByte23[6])
-				{
-					writer.Write((short)projectile.originalDamage);
-				}
-				if (bitsByte23[7])
-				{
-					writer.Write((short)projectile.projUUID);
-				}
-				if (bitsByte24[0])
-				{
-					writer.Write(projectile.ai[2]);
-				}
-        */
-
-        writer.WriteInt16(packet.ProjectileIndex);
+        writer.WriteInt16(packet.ProjectileIdentity);
         writer.WriteNetVector2(packet.Position);
         writer.WriteNetVector2(packet.Velocity);
         writer.WriteByte((byte)packet.OwnerID);
@@ -211,7 +135,10 @@ public sealed class ProjectileUpdatePacket : IPacket<ProjectileUpdate>
 
 public struct ProjectileUpdate
 {
-    public short ProjectileIndex;
+    /// <summary>
+    /// Projectile identity. Not index.
+    /// </summary>
+    public short ProjectileIdentity;
     public NetVector2 Position;
     public NetVector2 Velocity;
     public byte OwnerID;

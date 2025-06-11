@@ -6,11 +6,11 @@ using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Terraria;
 
-namespace Amethyst.Network.Handling.Packets.Shared;
+namespace Amethyst.Network.Handling.Packets.Other;
 
-public sealed class SharedHandler : INetworkHandler
+public sealed class OtherHandler : INetworkHandler
 {
-    public string Name => "net.amethyst.SharedHandler";
+    public string Name => "net.amethyst.OtherHandler";
 
     public void Load()
     {
