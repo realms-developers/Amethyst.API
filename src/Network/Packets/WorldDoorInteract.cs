@@ -18,12 +18,14 @@ public sealed class WorldDoorInteractPacket : IPacket<WorldDoorInteract>
         byte Action = reader.ReadByte();
         short TileX = reader.ReadInt16();
         short TileY = reader.ReadInt16();
+        byte PlayerAbove = reader.ReadByte();
 
         return new WorldDoorInteract
         {
             Action = Action,
             TileX = TileX,
             TileY = TileY,
+            PlayerAbove = PlayerAbove
         };
     }
 
@@ -34,6 +36,7 @@ public sealed class WorldDoorInteractPacket : IPacket<WorldDoorInteract>
         writer.WriteByte(packet.Action);
         writer.WriteInt16(packet.TileX);
         writer.WriteInt16(packet.TileY);
+        writer.WriteByte(packet.PlayerAbove);
 
         return writer.Build();
     }
@@ -44,4 +47,5 @@ public struct WorldDoorInteract
     public byte Action;
     public short TileX;
     public short TileY;
+    public byte PlayerAbove;
 }
