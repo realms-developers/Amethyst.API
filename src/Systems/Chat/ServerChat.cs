@@ -39,9 +39,9 @@ public static class ServerChat
 
     public static void HandleMessage(PlayerEntity entity, string text)
     {
-        PlayerMessage message = new PlayerMessage(entity, text, DateTimeOffset.UtcNow);
+        PlayerMessage message = new(entity, text, DateTimeOffset.UtcNow);
 
-        foreach (var handler in HandlerRegistry._handlers)
+        foreach (IChatMessageHandler handler in HandlerRegistry._handlers)
         {
             handler.HandleMessage(message);
         }
@@ -51,14 +51,14 @@ public static class ServerChat
             return;
         }
 
-        MessageRenderContext ctx = new MessageRenderContext(entity, message);
-        foreach (var renderer in RendererRegistry._handlers)
+        MessageRenderContext ctx = new(entity, message);
+        foreach (IChatMessageRenderer renderer in RendererRegistry._handlers)
         {
             renderer.Render(ctx);
         }
 
         MessageRenderResult result = ctx.Build();
-        foreach (var output in OutputRegistry._handlers)
+        foreach (IChatMessageOutput output in OutputRegistry._handlers)
         {
             output.OutputMessage(result);
         }

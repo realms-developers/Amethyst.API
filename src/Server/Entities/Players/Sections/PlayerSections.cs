@@ -1,18 +1,13 @@
 namespace Amethyst.Server.Entities.Players.Sections;
 
-public sealed class PlayerSections
+public sealed class PlayerSections(PlayerEntity player)
 {
-    public PlayerSections(PlayerEntity player)
-    {
-        Player = player;
-    }
-
-    public PlayerEntity Player { get; }
+    public PlayerEntity Player { get; } = player;
 
     public int SectionX => (int)(Player.Position.X / 16 / 200);
     public int SectionY => (int)(Player.Position.Y / 16 / 150);
 
-    private bool[,] _sentSections = new bool[8401 / 200, 2401 / 200];
+    private readonly bool[,] _sentSections = new bool[8401 / 200, 2401 / 200];
 
     public bool IsValidSection(int sectionX, int sectionY)
     {
@@ -22,7 +17,9 @@ public sealed class PlayerSections
     public bool IsSent(int sectionX, int sectionY)
     {
         if (sectionX < 0 || sectionY < 0 || sectionX >= _sentSections.GetLength(0) || sectionY >= _sentSections.GetLength(1))
+        {
             return false;
+        }
 
         return _sentSections[sectionX, sectionY];
     }
@@ -30,14 +27,18 @@ public sealed class PlayerSections
     public void MarkAsSent(int sectionX, int sectionY)
     {
         if (sectionX < 0 || sectionY < 0 || sectionX >= _sentSections.GetLength(0) || sectionY >= _sentSections.GetLength(1))
+        {
             return;
+        }
 
         _sentSections[sectionX, sectionY] = true;
     }
     public void UnmarkAsSent(int sectionX, int sectionY)
     {
         if (sectionX < 0 || sectionY < 0 || sectionX >= _sentSections.GetLength(0) || sectionY >= _sentSections.GetLength(1))
+        {
             return;
+        }
 
         _sentSections[sectionX, sectionY] = false;
     }

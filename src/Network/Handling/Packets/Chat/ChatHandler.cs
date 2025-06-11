@@ -21,7 +21,7 @@ public sealed class ChatHandler : INetworkHandler
 
     private void OnReadNetModule(PlayerEntity plr, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        FastPacketReader reader = new FastPacketReader(rawPacket, 3);
+        FastPacketReader reader = new(rawPacket, 3);
         ushort type = reader.ReadUInt16();
 
         if (type != 1)

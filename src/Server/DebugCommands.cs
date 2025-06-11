@@ -12,7 +12,7 @@ public static class DebugCommands
     [Command(["debug pinfo"], "Prints player information.")]
     [CommandRepository("debug")]
     [CommandSyntax("en-US", "<player>")]
-    public static void PrintPlayerInfo(IAmethystUser user, CommandInvokeContext ctx, PlayerEntity plr)
+    public static void PrintPlayerInfo(IAmethystUser _, CommandInvokeContext ctx, PlayerEntity plr)
     {
         ctx.Messages.ReplySuccess($"[AMETHYST] SHOWING PLAYER INFO: {plr.Name} (PlayerEntity.Data.cs)");
         ctx.Messages.ReplyInfo($"hp: {plr.Life}, mp: {plr.Mana}, dead: {plr.IsDead}, gm: {plr.IsGodModeEnabled}");
@@ -28,9 +28,9 @@ public static class DebugCommands
     [Command(["debug npcs"], "Prints NPC information.")]
     [CommandRepository("debug")]
     [CommandSyntax("en-US", "[page]")]
-    public static void PrintNPCs(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
+    public static void PrintNPCs(IAmethystUser _, CommandInvokeContext ctx, int page = 0)
     {
-        var npcs = Main.npc.Where(n => n != null && n.active);
+        IEnumerable<NPC> npcs = Main.npc.Where(n => n != null && n.active);
         var pageCollection = PagesCollection.AsListPage(npcs.Select(p => $"{p.type} ({p.TypeName})"));
         ctx.Messages.ReplyPage(pageCollection, "[AMETHYST] NPCs", null, null, true, page);
     }

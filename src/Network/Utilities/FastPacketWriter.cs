@@ -12,7 +12,7 @@ public unsafe ref struct FastPacketWriter : IDisposable
     private byte[] _buffer;
     private GCHandle _handle;
     private byte* _ptr;
-    private nint _startPos;
+    private readonly nint _startPos;
 
     public FastPacketWriter()
     {
@@ -76,7 +76,7 @@ public unsafe ref struct FastPacketWriter : IDisposable
             value.Substitutions ??= Array.Empty<NetText>();
 
             WriteByte((byte)value.Substitutions.Length);
-            foreach (var substitution in value.Substitutions)
+            foreach (NetText substitution in value.Substitutions)
             {
                 WriteNetText(substitution);
             }
@@ -168,7 +168,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteByteArray(byte[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -189,7 +191,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteSByteArray(sbyte[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -210,7 +214,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteBooleanArray(bool[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -231,7 +237,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteInt16Array(short[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -252,7 +260,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteUInt16Array(ushort[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -273,7 +283,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteInt32Array(int[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -294,7 +306,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteUInt32Array(uint[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -315,7 +329,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteInt64Array(long[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -336,7 +352,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteUInt64Array(ulong[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -357,7 +375,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteSingleArray(float[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -378,7 +398,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteDoubleArray(double[] values)
     {
         if (values == null || values.Length == 0)
+        {
             return;
+        }
 
         int length = values.Length;
         for (int i = 0; i < length; i++)
@@ -466,7 +488,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     {
         int length = (int)(_ptr - (byte*)_handle.AddrOfPinnedObject());
         if (length > _buffer.Length)
+        {
             throw new InvalidOperationException("Written span exceeds buffer length.");
+        }
 
         _ptr = (byte*)_handle.AddrOfPinnedObject();
         WriteUInt16((ushort)length);
@@ -479,7 +503,9 @@ public unsafe ref struct FastPacketWriter : IDisposable
     {
         int length = (int)(_ptr - (byte*)_handle.AddrOfPinnedObject());
         if (length > _buffer.Length)
+        {
             throw new InvalidOperationException("Written span exceeds buffer length.");
+        }
 
         _ptr = (byte*)_handle.AddrOfPinnedObject();
         WriteUInt16((ushort)length);
@@ -513,6 +539,8 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void Dispose()
     {
         if (_handle.IsAllocated)
+        {
             _handle.Free();
+        }
     }
 }

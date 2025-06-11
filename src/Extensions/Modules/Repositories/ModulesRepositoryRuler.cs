@@ -30,7 +30,9 @@ public sealed class ModulesRepositoryRuler : IRepositoryRuler
     public void AllowExtension(string name)
     {
         if (_modulesCfg.Data.AllowedModules.Contains(name))
+        {
             return;
+        }
 
         _modulesCfg.Data.AllowedModules.Add(name);
     }

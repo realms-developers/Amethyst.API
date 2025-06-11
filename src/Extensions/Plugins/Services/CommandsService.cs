@@ -21,9 +21,9 @@ public sealed class CommandsService : IPluginService
 
     public void OnPluginUnload()
     {
-        foreach (var repo in CommandsOrganizer.Repositories)
+        foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
-            foreach (var command in repo.RegisteredCommands)
+            foreach (ICommand command in repo.RegisteredCommands)
             {
                 if (command is DynamicCommand dynamicCommand && dynamicCommand.LoadIdentifier == BaseInstance.Root.LoadIdentifier)
                 {

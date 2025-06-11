@@ -30,14 +30,20 @@ public sealed class NPCsHandler : INetworkHandler
     private void OnNPCStrike(PlayerEntity plr, ref NPCStrike packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.NPCIndex < 0 || packet.NPCIndex >= Main.npc.Length)
+        {
             return;
+        }
 
         NPC npc = Main.npc[packet.NPCIndex];
         if (npc == null || !npc.active)
+        {
             return;
+        }
 
         npc.PlayerInteraction(plr.Index);
 
@@ -77,14 +83,20 @@ public sealed class NPCsHandler : INetworkHandler
     private void OnNPCRequestBuffRemoval(PlayerEntity plr, ref NPCRequestBuffRemoval packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.NPCIndex < 0 || packet.NPCIndex >= Main.npc.Length)
+        {
             return;
+        }
 
         NPC npc = Main.npc[packet.NPCIndex];
         if (npc == null || !npc.active)
+        {
             return;
+        }
 
         npc.RequestBuffRemoval(packet.TargetBuffType);
     }
@@ -92,7 +104,9 @@ public sealed class NPCsHandler : INetworkHandler
     private void OnNPCRelease(PlayerEntity plr, ref NPCRelease packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         NPC.ReleaseNPC(packet.PositionX, packet.PositionY, packet.NPCType, packet.NPCStyle, plr.Index);
     }
@@ -100,14 +114,20 @@ public sealed class NPCsHandler : INetworkHandler
     private void OnNPCPortalGunTeleport(PlayerEntity plr, ref NPCPortalGunTeleport packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.NPCIndex < 0 || packet.NPCIndex >= Main.npc.Length)
+        {
             return;
+        }
 
         NPC npc = Main.npc[packet.NPCIndex];
         if (npc == null || !npc.active)
+        {
             return;
+        }
 
         npc.lastPortalColorIndex = packet.TeleportExtraInfo + ((packet.TeleportExtraInfo % 2 == 0) ? 1 : (-1));
         npc.Teleport(packet.Position, 4, packet.TeleportExtraInfo);
@@ -118,13 +138,19 @@ public sealed class NPCsHandler : INetworkHandler
     private void OnNPCMoveHome(PlayerEntity plr, ref NPCMoveHome packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.NPCIndex < 0 || packet.NPCIndex >= Main.npc.Length)
+        {
             return;
+        }
 
         if (Main.npc[packet.NPCIndex]?.active != true)
+        {
             return;
+        }
 
         switch (packet.Action)
         {
@@ -141,14 +167,20 @@ public sealed class NPCsHandler : INetworkHandler
     private void OnNPCMoneyPing(PlayerEntity plr, ref NPCMoneyPing packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.NPCIndex < 0 || packet.NPCIndex >= Main.npc.Length)
+        {
             return;
+        }
 
         NPC npc = Main.npc[packet.NPCIndex];
         if (npc == null || !npc.active)
+        {
             return;
+        }
 
         npc.extraValue += packet.ExtraValue;
         NetMessage.TrySendData(92, -1, -1, NetworkText.Empty, packet.NPCIndex, npc.extraValue, packet.Position.X, packet.Position.Y);
@@ -159,7 +191,9 @@ public sealed class NPCsHandler : INetworkHandler
         if (packet.NPCType == 682)
         {
             if (NPC.unlockedSlimeRedSpawn)
+            {
                 return;
+            }
 
             NPC.unlockedSlimeRedSpawn = true;
             PacketSendingUtility.ExcludeBroadcastConnected(-1, PacketSendingUtility.DirectCreateWorldInfoPacket());
@@ -168,7 +202,7 @@ public sealed class NPCsHandler : INetworkHandler
         int x = packet.TileX * 16;
         int y = packet.TileY * 16;
 
-        NPC nPC3 = new NPC();
+        NPC nPC3 = new();
         nPC3.SetDefaults(packet.NPCType);
         int type5 = nPC3.type;
         int netID = nPC3.netID;
@@ -187,7 +221,9 @@ public sealed class NPCsHandler : INetworkHandler
     private void OnNPCCatch(PlayerEntity plr, ref NPCCatch packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         NPC.CatchNPC(packet.NPCIndex, plr.Index);
     }
@@ -195,14 +231,20 @@ public sealed class NPCsHandler : INetworkHandler
     private void OnNPCAddBuff(PlayerEntity plr, ref NPCAddBuff packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.NPCIndex < 0 || packet.NPCIndex >= Main.npc.Length)
+        {
             return;
+        }
 
         NPC npc = Main.npc[packet.NPCIndex];
         if (npc == null || !npc.active)
+        {
             return;
+        }
 
         npc.AddBuff(packet.BuffTime, packet.BuffType, true);
 

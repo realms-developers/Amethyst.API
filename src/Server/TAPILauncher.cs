@@ -3,7 +3,6 @@ using Amethyst.Extensions;
 using Amethyst.Kernel;
 using Amethyst.Kernel.Console;
 using Amethyst.Network;
-using Amethyst.Network.Handling;
 using Amethyst.Server.World;
 using Amethyst.Systems.Console;
 using Microsoft.Xna.Framework;

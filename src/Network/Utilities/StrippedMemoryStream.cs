@@ -3,14 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Amethyst.Network.Utilities;
 
-public sealed unsafe class StrippedMemoryStream : Stream
+public sealed unsafe class StrippedMemoryStream(byte* bytePtr) : Stream
 {
-    public StrippedMemoryStream(byte* bytePtr)
-    {
-        _ptr = bytePtr;
-    }
-
-    internal byte* _ptr;
+    internal byte* _ptr = bytePtr;
     internal int ptrOffset;
 
     public override bool CanRead => true;
@@ -33,13 +28,13 @@ public sealed unsafe class StrippedMemoryStream : Stream
 
     public override int Read(byte[] buffer, int offset, int count)
     {
-        var span = buffer.AsSpan(offset, count);
+        Span<byte> span = buffer.AsSpan(offset, count);
         if (span.Length == 0)
         {
             return 0;
         }
 
-        var spanPtr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+        byte* spanPtr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
         Buffer.MemoryCopy(
             source: _ptr + ptrOffset,
             destination: spanPtr,
@@ -66,7 +61,7 @@ public sealed unsafe class StrippedMemoryStream : Stream
             return;
         }
 
-        var spanPtr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+        byte* spanPtr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
 
         Buffer.MemoryCopy(
             source: spanPtr,

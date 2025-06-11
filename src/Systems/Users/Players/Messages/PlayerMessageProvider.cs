@@ -1,5 +1,4 @@
 using System.Globalization;
-using Amethyst.Kernel;
 using Amethyst.Network.Structures;
 using Amethyst.Network.Utilities;
 using Amethyst.Systems.Users.Base.Messages;

@@ -22,8 +22,8 @@ public class DynamicCommandInvoker : ICommandInvoker
 
     public ICommand Command { get; }
 
-    private DynamicMethod _dynamicMethod;
-    private Action<object?[]> _invokeAction;
+    private readonly DynamicMethod _dynamicMethod;
+    private readonly Action<object?[]> _invokeAction;
 
     public CommandInvokeContext CreateContext(IAmethystUser user, string[] args)
     {

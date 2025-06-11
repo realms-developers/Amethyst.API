@@ -20,7 +20,7 @@ public static class ParsingNode
             return inputText;
         });
 
-        foreach (var type in new[]
+        foreach (Type? type in new[]
         {
             typeof(bool),
             typeof(byte),
@@ -63,7 +63,7 @@ public static class ParsingNode
                     return null;
                 }
 
-                var player = EntityTrackers.Players[index];
+                PlayerEntity player = EntityTrackers.Players[index];
                 if (player != null && player.Active)
                 {
                     return player;
@@ -75,7 +75,7 @@ public static class ParsingNode
                 }
             }
 
-            foreach (var player in EntityTrackers.Players)
+            foreach (PlayerEntity player in EntityTrackers.Players)
             {
                 if (player != null && player.Active && player.Name.Equals(inputText, StringComparison.OrdinalIgnoreCase))
                 {
@@ -83,7 +83,7 @@ public static class ParsingNode
                 }
             }
 
-            foreach (var player in EntityTrackers.Players)
+            foreach (PlayerEntity player in EntityTrackers.Players)
             {
                 if (player != null && player.Active && player.Name.StartsWith(inputText, StringComparison.OrdinalIgnoreCase))
                 {
@@ -100,7 +100,7 @@ public static class ParsingNode
             // by R,G,B
             if (inputText.Contains(','))
             {
-                var parts = inputText.Split(',');
+                string[] parts = inputText.Split(',');
                 if (parts.Length == 3 &&
                     byte.TryParse(parts[0].Trim(), out byte r) &&
                     byte.TryParse(parts[1].Trim(), out byte g) &&
@@ -133,7 +133,9 @@ public static class ParsingNode
     public static void AddParser(Type type, ArgumentParser parser)
     {
         if (Parsers.ContainsKey(type))
+        {
             return;
+        }
 
         Parsers.Add(type, parser);
     }
@@ -152,17 +154,17 @@ public static class ParsingNode
             skipVisibility: true
         );
 
-        var il = method.GetILGenerator();
+        ILGenerator il = method.GetILGenerator();
 
-        var tryParseMethod = type.GetMethod(
+        System.Reflection.MethodInfo? tryParseMethod = type.GetMethod(
             "TryParse",
             new[] { typeof(string), type.MakeByRefType() }
         );
 
-        var lblParseSuccess = il.DefineLabel();
-        var lblAfterParse = il.DefineLabel();
-        var valueLocal = il.DeclareLocal(type);
-        var resultLocal = il.DeclareLocal(typeof(bool));
+        Label lblParseSuccess = il.DefineLabel();
+        Label lblAfterParse = il.DefineLabel();
+        LocalBuilder valueLocal = il.DeclareLocal(type);
+        LocalBuilder resultLocal = il.DeclareLocal(typeof(bool));
 
         il.Emit(OpCodes.Ldarg_1);
         il.Emit(OpCodes.Ldloca_S, valueLocal);
@@ -178,7 +180,7 @@ public static class ParsingNode
 
         if (type.IsValueType)
         {
-            var defaultLocal = il.DeclareLocal(type);
+            LocalBuilder defaultLocal = il.DeclareLocal(type);
             il.Emit(OpCodes.Ldloca_S, defaultLocal);
             il.Emit(OpCodes.Initobj, type);
             il.Emit(OpCodes.Ldloc, defaultLocal);
@@ -198,7 +200,9 @@ public static class ParsingNode
 
         il.Emit(OpCodes.Ldloc, valueLocal);
         if (type.IsValueType)
+        {
             il.Emit(OpCodes.Box, type);
+        }
 
         il.MarkLabel(lblAfterParse);
         il.Emit(OpCodes.Ret);

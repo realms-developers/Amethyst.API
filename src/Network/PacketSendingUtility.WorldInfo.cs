@@ -110,7 +110,7 @@ public static partial class PacketSendingUtility
         flags10[1] = Main.zenithWorld;
         flags10[2] = NPC.unlockedTruffleSpawn;
 
-        WorldInfo wldInfo = new WorldInfo()
+        WorldInfo wldInfo = new()
         {
             Time = (int)Main.time,
             MoonPhase = (byte)Main.moonPhase,

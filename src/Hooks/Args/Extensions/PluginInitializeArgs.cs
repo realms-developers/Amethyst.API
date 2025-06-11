@@ -5,14 +5,8 @@ using Amethyst.Hooks.Autoloading;
 namespace Amethyst.Hooks.Args.Extensions;
 
 [AutoloadHook]
-public sealed class PluginInitializeArgs
+public sealed class PluginInitializeArgs(PluginInstance pluginInstance, ExtensionHandleResult result)
 {
-    public PluginInitializeArgs(PluginInstance pluginInstance, ExtensionHandleResult result)
-    {
-        Instance = pluginInstance;
-        Result = result;
-    }
-
-    public PluginInstance Instance { get; }
-    public ExtensionHandleResult Result { get; }
+    public PluginInstance Instance { get; } = pluginInstance;
+    public ExtensionHandleResult Result { get; } = result;
 }

@@ -29,8 +29,8 @@ public sealed class CommonCommandProvider : ICommandProvider, IDisposable
 
     public List<string> Repositories { get; set; }
 
-    private BlockingCollection<Func<CompletedCommandInfo?>> _commandQueue = new();
-    private CancellationTokenSource _cancellationTokenSource = new();
+    private readonly BlockingCollection<Func<CompletedCommandInfo?>> _commandQueue = new();
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     private void CommandQueueHandler()
     {
@@ -40,7 +40,9 @@ public sealed class CommonCommandProvider : ICommandProvider, IDisposable
             {
                 Func<CompletedCommandInfo?> commandFunc = _commandQueue.Take(_cancellationTokenSource.Token);
                 if (_cancellationTokenSource.IsCancellationRequested)
+                {
                     break;
+                }
 
                 CompletedCommandInfo? info = commandFunc();
                 CompletedCommandInfo? last = History.GetLast();
@@ -50,7 +52,9 @@ public sealed class CommonCommandProvider : ICommandProvider, IDisposable
                 }
 
                 if (Delay > 0)
+                {
                     Task.Delay(Delay).Wait();
+                }
             }
             catch {}
         }

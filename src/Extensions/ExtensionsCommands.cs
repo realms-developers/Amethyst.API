@@ -14,7 +14,7 @@ public static class ExtensionsCommands
     [CommandSyntax("ru-RU", "[страница]")]
     public static void PluginsList(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
     {
-        var repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "plg.main");
@@ -38,7 +38,7 @@ public static class ExtensionsCommands
     [CommandSyntax("ru-RU", "<имя плагина>")]
     public static void PluginsAllow(IAmethystUser user, CommandInvokeContext ctx, string pluginName)
     {
-        var repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "plg.main");
@@ -61,7 +61,7 @@ public static class ExtensionsCommands
     [CommandSyntax("ru-RU", "<имя плагина>")]
     public static void PluginsDisallow(IAmethystUser user, CommandInvokeContext ctx, string pluginName)
     {
-        var repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "plg.main");
@@ -82,7 +82,7 @@ public static class ExtensionsCommands
     [CommandPermission("amethyst.extensions.plugins.reload")]
     public static void PluginsReload(IAmethystUser user, CommandInvokeContext ctx)
     {
-        var repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "plg.main");
@@ -100,7 +100,7 @@ public static class ExtensionsCommands
     [CommandPermission("amethyst.extensions.plugins.load")]
     public static void PluginsLoad(IAmethystUser user, CommandInvokeContext ctx)
     {
-        var repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "plg.main");
@@ -116,7 +116,7 @@ public static class ExtensionsCommands
     [CommandPermission("amethyst.extensions.plugins.unload")]
     public static void PluginsUnload(IAmethystUser user, CommandInvokeContext ctx)
     {
-        var repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Plugins.GetRepository("plg.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "plg.main");
@@ -134,7 +134,7 @@ public static class ExtensionsCommands
     [CommandSyntax("ru-RU", "[страница]")]
     public static void ModulesList(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
     {
-        var repository = ExtensionsOrganizer.Modules.GetRepository("mdl.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Modules.GetRepository("mdl.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "mdl.main");
@@ -158,7 +158,7 @@ public static class ExtensionsCommands
     [CommandSyntax("ru-RU", "<имя модуля>")]
     public static void ModulesAllow(IAmethystUser user, CommandInvokeContext ctx, string moduleName)
     {
-        var repository = ExtensionsOrganizer.Modules.GetRepository("mdl.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Modules.GetRepository("mdl.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "mdl.main");
@@ -181,7 +181,7 @@ public static class ExtensionsCommands
     [CommandSyntax("ru-RU", "<имя модуля>")]
     public static void ModulesDisallow(IAmethystUser user, CommandInvokeContext ctx, string moduleName)
     {
-        var repository = ExtensionsOrganizer.Modules.GetRepository("mdl.main");
+        Base.Repositories.IExtensionRepository? repository = ExtensionsOrganizer.Modules.GetRepository("mdl.main");
         if (repository == null)
         {
             ctx.Messages.ReplyError("amethyst.extensions.repositoryNotFound", "mdl.main");

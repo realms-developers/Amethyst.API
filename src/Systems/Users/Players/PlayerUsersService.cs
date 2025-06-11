@@ -7,30 +7,21 @@ using Amethyst.Systems.Users.Base.Suspension;
 
 namespace Amethyst.Systems.Users.Players;
 
-public sealed class PlayersUsersService : IUsersService<PlayerUser, PlayerUserMetadata>
+public sealed class PlayersUsersService(IProviderBuilder<IMessageProvider> messageBuilder,
+    IProviderBuilder<IPermissionProvider> permissionBuilder,
+    IProviderBuilder<IExtensionProvider> extensionBuilder,
+    IProviderBuilder<ISuspensionProvider> suspensionBuilder,
+    IProviderBuilder<ICommandProvider> commandBuilder) : IUsersService<PlayerUser, PlayerUserMetadata>
 {
-    public PlayersUsersService(IProviderBuilder<IMessageProvider> messageBuilder,
-        IProviderBuilder<IPermissionProvider> permissionBuilder,
-        IProviderBuilder<IExtensionProvider> extensionBuilder,
-        IProviderBuilder<ISuspensionProvider> suspensionBuilder,
-        IProviderBuilder<ICommandProvider> commandBuilder)
-    {
-        MessageProviderBuilder = messageBuilder;
-        PermissionProviderBuilder = permissionBuilder;
-        ExtensionProviderBuilder = extensionBuilder;
-        SuspensionProviderBuilder = suspensionBuilder;
-        CommandProviderBuilder = commandBuilder;
-    }
+    public IProviderBuilder<IMessageProvider> MessageProviderBuilder { get; set; } = messageBuilder;
 
-    public IProviderBuilder<IMessageProvider> MessageProviderBuilder { get; set; }
+    public IProviderBuilder<IPermissionProvider> PermissionProviderBuilder { get; set; } = permissionBuilder;
 
-    public IProviderBuilder<IPermissionProvider> PermissionProviderBuilder { get; set; }
+    public IProviderBuilder<IExtensionProvider> ExtensionProviderBuilder { get; set; } = extensionBuilder;
 
-    public IProviderBuilder<IExtensionProvider> ExtensionProviderBuilder { get; set;  }
+    public IProviderBuilder<ISuspensionProvider>? SuspensionProviderBuilder { get; set; } = suspensionBuilder;
 
-    public IProviderBuilder<ISuspensionProvider>? SuspensionProviderBuilder { get; set; }
-
-    public IProviderBuilder<ICommandProvider> CommandProviderBuilder { get; set; }
+    public IProviderBuilder<ICommandProvider> CommandProviderBuilder { get; set; } = commandBuilder;
 
     public PlayerUser CreateUser(PlayerUserMetadata metadata,
         IProviderBuilder<IMessageProvider>? messageBuilder = null,

@@ -4,12 +4,7 @@ using Amethyst.Hooks.Autoloading;
 namespace Amethyst.Hooks.Args.Extensions;
 
 [AutoloadHook]
-public sealed class PluginPreloadArgs
+public sealed class PluginPreloadArgs(PluginInstance pluginInstance)
 {
-    public PluginPreloadArgs(PluginInstance pluginInstance)
-    {
-        Instance = pluginInstance;
-    }
-
-    public PluginInstance Instance { get; }
+    public PluginInstance Instance { get; } = pluginInstance;
 }

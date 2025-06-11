@@ -6,7 +6,6 @@ using Amethyst.Systems.Characters.Base.Interactions;
 using Amethyst.Systems.Characters.Utilities;
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Players;
-using Terraria;
 
 namespace Amethyst.Systems.Characters.Serverside;
 

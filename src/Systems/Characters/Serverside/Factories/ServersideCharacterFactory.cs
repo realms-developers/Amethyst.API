@@ -28,10 +28,12 @@ public sealed class ServersideCharacterFactory : ICharacterFactory<ServersideCha
     public ServersideCharacterProvider BuildFor(IAmethystUser user)
     {
         if (user is not PlayerUser plrUser)
+        {
             throw new ArgumentException("User is not a PlayerUser", nameof(user));
+        }
 
-        var model = FindOrCreateModel(plrUser);
-        var provider = CreateProvider(plrUser);
+        ICharacterModel model = FindOrCreateModel(plrUser);
+        ServersideCharacterProvider provider = CreateProvider(plrUser);
 
         provider.LoadModel(model);
 
@@ -51,7 +53,7 @@ public sealed class ServersideCharacterFactory : ICharacterFactory<ServersideCha
 
     private ICharacterModel FindOrCreateModel(PlayerUser user)
     {
-        var model = Storage.GetModel(user.Name);
+        ICharacterModel? model = Storage.GetModel(user.Name);
 
         if (model is null)
         {

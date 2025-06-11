@@ -94,7 +94,7 @@ public sealed class HandshakeHandler : INetworkHandler
             return;
         }
 
-        var cfg = HandshakeConfiguration.Instance;
+        HandshakeConfiguration cfg = HandshakeConfiguration.Instance;
         string uuid = packet.UUID;
 
         if (string.IsNullOrEmpty(packet.UUID))
@@ -122,7 +122,7 @@ public sealed class HandshakeHandler : INetworkHandler
 
         plr.Phase = ConnectionPhase.WaitingWorldInfoRequest;
 
-        PlayerUserMetadata userMetadata = new PlayerUserMetadata(plr.Name, plr.IP, plr.UUID, plr.Index);
+        PlayerUserMetadata userMetadata = new(plr.Name, plr.IP, plr.UUID, plr.Index);
         PlayerUser user = UsersOrganizer.PlayerUsers.CreateUser(userMetadata);
         user.Suspensions!.Suspend(Suspension);
 
@@ -136,7 +136,7 @@ public sealed class HandshakeHandler : INetworkHandler
             return;
         }
 
-        var cfg = HandshakeConfiguration.Instance;
+        HandshakeConfiguration cfg = HandshakeConfiguration.Instance;
 
         string name = packet.Name;
         if (EntityTrackers.Players.Any(p => p.Name == name) && cfg.AllowDuplicateNicknames == false)
@@ -146,12 +146,14 @@ public sealed class HandshakeHandler : INetworkHandler
             return;
         }
 
-        foreach (var banword in cfg.NicknameBanwords)
-        if (name.Contains(banword, StringComparison.OrdinalIgnoreCase))
+        foreach (string banword in cfg.NicknameBanwords)
+        {
+            if (name.Contains(banword, StringComparison.OrdinalIgnoreCase))
         {
             plr.Kick("network.bannedNickname");
             AmethystLog.Network.Error(nameof(HandshakeHandler), $"Player #{plr.Index} tried to connect with a banned nickname: {name}");
             return;
+        }
         }
 
         IEnumerable<char> invalidChars = name.ToLowerInvariant().Where(c => !cfg.NicknameFilter.Contains(c));
@@ -203,7 +205,7 @@ public sealed class HandshakeHandler : INetworkHandler
             return;
         }
 
-        var cfg = HandshakeConfiguration.Instance;
+        HandshakeConfiguration cfg = HandshakeConfiguration.Instance;
 
         if ((cfg.AllowedProtocols.Length > 0 && !cfg.AllowedProtocols.Contains(packet.Protocol)) ||
             (cfg.AllowedProtocols.Length == 0 && packet.Protocol != "Terraria" + Main.curRelease))

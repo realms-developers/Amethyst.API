@@ -4,12 +4,7 @@ using Amethyst.Server.Entities.Players;
 namespace Amethyst.Hooks.Args.Players;
 
 [AutoloadHook]
-public sealed class PlayerFullyJoinedArgs
+public sealed class PlayerFullyJoinedArgs(PlayerEntity player)
 {
-    public PlayerFullyJoinedArgs(PlayerEntity player)
-    {
-        Player = player;
-    }
-
-    public PlayerEntity Player { get; }
+    public PlayerEntity Player { get; } = player;
 }

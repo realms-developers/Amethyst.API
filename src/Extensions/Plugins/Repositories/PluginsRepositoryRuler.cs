@@ -32,7 +32,9 @@ public sealed class PluginsRepositoryRuler : IRepositoryRuler
     public void AllowExtension(string name)
     {
         if (_pluginCfg.Data.AllowedPlugins.Contains(name))
+        {
             return;
+        }
 
         _pluginCfg.Data.AllowedPlugins.Add(name);
     }

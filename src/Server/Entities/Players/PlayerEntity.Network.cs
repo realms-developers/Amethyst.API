@@ -48,7 +48,7 @@ public sealed partial class PlayerEntity : IServerEntity
     {
         public static Action<PlayerEntity, string, byte, byte, byte> DefaultSendText { get; set; } = static (player, text, r, g, b) =>
         {
-            FastPacketWriter writer = new FastPacketWriter(82, 1024);
+            FastPacketWriter writer = new(82, 1024);
             writer.WriteUInt16(1);
             writer.WriteByte(255);
             writer.WriteByte(0);

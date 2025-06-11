@@ -10,11 +10,13 @@ public static class CommandsUtility
     public static CompletedCommandInfo? RunCommand(CommandRepository[] repositories, IAmethystUser user, string commandText)
     {
         if (commandText.StartsWith('/'))
-            commandText = commandText.Substring(1);
-
-        foreach (var repository in repositories)
         {
-            var command = repository.FindCommand(commandText, out string remainingText);
+            commandText = commandText.Substring(1);
+        }
+
+        foreach (CommandRepository repository in repositories)
+        {
+            ICommand? command = repository.FindCommand(commandText, out string remainingText);
             if (command != null)
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -31,9 +33,12 @@ public static class CommandsUtility
     {
         try
         {
-            var ctx = command.Invoker.CreateContext(user, SplitByArguments(args));
+            CommandInvokeContext ctx = command.Invoker.CreateContext(user, SplitByArguments(args));
             if (!command.Metadata.Rules.HasFlag(CommandRules.NoLogging))
+            {
                 AmethystLog.System.Info($"Commands<{user.Name}>", $"/{command.Metadata.Names.First() ?? "unknown"} -> [{string.Join(", ", ctx.Args.Select(p => $"\"{p}\""))}] [{command.Repository.Name}]");
+            }
+
             command.Invoker.Invoke(ctx);
         }
         catch (Exception ex)
@@ -48,9 +53,11 @@ public static class CommandsUtility
     public static string[] SplitByArguments(string text)
     {
         if (text.Length == 0)
+        {
             return Array.Empty<string>();
+        }
 
-        List<string> args = new List<string>();
+        List<string> args = new();
         args.Add("");
         int index = 0;
 
@@ -69,7 +76,10 @@ public static class CommandsUtility
                 index++;
                 ignoreFormat = false;
             }
-            else if (c == '\\' && !ignoreFormat) ignoreFormat = true;
+            else if (c == '\\' && !ignoreFormat)
+            {
+                ignoreFormat = true;
+            }
             else
             {
                 args[index] += c;

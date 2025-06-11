@@ -5,18 +5,10 @@ using Terraria.Localization;
 namespace Amethyst.Hooks.Args.Chat;
 
 [AutoloadHook(true, true)]
-public sealed class BroadcastTextArgs
+public sealed class BroadcastTextArgs(NetworkText text, Color color, int excludedPlayer, byte messageAuthor)
 {
-    public BroadcastTextArgs(NetworkText text, Color color, int excludedPlayer, byte messageAuthor)
-    {
-        Text = text;
-        Color = color;
-        ExcludedPlayer = excludedPlayer;
-        MessageAuthor = messageAuthor;
-    }
-
-    public NetworkText Text { get; set; }
-    public Color Color { get; set; }
-    public int ExcludedPlayer { get; set; }
-    public byte MessageAuthor { get; set; }
+    public NetworkText Text { get; set; } = text;
+    public Color Color { get; set; } = color;
+    public int ExcludedPlayer { get; set; } = excludedPlayer;
+    public byte MessageAuthor { get; set; } = messageAuthor;
 }

@@ -4,12 +4,7 @@ using Amethyst.Server.Entities.Players;
 namespace Amethyst.Hooks.Args.Players;
 
 [AutoloadHook]
-public sealed class PlayerTrackerRemoveArgs
+public sealed class PlayerTrackerRemoveArgs(PlayerEntity player)
 {
-    public PlayerTrackerRemoveArgs(PlayerEntity player)
-    {
-        Player = player;
-    }
-
-    public PlayerEntity Player { get; }
+    public PlayerEntity Player { get; } = player;
 }

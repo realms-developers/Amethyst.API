@@ -11,7 +11,7 @@ public sealed class ItemTracker : IEntityTracker<ItemEntity>
     }
 
     public IEntityManager<ItemEntity>? Manager => null;
-    public ItemEntity this[int index] => new ItemEntity(index);
+    public ItemEntity this[int index] => new(index);
 
     public IEnumerator<ItemEntity> GetEnumerator()
     {

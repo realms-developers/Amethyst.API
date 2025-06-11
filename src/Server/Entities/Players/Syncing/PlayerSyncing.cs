@@ -93,7 +93,7 @@ public static class PlayerSyncing
 
         ICharacterModel character = player.User.Character.CurrentModel;
 
-        PlayerInfo info = new PlayerInfo
+        PlayerInfo info = new()
         {
             PlayerIndex = (byte)player.Index,
             SkinVariant = character.SkinVariant,

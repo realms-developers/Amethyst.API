@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Amethyst.Network.Utilities;
-using Amethyst.Server.Entities.Players;
 using Ionic.Zlib;
 using Terraria;
 using Terraria.DataStructures;
@@ -14,13 +13,13 @@ public static partial class PacketSendingUtility
 {
     public const int TileSize = sizeof(ushort) * 3 + sizeof(byte) * 4 + sizeof(short) * 2;
 
-    private static BinaryWriter TempWriter = new BinaryWriter(new MemoryStream());
+    private static readonly BinaryWriter TempWriter = new(new MemoryStream());
 
-	private static short[] CompressChestList = new short[8000];
+	private static readonly short[] CompressChestList = new short[8000];
 
-	private static short[] CompressSignList = new short[1000];
+	private static readonly short[] CompressSignList = new short[1000];
 
-	private static short[] CompressEntities = new short[1000];
+	private static readonly short[] CompressEntities = new short[1000];
 
     // if method CompressTileBlock will be invoked twice in same time it will cause epic fails in data
     // because of FreeBufferData, CompressChestList, CompressSignList, CompressEntities
@@ -35,9 +34,9 @@ public static partial class PacketSendingUtility
         try
         {
             using MemoryStream stream = new();
-            using DeflateStream output = new DeflateStream(stream, CompressionMode.Compress, leaveOpen: true);
+            using DeflateStream output = new(stream, CompressionMode.Compress, leaveOpen: true);
             {
-                using (BinaryWriter binaryWriter = new BinaryWriter(output))
+                using (BinaryWriter binaryWriter = new(output))
                 {
                     binaryWriter.Write(xStart);
                     binaryWriter.Write(yStart);
@@ -47,8 +46,8 @@ public static partial class PacketSendingUtility
                 }
             }
 
-            var data = stream.ToArray().AsSpan();
-            FastPacketWriter writer = new FastPacketWriter(10, data.Length + 3);
+            Span<byte> data = stream.ToArray().AsSpan();
+            FastPacketWriter writer = new(10, data.Length + 3);
             writer.WriteByteSpan(data);
             return writer.BuildNoResize();
         }
@@ -136,7 +135,9 @@ public static partial class PacketSendingUtility
                             break;
                     }
                     if (chestIdx != -1)
+                    {
                         chestSpan[chestCount++] = chestIdx;
+                    }
 
                     // Signs
                     short signIdx = -1;
@@ -150,7 +151,9 @@ public static partial class PacketSendingUtility
                             break;
                     }
                     if (signIdx != -1)
+                    {
                         signSpan[signCount++] = signIdx;
+                    }
 
                     // Tile Entities
                     int teIdx = -1;
@@ -179,7 +182,9 @@ public static partial class PacketSendingUtility
                             break;
                     }
                     if (teIdx != -1)
+                    {
                         teSpan[teCount++] = (short)teIdx;
+                    }
 
                     if (Main.tileFrameImportant[tile2->type])
                     {
@@ -188,7 +193,7 @@ public static partial class PacketSendingUtility
                         Unsafe.Write((byte*)(bufferPtr + num5 + 2), tile2->frameY);
                         num5 += 4;
                     }
-                    var col = tile2->color();
+                    byte col = tile2->color();
                     if (col != 0)
                     {
                         b3 |= 8;
@@ -201,7 +206,7 @@ public static partial class PacketSendingUtility
                     b |= 4;
                     buffer[num5] = (byte)tile2->wall;
                     num5++;
-                    var wallcol = tile2->wallColor();
+                    byte wallcol = tile2->wallColor();
                     if (wallcol != 0)
                     {
                         b3 |= 0x10;

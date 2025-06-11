@@ -6,7 +6,7 @@ namespace Amethyst.Network.Utilities;
 
 public unsafe ref struct FastPacketReader
 {
-    private ReadOnlySpan<byte> _span;
+    private readonly ReadOnlySpan<byte> _span;
     private byte* _ptr;
 
     public FastPacketReader(byte[] buffer, int offset = 0)
@@ -379,9 +379,11 @@ public unsafe ref struct FastPacketReader
     public ReadOnlySpan<byte> ReadBytesSpan(int count)
     {
         if (count < 0 || count > _span.Length - (_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))))
+        {
             throw new ArgumentOutOfRangeException(nameof(count), "Count exceeds buffer length.");
+        }
 
-        ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(_ptr, count);
+        ReadOnlySpan<byte> span = new(_ptr, count);
         _ptr += count;
         return span;
     }
@@ -391,7 +393,9 @@ public unsafe ref struct FastPacketReader
     {
         int length = Read7BitEncodedInt();
         if (length <= 0)
+        {
             return string.Empty;
+        }
 
         string value = System.Text.Encoding.UTF8.GetString(_ptr, length);
         _ptr += length;
@@ -406,7 +410,9 @@ public unsafe ref struct FastPacketReader
         byte b;
 
         if (_ptr >= (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span)) + _span.Length)
+        {
             throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading 7-bit encoded integer.");
+        }
 
         do
         {
@@ -424,7 +430,9 @@ public unsafe ref struct FastPacketReader
     public void Skip(int count)
     {
         if (count < 0 || count > _span.Length - (_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))))
+        {
             throw new ArgumentOutOfRangeException(nameof(count), "Count exceeds buffer length.");
+        }
 
         _ptr += count;
     }

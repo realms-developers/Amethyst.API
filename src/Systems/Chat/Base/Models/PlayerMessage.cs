@@ -3,18 +3,11 @@ using Amethyst.Systems.Users.Base.Permissions;
 
 namespace Amethyst.Systems.Chat;
 
-public sealed class PlayerMessage
+public sealed class PlayerMessage(PlayerEntity player, string message, DateTimeOffset timestamp)
 {
-    public PlayerMessage(PlayerEntity player, string message, DateTimeOffset timestamp)
-    {
-        Player = player;
-        Text = message;
-        Timestamp = timestamp;
-    }
-
-    public PlayerEntity Player { get; }
-    public string Text { get; }
-    public DateTimeOffset Timestamp { get; }
+    public PlayerEntity Player { get; } = player;
+    public string Text { get; } = message;
+    public DateTimeOffset Timestamp { get; } = timestamp;
 
     public bool IsCancelled { get; private set; }
     public string? ModifiedText { get; private set; }
@@ -25,7 +18,9 @@ public sealed class PlayerMessage
     public void Cancel()
     {
         if (IsLocked)
+        {
             throw new InvalidOperationException("Cannot modify a locked message.");
+        }
 
         IsCancelled = true;
         AmethystLog.System.Error("PlayerMessage", $"Message '{Text}' was cancelled.");
@@ -34,7 +29,9 @@ public sealed class PlayerMessage
     public void Cancel(string reason)
     {
         if (IsLocked)
+        {
             throw new InvalidOperationException("Cannot modify a locked message.");
+        }
 
         IsCancelled = true;
         AmethystLog.System.Error("PlayerMessage", $"Message '{Text}' was cancelled: {reason}");
@@ -44,7 +41,9 @@ public sealed class PlayerMessage
     public void Modify(string? newMessage)
     {
         if (IsLocked)
+        {
             throw new InvalidOperationException("Cannot modify a locked message.");
+        }
 
         if (Text.StartsWith('!') && Player.User?.Permissions.HasPermission("chat.ignore-modify") == PermissionAccess.HasPermission)
         {
@@ -54,9 +53,13 @@ public sealed class PlayerMessage
         ModifiedText = newMessage;
 
         if (newMessage != null)
+        {
             AmethystLog.System.Debug("PlayerMessage", $"{Player.Name} -> Message '{Text}' was modified to '{newMessage}'.");
+        }
         else
+        {
             AmethystLog.System.Debug("PlayerMessage", $"{Player.Name} -> Message '{Text}' was modified to previous value.");
+        }
     }
 
     internal void Lock()

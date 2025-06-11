@@ -3,12 +3,7 @@ using Amethyst.Hooks.Autoloading;
 namespace Amethyst.Hooks.Args.Console;
 
 [AutoloadHook(true, false)]
-public sealed class ConsoleCommandArgs
+public sealed class ConsoleCommandArgs(string command)
 {
-    public ConsoleCommandArgs(string command)
-    {
-        Command = command;
-    }
-
-    public string Command { get; set; }
+    public string Command { get; set; } = command;
 }

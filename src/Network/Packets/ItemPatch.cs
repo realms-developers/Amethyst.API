@@ -33,35 +33,72 @@ public sealed class ItemPatchPacket : IPacket<ItemPatch>
         bool? NotAmmo = null;
 
         if ((Flags & ItemPatchFlags1.Color) != 0)
+        {
             ItemColor = reader.ReadUInt64();
+        }
+
         if ((Flags & ItemPatchFlags1.Damage) != 0)
+        {
             ItemDamage = reader.ReadUInt16();
+        }
+
         if ((Flags & ItemPatchFlags1.Knockback) != 0)
+        {
             ItemKnockback = reader.ReadSingle();
+        }
+
         if ((Flags & ItemPatchFlags1.UseAnimation) != 0)
+        {
             UseAnimation = reader.ReadUInt16();
+        }
+
         if ((Flags & ItemPatchFlags1.UseTime) != 0)
+        {
             UseTime = reader.ReadUInt16();
+        }
+
         if ((Flags & ItemPatchFlags1.Shoot) != 0)
+        {
             Shoot = reader.ReadInt16();
+        }
+
         if ((Flags & ItemPatchFlags1.ShootSpeed) != 0)
+        {
             ShootSpeed = reader.ReadSingle();
+        }
 
         if ((Flags & ItemPatchFlags1.ExtraValues) != 0)
         {
             ItemPatchFlags2 flags2 = (ItemPatchFlags2)reader.ReadByte();
             if ((flags2 & ItemPatchFlags2.Width) != 0)
+            {
                 ItemWidth = reader.ReadInt16();
+            }
+
             if ((flags2 & ItemPatchFlags2.Height) != 0)
+            {
                 ItemHeight = reader.ReadInt16();
+            }
+
             if ((flags2 & ItemPatchFlags2.Scale) != 0)
+            {
                 ItemScale = reader.ReadSingle();
+            }
+
             if ((flags2 & ItemPatchFlags2.Ammo) != 0)
+            {
                 Ammo = reader.ReadInt16();
+            }
+
             if ((flags2 & ItemPatchFlags2.UseAmmo) != 0)
+            {
                 UseAmmo = reader.ReadInt16();
+            }
+
             if ((flags2 & ItemPatchFlags2.NotAmmo) != 0)
+            {
                 NotAmmo = reader.ReadBoolean();
+            }
         }
 
         return new ItemPatch
@@ -90,13 +127,41 @@ public sealed class ItemPatchPacket : IPacket<ItemPatch>
         writer.WriteInt16(packet.ItemIndex);
 
         ItemPatchFlags1 flags1 = ItemPatchFlags1.None;
-        if (packet.ItemColor.HasValue) flags1 |= ItemPatchFlags1.Color;
-        if (packet.ItemDamage.HasValue) flags1 |= ItemPatchFlags1.Damage;
-        if (packet.ItemKnockback.HasValue) flags1 |= ItemPatchFlags1.Knockback;
-        if (packet.UseAnimation.HasValue) flags1 |= ItemPatchFlags1.UseAnimation;
-        if (packet.UseTime.HasValue) flags1 |= ItemPatchFlags1.UseTime;
-        if (packet.Shoot.HasValue) flags1 |= ItemPatchFlags1.Shoot;
-        if (packet.ShootSpeed.HasValue) flags1 |= ItemPatchFlags1.ShootSpeed;
+        if (packet.ItemColor.HasValue)
+        {
+            flags1 |= ItemPatchFlags1.Color;
+        }
+
+        if (packet.ItemDamage.HasValue)
+        {
+            flags1 |= ItemPatchFlags1.Damage;
+        }
+
+        if (packet.ItemKnockback.HasValue)
+        {
+            flags1 |= ItemPatchFlags1.Knockback;
+        }
+
+        if (packet.UseAnimation.HasValue)
+        {
+            flags1 |= ItemPatchFlags1.UseAnimation;
+        }
+
+        if (packet.UseTime.HasValue)
+        {
+            flags1 |= ItemPatchFlags1.UseTime;
+        }
+
+        if (packet.Shoot.HasValue)
+        {
+            flags1 |= ItemPatchFlags1.Shoot;
+        }
+
+        if (packet.ShootSpeed.HasValue)
+        {
+            flags1 |= ItemPatchFlags1.ShootSpeed;
+        }
+
         if (packet.ItemWidth.HasValue || packet.ItemHeight.HasValue || packet.ItemScale.HasValue ||
             packet.Ammo.HasValue || packet.UseAmmo.HasValue || packet.NotAmmo.HasValue)
         {
@@ -105,47 +170,101 @@ public sealed class ItemPatchPacket : IPacket<ItemPatch>
         writer.WriteByte((byte)flags1);
 
         if (packet.ItemColor != null)
+        {
             writer.WriteUInt64(packet.ItemColor.Value);
+        }
 
         if (packet.ItemDamage != null)
+        {
             writer.WriteUInt16(packet.ItemDamage.Value);
+        }
+
         if (packet.ItemKnockback != null)
+        {
             writer.WriteSingle(packet.ItemKnockback.Value);
+        }
+
         if (packet.UseAnimation != null)
+        {
             writer.WriteUInt16(packet.UseAnimation.Value);
+        }
+
         if (packet.UseTime != null)
+        {
             writer.WriteUInt16(packet.UseTime.Value);
+        }
+
         if (packet.Shoot != null)
+        {
             writer.WriteInt16(packet.Shoot.Value);
+        }
+
         if (packet.ShootSpeed != null)
+        {
             writer.WriteSingle(packet.ShootSpeed.Value);
+        }
 
         ItemPatchFlags2 flags2 = ItemPatchFlags2.None;
         if (packet.ItemWidth != null)
+        {
             flags2 |= ItemPatchFlags2.Width;
+        }
+
         if (packet.ItemHeight != null)
+        {
             flags2 |= ItemPatchFlags2.Height;
+        }
+
         if (packet.ItemScale != null)
+        {
             flags2 |= ItemPatchFlags2.Scale;
+        }
+
         if (packet.Ammo != null)
+        {
             flags2 |= ItemPatchFlags2.Ammo;
+        }
+
         if (packet.UseAmmo != null)
+        {
             flags2 |= ItemPatchFlags2.UseAmmo;
+        }
+
         if (packet.NotAmmo != null)
+        {
             flags2 |= ItemPatchFlags2.NotAmmo;
+        }
+
         writer.WriteByte((byte)flags2);
         if (packet.ItemWidth != null)
+        {
             writer.WriteInt16(packet.ItemWidth.Value);
+        }
+
         if (packet.ItemHeight != null)
+        {
             writer.WriteInt16(packet.ItemHeight.Value);
+        }
+
         if (packet.ItemScale != null)
+        {
             writer.WriteSingle(packet.ItemScale.Value);
+        }
+
         if (packet.Ammo != null)
+        {
             writer.WriteInt16(packet.Ammo.Value);
+        }
+
         if (packet.UseAmmo != null)
+        {
             writer.WriteInt16(packet.UseAmmo.Value);
+        }
+
         if (packet.NotAmmo != null)
+        {
             writer.WriteBoolean(packet.NotAmmo.Value);
+        }
 
         return writer.Build();
     }

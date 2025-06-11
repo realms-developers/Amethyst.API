@@ -15,7 +15,9 @@ public sealed class ClientsideCharacterEditor : ICharacterEditor
         Provider = provider;
 
         if (provider.User is not PlayerUser)
+        {
             throw new InvalidOperationException("Provider user is not a PlayerUser.");
+        }
 
         PlayerUser user = (PlayerUser)provider.User;
 
@@ -54,11 +56,15 @@ public sealed class ClientsideCharacterEditor : ICharacterEditor
         if (hideAccessories != null)
         {
             for (int i = 0; i < hideAccessories.Length; i++)
+            {
                 Provider.CurrentModel.HideAccessories[i] = hideAccessories[i];
+            }
         }
 
         if (hideMisc != null)
+        {
             Provider.CurrentModel.HideMisc = hideMisc.Value;
+        }
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
         return false;
@@ -69,10 +75,14 @@ public sealed class ClientsideCharacterEditor : ICharacterEditor
         ThrowIfExclude(sync);
 
         if (current != null)
+        {
             Player.TPlayer.statLife = current.Value;
+        }
 
         if (max != null)
+        {
             Provider.CurrentModel.MaxLife = max.Value;
+        }
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncLife);
         return false;
@@ -83,10 +93,14 @@ public sealed class ClientsideCharacterEditor : ICharacterEditor
         ThrowIfExclude(sync);
 
         if (current != null)
+        {
             Player.TPlayer.statMana = current.Value;
+        }
 
         if (max != null)
+        {
             Provider.CurrentModel.MaxMana = max.Value;
+        }
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncMana);
         return false;
@@ -120,13 +134,18 @@ public sealed class ClientsideCharacterEditor : ICharacterEditor
             SetSlot(sync, fixedSlot, item);
 
             if (sync != null)
+            {
                 Provider.Synchronizer.SyncSlot(SyncType.Exclude, fixedSlot);
+            }
         }
 
         Provider.CurrentModel.Slots[slot] = item;
 
         if (sync != null)
+        {
             Provider.Synchronizer.SyncSlot(sync.Value, slot);
+        }
+
         return false;
     }
 
@@ -135,13 +154,19 @@ public sealed class ClientsideCharacterEditor : ICharacterEditor
         ThrowIfExclude(sync);
 
         if (stats1 != null)
+        {
             Provider.CurrentModel.Info1 = stats1.Value;
+        }
 
         if (stats2 != null)
+        {
             Provider.CurrentModel.Info2 = stats2.Value;
+        }
 
         if (stats3 != null)
+        {
             Provider.CurrentModel.Info3 = stats3.Value;
+        }
 
         SyncIfNeeded(sync, Provider.Synchronizer.SyncPlayerInfo);
         return false;
@@ -150,12 +175,16 @@ public sealed class ClientsideCharacterEditor : ICharacterEditor
     private void ThrowIfExclude(SyncType? sync)
     {
         if (sync != null && sync != SyncType.Exclude)
+        {
             throw new InvalidOperationException("ClientsideCharacterEditor does not support edit.");
+        }
     }
 
     private void SyncIfNeeded(SyncType? sync, Action<SyncType> action)
     {
         if (sync != null)
+        {
             action(sync.Value);
+        }
     }
 }

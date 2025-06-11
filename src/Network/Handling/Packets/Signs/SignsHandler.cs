@@ -20,7 +20,9 @@ public sealed class SignsHandler : INetworkHandler
     private void OnSignSync(PlayerEntity plr, ref SignSync packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.SignIndex < 0 || packet.SignIndex >= Main.sign.Length)
         {
@@ -30,7 +32,7 @@ public sealed class SignsHandler : INetworkHandler
 
         bool sendPacket = Main.sign[packet.SignIndex]?.text != packet.SignText;
 
-        Sign newSign = new Sign
+        Sign newSign = new()
         {
             x = packet.SignX,
             y = packet.SignY,
@@ -49,7 +51,9 @@ public sealed class SignsHandler : INetworkHandler
     private void OnSignRead(PlayerEntity plr, ref SignRead packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         int signIndex = Sign.ReadSign(packet.SignX, packet.SignY);
 

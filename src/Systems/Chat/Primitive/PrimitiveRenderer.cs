@@ -1,4 +1,3 @@
-using Amethyst.Network.Structures;
 using Amethyst.Server.Systems.Chat.Base;
 using Amethyst.Systems.Chat.Base.Models;
 

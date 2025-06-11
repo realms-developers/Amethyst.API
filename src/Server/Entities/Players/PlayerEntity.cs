@@ -1,12 +1,12 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
-using Amethyst.Server.Entities.Base;
 using Amethyst.Network.Engine;
-using Amethyst.Systems.Users.Players;
-using Terraria;
 using Amethyst.Network.Enums;
 using Amethyst.Network.Handling.Packets.Handshake;
+using Amethyst.Server.Entities.Base;
 using Amethyst.Server.Entities.Players.Sections;
+using Amethyst.Systems.Users.Players;
+using Terraria;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -52,11 +52,8 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
 
     public void SetUser(PlayerUser? user)
     {
-        var result = HookRegistry.GetHook<PlayerSetUserArgs>()
-            ?.Invoke(new PlayerSetUserArgs(this, User, user));
-
-        if (result == null)
-            throw new InvalidOperationException("PlayerSetUserArgs hook not found.");
+        Amethyst.Hooks.Context.HookResult<PlayerSetUserArgs>? result = (HookRegistry.GetHook<PlayerSetUserArgs>()
+            ?.Invoke(new PlayerSetUserArgs(this, User, user))) ?? throw new InvalidOperationException("PlayerSetUserArgs hook not found.");
 
         if (result.IsCancelled == true)
         {

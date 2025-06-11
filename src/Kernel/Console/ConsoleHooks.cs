@@ -22,12 +22,16 @@ internal static class ConsoleHooks
             string? input = System.Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(input))
+            {
                 continue;
+            }
 
             var commandArgs = new ConsoleCommandArgs(input);
 
             if (commandArgs.Command.StartsWith('/'))
+            {
                 commandArgs.Command = commandArgs.Command[1..];
+            }
 
             if (commandArgs.Command.Equals("exit", StringComparison.OrdinalIgnoreCase) ||
                 commandArgs.Command.Equals("quit", StringComparison.OrdinalIgnoreCase))

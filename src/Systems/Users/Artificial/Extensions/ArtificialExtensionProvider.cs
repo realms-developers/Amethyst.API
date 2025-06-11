@@ -5,12 +5,14 @@ namespace Amethyst.Systems.Users.Artificial.Extensions;
 
 public sealed class ArtificialExtensionsProvider : IExtensionProvider
 {
-    private Dictionary<string, IUserExtension> _extensions = new();
+    private readonly Dictionary<string, IUserExtension> _extensions = new();
 
     public void AddExtension(IUserExtension extension)
     {
         if (_extensions.ContainsKey(extension.Name))
+        {
             throw new ArgumentException($"Extension with name {extension.Name} already exists.");
+        }
 
         _extensions.Add(extension.Name, extension);
     }
@@ -18,14 +20,16 @@ public sealed class ArtificialExtensionsProvider : IExtensionProvider
     public void RemoveExtension(IUserExtension extension)
     {
         if (!_extensions.ContainsKey(extension.Name))
+        {
             throw new ArgumentException($"Extension with name {extension.Name} does not exist.");
+        }
 
         _extensions.Remove(extension.Name);
     }
 
     public IUserExtension? GetExtension(string name)
     {
-        _extensions.TryGetValue(name, out var extension);
+        _extensions.TryGetValue(name, out IUserExtension? extension);
         return extension;
     }
 
@@ -36,7 +40,7 @@ public sealed class ArtificialExtensionsProvider : IExtensionProvider
 
     public void LoadAll(IAmethystUser user)
     {
-        foreach (var extension in _extensions.Values)
+        foreach (IUserExtension extension in _extensions.Values)
         {
             extension.Load(user);
         }
@@ -44,7 +48,7 @@ public sealed class ArtificialExtensionsProvider : IExtensionProvider
 
     public void UnloadAll(IAmethystUser user)
     {
-        foreach (var extension in _extensions.Values)
+        foreach (IUserExtension extension in _extensions.Values)
         {
             extension.Unload(user);
         }

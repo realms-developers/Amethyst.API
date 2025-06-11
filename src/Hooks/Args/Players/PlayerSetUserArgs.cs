@@ -5,17 +5,10 @@ using Amethyst.Systems.Users.Players;
 namespace Amethyst.Hooks.Args.Players;
 
 [AutoloadHook]
-public sealed class PlayerSetUserArgs
+public sealed class PlayerSetUserArgs(PlayerEntity player, PlayerUser? old, PlayerUser? newUser)
 {
-    public PlayerSetUserArgs(PlayerEntity player, PlayerUser? old, PlayerUser? newUser)
-    {
-        Player = player;
-        Old = old;
-        New = newUser;
-    }
+    public PlayerEntity Player { get; } = player;
 
-    public PlayerEntity Player { get; }
-
-    public PlayerUser? Old { get; }
-    public PlayerUser? New { get; set; }
+    public PlayerUser? Old { get; } = old;
+    public PlayerUser? New { get; set; } = newUser;
 }

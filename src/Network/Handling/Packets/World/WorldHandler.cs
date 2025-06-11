@@ -28,7 +28,9 @@ public sealed class WorldHandler : INetworkHandler
     private void OnWorldDoorInteract(PlayerEntity plr, ref WorldDoorInteract packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+        {
             return;
+        }
 
         int above = ((packet.PlayerAbove != 0) ? 1 : (-1));
         switch (packet.Action)
@@ -61,53 +63,71 @@ public sealed class WorldHandler : INetworkHandler
     private void OnWorldAddLiquid(PlayerEntity plr, ref WorldAddLiquid packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+        {
             return;
+        }
     }
 
     private void OnWorldWiringHitSwitch(PlayerEntity plr, ref WorldWiringHitSwitch packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+        {
             return;
+        }
     }
 
     private void OnWorldToggleGemLock(PlayerEntity plr, ref WorldToggleGemLock packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+        {
             return;
+        }
     }
 
     private void OnWorldTileRectangle(PlayerEntity plr, ref WorldTileRectangle packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.StartX <= 5 || packet.StartY <= 5 || packet.StartX >= Main.maxTilesX - 5 || packet.StartY >= Main.maxTilesY - 5 ||
             packet.StartX + packet.SizeX <= 5 || packet.StartY + packet.SizeY <= 5 || packet.StartX + packet.SizeX >= Main.maxTilesX - 5 || packet.StartY + packet.SizeY >= Main.maxTilesY - 5)
+        {
             return;
+        }
     }
 
     private void OnWorldTileInteract(PlayerEntity plr, ref WorldTileInteract packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+        {
             return;
+        }
     }
 
     private void OnWorldPaintWall(PlayerEntity plr, ref WorldPaintWall packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+        {
             return;
+        }
     }
 
     private void OnWorldPaintTile(PlayerEntity plr, ref WorldPaintTile packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+        {
             return;
+        }
     }
 
     private void OnWorldMassWireOperation(PlayerEntity plr, ref WorldMassWireOperation packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.StartX <= 5 || packet.StartY <= 5 || packet.StartX >= Main.maxTilesX - 5 || packet.StartY >= Main.maxTilesY - 5 ||
             packet.EndX <= 5 || packet.EndY <= 5 || packet.EndX >= Main.maxTilesX - 5 || packet.EndY >= Main.maxTilesY - 5)
+        {
             return;
+        }
 
+        // TODO: fix ts (this shit) vxlhat
 
+        /*
         if (Main.tile[packet.TileX, packet.TileY] == null)
         {
             Main.tile[packet.TileX, packet.TileY] = new Tile();
@@ -125,13 +145,15 @@ public sealed class WorldHandler : INetworkHandler
                 }
             }
             break;
-        }
+        }*/
     }
 
     private void OnWorldLockSomething(PlayerEntity plr, ref WorldLockSomething packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+        {
             return;
+        }
     }
 
     public void Unload()

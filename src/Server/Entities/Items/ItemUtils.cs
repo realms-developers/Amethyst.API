@@ -1,4 +1,3 @@
-using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Players;
 using Microsoft.Xna.Framework;
 using Terraria;

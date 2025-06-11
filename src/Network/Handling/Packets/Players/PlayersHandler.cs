@@ -1,4 +1,3 @@
-using System.Globalization;
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Hooks.Context;
@@ -46,7 +45,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerZone(PlayerEntity plr, ref PlayerZone packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         plr.Zone1 = packet.Zone1;
         plr.Zone2 = packet.Zone2;
@@ -63,7 +64,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerTalkNPC(PlayerEntity plr, ref PlayerTalkNPC packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         plr.TalkNPC = packet.NPCIndex;
 
@@ -76,7 +79,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerSyncBuffs(PlayerEntity plr, ref PlayerSyncBuffs packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.PlayerIndex != plr.Index)
         {
@@ -93,7 +98,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerStealth(PlayerEntity plr, ref PlayerStealth packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.PlayerIndex != plr.Index)
         {
@@ -112,7 +119,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerSetTeam(PlayerEntity plr, ref PlayerSetTeam packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.PlayerIndex != plr.Index)
         {
@@ -132,7 +141,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerPvP(PlayerEntity plr, ref PlayerPvP packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.PlayerIndex != plr.Index)
         {
@@ -152,7 +163,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerPlayItemSound(PlayerEntity plr, ref PlayerPlayItemSound packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (HandlersConfiguration.Instance.SyncPlayers)
         {
@@ -163,7 +176,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerMinionRestPoint(PlayerEntity plr, ref PlayerMinionRestPoint packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         plr.TPlayer.MinionRestTargetPoint = packet.Position;
 
@@ -176,7 +191,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerMinionAttackNPC(PlayerEntity plr, ref PlayerMinionAttackNPC packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         plr.TPlayer.MinionAttackTargetNPC = packet.NPCIndex;
 
@@ -189,9 +206,11 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerMana(PlayerEntity plr, ref PlayerManaHealEffect packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
-        var victim = EntityTrackers.Players[packet.PlayerIndex];
+        PlayerEntity victim = EntityTrackers.Players[packet.PlayerIndex];
         if (victim == null || victim.IsGodModeEnabled)
         {
             return;
@@ -213,9 +232,11 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerHeal(PlayerEntity plr, ref PlayerLifeHealEffect packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
-        var victim = EntityTrackers.Players[packet.PlayerIndex];
+        PlayerEntity victim = EntityTrackers.Players[packet.PlayerIndex];
         if (victim == null || victim.IsGodModeEnabled)
         {
             return;
@@ -237,7 +258,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerDodge(PlayerEntity plr, ref PlayerDodge packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         switch (packet.DodgeType)
         {
@@ -261,9 +284,11 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerAddBuff(PlayerEntity plr, ref PlayerAddBuff packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
-        var victim = EntityTrackers.Players[packet.PlayerIndex];
+        PlayerEntity victim = EntityTrackers.Players[packet.PlayerIndex];
         if (victim == null)
         {
             return;
@@ -279,7 +304,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerDeath(PlayerEntity plr, ref PlayerDeath packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || plr.User == null || plr.User.Suspensions?.IsSuspended == true)
+        {
             return;
+        }
 
         if (packet.PlayerIndex != plr.Index)
         {
@@ -306,7 +333,9 @@ public sealed class PlayersHandler : INetworkHandler
             {
                 await Task.Delay(HandlersConfiguration.Instance.AutoRespawnSeconds * 1000);
                 if (plr.Phase == ConnectionPhase.Connected && !plr.IsDead)
+                {
                     return;
+                }
 
                 plr.SendPacketBytes(PlayerSpawnPacket.Serialize(new PlayerSpawn
                 {
@@ -328,9 +357,11 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerHurt(PlayerEntity plr, ref PlayerHurt packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected || plr.User == null || plr.User.Suspensions?.IsSuspended == true)
+        {
             return;
+        }
 
-        var victim = EntityTrackers.Players[packet.PlayerIndex];
+        PlayerEntity victim = EntityTrackers.Players[packet.PlayerIndex];
         if (victim == null || victim.IsGodModeEnabled)
         {
             return;
@@ -362,7 +393,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerSpawn(PlayerEntity plr, ref PlayerSpawn packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected && plr.Phase != ConnectionPhase.WaitingPlayerSpawn)
+        {
             return;
+        }
 
         if (packet.PlayerIndex != plr.Index)
         {
@@ -373,7 +406,9 @@ public sealed class PlayersHandler : INetworkHandler
         plr.IsDead = false;
 
         if (!HandlersConfiguration.Instance.SyncPlayers)
+        {
             return;
+        }
 
         PlayerSpawn packetToResend = packet with
         {
@@ -387,7 +422,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerItemRotation(PlayerEntity plr, ref PlayerItemRotation packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.PlayerIndex != plr.Index)
         {
@@ -413,7 +450,9 @@ public sealed class PlayersHandler : INetworkHandler
     private void OnPlayerUpdate(PlayerEntity plr, ref PlayerUpdate packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.PlayerIndex != plr.Index)
         {

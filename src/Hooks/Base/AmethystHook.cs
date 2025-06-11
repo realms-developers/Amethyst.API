@@ -2,25 +2,17 @@ using Amethyst.Hooks.Context;
 
 namespace Amethyst.Hooks;
 
-public sealed class AmethystHook<TArgs>
+public sealed class AmethystHook<TArgs>(string name, bool canBeCancelled, bool canBeModified, bool cancelByError = false)
 {
-    public AmethystHook(string name, bool canBeCancelled, bool canBeModified, bool cancelByError = false)
-    {
-        Name = name;
-        CanBeCancelled = canBeCancelled;
-        CanBeModified = canBeModified;
-        CancelByError = cancelByError;
-    }
+    public string Name { get; } = name;
 
-    public string Name { get; }
+    public bool CanBeCancelled { get; } = canBeCancelled;
 
-    public bool CanBeCancelled { get; }
+    public bool CanBeModified { get; } = canBeModified;
 
-    public bool CanBeModified { get; }
+    public bool CancelByError { get; set; } = cancelByError;
 
-    public bool CancelByError { get; set; }
-
-    internal List<HookHandler<TArgs>> _handlers = new List<HookHandler<TArgs>>();
+    internal List<HookHandler<TArgs>> _handlers = new();
     internal HookHandler<TArgs>[] _ivkHandlers = [];
 
     public void Register(HookHandler<TArgs> handler)
@@ -28,7 +20,9 @@ public sealed class AmethystHook<TArgs>
         ArgumentNullException.ThrowIfNull(handler);
 
         if (_ivkHandlers.Contains(handler))
+        {
             throw new InvalidOperationException($"Handler {handler.Method.Name} is already registered for hook {Name}.");
+        }
 
         _handlers.Add(handler);
         _ivkHandlers = _handlers.ToArray();
@@ -50,7 +44,7 @@ public sealed class AmethystHook<TArgs>
         {
             for (int i = 0; i < _ivkHandlers.Length; i++)
             {
-                var handler = _ivkHandlers[i];
+                HookHandler<TArgs> handler = _ivkHandlers[i];
                 handler.Invoke(in args, result);
             }
         }

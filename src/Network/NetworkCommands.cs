@@ -16,7 +16,7 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.userInfo")]
     [CommandSyntax("en-US", "<player>")]
     [CommandSyntax("ru-RU", "<игрок>")]
-    public static void NetworkUserInfo(IAmethystUser user, CommandInvokeContext ctx, PlayerEntity player)
+    public static void NetworkUserInfo(IAmethystUser _, CommandInvokeContext ctx, PlayerEntity player)
     {
         ctx.Messages.ReplySuccess("amethyst.networkManagement.playerInfo", player.Name);
         ctx.Messages.ReplyInfo("amethyst.networkManagement.playerInfoIndex", player.Index);
@@ -31,7 +31,7 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.close")]
     [CommandSyntax("en-US", "<player>")]
     [CommandSyntax("ru-RU", "<игрок>")]
-    public static void NetworkClose(IAmethystUser user, CommandInvokeContext ctx, PlayerEntity player)
+    public static void NetworkClose(IAmethystUser _, CommandInvokeContext ctx, PlayerEntity player)
     {
         if (player.Active)
         {
@@ -48,7 +48,7 @@ public static class NetworkCommands
     [Command(["net lock"], "amethyst.desc.networkLock")]
     [CommandRepository("root")]
     [CommandPermission("amethyst.network.lock")]
-    public static void NetworkLock(IAmethystUser user, CommandInvokeContext ctx)
+    public static void NetworkLock(IAmethystUser _, CommandInvokeContext ctx)
     {
         if (NetworkManager.IsLocked)
         {
@@ -63,7 +63,7 @@ public static class NetworkCommands
     [Command(["net unlock"], "amethyst.desc.networkUnlock")]
     [CommandRepository("root")]
     [CommandPermission("amethyst.network.unlock")]
-    public static void NetworkUnlock(IAmethystUser user, CommandInvokeContext ctx)
+    public static void NetworkUnlock(IAmethystUser _, CommandInvokeContext ctx)
     {
         if (!NetworkManager.IsLocked)
         {
@@ -80,7 +80,7 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.socketAcceptDelay")]
     [CommandSyntax("en-US", "<delay>")]
     [CommandSyntax("ru-RU", "<задержка>")]
-    public static void NetworkSocketAcceptDelay(IAmethystUser user, CommandInvokeContext ctx, int delay)
+    public static void NetworkSocketAcceptDelay(IAmethystUser _, CommandInvokeContext ctx, int delay)
     {
         if (delay < 0)
         {
@@ -97,7 +97,7 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.handlerEnable")]
     [CommandSyntax("en-US", "<handler>")]
     [CommandSyntax("ru-RU", "<обработчик>")]
-    public static void NetworkHandlerEnable(IAmethystUser user, CommandInvokeContext ctx, string handlerName)
+    public static void NetworkHandlerEnable(IAmethystUser _, CommandInvokeContext ctx, string handlerName)
     {
         if (HandlerManager.LoadHandler(handlerName))
         {
@@ -114,7 +114,7 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.handlerDisable")]
     [CommandSyntax("en-US", "<handler>")]
     [CommandSyntax("ru-RU", "<обработчик>")]
-    public static void NetworkHandlerDisable(IAmethystUser user, CommandInvokeContext ctx, string handlerName)
+    public static void NetworkHandlerDisable(IAmethystUser _, CommandInvokeContext ctx, string handlerName)
     {
         if (HandlerManager.UnloadHandler(handlerName))
         {
@@ -131,7 +131,7 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.handlerList")]
     [CommandSyntax("en-US", "[page]")]
     [CommandSyntax("ru-RU", "[страница]")]
-    public static void NetworkHandlerList(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
+    public static void NetworkHandlerList(IAmethystUser _, CommandInvokeContext ctx, int page = 0)
     {
         PagesCollection collection = PagesCollection.AsListPage(HandlerManager.GetHandlers().Select(h => h.Name), 80);
         if (collection.Pages.Count == 0)
@@ -148,9 +148,9 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.handlerStatus")]
     [CommandSyntax("en-US", "<handler>")]
     [CommandSyntax("ru-RU", "<обработчик>")]
-    public static void NetworkHandlerStatus(IAmethystUser user, CommandInvokeContext ctx, string handlerName)
+    public static void NetworkHandlerStatus(IAmethystUser _, CommandInvokeContext ctx, string handlerName)
     {
-        var handler = HandlerManager.GetHandlers().FirstOrDefault(h => h.Name.Equals(handlerName, StringComparison.OrdinalIgnoreCase));
+        INetworkHandler? handler = HandlerManager.GetHandlers().FirstOrDefault(h => h.Name.Equals(handlerName, StringComparison.OrdinalIgnoreCase));
         if (handler == null)
         {
             ctx.Messages.ReplyError("amethyst.networkManagement.handlerNotFound", handlerName);
@@ -167,7 +167,7 @@ public static class NetworkCommands
     [CommandRepository("root")]
     [CommandPermission("amethyst.network.rulerSyncPlayers")]
     [CommandSyntax("en-US", "<true/false>")]
-    public static void NetworkRulerSyncPlayers(IAmethystUser user, CommandInvokeContext ctx, bool sync)
+    public static void NetworkRulerSyncPlayers(IAmethystUser _, CommandInvokeContext ctx, bool sync)
     {
         HandlersConfiguration.Instance.SyncPlayers = sync;
         HandlersConfiguration.Configuration.Save();
@@ -180,7 +180,7 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.rulerWorldName")]
     [CommandSyntax("en-US", "<name>")]
     [CommandSyntax("ru-RU", "<имя>")]
-    public static void NetworkRulerWorldName(IAmethystUser user, CommandInvokeContext ctx, string name)
+    public static void NetworkRulerWorldName(IAmethystUser _, CommandInvokeContext ctx, string name)
     {
         PacketsNetworkConfiguration.Instance.FakeWorldName = name;
         PacketsNetworkConfiguration.Configuration.Save();
@@ -193,7 +193,7 @@ public static class NetworkCommands
     [CommandPermission("amethyst.network.rulerWorldID")]
     [CommandSyntax("en-US", "<id>")]
     [CommandSyntax("ru-RU", "<идентификатор>")]
-    public static void NetworkRulerWorldID(IAmethystUser user, CommandInvokeContext ctx, int id)
+    public static void NetworkRulerWorldID(IAmethystUser _, CommandInvokeContext ctx, int id)
     {
         PacketsNetworkConfiguration.Instance.FakeWorldID = id;
         PacketsNetworkConfiguration.Configuration.Save();

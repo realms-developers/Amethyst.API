@@ -32,18 +32,18 @@ public static class NetworkManager
     public static int SocketBacklog { get; set; } = 32;
     public static int SocketLiveCheck { get; set; } = 1000;
 
-    internal static Dictionary<Type, object> Providers = new Dictionary<Type, object>();
+    internal static Dictionary<Type, object> Providers = new();
 
     internal static PacketInvokeHandler?[] InvokeHandlers = new PacketInvokeHandler?[256];
     internal static List<PacketInvokeHandler>?[] DirectHandlers = new List<PacketInvokeHandler>?[256];
-    internal static List<PacketInvokeHandler> OverlapHandlers = new List<PacketInvokeHandler>();
+    internal static List<PacketInvokeHandler> OverlapHandlers = new();
 
-    private static PacketInvokeHandler[][] _InvokeHandlers = new PacketInvokeHandler[256][];
+    private static readonly PacketInvokeHandler[][] _InvokeHandlers = new PacketInvokeHandler[256][];
     private static PacketInvokeHandler[] _InvokeOverlapHandlers = [];
 
     internal static AmethystTcpServer? TcpServer;
 
-    private static readonly Timer _socketLifeUpdate = new Timer(static (state) =>
+    private static readonly Timer _socketLifeUpdate = new(static (state) =>
     {
         foreach (PlayerEntity plr in EntityTrackers.Players)
         {
@@ -102,31 +102,35 @@ public static class NetworkManager
 
         try
         {
-            var ignore = false;
-            var packetId = data[2];
+            bool ignore = false;
+            byte packetId = data[2];
 
             if (_InvokeOverlapHandlers.Length > 0)
             {
                 for (int i = 0; i < _InvokeOverlapHandlers.Length; i++)
                 {
-                    var handler = _InvokeOverlapHandlers[i];
+                    PacketInvokeHandler handler = _InvokeOverlapHandlers[i];
                     handler(EntityTrackers.Players[client._index], data, ref ignore);
 
                     if (ignore)
+                    {
                         return;
+                    }
                 }
             }
 
-            var directHandlers = _InvokeHandlers[packetId];
+            PacketInvokeHandler[] directHandlers = _InvokeHandlers[packetId];
             if (directHandlers != null && directHandlers.Length > 0)
             {
                 for (int i = 0; i < directHandlers.Length; i++)
                 {
-                    var handler = directHandlers[i];
+                    PacketInvokeHandler handler = directHandlers[i];
                     handler(EntityTrackers.Players[client._index], data, ref ignore);
 
                     if (ignore)
+                    {
                         return;
+                    }
                 }
             }
 
@@ -136,7 +140,7 @@ public static class NetworkManager
                 return;
             }
 
-            var player = EntityTrackers.Players[client._index];
+            PlayerEntity player = EntityTrackers.Players[client._index];
             InvokeHandlers[packetId]!(player, data, ref ignore);
         }
         catch (Exception ex)
@@ -148,16 +152,17 @@ public static class NetworkManager
 
     private static void RegisterPacketHandlers()
     {
-        foreach (var type in typeof(NetworkManager).Assembly.GetTypes())
+        foreach (Type type in typeof(NetworkManager).Assembly.GetTypes())
         {
             if (type.Namespace != "Amethyst.Network.Packets"
                 || type.GetInterfaces().Any(p => p.Name.StartsWith("IPacket"))
                 || type.Assembly.GetType($"{type.FullName}Packet") == null)
+            {
                 continue;
+            }
 
-
-            var providerType = typeof(PacketProvider<>).MakeGenericType(type);
-            var provider = Activator.CreateInstance(providerType);
+            Type providerType = typeof(PacketProvider<>).MakeGenericType(type);
+            object? provider = Activator.CreateInstance(providerType);
 
             if (provider == null)
             {
@@ -231,7 +236,7 @@ public static class NetworkManager
 
     private static void InteractWithProvider<TPacket>(Action<PacketProvider<TPacket>> action)
     {
-        if (Providers.TryGetValue(typeof(TPacket), out var provider))
+        if (Providers.TryGetValue(typeof(TPacket), out object? provider))
         {
             action((PacketProvider<TPacket>)provider);
         }

@@ -1,13 +1,8 @@
 namespace Amethyst.Systems.Commands.Base;
 
-public sealed class CommandRepository
+public sealed class CommandRepository(string name)
 {
-    public CommandRepository(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name;
     public IReadOnlyList<ICommand> RegisteredCommands => _commands;
 
     private readonly List<ICommand> _commands = new();
@@ -17,16 +12,24 @@ public sealed class CommandRepository
         ArgumentNullException.ThrowIfNull(command);
 
         if (command.Metadata.Names.Length == 0)
+        {
             throw new ArgumentException($"Command has no names.");
+        }
 
         if (command.Metadata.Names.Any(p => p.Length == 0))
+        {
             throw new ArgumentException($"Command {command.Metadata.Names.FirstOrDefault(p => p.Length != 0) ?? "UNKNOWN"} has empty names.");
+        }
 
         if (command.Repository != this)
+        {
             throw new ArgumentException($"Command {command.Metadata.Names.First()} is registered in {command.Repository.Name} repository.");
+        }
 
         if (_commands.Contains(command))
+        {
             return;
+        }
 
         _commands.Add(command);
 
@@ -57,11 +60,13 @@ public sealed class CommandRepository
         remainingText = string.Empty;
 
         if (string.IsNullOrEmpty(fullText))
+        {
             throw new ArgumentNullException(nameof(fullText));
+        }
 
         string[] textLines = fullText.Split();
 
-        foreach (var cmd in _commands)
+        foreach (ICommand cmd in _commands)
         {
             foreach (string name in cmd.Metadata.Names)
             {
@@ -82,7 +87,9 @@ public sealed class CommandRepository
                     }
                 }
                 if (skip)
+                {
                     continue;
+                }
 
                 remainingText = fullText.Length > name.Length ? fullText.Substring(name.Length + 1) : fullText.Substring(name.Length);
 

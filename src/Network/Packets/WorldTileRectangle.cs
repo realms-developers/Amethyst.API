@@ -24,8 +24,12 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
         NetTile[,] Tiles = new NetTile[SizeX, SizeY];
 
         for (int i = 0; i < SizeX; i++)
-        for (int j = 0; j < SizeY; j++)
-            Tiles[i, j] = new NetTile(reader);
+        {
+            for (int j = 0; j < SizeY; j++)
+            {
+                Tiles[i, j] = new NetTile(reader);
+            }
+        }
 
         return new WorldTileRectangle
         {
@@ -48,8 +52,12 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
         writer.WriteByte(packet.SizeY);
         writer.WriteByte(packet.TileChangeType);
         for (int i = 0; i < packet.SizeX; i++)
-        for (int j = 0; j < packet.SizeY; j++)
-            packet.Tiles[i, j].Serialize(writer);
+        {
+            for (int j = 0; j < packet.SizeY; j++)
+            {
+                packet.Tiles[i, j].Serialize(writer);
+            }
+        }
 
         return writer.Build();
     }

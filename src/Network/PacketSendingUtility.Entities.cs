@@ -12,7 +12,7 @@ public static partial class PacketSendingUtility
 
     public static void DirectSyncNPC(PlayerEntity entity, int npcId)
     {
-        var npc = Main.npc[npcId];
+        NPC npc = Main.npc[npcId];
         if (npc == null || !npc.active)
         {
             return;
@@ -35,7 +35,7 @@ public static partial class PacketSendingUtility
             [1] = npc.SpawnedFromStatue,
             [2] = npc.strengthMultiplier != 1f
         };
-        var ai = new float[NPC.maxAI];
+        float[] ai = new float[NPC.maxAI];
         for (int i = 0; i < NPC.maxAI; i++)
         {
             if (npc.ai[i] != 0f)
@@ -43,7 +43,7 @@ public static partial class PacketSendingUtility
                 ai[i] = npc.ai[i];
             }
         }
-        var netID = (short)npc.netID;
+        short netID = (short)npc.netID;
         byte? playerCountForMultiplayerDifficultyOverride = npc.statsAreScaledForThisManyPlayers > 1 ? (byte)npc.statsAreScaledForThisManyPlayers : null;
         float strengthMultiplier = npc.strengthMultiplier;
         int life = npc.life;
@@ -69,7 +69,7 @@ public static partial class PacketSendingUtility
     public static Action<PlayerEntity, int> SyncProjectile { get; set; } = DirectSyncProjectile;
     public static void DirectSyncProjectile(PlayerEntity entity, int projectileId)
     {
-        var projectile = Main.projectile[projectileId];
+        Projectile projectile = Main.projectile[projectileId];
         if (projectile == null || !projectile.active)
         {
             return;
@@ -105,7 +105,7 @@ public static partial class PacketSendingUtility
 
     public static byte[]? CreateSyncItemDefaultPacket(int itemId, byte ownIgnore = 0)
     {
-        var item = Main.item[itemId];
+        Item item = Main.item[itemId];
         if (item == null || !item.active)
         {
             return null;
@@ -126,7 +126,7 @@ public static partial class PacketSendingUtility
 
     public static byte[]? CreateSyncItemInstancedPacket(int itemId, byte ownIgnore = 0)
     {
-        var item = Main.item[itemId];
+        Item item = Main.item[itemId];
         if (item == null || !item.active)
         {
             return null;
@@ -147,7 +147,7 @@ public static partial class PacketSendingUtility
 
     public static byte[]? CreateSyncItemShimmerPacket(int itemId, byte ownIgnore = 0)
     {
-        var item = Main.item[itemId];
+        Item item = Main.item[itemId];
         if (item == null || !item.active)
         {
             return null;
@@ -170,7 +170,7 @@ public static partial class PacketSendingUtility
 
     public static byte[]? CreateSyncItemNoPickupPacket(int itemId, byte ownIgnore = 0)
     {
-        var item = Main.item[itemId];
+        Item item = Main.item[itemId];
         if (item == null || !item.active)
         {
             return null;

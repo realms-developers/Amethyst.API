@@ -1,4 +1,3 @@
-using Amethyst.Infrastructure.Kernel;
 using Amethyst.Kernel;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Commands.Base;
@@ -33,7 +32,7 @@ public static class BasicCommands
     [CommandSyntax("ru-RU", "[дополнительные аргументы]")]
     public static void RepeatLastCommand(IAmethystUser user, CommandInvokeContext ctx)
     {
-        var lastcmd = user.Commands.History.FirstOrDefault(p => !p.Command.Metadata.Names.Any(p => p == "!!" || p == "="));
+        CompletedCommandInfo? lastcmd = user.Commands.History.FirstOrDefault(p => !p.Command.Metadata.Names.Any(p => p == "!!" || p == "="));
         if (lastcmd == null)
         {
             ctx.Messages.ReplyError("amethyst.basic.noLastCommand");
@@ -114,7 +113,9 @@ public static class BasicCommands
         {
             plrUser.Permissions.AddChild(new RootPermissionProvider(plrUser));
             if (!plrUser.Commands.Repositories.Contains("root"))
+            {
                 plrUser.Commands.Repositories.Add("root");
+            }
 
             ctx.Messages.ReplySuccess("amethyst.basic.givenRoot", player.Name);
             AmethystLog.System.Info($"Commands(/giveroot)", $"Granted root permission to user {plrUser.Name}.");
@@ -134,7 +135,9 @@ public static class BasicCommands
         {
             user.Permissions.AddChild(new RootPermissionProvider(user));
             if (!user.Commands.Repositories.Contains("root"))
+            {
                 user.Commands.Repositories.Add("root");
+            }
 
             ctx.Messages.ReplySuccess("amethyst.basic.grantedRoot");
             AmethystLog.System.Info($"Commands(/+root)", $"Granted root permission to user {user.Name}.");

@@ -5,25 +5,15 @@ using Amethyst.Systems.Characters.Base.Enums;
 
 namespace Amethyst.Systems.Characters.Storages.MongoDB;
 
-public sealed class MongoCharacterModel : DataModel, ICharacterModel
+public sealed class MongoCharacterModel(string name) : DataModel(name), ICharacterModel
 {
     public static MongoCharactersStorage Storage { get; set; } = null!;
 
-    public MongoCharacterModel(string name) : base(name)
-    {
-        Slots = new NetItem[350];
-        Colors = new NetColor[8];
-        HideAccessories = new bool[10];
+    public NetItem[] Slots { get; set; } = new NetItem[350];
 
-        MaxLife = 100;
-        MaxMana = 20;
-    }
+    public int MaxLife { get; set; } = 100;
 
-    public NetItem[] Slots { get; set; }
-
-    public int MaxLife { get; set; }
-
-    public int MaxMana { get; set; }
+    public int MaxMana { get; set; } = 20;
 
     public PlayerInfo1 Info1 { get; set; }
 
@@ -37,11 +27,11 @@ public sealed class MongoCharacterModel : DataModel, ICharacterModel
 
     public byte HairDye { get; set; }
 
-    public bool[] HideAccessories { get; set; }
+    public bool[] HideAccessories { get; set; } = new bool[10];
 
     public byte HideMisc { get; set; }
 
-    public NetColor[] Colors { get; set; }
+    public NetColor[] Colors { get; set; } = new NetColor[8];
 
     public int QuestsCompleted { get; set; }
 

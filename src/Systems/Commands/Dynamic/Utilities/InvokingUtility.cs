@@ -17,7 +17,7 @@ internal static class InvokingUtility
             true);
 
         ILGenerator il = dynamicMethod.GetILGenerator();
-        var parameters = method.GetParameters();
+        ParameterInfo[] parameters = method.GetParameters();
 
         if (parameters.Length != 0)
         {
@@ -82,19 +82,19 @@ internal static class InvokingUtility
 
     internal static Action<object?[]> CreateInvoker(DynamicMethod method)
     {
-        var invoker = method.CreateDelegate(typeof(Action<object?[]>));
+        Delegate invoker = method.CreateDelegate(typeof(Action<object?[]>));
         return (Action<object?[]>)invoker;
     }
 
     internal static object?[]? CreateArguments(DynamicCommandInvoker invoker, CommandInvokeContext ctx)
     {
-        var methodParameters = invoker.Method.GetParameters();
+        ParameterInfo[] methodParameters = invoker.Method.GetParameters();
         List<object?> args = [ctx.User, ctx];
 
         int offset = 2;
         for (int i = offset; i < methodParameters.Length; i++)
         {
-            var parameter = methodParameters[i];
+            ParameterInfo parameter = methodParameters[i];
 
             if (i - offset >= ctx.Args.Length)
             {
@@ -108,8 +108,8 @@ internal static class InvokingUtility
                 return null;
             }
 
-            var parser = ParsingNode.Parsers[parameter.ParameterType];
-            var arg = parser(ctx.User, ctx.Args[i - offset], out var errorMessage);
+            ArgumentParser parser = ParsingNode.Parsers[parameter.ParameterType];
+            object? arg = parser(ctx.User, ctx.Args[i - offset], out string? errorMessage);
             if (arg == null || errorMessage != null)
             {
                 if (invoker.Command.Metadata.Syntax?[ctx.Messages.Language]?.Length > i)
@@ -122,7 +122,9 @@ internal static class InvokingUtility
                 }
 
                 if (errorMessage != null)
+                {
                     ctx.Messages.ReplyError(errorMessage);
+                }
 
                 return null;
             }

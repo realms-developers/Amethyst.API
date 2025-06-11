@@ -1,6 +1,5 @@
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Base.Suspension;
-using Amethyst.Systems.Users.Players.Suspension;
 
 namespace Amethyst.Systems.Users.Players.Suspension;
 
