@@ -18,6 +18,8 @@ using Terraria;
 using Amethyst.Network.Handling.Packets.Items;
 using Amethyst.Network.Handling.NetMessagePatch;
 using Amethyst.Network.Handling.Packets.NPCs;
+using Amethyst.Network.Handling.Packets.Signs;
+using Amethyst.Network.Handling.Packets.Projectiles;
 
 namespace Amethyst.Network;
 
@@ -82,6 +84,8 @@ public static class NetworkManager
         HandlerManager.RegisterHandler(new OtherHandler());
         HandlerManager.RegisterHandler(new ItemsHandler());
         HandlerManager.RegisterHandler(new NPCsHandler());
+        HandlerManager.RegisterHandler(new ProjectilesHandler());
+        HandlerManager.RegisterHandler(new SignsHandler());
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);
