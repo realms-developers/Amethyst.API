@@ -67,7 +67,7 @@ public sealed class ProjectilesHandler : INetworkHandler
         for (int i = 0; i < Main.maxProjectiles; i++)
         {
             Projectile projectile = Main.projectile[i];
-            if (projectile.active && projectile.type == 602 && projectile.ai[0] == (float)packet.AI1Type && projectile.owner == packet.PlayerIndex)
+            if (projectile != null && projectile.active && projectile.type == 602 && projectile.ai[0] == (float)packet.AI1Type && projectile.owner == packet.PlayerIndex)
             {
                 projectile.Kill();
 
@@ -85,7 +85,7 @@ public sealed class ProjectilesHandler : INetworkHandler
         for (int i = 0; i < Main.maxProjectiles; i++)
         {
             Projectile projectile = Main.projectile[i];
-            if (projectile.active && projectile.identity == packet.ProjectileIdentity && projectile.owner == plr.Index)
+            if (projectile != null && projectile.active && projectile.identity == packet.ProjectileIdentity && projectile.owner == plr.Index)
             {
                 projectile.Kill();
 
