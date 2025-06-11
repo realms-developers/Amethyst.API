@@ -15,6 +15,15 @@ public sealed class OtherHandler : INetworkHandler
     public void Load()
     {
         NetworkManager.SetMainHandler<PlayerOrEntityTeleport>(OnPlayerOrEntityTeleport);
+        NetworkManager.SetMainHandler<GolfPutBallInCup>(OnGolfPutBallInCup);
+    }
+
+    private void OnGolfPutBallInCup(PlayerEntity plr, ref GolfPutBallInCup packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    {
+        if (plr.Phase != ConnectionPhase.Connected)
+            return;
+
+        PacketSendingUtility.ExcludeBroadcastConnected(-1, GolfPutBallInCupPacket.Serialize(packet with { PlayerIndex = (byte)plr.Index }));
     }
 
     private void OnPlayerOrEntityTeleport(PlayerEntity plr, ref PlayerOrEntityTeleport packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
@@ -61,5 +70,6 @@ public sealed class OtherHandler : INetworkHandler
     public void Unload()
     {
         NetworkManager.SetMainHandler<PlayerOrEntityTeleport>(null);
+        NetworkManager.SetMainHandler<GolfPutBallInCup>(null);
     }
 }
