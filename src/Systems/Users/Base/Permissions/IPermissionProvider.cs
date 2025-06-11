@@ -13,6 +13,6 @@ public interface IPermissionProvider
 
     PermissionAccess HasPermission(string permission);
 
-    public PermissionAccess HasPermission(PermissionAccess type, int x, int y);
-    public PermissionAccess HasPermission(PermissionAccess type, int x, int y, int width, int height);
+    PermissionAccess HasPermission(PermissionType type, int x, int y);
+    PermissionAccess HasPermission(PermissionType type, int x, int y, int width, int height);
 }

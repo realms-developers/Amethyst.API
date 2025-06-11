@@ -79,12 +79,12 @@ public sealed class ArtificialPermissionProvider : IPermissionProvider
         return HandlePermission(p => p.HasPermission(permission));
     }
 
-    public PermissionAccess HasPermission(PermissionAccess type, int x, int y)
+    public PermissionAccess HasPermission(PermissionType type, int x, int y)
     {
         return HandlePermission(p => p.HasPermission(type, x, y));
     }
 
-    public PermissionAccess HasPermission(PermissionAccess type, int x, int y, int width, int height)
+    public PermissionAccess HasPermission(PermissionType type, int x, int y, int width, int height)
     {
         return HandlePermission(p => p.HasPermission(type, x, y, width, height));
     }

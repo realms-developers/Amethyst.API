@@ -39,12 +39,12 @@ public sealed class RootPermissionProvider : IPermissionProvider
         return PermissionAccess.HasPermission;
     }
 
-    public PermissionAccess HasPermission(PermissionAccess type, int x, int y)
+    public PermissionAccess HasPermission(PermissionType type, int x, int y)
     {
         return PermissionAccess.HasPermission;
     }
 
-    public PermissionAccess HasPermission(PermissionAccess type, int x, int y, int width, int height)
+    public PermissionAccess HasPermission(PermissionType type, int x, int y, int width, int height)
     {
         return PermissionAccess.HasPermission;
     }
