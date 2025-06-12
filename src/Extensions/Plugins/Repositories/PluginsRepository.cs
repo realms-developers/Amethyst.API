@@ -64,6 +64,8 @@ public sealed class PluginsRepository : IExtensionRepository
                 var errorResult = new ExtensionHandleResult(Guid.Empty,
                     ExtensionResult.NotAllowed,
                     $"Plugin {Path.GetFileName(file)} is not allowed by the repository ruler.");
+
+                _results.Add(errorResult);
                 results.Add(errorResult);
 
                 AmethystLog.System.Warning(nameof(PluginsRepository),
@@ -100,18 +102,24 @@ public sealed class PluginsRepository : IExtensionRepository
                 }
                 else
                 {
-                    results.Add(new ExtensionHandleResult(
+                    ExtensionHandleResult result = new ExtensionHandleResult(
                         Guid.Empty,
                         ExtensionResult.ExternalError,
-                        $"Failed to create plugin instance from {file}"));
+                        $"Failed to create plugin instance from {file}");
+
+                    _results.Add(result);
+                    results.Add(result);
                 }
             }
             catch (Exception ex)
             {
-                results.Add(new ExtensionHandleResult(
+                ExtensionHandleResult result = new ExtensionHandleResult(
                     Guid.Empty,
                     ExtensionResult.InternalError,
-                    $"Error loading plugin from {file}: {ex.Message}"));
+                    $"Error loading plugin from {file}: {ex.Message}");
+
+                _results.Add(result);
+                results.Add(result);
             }
         }
 
@@ -135,15 +143,19 @@ public sealed class PluginsRepository : IExtensionRepository
             try
             {
                 ExtensionHandleResult result = ext.Handler.Unload();
+
                 _results.Add(result);
                 results.Add(result);
             }
             catch (Exception ex)
             {
-                results.Add(new ExtensionHandleResult(
+                ExtensionHandleResult result = new ExtensionHandleResult(
                     ext.LoadIdentifier,
-                    ExtensionResult.ExternalError,
-                    $"Error unloading {ext.Metadata.Name}: {ex.Message}"));
+                    ExtensionResult.InternalError,
+                    $"Error unloading {ext.Metadata.Name}: {ex.Message}");
+
+                _results.Add(result);
+                results.Add(result);
             }
         }
 

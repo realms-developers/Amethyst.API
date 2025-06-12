@@ -58,7 +58,7 @@ public sealed class TAPILauncher : IServerLauncher
 
         ServerUtils.UpdateTitle();
 
-        AmethystLog.Startup.Verbose(nameof(TAPILauncher), "Loading worlds...");
+        AmethystLog.Startup.Verbose("TAPI", "Loading worlds...");
         Main.LoadWorlds();
 
         string? worldPath = AmethystSession.Profile.WorldToLoad;
@@ -72,7 +72,7 @@ public sealed class TAPILauncher : IServerLauncher
 
         if (!File.Exists(worldPath) || AmethystSession.Profile.WorldRecreate)
         {
-            AmethystLog.Startup.Verbose(nameof(TAPILauncher), $"Requesting world-generation {worldPath}...");
+            AmethystLog.Startup.Verbose("TAPI", $"Requesting world-generation {worldPath}...");
 
             ServerUtils.GenerateWorld();
             ServerUtils.CheckWorldExceptions();
@@ -81,7 +81,7 @@ public sealed class TAPILauncher : IServerLauncher
         ServerUtils.LoadWorld(worldPath);
         ServerUtils.CheckWorldExceptions();
 
-        AmethystLog.Startup.Verbose(nameof(TAPILauncher), $"Starting server...");
+        AmethystLog.Startup.Verbose("TAPI", $"Starting server...");
 
         ServerUtils.InitializeServer();
 
@@ -98,7 +98,7 @@ public sealed class TAPILauncher : IServerLauncher
         Stopwatch updateSw = new();
 
         List<double> timings = [];
-        AmethystLog.Startup.Verbose(nameof(TAPILauncher), $"Server started.");
+        AmethystLog.Startup.Verbose("TAPI", $"Server started.");
 
         ConsoleCommandHandler.Attach();
         _ = Task.Run(ConsoleHooks.InputTask);
@@ -140,7 +140,7 @@ public sealed class TAPILauncher : IServerLauncher
                                 {
                                     totalMs += ms;
                                 }
-                                AmethystLog.Main.Debug(nameof(TAPILauncher), $"TPS: {tps} Game Update: [Min-Max range: {Math.Ceiling(ordered.First())}-{Math.Ceiling(ordered.Last())}ms] average: {Math.Ceiling(totalMs / 180)}ms, total: {(int)totalMs}ms");
+                                AmethystLog.Main.Debug("TAPI", $"TPS: {tps} Game Update: [Min-Max range: {Math.Ceiling(ordered.First())}-{Math.Ceiling(ordered.Last())}ms] average: {Math.Ceiling(totalMs / 180)}ms, total: {(int)totalMs}ms");
                             }
 
                             timings.Clear();
@@ -180,11 +180,11 @@ public sealed class TAPILauncher : IServerLauncher
 
     public void StopServer(bool force = false)
     {
-        AmethystLog.System.Critical(nameof(TAPILauncher), "Server is stopping...");
+        AmethystLog.Main.Critical("TAPI", "Server is stopping...");
 
         if (!IsStarted || force)
         {
-            AmethystLog.System.Critical(nameof(TAPILauncher),
+            AmethystLog.Main.Critical("TAPI",
                 $"{(IsStarted ? string.Empty : "Server was not fully loaded -> ")}Stopping forcefully...");
 
             Environment.Exit(0);
@@ -193,15 +193,12 @@ public sealed class TAPILauncher : IServerLauncher
         }
 
         ServerUtils.DeinitializePlayers();
-        AmethystLog.System.Info(nameof(TAPILauncher), "Shutdown -> Players deinitialized.");
 
         ExtensionsOrganizer.UnloadPlugins();
-        AmethystLog.System.Info(nameof(TAPILauncher), "Shutdown -> Plugins unloaded.");
 
         WorldFile.SaveWorld();
-        AmethystLog.System.Info(nameof(TAPILauncher), "Shutdown -> World saved.");
 
-        AmethystLog.System.Info(nameof(TAPILauncher), "Shutdown -> Exiting server...");
+        AmethystLog.Main.Critical("TAPI", "Server is stopped.");
         Environment.Exit(0);
     }
 }

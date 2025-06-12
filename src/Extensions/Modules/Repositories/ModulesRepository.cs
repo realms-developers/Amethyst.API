@@ -65,10 +65,9 @@ public sealed class ModulesRepository : IExtensionRepository
                 var errorResult = new ExtensionHandleResult(Guid.Empty,
                     ExtensionResult.NotAllowed,
                     $"Module {Path.GetFileName(file)} is not allowed by the repository ruler.");
+                _results.Add(errorResult);
                 results.Add(errorResult);
 
-                AmethystLog.System.Warning(nameof(ModulesRepository),
-                    $"Module {Path.GetFileName(file)} is not allowed by the repository ruler.");
                 continue;
             }
 
@@ -108,6 +107,8 @@ public sealed class ModulesRepository : IExtensionRepository
                 var errorResult = new ExtensionHandleResult(Guid.Empty,
                     ExtensionResult.ExternalError,
                     $"Failed to load Module from {file}");
+
+                _results.Add(errorResult);
                 results.Add(errorResult);
             }
         }

@@ -382,6 +382,7 @@ public sealed class PlayersHandler : INetworkHandler
             crit = false;
         }
 
+        Main.rand = new(DateTime.Now.Second);
         victim.TPlayer.Hurt(packet.Reason, packet.Damage, packet.HitDirection - 1, pvp, false, crit, packet.CooldownCounter);
 
         if (HandlersConfiguration.Instance.SyncPlayers)

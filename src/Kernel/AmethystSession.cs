@@ -27,12 +27,13 @@ public static class AmethystSession
     internal static void StartServer()
     {
         Launcher.Initialize();
-        PrintWelcome();
-
-        Localization.Load();
 
         ExtensionsOrganizer.LoadModules();
         ExtensionsOrganizer.LoadPlugins();
+
+        PrintWelcome();
+
+        Localization.Load();
 
         ImportUtility.ImportFrom(typeof(AmethystSession).Assembly, ImportUtility.CoreIdentifier);
 

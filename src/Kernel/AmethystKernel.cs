@@ -35,7 +35,7 @@ internal static class AmethystKernel
 
         AppDomain.CurrentDomain.FirstChanceException += (sender, ex) =>
         {
-            if (ex.Exception is OperationCanceledException)
+            if (ex.Exception is OperationCanceledException || ex.Exception is ObjectDisposedException)
             {
                 return;
             }

@@ -50,10 +50,8 @@ internal static class ServerUtils
             }
             catch (Exception ex)
             {
-                AmethystLog.System.Error(nameof(AmethystSession), $"Shutdown -> Failed to deinitialize player {plr.Name}: {ex.Message}");
+                AmethystLog.Main.Error(nameof(AmethystSession), $"Shutdown -> Failed to deinitialize player {plr.Name}: {ex.Message}");
             }
-
-            AmethystLog.System.Info(nameof(AmethystSession), $"Player {plr.Name} was deinitialized.");
         }
     }
 
@@ -75,19 +73,19 @@ internal static class ServerUtils
 
     internal static void PrintWorlds()
     {
-        AmethystLog.Startup.Info(nameof(TAPILauncher), "Available worlds:");
+        AmethystLog.Startup.Info("TAPI", "Available worlds:");
         foreach (WorldFileData wld in Main.WorldList)
         {
-            AmethystLog.Startup.Info(nameof(TAPILauncher), $"World '{wld.Name}' from '{wld.Path}' ({wld.WorldSizeX}x{wld.WorldSizeY}, built at {wld.WorldGeneratorVersion})");
+            AmethystLog.Startup.Info("TAPI", $"World '{wld.Name}' from '{wld.Path}' ({wld.WorldSizeX}x{wld.WorldSizeY}, built at {wld.WorldGeneratorVersion})");
         }
-        AmethystLog.Startup.Info(nameof(TAPILauncher), "Load server with '-worldpath <path>' argument.");
+        AmethystLog.Startup.Info("TAPI", "Load server with '-worldpath <path>' argument.");
     }
 
     internal static void LoadWorld(string path)
     {
         Main.instance.SetWorld(path, false);
 
-        AmethystLog.Startup.Verbose(nameof(TAPILauncher), $"Loading world '{path}'...");
+        AmethystLog.Startup.Verbose("TAPI", $"Loading world '{path}'...");
         WorldGen.serverLoadWorld().Wait();
     }
 
