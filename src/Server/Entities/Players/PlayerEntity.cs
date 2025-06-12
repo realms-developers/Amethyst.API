@@ -19,10 +19,6 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
 
         Name = "";
 
-        NetworkOperations = new PlayerNetworkOperations();
-        ModerationOperations = new PlayerModerationOperations();
-        GameplayOperations = new PlayerGameplayOperations();
-
         IP = client._socket.RemoteEndPoint?.ToString()?.Split(':')[0] ?? "0.0.0.0";
         UUID = "";
 
