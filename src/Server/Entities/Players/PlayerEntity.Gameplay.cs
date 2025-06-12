@@ -65,4 +65,42 @@ public sealed partial class PlayerEntity : IServerEntity
     {
         NetMessage.SendData((byte)PacketID.PlayerSetTeam, -1, -1, NetworkText.Empty, Index, teamId);
     }
+
+    public void OpenSign(int signId)
+    {
+        if (signId < 0 || signId >= Main.sign.Length)
+        {
+            return;
+        }
+
+        Sign sign = Main.sign[signId];
+        if (sign == null)
+        {
+            return;
+        }
+
+        NetMessage.SendData((byte)PacketID.SignSync, Index, -1, NetworkText.Empty, Index, signId, Index);
+    }
+
+    public void OpenChest(int chestId)
+    {
+        if (chestId < 0 || chestId >= Main.chest.Length)
+        {
+            return;
+        }
+
+        Chest chest = Main.chest[chestId];
+        if (chest == null)
+        {
+            return;
+        }
+
+        for (int num222 = 0; num222 < 40; num222++)
+        {
+            NetMessage.TrySendData(32, Index, -1, NetworkText.Empty, chestId, num222);
+        }
+        NetMessage.TrySendData(33, Index, -1, NetworkText.Empty, chestId);
+        TPlayer.chest = chestId;
+        NetMessage.TrySendData(80, -1, Index, NetworkText.Empty, Index, chestId);
+    }
 }
