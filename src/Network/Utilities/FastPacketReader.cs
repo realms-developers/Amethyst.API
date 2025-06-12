@@ -427,6 +427,18 @@ public unsafe ref struct FastPacketReader
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public StrippedMemoryStream StreamOpen()
+    {
+        return new StrippedMemoryStream(_ptr);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void StreamClose(StrippedMemoryStream stream)
+    {
+        _ptr += stream.Position;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Skip(int count)
     {
         if (count < 0 || count > _span.Length - (_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))))

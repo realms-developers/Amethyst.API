@@ -29,7 +29,7 @@ public sealed class TETryPlaceItemHatRackPacket : IPacket<TETryPlaceItemHatRack>
             SlotIndex = SlotIndex,
             ItemType = ItemType,
             ItemStack = ItemStack,
-            Prefix = Prefix,
+            ItemPrefix = Prefix,
         };
     }
 
@@ -42,7 +42,7 @@ public sealed class TETryPlaceItemHatRackPacket : IPacket<TETryPlaceItemHatRack>
         writer.WriteByte(packet.SlotIndex);
         writer.WriteUInt16(packet.ItemType);
         writer.WriteUInt16(packet.ItemStack);
-        writer.WriteByte(packet.Prefix);
+        writer.WriteByte(packet.ItemPrefix);
 
         return writer.Build();
     }
@@ -55,5 +55,5 @@ public struct TETryPlaceItemHatRack
     public byte SlotIndex;
     public ushort ItemType;
     public ushort ItemStack;
-    public byte Prefix;
+    public byte ItemPrefix;
 }

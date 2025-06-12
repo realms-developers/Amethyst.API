@@ -25,7 +25,7 @@ public sealed class TETryPlaceItemItemFramePacket : IPacket<TETryPlaceItemItemFr
         {
             X = X,
             Y = Y,
-            ItemNetID = ItemNetID,
+            ItemType = ItemNetID,
             ItemPrefix = ItemPrefix,
             ItemStack = ItemStack,
         };
@@ -37,7 +37,7 @@ public sealed class TETryPlaceItemItemFramePacket : IPacket<TETryPlaceItemItemFr
 
         writer.WriteInt16(packet.X);
         writer.WriteInt16(packet.Y);
-        writer.WriteInt16(packet.ItemNetID);
+        writer.WriteInt16(packet.ItemType);
         writer.WriteByte(packet.ItemPrefix);
         writer.WriteInt16(packet.ItemStack);
 
@@ -49,7 +49,7 @@ public struct TETryPlaceItemItemFrame
 {
     public short X;
     public short Y;
-    public short ItemNetID;
+    public short ItemType;
     public byte ItemPrefix;
     public short ItemStack;
 }
