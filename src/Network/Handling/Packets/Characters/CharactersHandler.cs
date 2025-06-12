@@ -102,7 +102,7 @@ public sealed class CharactersHandler : INetworkHandler
 
     private void OnPlayerQuests(PlayerEntity plr, ref PlayerTownNPCQuestsStats packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != Handshake.ConnectionPhase.Connected)
+        if (plr.Phase != Handshake.ConnectionPhase.Connected && AmethystSession.Profile.SSCMode)
         {
             return;
         }
@@ -112,7 +112,7 @@ public sealed class CharactersHandler : INetworkHandler
 
     private void OnPlayerMana(PlayerEntity plr, ref PlayerMana packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != Handshake.ConnectionPhase.Connected)
+        if (plr.Phase != Handshake.ConnectionPhase.Connected && AmethystSession.Profile.SSCMode)
         {
             return;
         }
@@ -122,7 +122,7 @@ public sealed class CharactersHandler : INetworkHandler
 
     private void OnPlayerLife(PlayerEntity plr, ref PlayerLife packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != Handshake.ConnectionPhase.Connected)
+        if (plr.Phase != Handshake.ConnectionPhase.Connected && AmethystSession.Profile.SSCMode)
         {
             return;
         }
@@ -132,7 +132,7 @@ public sealed class CharactersHandler : INetworkHandler
 
     private void OnPlayerSlot(PlayerEntity plr, ref PlayerSlot packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != Handshake.ConnectionPhase.Connected)
+        if (plr.Phase != Handshake.ConnectionPhase.Connected && AmethystSession.Profile.SSCMode)
         {
             return;
         }
@@ -142,7 +142,7 @@ public sealed class CharactersHandler : INetworkHandler
 
     private void OnPlayerInfo(PlayerEntity plr, ref PlayerInfo packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != Handshake.ConnectionPhase.Connected)
+        if (plr.Phase != Handshake.ConnectionPhase.Connected && AmethystSession.Profile.SSCMode)
         {
             return;
         }
