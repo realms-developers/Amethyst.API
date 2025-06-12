@@ -35,11 +35,17 @@ public sealed class ModulesRepositoryRuler : IRepositoryRuler
         }
 
         _modulesCfg.Data.AllowedModules.Add(name);
+        _modulesCfg.Save();
     }
 
     public bool DisallowExtension(string name)
     {
-        return _modulesCfg.Data.AllowedModules.Remove(name);
+        bool wasRemoved = _modulesCfg.Data.AllowedModules.Remove(name);
+        if (wasRemoved)
+        {
+            _modulesCfg.Save();
+        }
+        return wasRemoved;
     }
 
     public bool IsExtensionAllowed(string name) =>

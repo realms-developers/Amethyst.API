@@ -37,11 +37,17 @@ public sealed class PluginsRepositoryRuler : IRepositoryRuler
         }
 
         _pluginCfg.Data.AllowedPlugins.Add(name);
+        _pluginCfg.Save();
     }
 
     public bool DisallowExtension(string name)
     {
-        return _pluginCfg.Data.AllowedPlugins.Remove(name);
+        bool wasRemoved = _pluginCfg.Data.AllowedPlugins.Remove(name);
+        if (wasRemoved)
+        {
+            _pluginCfg.Save();
+        }
+        return wasRemoved;
     }
 
     public bool IsExtensionAllowed(string name) => _pluginCfg.Data.AllowedPlugins.Contains(name);
