@@ -29,19 +29,19 @@ public struct NetColor
     }
 
     public static implicit operator NetColor(Color color)
-        => new NetColor(color.R, color.G, color.B);
+        => new(color.R, color.G, color.B);
 
     public static implicit operator Color(NetColor color)
-        => new Color(color.R, color.G, color.B);
+        => new(color.R, color.G, color.B);
 
     public static implicit operator NetColor(string hex)
-        => new NetColor(hex);
+        => new(hex);
 
     public static implicit operator string(NetColor color)
         => color.ToHex();
 
     public static implicit operator NetColor(int packedValue)
-        => new NetColor(packedValue);
+        => new(packedValue);
 
     public static implicit operator int(NetColor color)
         => color.ToPackedValue();

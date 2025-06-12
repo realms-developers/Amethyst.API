@@ -30,18 +30,26 @@ public sealed class EventsHandler : INetworkHandler
     private void OnEventCreditsOrTransform(PlayerEntity plr, ref EventCreditsOrTransform packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.EventType == 1)
+        {
             NPC.TransformCopperSlime(packet.ExtraValue);
+        }
         else if (packet.EventType == 2)
+        {
             NPC.TransformElderSlime(packet.ExtraValue);
+        }
     }
 
     private void OnEventInvokeV2(PlayerEntity plr, ref EventInvokeV2 packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.EventOrBossType >= 0 && packet.EventOrBossType < NPCID.Count && NPCID.Sets.MPAllowedEnemies[packet.EventOrBossType])
         {
@@ -172,8 +180,9 @@ public sealed class EventsHandler : INetworkHandler
     private void OnEventInvokeV1(PlayerEntity plr, ref EventInvokeV1 packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
-
+        }
 
         switch (packet.EventType)
         {
@@ -193,7 +202,7 @@ public sealed class EventsHandler : INetworkHandler
                 Main.npc[packet.EventAdditionalValue].BigMimicSpawnSmoke();
                 break;
             case 5:
-                NPC nPC6 = new NPC();
+                NPC nPC6 = new();
                 nPC6.SetDefaults(664);
                 Main.BestiaryTracker.Kills.RegisterKill(nPC6);
                 break;
@@ -209,8 +218,9 @@ public sealed class EventsHandler : INetworkHandler
     private void OnEventDD2Toggle(PlayerEntity plr, ref EventDD2Toggle packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
-
+        }
 
         if (DD2Event.WouldFailSpawningHere(packet.X, packet.Y))
         {
@@ -222,7 +232,9 @@ public sealed class EventsHandler : INetworkHandler
     private void OnEventDD2AttemptSkipWaitTime(PlayerEntity plr, ref EventDD2AttemptSkipWaitTime packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         DD2Event.AttemptToSkipWaitTime();
     }
@@ -230,7 +242,9 @@ public sealed class EventsHandler : INetworkHandler
     private void OnEventBirthdayParty(PlayerEntity plr, ref EventBirthdayParty packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         BirthdayParty.ToggleManualParty();
     }

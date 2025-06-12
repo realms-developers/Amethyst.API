@@ -20,13 +20,7 @@ public static class ChatModHooks
     private static void ChatHelperBroadcastChatMessageAs(On.Terraria.Chat.ChatHelper.orig_BroadcastChatMessageAs orig, byte messageAuthor, NetworkText text, Color color, int excludedPlayer)
     {
         var args = new BroadcastTextArgs(text, color, excludedPlayer, messageAuthor);
-        var result = HookRegistry.GetHook<BroadcastTextArgs>()?.Invoke(args);
-
-        if (result == null)
-        {
-            throw new InvalidOperationException("No hook found for BroadcastTextArgs.");
-        }
-
+        Amethyst.Hooks.Context.HookResult<BroadcastTextArgs>? result = (HookRegistry.GetHook<BroadcastTextArgs>()?.Invoke(args)) ?? throw new InvalidOperationException("No hook found for BroadcastTextArgs.");
         if (result.IsCancelled == true)
         {
             return;

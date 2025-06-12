@@ -3,7 +3,6 @@ using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Network.Packets;
 using Amethyst.Server.Entities.Players;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Localization;
 
@@ -25,7 +24,9 @@ public sealed class ChestsHandler : INetworkHandler
     private void OnChestSync(PlayerEntity plr, ref ChestSync packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.Name != null)
         {
@@ -42,24 +43,34 @@ public sealed class ChestsHandler : INetworkHandler
     private void OnChestSetName(PlayerEntity plr, ref ChestSetName packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.ChestIndex < -1 || packet.ChestIndex >= 8000)
+        {
             return;
+        }
 
         int chestIndex = packet.ChestIndex == -1 ? Chest.FindChest(packet.ChestX, packet.ChestY) : packet.ChestIndex;
         if (chestIndex == -1)
+        {
             return;
+        }
 
         Chest chest = Main.chest[chestIndex];
         if (chest.x == packet.ChestX && chest.y == packet.ChestY)
+        {
             NetMessage.TrySendData(69, plr.Index, -1, NetworkText.Empty, chestIndex, packet.ChestX, packet.ChestY);
+        }
     }
 
     private void OnChestRequestOpen(PlayerEntity plr, ref ChestRequestOpen packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         int chestIndex = Chest.FindChest(packet.TileX, packet.TileY);
 
@@ -89,7 +100,9 @@ public sealed class ChestsHandler : INetworkHandler
     private void OnChestItemSync(PlayerEntity plr, ref ChestItemSync packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.ChestIndex >= 0 && packet.ChestIndex < 8000)
         {
@@ -111,8 +124,9 @@ public sealed class ChestsHandler : INetworkHandler
     private void OnChestInteract(PlayerEntity plr, ref ChestInteract packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
-
+        }
 
         switch (packet.Action)
         {

@@ -12,14 +12,18 @@ public static class CharactersSaver
     public static void Setup(TimeSpan autoSaveInterval)
     {
         if (_autoSaveTimer != null)
+        {
             throw new InvalidOperationException("CharactersSaver is already set up.");
+        }
 
         _autoSaveTimer = new Timer(AutoSaveCallback, null, TimeSpan.Zero, autoSaveInterval);
     }
     public static void Stop()
     {
         if (_autoSaveTimer == null)
+        {
             throw new InvalidOperationException("CharactersSaver is not set up.");
+        }
 
         _autoSaveTimer.Dispose();
         _autoSaveTimer = null;

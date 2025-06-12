@@ -13,7 +13,7 @@ public sealed class ConfigModelFactory : IDefaultModelFactory
 
     public ICharacterModel CreateModel(PlayerEntity player)
     {
-        EmptyCharacterModel model = new EmptyCharacterModel();
+        EmptyCharacterModel model = new();
         model.Name = player.Name;
 
         CopyPlayerInfo(player, ref model);

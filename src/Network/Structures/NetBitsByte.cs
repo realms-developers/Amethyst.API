@@ -12,8 +12,14 @@ public struct NetBitsByte
         get => (ByteValue & (1 << key)) != 0;
         set
         {
-            if (value) ByteValue |= (byte)(1 << key);
-            else ByteValue &= (byte)(~(1 << key));
+            if (value)
+            {
+                ByteValue |= (byte)(1 << key);
+            }
+            else
+            {
+                ByteValue &= (byte)(~(1 << key));
+            }
         }
     }
 
@@ -21,5 +27,5 @@ public struct NetBitsByte
         => bitsBytes.ByteValue;
 
     public static implicit operator NetBitsByte(byte byteValue)
-        => new NetBitsByte() { ByteValue = byteValue };
+        => new() { ByteValue = byteValue };
 }

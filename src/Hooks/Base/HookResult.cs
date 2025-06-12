@@ -20,15 +20,19 @@ public sealed class HookResult<TArgs>
 
     public TArgs? Args { get; private set; }
 
-    private List<string> _cancellationReasons = new();
+    private readonly List<string> _cancellationReasons = new();
 
     public void Cancel(string reason)
     {
         if (!CanBeCancelled)
+        {
             throw new InvalidOperationException("This hook result cannot be cancelled.");
+        }
 
         if (_cancellationReasons.Contains(reason))
+        {
             return;
+        }
 
         _cancellationReasons.Add(reason);
     }
@@ -36,7 +40,9 @@ public sealed class HookResult<TArgs>
     public void Modify(TArgs args)
     {
         if (!CanBeModified)
+        {
             throw new InvalidOperationException("This hook result cannot be modified.");
+        }
 
         IsModified = true;
         Args = args;

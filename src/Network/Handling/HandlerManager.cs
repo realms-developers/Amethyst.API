@@ -9,7 +9,9 @@ public static class HandlerManager
         ArgumentNullException.ThrowIfNull(handler, nameof(handler));
 
         if (Handlers.Contains(handler))
+        {
             return;
+        }
 
         if (HandlerRuler.IsHandlerEnabled(handler.Name))
         {
@@ -29,7 +31,9 @@ public static class HandlerManager
         ArgumentNullException.ThrowIfNull(handler, nameof(handler));
 
         if (!Handlers.Contains(handler))
+        {
             return;
+        }
 
         if (HandlerRuler.IsHandlerEnabled(handler.Name))
         {
@@ -48,9 +52,11 @@ public static class HandlerManager
     {
         ArgumentNullException.ThrowIfNull(name, nameof(name));
 
-        var handler = Handlers.FirstOrDefault(h => h.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        INetworkHandler? handler = Handlers.FirstOrDefault(h => h.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (handler == null)
+        {
             return false;
+        }
 
         if (!HandlerRuler.IsHandlerEnabled(handler.Name))
         {
@@ -66,9 +72,11 @@ public static class HandlerManager
     {
         ArgumentNullException.ThrowIfNull(name, nameof(name));
 
-        var handler = Handlers.FirstOrDefault(h => h.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        INetworkHandler? handler = Handlers.FirstOrDefault(h => h.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (handler == null)
+        {
             return false;
+        }
 
         if (HandlerRuler.IsHandlerEnabled(handler.Name))
         {

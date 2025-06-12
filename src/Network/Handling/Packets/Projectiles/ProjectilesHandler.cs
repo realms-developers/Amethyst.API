@@ -21,7 +21,9 @@ public sealed class ProjectilesHandler : INetworkHandler
     private void OnProjectileUpdate(PlayerEntity plr, ref ProjectileUpdate packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         byte owner = packet.ProjectileType == 949 ? (byte)255 : (byte)plr.Index;
         short identity = packet.ProjectileIdentity;
@@ -62,7 +64,9 @@ public sealed class ProjectilesHandler : INetworkHandler
     private void OnProjectileKillPortal(PlayerEntity plr, ref ProjectileKillPortal packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         for (int i = 0; i < Main.maxProjectiles; i++)
         {
@@ -80,7 +84,9 @@ public sealed class ProjectilesHandler : INetworkHandler
     private void OnProjectileKill(PlayerEntity plr, ref ProjectileKill packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         for (int i = 0; i < Main.maxProjectiles; i++)
         {
@@ -95,7 +101,7 @@ public sealed class ProjectilesHandler : INetworkHandler
         }
     }
 
-    private int GetNewProjectileIndex()
+    private static int GetNewProjectileIndex()
     {
         for (int i = 0; i < Main.maxProjectiles; i++)
         {

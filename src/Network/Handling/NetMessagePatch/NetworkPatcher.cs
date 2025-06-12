@@ -802,8 +802,8 @@ internal sealed class NetworkPatcher : NetMessage
                     writer.Write(flag3);
                     if (flag3)
                     {
-                        var stream86 = writer.StreamOpen();
-                        BinaryWriter bwriter86 = new BinaryWriter(stream86);
+                        StrippedMemoryStream stream86 = writer.StreamOpen();
+                        BinaryWriter bwriter86 = new(stream86);
                         TileEntity.Write(bwriter86, TileEntity.ByID[number], networkSend: true);
                         writer.StreamClose(stream86);
                     }
@@ -1046,8 +1046,8 @@ internal sealed class NetworkPatcher : NetMessage
                     writer.Write((byte)num3);
                     if (TileEntity.ByID[(int)number2] is TEDisplayDoll tEDisplayDoll)
                     {
-                        var stream121 = writer.StreamOpen();
-                        BinaryWriter bwriter121 = new BinaryWriter(stream121);
+                        StrippedMemoryStream stream121 = writer.StreamOpen();
+                        BinaryWriter bwriter121 = new(stream121);
                         tEDisplayDoll.WriteItem((int)number3, bwriter121, flag2);
                         writer.StreamClose(stream121);
                         break;
@@ -1083,8 +1083,8 @@ internal sealed class NetworkPatcher : NetMessage
                     writer.Write((byte)num2);
                     if (TileEntity.ByID[(int)number2] is TEHatRack tEHatRack)
                     {
-                        var stream124 = writer.StreamOpen();
-                        BinaryWriter bwriter124 = new BinaryWriter(stream124);
+                        StrippedMemoryStream stream124 = writer.StreamOpen();
+                        BinaryWriter bwriter124 = new(stream124);
                         tEHatRack.WriteItem((int)number3, bwriter124, flag);
                         writer.StreamClose(stream124);
                         break;
@@ -1100,8 +1100,8 @@ internal sealed class NetworkPatcher : NetMessage
                 writer.Write((byte)number4);
                 break;
             case 126:
-                var stream = writer.StreamOpen();
-                BinaryWriter bwriter = new BinaryWriter(stream);
+                StrippedMemoryStream stream = writer.StreamOpen();
+                BinaryWriter bwriter = new(stream);
                 _currentRevengeMarker.WriteSelfTo(bwriter);
                 writer.StreamClose(stream);
                 break;
@@ -1133,8 +1133,8 @@ internal sealed class NetworkPatcher : NetMessage
                     break;
                 }
             case 132:
-                var stream132 = writer.StreamOpen();
-                BinaryWriter bwriter132 = new BinaryWriter(stream132);
+                StrippedMemoryStream stream132 = writer.StreamOpen();
+                BinaryWriter bwriter132 = new(stream132);
                 _currentNetSoundInfo.WriteSelfTo(bwriter132);
                 writer.StreamClose(stream132);
                 break;
@@ -1201,8 +1201,8 @@ internal sealed class NetworkPatcher : NetMessage
                 {
                     writer.Write((byte)number);
                     Player obj = Main.player[number];
-                    var stream142 = writer.StreamOpen();
-                    BinaryWriter bwriter142 = new BinaryWriter(stream142);
+                    StrippedMemoryStream stream142 = writer.StreamOpen();
+                    BinaryWriter bwriter142 = new(stream142);
                     obj.piggyBankProjTracker.Write(bwriter142);
                     obj.voidLensChest.Write(bwriter142);
                     writer.StreamClose(stream142);
@@ -1293,13 +1293,17 @@ internal sealed class NetworkPatcher : NetMessage
         }
         else
         {
-            foreach (var plr in EntityTrackers.Players)
+            foreach (PlayerEntity plr in EntityTrackers.Players)
             {
                 if (plr == null || plr.Phase != ConnectionPhase.Connected || (filter != null && !filter(plr)))
+                {
                     continue;
+                }
 
                 if (plr.Index == ignore)
+                {
                     continue;
+                }
 
                 plr.SendPacketBytes(data);
             }

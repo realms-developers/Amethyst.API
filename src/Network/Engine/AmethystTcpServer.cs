@@ -1,10 +1,9 @@
 using System.Net;
 using System.Net.Sockets;
-using Amethyst.Server.Entities;
-using Amethyst.Server.Entities.Players;
-using Amethyst.Network.Utilities;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
+using Amethyst.Server.Entities;
+using Amethyst.Server.Entities.Players;
 
 namespace Amethyst.Network.Engine;
 
@@ -31,14 +30,19 @@ internal sealed class AmethystTcpServer : IDisposable
         var args = new SocketAsyncEventArgs();
         args.Completed += OnAcceptCompleted;
         if (!_listener.AcceptAsync(args))
+        {
             OnAcceptCompleted(null, args);
+        }
     }
 
     private void OnAcceptCompleted(object? sender, SocketAsyncEventArgs e)
     {
-        var client = e.AcceptSocket;
+        Socket? client = e.AcceptSocket;
         e.Dispose();
-        if (client != null) HandleClient(client);
+        if (client != null)
+        {
+            HandleClient(client);
+        }
 
         AcceptNext();
     }

@@ -3,14 +3,9 @@ using Amethyst.Systems.Users.Base.Permissions;
 
 namespace Amethyst.Systems.Users.Common.Permissions;
 
-public sealed class RootPermissionProvider : IPermissionProvider
+public sealed class RootPermissionProvider(IAmethystUser user) : IPermissionProvider
 {
-    public RootPermissionProvider(IAmethystUser user)
-    {
-        User = user;
-    }
-
-    public IAmethystUser User { get; }
+    public IAmethystUser User { get; } = user;
 
     public bool SupportsChildProviders => false;
 

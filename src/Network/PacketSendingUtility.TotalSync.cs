@@ -13,7 +13,9 @@ public static partial class PacketSendingUtility
         foreach (PlayerEntity player in EntityTrackers.Players)
         {
             if (player.Phase != ConnectionPhase.Connected || player.Index == index)
+            {
                 continue;
+            }
 
             player.SendPacketBytes(packet);
         }
@@ -23,7 +25,9 @@ public static partial class PacketSendingUtility
         foreach (PlayerEntity player in EntityTrackers.Players)
         {
             if (player.Index == index)
+            {
                 continue;
+            }
 
             player.SendPacketBytes(packet);
         }

@@ -12,7 +12,7 @@ public sealed class MiscMessageProvider<T> where T : class
     public IMiscMessageRenderer<T>? Renderer { get; private set; }
     public IReadOnlyDictionary<string, IMiscOutput<T>> Outputs => _outputsInternal;
 
-    private Dictionary<string, IMiscOutput<T>> _outputsInternal = new();
+    private readonly Dictionary<string, IMiscOutput<T>> _outputsInternal = new();
 
     public void Invoke(T ctx)
     {
@@ -21,14 +21,14 @@ public sealed class MiscMessageProvider<T> where T : class
             return;
         }
 
-        var message = Renderer.Render(ctx);
+        MiscRenderedMessage<T>? message = Renderer.Render(ctx);
 
         if (message is null)
         {
             return;
         }
 
-        foreach (var output in _outputsInternal)
+        foreach (KeyValuePair<string, IMiscOutput<T>> output in _outputsInternal)
         {
             output.Value.OutputMessage(message);
         }

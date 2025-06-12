@@ -43,13 +43,19 @@ public sealed class SoundPlayPacket : IPacket<SoundPlay>
         writer.WriteByte(packet.Flags);
         NetBitsByte flags = packet.Flags;
         if (flags[0])
+        {
             writer.WriteInt32(packet.Style ?? 0);
+        }
 
         if (flags[1])
+        {
             writer.WriteSingle(packet.Volume.HasValue ? Math.Clamp(packet.Volume.Value, 0f, 1f) : 0f);
+        }
 
         if (flags[2])
+        {
             writer.WriteSingle(packet.Pitch.HasValue ? Math.Clamp(packet.Pitch.Value, -1f, 1f) : 0f);
+        }
 
         return writer.Build();
     }

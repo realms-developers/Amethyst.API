@@ -4,7 +4,7 @@ public static class PlayerUtils
 {
     public static void BroadcastText(string text, byte r, byte g, byte b)
     {
-        foreach (var plr in EntityTrackers.Players)
+        foreach (PlayerEntity plr in EntityTrackers.Players)
         {
             if (plr.Active)
             {
@@ -15,7 +15,7 @@ public static class PlayerUtils
 
     public static void BroadcastPacketBytes(byte[] packetBytes, int ignore = -1)
     {
-        foreach (var plr in EntityTrackers.Players)
+        foreach (PlayerEntity plr in EntityTrackers.Players)
         {
             if (plr.Active && plr.Index != ignore)
             {

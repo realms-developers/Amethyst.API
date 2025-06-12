@@ -7,16 +7,11 @@ using Terraria.Localization;
 
 namespace Amethyst.Server.Entities.Items;
 
-public sealed class ItemEntity : IServerEntity
+public sealed class ItemEntity(int index) : IServerEntity
 {
-    public ItemEntity(int index)
-    {
-        Index = index;
-    }
-
     public Item TItem => Main.item[Index];
 
-    public int Index { get; }
+    public int Index { get; } = index;
 
     public bool Active => TItem.active;
 

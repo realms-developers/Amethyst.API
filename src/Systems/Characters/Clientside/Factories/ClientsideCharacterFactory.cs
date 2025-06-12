@@ -28,10 +28,12 @@ public sealed class ClientsideCharacterFactory : ICharacterFactory<ClientsideCha
     public ClientsideCharacterProvider BuildFor(IAmethystUser user)
     {
         if (user is not PlayerUser plrUser)
+        {
             throw new ArgumentException("User is not a PlayerUser", nameof(user));
+        }
 
-        var model = ModelFactory.CreateModel(plrUser.Player);
-        var provider = CreateProvider(plrUser);
+        ICharacterModel model = ModelFactory.CreateModel(plrUser.Player);
+        ClientsideCharacterProvider provider = CreateProvider(plrUser);
 
         provider.LoadModel(model);
 

@@ -26,7 +26,9 @@ public sealed class MongoCharactersStorage : ICharactersStorage
     public ICharacterModel CreateModel(string name)
     {
         if (ModelsCache.TryGetValue(name, out MongoCharacterModel? model))
+        {
             return model;
+        }
 
         model = new MongoCharacterModel(name);
 
@@ -38,12 +40,16 @@ public sealed class MongoCharactersStorage : ICharactersStorage
     public ICharacterModel? GetModel(string name)
     {
         if (ModelsCache.TryGetValue(name, out MongoCharacterModel? model))
+        {
             return model;
+        }
 
         model = Models.Find(name);
 
         if (model == null)
+        {
             return null;
+        }
 
         ModelsCache.Add(name, model);
 
@@ -56,7 +62,9 @@ public sealed class MongoCharactersStorage : ICharactersStorage
         MongoCharacterModel mongoModel = (MongoCharacterModel)character;
 
         if (ModelsCache.ContainsKey(mongoModel.Name))
+        {
             ModelsCache.Remove(mongoModel.Name);
+        }
 
         Models.Remove(mongoModel.Name);
     }
@@ -67,7 +75,9 @@ public sealed class MongoCharactersStorage : ICharactersStorage
         MongoCharacterModel mongoModel = (MongoCharacterModel)character;
 
         if (!ModelsCache.TryAdd(character.Name, mongoModel))
+        {
             ModelsCache[character.Name] = mongoModel;
+        }
 
         Models.Save(mongoModel);
     }
@@ -82,9 +92,13 @@ public sealed class MongoCharactersStorage : ICharactersStorage
     private void ThrowIfInvalidModel(ICharacterModel character)
     {
         if (character is not MongoCharacterModel)
+        {
             throw new InvalidOperationException("Invalid character model type.");
+        }
 
         if (character.Name == null)
+        {
             throw new InvalidOperationException("Character name cannot be null.");
+        }
     }
 }

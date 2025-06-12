@@ -13,7 +13,7 @@ public sealed class ArtificialPermissionProvider : IPermissionProvider
 
     public IAmethystUser User { get; }
 
-    private List<IPermissionProvider> _childProviders = new();
+    private readonly List<IPermissionProvider> _childProviders = new();
     public IReadOnlyList<IPermissionProvider> ChildProviders => _childProviders;
 
     public bool SupportsChildProviders => true;
@@ -28,7 +28,9 @@ public sealed class ArtificialPermissionProvider : IPermissionProvider
         ArgumentNullException.ThrowIfNull(provider);
 
         if (_childProviders.Contains(provider))
+        {
             return;
+        }
 
         _childProviders.Add(provider);
     }
@@ -38,14 +40,16 @@ public sealed class ArtificialPermissionProvider : IPermissionProvider
         ArgumentNullException.ThrowIfNull(provider);
 
         if (!_childProviders.Contains(provider))
+        {
             return;
+        }
 
         _childProviders.Remove(provider);
     }
 
     public void RemoveChild<T>() where T : IPermissionProvider
     {
-        var provider = _childProviders.FirstOrDefault(p => p is T);
+        IPermissionProvider? provider = _childProviders.FirstOrDefault(p => p is T);
         if (provider != null)
         {
             _childProviders.Remove(provider);
@@ -56,9 +60,9 @@ public sealed class ArtificialPermissionProvider : IPermissionProvider
     {
         bool hasPermission = false;
 
-        foreach (var provider in _childProviders)
+        foreach (IPermissionProvider provider in _childProviders)
         {
-            var result = action(provider);
+            PermissionAccess result = action(provider);
             if (result == PermissionAccess.HasPermission)
             {
                 hasPermission = true;

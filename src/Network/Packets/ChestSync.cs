@@ -25,7 +25,9 @@ public sealed class ChestSyncPacket : IPacket<ChestSync>
             Name = reader.ReadString();
 
             if (Name.Length != NameLength)
+            {
                 Name = string.Empty;
+            }
         }
 
         return new ChestSync

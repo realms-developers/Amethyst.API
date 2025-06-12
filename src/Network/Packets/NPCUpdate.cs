@@ -6,7 +6,6 @@ using Amethyst.Network.Engine.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Network.Utilities;
 using Terraria;
-using Terraria.ID;
 
 namespace Amethyst.Network.Packets;
 

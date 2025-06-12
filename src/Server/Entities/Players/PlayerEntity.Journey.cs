@@ -1,8 +1,5 @@
 using Amethyst.Network.Enums;
 using Amethyst.Network.Utilities;
-using Amethyst.Systems.Commands.Base;
-using Amethyst.Systems.Commands.Dynamic.Attributes;
-using Amethyst.Systems.Users.Players;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -14,7 +11,7 @@ public sealed partial class PlayerEntity
 
     public void SetGodMode(bool enabled)
     {
-        FastPacketWriter writer = new FastPacketWriter(82, new byte[64]);
+        FastPacketWriter writer = new(82, new byte[64]);
         writer.WriteUInt16((ushort)ModuleID.JourneyPowers);
         writer.WriteUInt16(5);
         writer.WriteByte(1);
@@ -26,7 +23,7 @@ public sealed partial class PlayerEntity
 
     public void ResearchItem(short itemType, short amount = 1)
     {
-        FastPacketWriter writer = new FastPacketWriter(82, new byte[64]);
+        FastPacketWriter writer = new(82, new byte[64]);
         writer.WriteUInt16((ushort)ModuleID.JourneyServersideResearch);
         writer.WriteInt16(itemType);
         writer.WriteInt16(amount);

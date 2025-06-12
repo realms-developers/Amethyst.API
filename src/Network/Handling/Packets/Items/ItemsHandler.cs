@@ -22,7 +22,9 @@ public sealed class ItemsHandler : INetworkHandler
     private void OnItemUpdateShimmer(PlayerEntity plr, ref ItemUpdateShimmer packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.ItemIndex < 0 || packet.ItemIndex >= Main.item.Length ||
             (packet.ItemIndex == 400 && packet.ItemType <= 0))
@@ -33,11 +35,13 @@ public sealed class ItemsHandler : INetworkHandler
         int itemIndex = packet.ItemIndex;
 
         if (Main.timeItemSlotCannotBeReusedFor[itemIndex] > 0)
+        {
             return;
+        }
 
         if (packet.ItemIndex == 400)
         {
-            Item item3 = new Item();
+            Item item3 = new();
             item3.netDefaults(packet.ItemType);
             itemIndex = Item.NewItem(new EntitySource_Sync(), (int)packet.Position.X, (int)packet.Position.Y, item3.width, item3.height, item3.type, packet.ItemStack, noBroadcast: true);
         }
@@ -74,7 +78,9 @@ public sealed class ItemsHandler : INetworkHandler
     private void OnItemUpdateNoPickup(PlayerEntity plr, ref ItemUpdateNoPickup packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.ItemIndex < 0 || packet.ItemIndex >= Main.item.Length ||
             (packet.ItemIndex == 400 && packet.ItemType <= 0))
@@ -85,11 +91,13 @@ public sealed class ItemsHandler : INetworkHandler
         int itemIndex = packet.ItemIndex;
 
         if (Main.timeItemSlotCannotBeReusedFor[itemIndex] > 0)
+        {
             return;
+        }
 
         if (packet.ItemIndex == 400)
         {
-            Item item3 = new Item();
+            Item item3 = new();
             item3.netDefaults(packet.ItemType);
             itemIndex = Item.NewItem(new EntitySource_Sync(), (int)packet.Position.X, (int)packet.Position.Y, item3.width, item3.height, item3.type, packet.ItemStack, noBroadcast: true);
         }
@@ -124,7 +132,9 @@ public sealed class ItemsHandler : INetworkHandler
     private void OnItemUpdateDefault(PlayerEntity plr, ref ItemUpdateDefault packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.ItemIndex < 0 || packet.ItemIndex >= Main.item.Length ||
             (packet.ItemIndex == 400 && packet.ItemType <= 0))
@@ -135,11 +145,13 @@ public sealed class ItemsHandler : INetworkHandler
         int itemIndex = packet.ItemIndex;
 
         if (Main.timeItemSlotCannotBeReusedFor[itemIndex] > 0)
+        {
             return;
+        }
 
         if (packet.ItemIndex == 400)
         {
-            Item item3 = new Item();
+            Item item3 = new();
             item3.netDefaults(packet.ItemType);
             itemIndex = Item.NewItem(new EntitySource_Sync(), (int)packet.Position.X, (int)packet.Position.Y, item3.width, item3.height, item3.type, packet.ItemStack, noBroadcast: true);
         }
@@ -174,7 +186,9 @@ public sealed class ItemsHandler : INetworkHandler
     private void OnItemUpdateInstanced(PlayerEntity plr, ref ItemUpdateInstanced packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         if (packet.ItemIndex < 0 || packet.ItemIndex >= Main.item.Length ||
             (packet.ItemIndex == 400 && packet.ItemType <= 0))
@@ -185,11 +199,13 @@ public sealed class ItemsHandler : INetworkHandler
         int itemIndex = packet.ItemIndex;
 
         if (Main.timeItemSlotCannotBeReusedFor[itemIndex] > 0)
+        {
             return;
+        }
 
         if (packet.ItemIndex == 400)
         {
-            Item item3 = new Item();
+            Item item3 = new();
             item3.netDefaults(packet.ItemType);
             itemIndex = Item.NewItem(new EntitySource_Sync(), (int)packet.Position.X, (int)packet.Position.Y, item3.width, item3.height, item3.type, packet.ItemStack, noBroadcast: true);
         }

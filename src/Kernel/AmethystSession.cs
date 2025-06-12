@@ -44,7 +44,7 @@ public static class AmethystSession
     }
 
     private static Timer? _secondTickTimer;
-    private static AmethystHook<SecondTickArgs> _secondTickHook = HookRegistry.GetHook<SecondTickArgs>();
+    private static readonly AmethystHook<SecondTickArgs> _secondTickHook = HookRegistry.GetHook<SecondTickArgs>();
     private static void OnSecondTick(object? state)
     {
         _secondTickHook?.Invoke(new SecondTickArgs());

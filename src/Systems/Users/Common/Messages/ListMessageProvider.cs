@@ -26,7 +26,7 @@ public sealed class ListMessageProvider : IMessageProvider
 
     public IReadOnlyList<string> Messages => _messages.AsReadOnly();
 
-    private List<string> _messages = [];
+    private readonly List<string> _messages = [];
 
     public void ReplyError(string text, params object[] args)
         => _messages.Add(string.Format(CultureInfo.InvariantCulture, Localization.Get(text, Language), args).RemoveColorTags());

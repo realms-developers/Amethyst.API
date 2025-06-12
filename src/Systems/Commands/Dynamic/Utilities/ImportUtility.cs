@@ -12,9 +12,9 @@ internal static class ImportUtility
     internal static int CountSameNames(string name)
     {
         int count = 0;
-        foreach (var repo in CommandsOrganizer.Repositories)
+        foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
-            foreach (var command in repo.RegisteredCommands)
+            foreach (ICommand command in repo.RegisteredCommands)
             {
                 count += command.Metadata.Names.Count(n => n.Contains('$') ?
                     n.Split('$')[0].Equals(name, StringComparison.OrdinalIgnoreCase) :
@@ -27,7 +27,7 @@ internal static class ImportUtility
 
     internal static void ImportFrom(Assembly assembly, Guid identifier)
     {
-        foreach (var type in assembly.GetTypes())
+        foreach (Type type in assembly.GetTypes())
         {
             ImportFromType(type, identifier);
         }
@@ -35,13 +35,15 @@ internal static class ImportUtility
 
     internal static void ImportFromType(Type type, Guid identifier)
     {
-        var methods = type.GetMethods();
-        foreach (var method in methods)
+        MethodInfo[] methods = type.GetMethods();
+        foreach (MethodInfo method in methods)
         {
-            var baseAttr = method.GetCustomAttribute<CommandAttribute>();
+            CommandAttribute? baseAttr = method.GetCustomAttribute<CommandAttribute>();
 
             if (baseAttr == null)
+            {
                 continue;
+            }
 
             string[] names = baseAttr.Names;
             for (int i = 0; i < baseAttr.Names.Length; i++)
@@ -59,7 +61,7 @@ internal static class ImportUtility
                 }
             }
 
-            if (!TryPreCreateCommand(method, out var userType))
+            if (!TryPreCreateCommand(method, out Type? userType))
             {
                 continue;
             }
@@ -67,20 +69,20 @@ internal static class ImportUtility
             bool noLog = method.GetCustomAttribute<CommandNoLogAttribute>() != null;
             string? permission = method.GetCustomAttribute<CommandPermissionAttribute>()?.Permission;
 
-            var repoAttr = method.GetCustomAttribute<CommandRepositoryAttribute>();
+            CommandRepositoryAttribute? repoAttr = method.GetCustomAttribute<CommandRepositoryAttribute>();
             CommandRepository repo = repoAttr == null ? CommandsOrganizer.Shared :
                                         CommandsOrganizer.GetRepository(repoAttr.Repository) ?? CommandsOrganizer.Shared;
 
             CommandSyntax? syntax = null;
-            foreach (var syntaxAttr in method.GetCustomAttributes<CommandSyntaxAttribute>())
+            foreach (CommandSyntaxAttribute syntaxAttr in method.GetCustomAttributes<CommandSyntaxAttribute>())
             {
                 syntax ??= new CommandSyntax(syntaxAttr.Culture);
                 syntax.Add(syntaxAttr.Culture, syntaxAttr.Syntax);
             }
 
-            CommandMetadata metadata = new CommandMetadata(baseAttr.Names, baseAttr.Description, syntax, noLog ? CommandRules.NoLogging : CommandRules.None, permission);
+            CommandMetadata metadata = new(baseAttr.Names, baseAttr.Description, syntax, noLog ? CommandRules.NoLogging : CommandRules.None, permission);
 
-            DynamicCommand command = new DynamicCommand(identifier, method, repo, metadata, userType);
+            DynamicCommand command = new(identifier, method, repo, metadata, userType);
 
             repo.Add(command);
         }
@@ -93,11 +95,15 @@ internal static class ImportUtility
         userType = typeof(IAmethystUser);
 
         if (!method.IsPublic || !method.IsStatic || method.ReturnType != typeof(void))
+        {
             return false;
+        }
 
-        var parameters = method.GetParameters();
+        ParameterInfo[] parameters = method.GetParameters();
         if (parameters.Length < 2)
+        {
             return false;
+        }
 
         if (parameters[0].ParameterType == typeof(IAmethystUser))
         {
@@ -105,18 +111,20 @@ internal static class ImportUtility
         }
         else if (parameters[0].ParameterType.IsNested)
         {
-            var baseType = parameters[0].ParameterType.BaseType;
+            Type? baseType = parameters[0].ParameterType.BaseType;
             if (baseType == null || baseType != typeof(IAmethystUser))
+            {
                 return false;
+            }
 
             userType = baseType;
             return true;
         }
 
         if (parameters[1].ParameterType != typeof(CommandInvokeContext))
+        {
             return false;
-
-
+        }
 
         return true;
     }

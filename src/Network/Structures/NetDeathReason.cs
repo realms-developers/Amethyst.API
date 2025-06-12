@@ -7,10 +7,10 @@ namespace Amethyst.Network.Structures;
 public struct NetDeathReason
 {
     public static NetDeathReason CreateEmpty()
-        => new NetDeathReason() { SourceOtherIndex = 254 };
+        => new() { SourceOtherIndex = 254 };
 
     public static NetDeathReason CreateDefault()
-        => new NetDeathReason() { SourceOtherIndex = 255 };
+        => new() { SourceOtherIndex = 255 };
 
     public NetDeathReason()
     {

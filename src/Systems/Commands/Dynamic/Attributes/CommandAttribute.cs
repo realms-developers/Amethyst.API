@@ -9,6 +9,12 @@ public sealed class CommandAttribute : Attribute
         Description = description;
     }
 
+    public CommandAttribute(string name, string description)
+    {
+        Names = [name];
+        Description = description;
+    }
+
     public string[] Names { get; }
     public string Description { get; }
 }

@@ -42,7 +42,7 @@ public sealed class EmptyCharacterModel : ICharacterModel
 
     public MongoCharacterModel ToMongoModel()
     {
-        MongoCharacterModel model = new MongoCharacterModel(Name)
+        MongoCharacterModel model = new(Name)
         {
             Slots = Slots,
             MaxLife = MaxLife,

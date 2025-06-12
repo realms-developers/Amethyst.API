@@ -16,7 +16,7 @@ public sealed class PlatformHandler : INetworkHandler
 
     private void OnPlatformPacket(PlayerEntity plr, ReadOnlySpan<byte> data, ref bool ignore)
     {
-        FastPacketReader reader = new FastPacketReader(data, 3);
+        FastPacketReader reader = new(data, 3);
         byte platform = reader.ReadByte();
         plr.PlatformType = (PlatformType)platform;
     }

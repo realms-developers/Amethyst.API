@@ -1,4 +1,3 @@
-using Amethyst.Network.Structures;
 using Amethyst.Storages.Config;
 
 namespace Amethyst.Network.Handling;

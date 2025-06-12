@@ -28,7 +28,9 @@ public static class CommandsOrganizer
     public static void AddRepository(CommandRepository repository)
     {
         if (_repositories.ContainsKey(repository.Name))
+        {
             throw new ArgumentException($"Repository with name {repository.Name} already exists.");
+        }
 
         _repositories[repository.Name] = repository;
     }
@@ -36,16 +38,22 @@ public static class CommandsOrganizer
     public static void RemoveRepository(CommandRepository repository)
     {
         if (_defRepos.Contains(repository.Name))
+        {
             throw new ArgumentException($"Repository with name {repository.Name} is a default repository and cannot be removed.");
+        }
 
         if (!_repositories.Remove(repository.Name))
+        {
             throw new ArgumentException($"Repository with name {repository.Name} does not exist.");
+        }
     }
 
     public static CommandRepository? GetRepository(string name)
     {
-        if (_repositories.TryGetValue(name, out var repository))
+        if (_repositories.TryGetValue(name, out CommandRepository? repository))
+        {
             return repository;
+        }
 
         return null;
     }

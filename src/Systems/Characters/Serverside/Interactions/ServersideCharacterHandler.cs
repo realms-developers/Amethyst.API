@@ -1,9 +1,7 @@
 using Amethyst.Network.Structures;
-using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Interactions;
 using Amethyst.Systems.Users.Players;
-using Terraria;
 using Amethyst.Network.Packets;
 using Amethyst.Systems.Characters.Base.Enums;
 
@@ -16,7 +14,9 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
         Provider = provider;
 
         if (provider.User is not PlayerUser)
+        {
             throw new InvalidOperationException("Provider user is not a PlayerUser.");
+        }
     }
 
     public ICharacterProvider Provider { get; }
@@ -26,9 +26,11 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
     public void HandlePlayerInfo(PlayerInfo packet)
     {
         if (InReadonlyMode)
+        {
             return;
+        }
 
-        var edit = Provider.Editor;
+        ICharacterEditor edit = Provider.Editor;
 
         edit.SetHides(null, packet.AccessoryVisiblity, packet.MiscVisiblity);
         edit.SetSkin(null, packet.HairID, packet.HairDyeID, packet.SkinVariant);
@@ -45,7 +47,9 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
     public void HandleQuests(PlayerTownNPCQuestsStats packet)
     {
         if (InReadonlyMode)
+        {
             return;
+        }
 
         Provider.Editor.SetQuests(SyncType.Exclude, packet.AnglerQuests);
     }
@@ -53,7 +57,9 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
     public void HandleSetLife(PlayerLife packet)
     {
         if (InReadonlyMode)
+        {
             return;
+        }
 
         Provider.Editor.SetLife(SyncType.Exclude, packet.LifeCount, packet.LifeMax);
     }
@@ -61,7 +67,9 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
     public void HandleSetMana(PlayerMana packet)
     {
         if (InReadonlyMode)
+        {
             return;
+        }
 
         Provider.Editor.SetMana(SyncType.Exclude, packet.ManaCount, packet.ManaMax);
     }
@@ -69,16 +77,18 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
     public void HandleSlot(PlayerSlot packet)
     {
         if (InReadonlyMode)
+        {
             return;
+        }
 
-        var edit = Provider.Editor;
+        ICharacterEditor edit = Provider.Editor;
 
         if (packet.SlotIndex < 0 || packet.SlotIndex >= Provider.CurrentModel.Slots.Length)
         {
             return;
         }
 
-        NetItem item = new NetItem
+        NetItem item = new()
         {
             ID = packet.ItemID,
             Stack = packet.ItemStack,

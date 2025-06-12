@@ -5,22 +5,15 @@ using Amethyst.Systems.Users.Base;
 
 namespace Amethyst.Systems.Characters.Clientside;
 
-public sealed class ClientsideCharacterProvider : ICharacterProvider
+public sealed class ClientsideCharacterProvider(IAmethystUser user) : ICharacterProvider
 {
-    public ClientsideCharacterProvider(IAmethystUser user)
-    {
-        User = user;
-
-        _model = new EmptyCharacterModel();
-    }
-
-    public IAmethystUser User { get; }
+    public IAmethystUser User { get; } = user;
 
     public bool CanSaveModel => false;
 
     public ICharacterModel CurrentModel => _model;
 
-    private ICharacterModel _model;
+    private ICharacterModel _model = new EmptyCharacterModel();
 
     public ICharacterHandler Handler { get; set; } = null!;
 

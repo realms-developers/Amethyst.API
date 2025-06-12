@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Amethyst.Network.Utilities;
 using Amethyst.Server.Entities;
 
 namespace Amethyst.Network.Engine;
@@ -15,11 +14,13 @@ internal sealed class NetworkClient : IDisposable
     internal SocketAsyncEventArgs _args;
     internal byte[] _dataBuffer;
     internal int _received;
-    internal BlockingCollection<byte[]> _handleQueue = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>());
-    internal CancellationTokenSource _tokenSrc = new CancellationTokenSource();
-    private byte _prevPacket;
-    private int _prevPacketCount;
-
+    internal BlockingCollection<byte[]> _handleQueue = new(new ConcurrentQueue<byte[]>());
+    internal CancellationTokenSource _tokenSrc = new();
+#pragma warning disable CS0169
+    private readonly byte _prevPacket;
+    private readonly int _prevPacketCount;
+#pragma warning restore CS0169
+    // TODO: what?! vxlhat needs to fix
     internal NetworkClient(int index, Socket socket, byte[] buffer)
     {
         _index = index;
@@ -97,7 +98,9 @@ internal sealed class NetworkClient : IDisposable
         if (OnReceive(e))
         {
             if (_disposed)
+            {
                 return;
+            }
 
             _prevArgs = e;
             Receive();
@@ -123,7 +126,7 @@ internal sealed class NetworkClient : IDisposable
 
         while (_received > 2)
         {
-            var span = _dataBuffer.AsSpan(0, 2);
+            Span<byte> span = _dataBuffer.AsSpan(0, 2);
             ushort length = Unsafe.Read<ushort>((byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(span)));
 
             if (length < 3 || length > 1000)
@@ -151,7 +154,7 @@ internal sealed class NetworkClient : IDisposable
                 return true;
             }
 
-            var data = ArrayPool<byte>.Shared.Rent(length);
+            byte[] data = ArrayPool<byte>.Shared.Rent(length);
             Buffer.BlockCopy(_dataBuffer, 0, data, 0, length);
             _handleQueue.Add(data);
 
@@ -176,7 +179,10 @@ internal sealed class NetworkClient : IDisposable
     public void Dispose()
     {
         if (_disposed)
+        {
             return;
+        }
+
         _disposed = true;
 
         EntityTrackers.Players.Manager?.Remove(_index);

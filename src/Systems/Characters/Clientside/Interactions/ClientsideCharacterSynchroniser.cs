@@ -6,7 +6,6 @@ using Amethyst.Systems.Characters.Base.Interactions;
 using Amethyst.Systems.Characters.Utilities;
 using Amethyst.Systems.Users.Players;
 using Terraria;
-using Amethyst.Network.Engine.Packets;
 using Amethyst.Network.Packets;
 
 namespace Amethyst.Systems.Characters.Clientside.Interactions;
@@ -18,7 +17,9 @@ public sealed class ClientsideCharacterSynchroniser : ICharacterSynchroniser
         Provider = provider;
 
         if (provider.User is not PlayerUser)
+        {
             throw new InvalidOperationException("Provider user is not a PlayerUser.");
+        }
 
         PlayerUser user = (PlayerUser)provider.User;
 
@@ -33,7 +34,7 @@ public sealed class ClientsideCharacterSynchroniser : ICharacterSynchroniser
 
     public void SyncSlot(SyncType sync, int slot)
     {
-        var model = Provider.CurrentModel;
+        ICharacterModel model = Provider.CurrentModel;
 
         if (slot < 0 || slot >= model.Slots.Length)
         {
@@ -64,7 +65,7 @@ public sealed class ClientsideCharacterSynchroniser : ICharacterSynchroniser
 
     public void SyncLife(SyncType sync)
     {
-        var model = Provider.CurrentModel;
+        ICharacterModel model = Provider.CurrentModel;
 
         Player.TPlayer.statLifeMax = model.MaxLife;
         Player.TPlayer.statLifeMax2 = model.MaxLife;
@@ -80,7 +81,7 @@ public sealed class ClientsideCharacterSynchroniser : ICharacterSynchroniser
 
     public void SyncMana(SyncType sync)
     {
-        var model = Provider.CurrentModel;
+        ICharacterModel model = Provider.CurrentModel;
 
         Player.TPlayer.statManaMax = model.MaxMana;
         Player.TPlayer.statManaMax2 = model.MaxMana;
@@ -96,7 +97,7 @@ public sealed class ClientsideCharacterSynchroniser : ICharacterSynchroniser
 
     public void SyncPlayerInfo(SyncType sync)
     {
-        var model = Provider.CurrentModel;
+        ICharacterModel model = Provider.CurrentModel;
 
         Player.TPlayer.skinVariant = model.SkinVariant;
         Player.TPlayer.hair = model.Hair;

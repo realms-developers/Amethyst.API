@@ -21,7 +21,9 @@ public sealed class OtherHandler : INetworkHandler
     private void OnGolfPutBallInCup(PlayerEntity plr, ref GolfPutBallInCup packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         PacketSendingUtility.ExcludeBroadcastConnected(-1, GolfPutBallInCupPacket.Serialize(packet with { PlayerIndex = (byte)plr.Index }));
     }
@@ -29,7 +31,9 @@ public sealed class OtherHandler : INetworkHandler
     private void OnPlayerOrEntityTeleport(PlayerEntity plr, ref PlayerOrEntityTeleport packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
         if (plr.Phase != ConnectionPhase.Connected)
+        {
             return;
+        }
 
         byte type = 0;
         NetBitsByte bb = packet.Flags;

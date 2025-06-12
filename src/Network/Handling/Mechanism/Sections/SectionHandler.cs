@@ -24,16 +24,20 @@ public sealed class SectionHandler : INetworkHandler
     {
         _tickCount++;
         if (_tickCount < 5)
+        {
             return;
+        }
 
         _tickCount = 0;
 
         foreach (PlayerEntity plr in EntityTrackers.Players)
         {
             if (plr.Phase != ConnectionPhase.Connected)
+            {
                 continue;
+            }
 
-            var sections = plr.Sections;
+            PlayerSections sections = plr.Sections;
 
             for (int i = -1; i <= 1; i++)
             {
@@ -51,10 +55,14 @@ public sealed class SectionHandler : INetworkHandler
     private void CheckSection(PlayerEntity plr, PlayerSections sections, int sectionX, int sectionY)
     {
         if (!sections.IsValidSection(sectionX, sectionY))
+        {
             return;
+        }
 
         if (sections.IsSent(sectionX, sectionY))
+        {
             return;
+        }
 
         plr.SendSection(sectionX, sectionY);
     }

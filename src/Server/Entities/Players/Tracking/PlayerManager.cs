@@ -10,24 +10,21 @@ using Terraria;
 
 namespace Amethyst.Server.Entities.Players.Tracking;
 
-public sealed class PlayerManager : IEntityManager<PlayerEntity>
+public sealed class PlayerManager(PlayerTracker tracker) : IEntityManager<PlayerEntity>
 {
-    public PlayerManager(PlayerTracker tracker)
-    {
-        _tracker = tracker;
-    }
-
     public IEntityTracker<PlayerEntity> Tracker => _tracker;
 
-    private PlayerTracker _tracker;
+    private readonly PlayerTracker _tracker = tracker;
 
-    private static Func<PlayerTrackerInsertArgs, HookResult<PlayerTrackerInsertArgs>> _insertHook = HookRegistry.GetHook<PlayerTrackerInsertArgs>()!.Invoke;
-    private static Func<PlayerTrackerRemoveArgs, HookResult<PlayerTrackerRemoveArgs>> _removeHook = HookRegistry.GetHook<PlayerTrackerRemoveArgs>()!.Invoke;
+    private static readonly Func<PlayerTrackerInsertArgs, HookResult<PlayerTrackerInsertArgs>> _insertHook = HookRegistry.GetHook<PlayerTrackerInsertArgs>()!.Invoke;
+    private static readonly Func<PlayerTrackerRemoveArgs, HookResult<PlayerTrackerRemoveArgs>> _removeHook = HookRegistry.GetHook<PlayerTrackerRemoveArgs>()!.Invoke;
 
     public void Insert(int index, PlayerEntity entity)
     {
         if (_tracker._players[index] != null)
+        {
             throw new InvalidOperationException($"Player at index {index} already exists.");
+        }
 
         _tracker._players[index] = entity;
 
@@ -42,15 +39,16 @@ public sealed class PlayerManager : IEntityManager<PlayerEntity>
 
     public void Remove(int index)
     {
-        var plr = _tracker._players[index];
-        if (plr == null)
-            throw new InvalidOperationException($"Player at index {index} does not exist.");
-
+        PlayerEntity plr = _tracker._players[index] ?? throw new InvalidOperationException($"Player at index {index} does not exist.");
         if (plr.Phase == ConnectionPhase.Connected)
+        {
             ServerChat.MessagePlayerLeft.Invoke(new PlayerLeftMessageContext(plr));
+        }
 
         if (Main.player[index] != null)
+        {
             Main.player[index].active = false;
+        }
 
         _removeHook.Invoke(new PlayerTrackerRemoveArgs(plr));
         AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count() - 1}/{NetworkManager.MaxPlayers}] RMV => player_{index} ({plr.Name ?? "not_identified"})");
