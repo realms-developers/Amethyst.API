@@ -1,7 +1,6 @@
 using Amethyst.Network.Handling.Base;
 using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Network.Packets;
-using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Players;
 using Terraria;
 using Terraria.GameContent.UI;
@@ -90,10 +89,10 @@ public sealed class WorldHandler : INetworkHandler
             return;
 
         Wiring.SetCurrentUser(plr.Index);
-		Wiring.HitSwitch(packet.TileX, packet.TileY);
-		Wiring.SetCurrentUser();
+        Wiring.HitSwitch(packet.TileX, packet.TileY);
+        Wiring.SetCurrentUser();
 
-		NetMessage.TrySendData(59, -1, plr.Index, NetworkText.Empty, packet.TileX, packet.TileY);
+        NetMessage.TrySendData(59, -1, plr.Index, NetworkText.Empty, packet.TileX, packet.TileY);
     }
 
     private void OnWorldToggleGemLock(PlayerEntity plr, ref WorldToggleGemLock packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
@@ -169,13 +168,13 @@ public sealed class WorldHandler : INetworkHandler
                     HitTile.ClearAllTilesAtThisLocation(packet.TileX, packet.TileY);
                 break;
             case 1:
-            {
-                bool forced = !WorldGen.CheckTileBreakability2_ShouldTileSurvive(packet.TileX, packet.TileY);
-                if (!forced)
-                    shouldSendTileSquare = true;
-                WorldGen.PlaceTile(packet.TileX, packet.TileY, packet.Type, mute: false, forced, -1, packet.Flags);
-                break;
-            }
+                {
+                    bool forced = !WorldGen.CheckTileBreakability2_ShouldTileSurvive(packet.TileX, packet.TileY);
+                    if (!forced)
+                        shouldSendTileSquare = true;
+                    WorldGen.PlaceTile(packet.TileX, packet.TileY, packet.Type, mute: false, forced, -1, packet.Flags);
+                    break;
+                }
             case 2:
                 WorldGen.KillWall(packet.TileX, packet.TileY, packet.Flags == 1);
                 break;
@@ -315,10 +314,10 @@ public sealed class WorldHandler : INetworkHandler
             packet.EndX <= 5 || packet.EndY <= 5 || packet.EndX >= Main.maxTilesX - 5 || packet.EndY >= Main.maxTilesY - 5)
             return;
 
-		WiresUI.Settings.MultiToolMode toolMode2 = WiresUI.Settings.ToolMode;
-		WiresUI.Settings.ToolMode = (WiresUI.Settings.MultiToolMode)packet.ToolMode;
-		Wiring.MassWireOperation(new(packet.StartX, packet.StartY), new(packet.EndX, packet.EndY), Main.player[plr.Index]);
-		WiresUI.Settings.ToolMode = toolMode2;
+        WiresUI.Settings.MultiToolMode toolMode2 = WiresUI.Settings.ToolMode;
+        WiresUI.Settings.ToolMode = (WiresUI.Settings.MultiToolMode)packet.ToolMode;
+        Wiring.MassWireOperation(new(packet.StartX, packet.StartY), new(packet.EndX, packet.EndY), Main.player[plr.Index]);
+        WiresUI.Settings.ToolMode = toolMode2;
     }
 
     private void OnWorldLockSomething(PlayerEntity plr, ref WorldLockSomething packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
