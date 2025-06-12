@@ -20,6 +20,8 @@ using Amethyst.Network.Handling.NetMessagePatch;
 using Amethyst.Network.Handling.Packets.NPCs;
 using Amethyst.Network.Handling.Packets.Signs;
 using Amethyst.Network.Handling.Packets.Projectiles;
+using Amethyst.Network.Handling.Packets.World;
+using Amethyst.Network.Handling.Packets.TileEntities;
 
 namespace Amethyst.Network;
 
@@ -87,6 +89,8 @@ public static class NetworkManager
         HandlerManager.RegisterHandler(new ProjectilesHandler());
         HandlerManager.RegisterHandler(new SignsHandler());
         HandlerManager.RegisterHandler(new ChestsHandler());
+        HandlerManager.RegisterHandler(new WorldHandler());
+        HandlerManager.RegisterHandler(new TEHandler());
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);
@@ -244,5 +248,10 @@ public static class NetworkManager
         {
             AmethystLog.Network.Error(nameof(NetworkManager), $"No provider found for packet type {typeof(TPacket).Name}");
         }
+    }
+
+    internal static void AddHandler<T>(int v, object onClearAnchor)
+    {
+        throw new NotImplementedException();
     }
 }
