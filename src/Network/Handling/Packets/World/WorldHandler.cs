@@ -123,8 +123,8 @@ public sealed class WorldHandler : INetworkHandler
                 {
                     Main.tile[x, y] = new Tile();
                 }
-                var netTile = packet.Tiles[x, y];
-                var tilePtr = Main.tile[x, y].ptr;
+                Structures.NetTile netTile = packet.Tiles[x, y];
+                TileData* tilePtr = Main.tile[x, y].ptr;
 
                 tilePtr->active(netTile.Active);
                 tilePtr->type = netTile.TileID;
@@ -267,7 +267,7 @@ public sealed class WorldHandler : INetworkHandler
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
             return;
 
-        var tile = Main.tile[packet.TileX, packet.TileY];
+        Tile tile = Main.tile[packet.TileX, packet.TileY];
         if (tile == null)
         {
             return;
@@ -290,7 +290,7 @@ public sealed class WorldHandler : INetworkHandler
         if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
             return;
 
-        var tile = Main.tile[packet.TileX, packet.TileY];
+        Tile tile = Main.tile[packet.TileX, packet.TileY];
         if (tile == null)
         {
             return;
