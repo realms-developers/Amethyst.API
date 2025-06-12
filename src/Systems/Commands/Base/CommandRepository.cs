@@ -33,18 +33,15 @@ public sealed class CommandRepository(string name)
 
         _commands.Add(command);
 
-        AmethystLog.System.Info($"Commands<{Name}>", $"Command {command.Metadata.Names.First()} registered.");
     }
 
     public void Remove(ICommand command)
     {
-        AmethystLog.System.Info($"Commands<{Name}>", $"Command {command.Metadata.Names.First()} unregistered.");
         _commands.Remove(command);
     }
 
     public void Clear()
     {
-        AmethystLog.System.Info($"Commands", $"Commands was cleared.");
         _commands.Clear();
     }
 

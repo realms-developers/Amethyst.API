@@ -49,7 +49,7 @@ public sealed class CharactersHandler : INetworkHandler
 
         if (args.New == null || args.New.Character != null)
         {
-            AmethystLog.System.Verbose("CharactersHandler", $"Player {plr.Index} ({plr.Name}) already has a character assigned, skipping.");
+            //AmethystLog.System.Verbose("CharactersHandler", $"Player {plr.Index} ({plr.Name}) already has a character assigned, skipping.");
             return;
         }
 
@@ -58,13 +58,13 @@ public sealed class CharactersHandler : INetworkHandler
             args.New!.Character = CharactersOrganizer.ServersideFactory.BuildFor(args.New);
 
             args.New.Character.Handler.InReadonlyMode = true;
-            AmethystLog.System.Info("CharactersHandler", $"Player {plr.Index} is in SSC mode, character handler is set to readonly mode.");
-            AmethystLog.System.Info("CharactersHandler", $"Set SS-Character for player {plr.Index} ({plr.Name}).");
+            //AmethystLog.System.Info("CharactersHandler", $"Player {plr.Index} is in SSC mode, character handler is set to readonly mode.");
+            //AmethystLog.System.Info("CharactersHandler", $"Set SS-Character for player {plr.Index} ({plr.Name}).");
         }
         else
         {
             args.New!.Character = CharactersOrganizer.ClientsideFactory.BuildFor(args.New);
-            AmethystLog.System.Info("CharactersHandler", $"Set CS-Character for player {plr.Index} ({plr.Name}).");
+            //AmethystLog.System.Info("CharactersHandler", $"Set CS-Character for player {plr.Index} ({plr.Name}).");
         }
     }
 

@@ -140,7 +140,6 @@ public static class NetworkManager
 
             if (InvokeHandlers[packetId] == null)
             {
-                AmethystLog.Network.Debug(nameof(NetworkManager), $"No main handler registered for packet ID {packetId}");
                 return;
             }
 

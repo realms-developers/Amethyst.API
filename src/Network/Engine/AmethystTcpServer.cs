@@ -51,7 +51,7 @@ internal sealed class AmethystTcpServer : IDisposable
     {
         try
         {
-            AmethystLog.Network.Warning(nameof(AmethystTcpServer), $"Handling incoming connection from {socket.RemoteEndPoint}.");
+            AmethystLog.Network.Warning("ATS", $"Handling incoming connection from {socket.RemoteEndPoint}.");
 
             if (NetworkManager.IsLocked)
             {
@@ -59,7 +59,7 @@ internal sealed class AmethystTcpServer : IDisposable
                 {
                     Reason = new NetText(0, "Server is locked", null)
                 }));
-                AmethystLog.Network.Error(nameof(AmethystTcpServer), $"Rejected connection from {socket.RemoteEndPoint} due to server lock.");
+                AmethystLog.Network.Error("ATS", $"Rejected connection from {socket.RemoteEndPoint} due to server lock.");
                 socket.Dispose();
                 return;
             }
@@ -71,7 +71,7 @@ internal sealed class AmethystTcpServer : IDisposable
                     var handler = new NetworkClient(i, socket, new byte[131070]);
                     EntityTrackers.Players.Manager!.Insert(i, new PlayerEntity(i, handler));
                     _ = Task.Run(handler.Receive);
-                    AmethystLog.Network.Info(nameof(AmethystTcpServer), $"Accepted connection from {socket.RemoteEndPoint} as player {i}.");
+                    AmethystLog.Network.Info("ATS", $"Accepted connection from {socket.RemoteEndPoint} as player {i}.");
                     return;
                 }
             }
@@ -80,13 +80,13 @@ internal sealed class AmethystTcpServer : IDisposable
             {
                 Reason = new NetText(0, "Server is full", null)
             }));
-            AmethystLog.Network.Error(nameof(AmethystTcpServer), $"Rejected connection from {socket.RemoteEndPoint} due to server being full.");
+            AmethystLog.Network.Error("ATS", $"Rejected connection from {socket.RemoteEndPoint} due to server being full.");
             socket.Dispose();
         }
         catch
         {
             socket.Dispose();
-            AmethystLog.Network.Debug(nameof(AmethystTcpServer), "Failed to handle client connection");
+            AmethystLog.Network.Debug("ATS", "Failed to handle client connection");
         }
     }
 

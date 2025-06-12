@@ -33,8 +33,6 @@ public sealed class PlayerManager(PlayerTracker tracker) : IEntityManager<Player
         Main.player[index].whoAmI = index;
 
         _insertHook.Invoke(new PlayerTrackerInsertArgs(entity));
-
-        AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count()}/{NetworkManager.MaxPlayers}] INS => player_{entity.Index}");
     }
 
     public void Remove(int index)
@@ -51,7 +49,6 @@ public sealed class PlayerManager(PlayerTracker tracker) : IEntityManager<Player
         }
 
         _removeHook.Invoke(new PlayerTrackerRemoveArgs(plr));
-        AmethystLog.System.Info(nameof(PlayerManager), $"[{Tracker.Count() - 1}/{NetworkManager.MaxPlayers}] RMV => player_{index} ({plr.Name ?? "not_identified"})");
 
         plr.Dispose();
         _tracker._players[index] = null!;
