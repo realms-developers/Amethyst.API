@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace Amethyst.Server.Entities.Players;
 
 public static class PlayerUtils
@@ -12,6 +14,8 @@ public static class PlayerUtils
             }
         }
     }
+
+    public static void BroadcastText(string text, Color color) => BroadcastText(text, color.R, color.G, color.B);
 
     public static void BroadcastPacketBytes(byte[] packetBytes, int ignore = -1)
     {

@@ -1,8 +1,9 @@
-using Amethyst.Server.Entities.Base;
+using Amethyst.Network;
 using Amethyst.Network.Utilities;
+using Amethyst.Server.Entities.Base;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Amethyst.Network;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -23,6 +24,8 @@ public sealed partial class PlayerEntity : IServerEntity
 
         writer.Dispose();
     }
+
+    public void SendText(string text, Color color) => SendText(text, color.R, color.G, color.B);
 
     public void SendPacketBytes(byte[] data)
     {
