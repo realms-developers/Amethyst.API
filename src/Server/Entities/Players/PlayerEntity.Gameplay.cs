@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.Localization;
 using Amethyst.Network.Structures;
 using Amethyst.Enums;
+using Amethyst.Network.Packets;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -48,7 +49,14 @@ public sealed partial class PlayerEntity : IServerEntity
 
     public void Teleport(float x, float y)
     {
+        RequestSendSection(Netplay.GetSectionX((int)x / 16), Netplay.GetSectionY((int)y / 16));
+
         NetMessage.SendData(65, -1, -1, NetworkText.Empty, Index, x, y);
+    }
+
+    public void TeleportTile(int x, int y)
+    {
+        Teleport(x * 16, y * 16);
     }
 
     public void Teleport(NetVector2 position)
@@ -102,5 +110,128 @@ public sealed partial class PlayerEntity : IServerEntity
         NetMessage.TrySendData(33, Index, -1, NetworkText.Empty, chestId);
         TPlayer.chest = chestId;
         NetMessage.TrySendData(80, -1, Index, NetworkText.Empty, Index, chestId);
+    }
+
+    public void Spawn(short x, short y, int respawnTimer, byte style = 0)
+    {
+        PlayerSpawn packet = new PlayerSpawn()
+        {
+            SpawnX = x,
+            SpawnY = y,
+            RespawnTimer = respawnTimer,
+            SpawnContext = style,
+            PlayerIndex = (byte)Index,
+            DeathsPvE = (short)TPlayer.numberOfDeathsPVE,
+            DeathsPvP = (short)TPlayer.numberOfDeathsPVP,
+        };
+
+        byte[] data = PlayerSpawnPacket.Serialize(packet);
+        PlayerUtils.BroadcastPacketBytes(data, -1);
+    }
+
+    public void RemoveItem(short netId, short stack)
+    {
+        PlayerConsumeItem packet = new PlayerConsumeItem()
+        {
+            ItemType = netId,
+            ItemCount = stack,
+            PlayerIndex = (byte)Index
+        };
+
+        byte[] data = PlayerConsumeItemPacket.Serialize(packet);
+        PlayerUtils.BroadcastPacketBytes(data, -1);
+    }
+
+    public bool RemoveProjectileByIndex(short index, bool broadcast)
+    {
+        if (index < 0 || index >= Main.projectile.Length)
+        {
+            return false;
+        }
+
+        Projectile? proj = Main.projectile[index];
+        if (proj == null || !proj.active || proj.owner != Index)
+        {
+            return false;
+        }
+
+        ProjectileUpdate packet = new ProjectileUpdate()
+        {
+            ProjectileIdentity = (short)proj.identity,
+            OwnerID = (byte)Index,
+        };
+
+        Main.projectile[index] = new Projectile();
+
+        byte[] data = ProjectileUpdatePacket.Serialize(packet);
+        if (broadcast)
+            PlayerUtils.BroadcastPacketBytes(data, -1);
+        else
+            SendPacketBytes(data);
+
+        return true;
+    }
+
+    public int RemoveProjectileByIdentity(short identity, bool broadcast = true)
+    {
+        int? projIndex = Main.projectile.FirstOrDefault(p => p != null && p.active && p.identity == identity && p.owner == Index)?.whoAmI;
+        if (projIndex == null)
+        {
+            return -1;
+        }
+
+        Main.projectile[projIndex.Value] = new Projectile();
+
+        ProjectileUpdate packet = new ProjectileUpdate()
+        {
+            ProjectileIdentity = identity,
+            OwnerID = (byte)Index,
+        };
+
+        byte[] data = ProjectileUpdatePacket.Serialize(packet);
+        if (broadcast)
+            PlayerUtils.BroadcastPacketBytes(data, -1);
+        else
+            SendPacketBytes(data);
+
+        return projIndex.Value;
+    }
+
+    public void SendStatusText(string text, bool padding)
+    {
+        if (padding)
+        {
+            text = new string('\n', 10) + text;
+        }
+
+        SendStatusText(new NetText() { Mode = 0, Text = text });
+    }
+
+    public void SendStatusText(NetText text)
+        => NetMessage.SendData(9, Index, -1, text);
+
+    public void CreateCombatText(string text, NetColor color, NetVector2? position, bool broadcast = true)
+        => CreateCombatText(new NetText() { Mode = 0, Text = text }, color, position, broadcast);
+
+    public void CreateCombatText(NetText text, NetColor color, NetVector2? position, bool broadcast = true)
+    {
+        position ??= Position with { Y = Position.Y - 32f };
+
+        VisualCreateCombatTextText packet = new VisualCreateCombatTextText()
+        {
+            Text = text,
+            NetColor = color,
+            Position = position.Value,
+        };
+
+        byte[] data = VisualCreateCombatTextTextPacket.Serialize(packet);
+        if (broadcast)
+        {
+            PlayerUtils.BroadcastPacketBytes(data, -1);
+        }
+        else
+        {
+            SendPacketBytes(data);
+        }
     }
 }
