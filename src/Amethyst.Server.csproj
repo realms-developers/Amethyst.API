@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>9.113.1</AssemblyVersion>
-    <Version>9.113.1</Version>
+    <AssemblyVersion>9.115.2</AssemblyVersion>
+    <Version>9.115.2</Version>
     <Title>Amethyst</Title>
     <Product>Amethyst</Product>
     <Description>Amethyst is a modern, high-performance API for Terraria servers, offering complete control and customization over every aspect of your server.</Description>
@@ -14,14 +14,14 @@
     <PackageProjectUrl>https://github.com/realms-developers/Amethyst.API</PackageProjectUrl>
     <RepositoryUrl>https://github.com/realms-developers/Amethyst.API</RepositoryUrl>
     <RootNamespace>Amethyst</RootNamespace>
-    <PackageReadmeFile>..\README.md</PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <LangVersion>preview</LangVersion>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <RepositoryType>git</RepositoryType>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\README.md" Pack="true" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
     <None Include="..\deps\FNA.dll" Pack="true" PackagePath="lib/net9.0/" />
     <None Include="..\deps\TerrariaAPI.Hooks.dll" Pack="true" PackagePath="lib/net9.0/" />
     <None Include="..\deps\TerrariaAPI.dll" Pack="true" PackagePath="lib/net9.0/" />
