@@ -13,7 +13,7 @@ public sealed class PlayerPermissionProvider : IPermissionProvider
 
     public IAmethystUser User { get; }
 
-    private readonly List<IPermissionProvider> _childProviders = new();
+    private readonly List<IPermissionProvider> _childProviders = [];
     public IReadOnlyList<IPermissionProvider> ChildProviders => _childProviders;
 
     public bool SupportsChildProviders => true;

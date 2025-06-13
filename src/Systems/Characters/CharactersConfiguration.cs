@@ -17,12 +17,12 @@ public sealed class CharactersConfiguration
 
     public bool EnableCaching { get; set; } = true;
 
-    public List<NetItem> DefaultItems { get; set; } = new()
-    {
+    public List<NetItem> DefaultItems { get; set; } =
+    [
         new NetItem(ItemID.CopperShortsword, 1, 0),
         new NetItem(ItemID.CopperPickaxe, 1, 0),
         new NetItem(ItemID.CopperAxe, 1, 0),
-    };
+    ];
 
     public int DefaultLife { get; set; } = 100;
     public int DefaultMana { get; set; } = 20;

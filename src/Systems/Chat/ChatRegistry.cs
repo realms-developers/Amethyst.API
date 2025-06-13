@@ -4,7 +4,7 @@ public sealed class ChatRegistry<T>
 {
     public IReadOnlyList<T> Handlers => _handlers.AsReadOnly();
 
-    internal readonly List<T> _handlers = new();
+    internal readonly List<T> _handlers = [];
 
     public void Add(T handler)
     {

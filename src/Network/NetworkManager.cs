@@ -35,11 +35,11 @@ public static class NetworkManager
     public static int SocketBacklog { get; set; } = 32;
     public static int SocketLiveCheck { get; set; } = 1000;
 
-    internal static Dictionary<Type, object> Providers = new();
+    internal static Dictionary<Type, object> Providers = [];
 
     internal static PacketInvokeHandler?[] InvokeHandlers = new PacketInvokeHandler?[256];
     internal static List<PacketInvokeHandler>?[] DirectHandlers = new List<PacketInvokeHandler>?[256];
-    internal static List<PacketInvokeHandler> OverlapHandlers = new();
+    internal static List<PacketInvokeHandler> OverlapHandlers = [];
 
     private static readonly PacketInvokeHandler[][] _InvokeHandlers = new PacketInvokeHandler[256][];
     private static PacketInvokeHandler[] _InvokeOverlapHandlers = [];
@@ -198,7 +198,7 @@ public static class NetworkManager
 
     public static void AddDirectHandler(int packetType, PacketInvokeHandler handler)
     {
-        DirectHandlers[packetType] ??= new List<PacketInvokeHandler>();
+        DirectHandlers[packetType] ??= [];
         ArgumentNullException.ThrowIfNull(handler);
 
         if (DirectHandlers[packetType]!.Contains(handler))

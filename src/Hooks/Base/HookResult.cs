@@ -20,7 +20,7 @@ public sealed class HookResult<TArgs>
 
     public TArgs? Args { get; private set; }
 
-    private readonly List<string> _cancellationReasons = new();
+    private readonly List<string> _cancellationReasons = [];
 
     public void Cancel(string reason)
     {

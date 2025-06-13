@@ -5,7 +5,7 @@ namespace Amethyst.Systems.Users.Players.Extensions;
 
 public sealed class PlayerExtensionsProvider : IExtensionProvider
 {
-    private readonly Dictionary<string, IUserExtension> _extensions = new();
+    private readonly Dictionary<string, IUserExtension> _extensions = [];
 
     public void AddExtension(IUserExtension extension)
     {

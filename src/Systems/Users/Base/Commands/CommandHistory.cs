@@ -5,7 +5,7 @@ namespace Amethyst.Systems.Users.Base.Commands;
 
 public sealed class CommandHistory : IReadOnlyList<CompletedCommandInfo>
 {
-    private readonly List<CompletedCommandInfo> _commands = new();
+    private readonly List<CompletedCommandInfo> _commands = [];
 
     public CompletedCommandInfo this[int index] => _commands[index];
 

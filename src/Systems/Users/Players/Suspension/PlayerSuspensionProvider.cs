@@ -11,7 +11,7 @@ public sealed class PlayerSuspensionProvider(IAmethystUser user) : ISuspensionPr
 
     public IReadOnlyList<ISuspension> Suspensions => _suspensions.AsReadOnly();
 
-    private readonly List<ISuspension> _suspensions = new();
+    private readonly List<ISuspension> _suspensions = [];
 
     public void Suspend(ISuspension suspension)
     {

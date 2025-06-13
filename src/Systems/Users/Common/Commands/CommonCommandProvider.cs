@@ -21,7 +21,7 @@ public sealed class CommonCommandProvider : ICommandProvider, IDisposable
 
     public IAmethystUser User { get; }
 
-    public CommandHistory History { get; } = new();
+    public CommandHistory History { get; } = [];
 
     public PagesCollection? ActivePage { get; set; }
 
@@ -29,7 +29,7 @@ public sealed class CommonCommandProvider : ICommandProvider, IDisposable
 
     public List<string> Repositories { get; set; }
 
-    private readonly BlockingCollection<Func<CompletedCommandInfo?>> _commandQueue = new();
+    private readonly BlockingCollection<Func<CompletedCommandInfo?>> _commandQueue = [];
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     private void CommandQueueHandler()

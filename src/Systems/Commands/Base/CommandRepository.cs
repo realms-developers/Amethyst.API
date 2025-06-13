@@ -5,7 +5,7 @@ public sealed class CommandRepository(string name)
     public string Name { get; } = name;
     public IReadOnlyList<ICommand> RegisteredCommands => _commands;
 
-    private readonly List<ICommand> _commands = new();
+    private readonly List<ICommand> _commands = [];
 
     public void Add(ICommand command)
     {

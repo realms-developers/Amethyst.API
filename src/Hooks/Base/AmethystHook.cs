@@ -12,7 +12,7 @@ public sealed class AmethystHook<TArgs>(string name, bool canBeCancelled, bool c
 
     public bool CancelByError { get; set; } = cancelByError;
 
-    internal List<HookHandler<TArgs>> _handlers = new();
+    internal List<HookHandler<TArgs>> _handlers = [];
     internal HookHandler<TArgs>[] _ivkHandlers = [];
 
     public void Register(HookHandler<TArgs> handler)
