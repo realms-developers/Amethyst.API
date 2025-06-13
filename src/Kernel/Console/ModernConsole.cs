@@ -1,6 +1,6 @@
 using Amethyst.Logging;
 
-namespace Amethyst.Infrastructure.CLI;
+namespace Amethyst.Kernel.Console;
 
 public static class ModernConsole
 {
@@ -50,7 +50,7 @@ public static class ModernConsole
 
         text += "\x1b[0m";
 
-        Console.WriteLine(text);
+        System.Console.WriteLine(text);
     }
 
     public static string ClearText(string text)
