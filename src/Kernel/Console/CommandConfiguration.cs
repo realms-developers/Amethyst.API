@@ -3,6 +3,7 @@ using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using Amethyst.Infrastructure.Kernel;
 using Amethyst.Infrastructure.Profiles;
+using Amethyst.Kernel.Console;
 
 namespace Amethyst.Infrastructure.CLI.LaunchConfiguration;
 
