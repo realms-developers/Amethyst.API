@@ -9,6 +9,8 @@ public unsafe ref struct FastPacketReader
     private readonly ReadOnlySpan<byte> _span;
     private byte* _ptr;
 
+    public int Length => (int)(_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span)));
+
     public FastPacketReader(byte[] buffer, int offset = 0)
     {
         _span = buffer;

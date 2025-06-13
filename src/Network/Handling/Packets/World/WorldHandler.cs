@@ -25,6 +25,16 @@ public sealed class WorldHandler : INetworkHandler
         NetworkManager.SetMainHandler<WorldWiringHitSwitch>(OnWorldWiringHitSwitch);
         NetworkManager.SetMainHandler<WorldAddLiquid>(OnWorldAddLiquid);
         NetworkManager.SetMainHandler<WorldDoorInteract>(OnWorldDoorInteract);
+        NetworkManager.SetMainHandler<WorldPlaceObject>(OnWorldPlaceObject);
+    }
+
+    private void OnWorldPlaceObject(PlayerEntity plr, ref WorldPlaceObject packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
+    {
+        if (plr.Phase != ConnectionPhase.Connected || packet.TileX <= 5 || packet.TileY <= 5 || packet.TileX >= Main.maxTilesX - 5 || packet.TileY >= Main.maxTilesY - 5)
+            return;
+
+		WorldGen.PlaceObject(packet.TileX, packet.TileY, packet.Type, mute: false, packet.Style, packet.Alternate, packet.Random, packet.Direction ? 1 : -1);
+		NetMessage.SendObjectPlacement(plr.Index, packet.TileX, packet.TileY, packet.Type, packet.Style, packet.Alternate, packet.Random, packet.Direction ? 1 : -1);
     }
 
     private void OnWorldDoorInteract(PlayerEntity plr, ref WorldDoorInteract packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
@@ -346,6 +356,7 @@ public sealed class WorldHandler : INetworkHandler
 
     public void Unload()
     {
+        NetworkManager.SetMainHandler<WorldPlaceObject>(null);
         NetworkManager.SetMainHandler<WorldLockSomething>(null);
         NetworkManager.SetMainHandler<WorldMassWireOperation>(null);
         NetworkManager.SetMainHandler<WorldPaintTile>(null);

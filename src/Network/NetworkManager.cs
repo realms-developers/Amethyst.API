@@ -22,6 +22,7 @@ using Amethyst.Network.Handling.Packets.Signs;
 using Amethyst.Network.Handling.Packets.Projectiles;
 using Amethyst.Network.Handling.Packets.World;
 using Amethyst.Network.Handling.Packets.TileEntities;
+using Amethyst.Network.Handling.Packets.NetModules;
 
 namespace Amethyst.Network;
 
@@ -91,6 +92,7 @@ public static class NetworkManager
         HandlerManager.RegisterHandler(new ChestsHandler());
         HandlerManager.RegisterHandler(new WorldHandler());
         HandlerManager.RegisterHandler(new TEHandler());
+        HandlerManager.RegisterHandler(new NetModulesHandler());
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);
