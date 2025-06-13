@@ -2,6 +2,7 @@ using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Base;
 using Microsoft.Xna.Framework;
+using Terraria;
 
 namespace Amethyst.Server.Entities.Players;
 
@@ -21,6 +22,8 @@ public sealed partial class PlayerEntity : IServerEntity
 
     public ref Vector2 Position => ref TPlayer.position;
     public ref Vector2 Velocity => ref TPlayer.velocity;
+
+    public ref Item HeldItem => ref TPlayer.inventory[TPlayer.selectedItem];
 
     /// <summary>
     /// Player difficulty. 0 - Normal, 1 - Expert, 2 - Master, 3 - Journey (Creative).
