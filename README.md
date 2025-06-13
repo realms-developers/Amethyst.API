@@ -98,6 +98,8 @@ The server will automatically generate the `/data/<profile>` directory and popul
      modules setallow MyModule.dll
      ```
 
+You can also download standard modules and plugins from the [Amethyst.Standard](https://github.com/realms-developers/Amethyst.Standard) repository.
+
 ---
 
 ## 📜 Disclaimer

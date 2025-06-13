@@ -1,4 +1,5 @@
 using System.Globalization;
+using Amethyst.Kernel.Console;
 
 namespace Amethyst.Logging;
 

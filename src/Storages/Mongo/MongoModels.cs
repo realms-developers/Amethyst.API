@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Amethyst.Storages.Mongo;

@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using Amethyst.Network;
+using Amethyst.Network.Structures;
 using Newtonsoft.Json;
 using Terraria;
 using Terraria.ID;
@@ -10,7 +10,13 @@ namespace Amethyst;
 
 public static class Localization
 {
-    private const string _directory = "localization";
+    internal static readonly string Directory = Path.GetFullPath(
+        Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "localization"
+        )
+    );
 
     // Nested dictionary: culture -> (key -> localized string)
     private static readonly Dictionary<string, Dictionary<string, string>> _localizationData = [];
@@ -27,9 +33,9 @@ public static class Localization
     /// </summary>
     public static void Load(string culture, string? directory = null)
     {
-        string directoryPath = Path.Combine(directory ?? _directory, culture);
+        string directoryPath = Path.Combine(directory ?? Directory, culture);
 
-        if (!Directory.Exists(directoryPath))
+        if (!System.IO.Directory.Exists(directoryPath))
         {
             throw new DirectoryNotFoundException($"Localization directory for '{culture}' not found.");
         }
@@ -40,7 +46,7 @@ public static class Localization
             _localizationData[culture] = [];
         }
 
-        string[] files = Directory.GetFiles(directoryPath, "*.json");
+        string[] files = System.IO.Directory.GetFiles(directoryPath, "*.json");
 
         foreach (string file in files)
         {
@@ -63,13 +69,13 @@ public static class Localization
     /// </summary>
     public static void Load()
     {
-        if (!Directory.Exists(_directory))
+        if (!System.IO.Directory.Exists(Directory))
         {
-            throw new DirectoryNotFoundException("Localization directory not found.");
+            throw new DirectoryNotFoundException($"Localization directory not found at {Directory}");
         }
 
         // Iterate over each subdirectory (each represents a culture)
-        string[] cultureDirectories = Directory.GetDirectories(_directory);
+        string[] cultureDirectories = System.IO.Directory.GetDirectories(Directory);
 
         foreach (string cultureDir in cultureDirectories)
         {
@@ -189,9 +195,9 @@ public static class Localization
             Regex regex = new(@"\[i(tem)?(?:\/s(?<Stack>\d{1,4}))?(?:\/p(?<Prefix>\d{1,3}))?:(?<NetID>-?\d{1,4})\]");
             Match match = regex.Match(tag);
             return !match.Success
-                ? null
+                ? default(NetItem?)
                 : new NetItem(
-                id: int.Parse(match.Groups["NetID"].Value, CultureInfo.InvariantCulture),
+                id: short.Parse(match.Groups["NetID"].Value, CultureInfo.InvariantCulture),
 
                 stack: string.IsNullOrWhiteSpace(match.Groups["Stack"].Value) ? (short)1 :
                     short.Parse(match.Groups["Stack"].Value, CultureInfo.InvariantCulture),
