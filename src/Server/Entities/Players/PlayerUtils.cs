@@ -1,23 +1,25 @@
+using Amethyst.Kernel;
 using Amethyst.Network.Structures;
 
 namespace Amethyst.Server.Entities.Players;
 
 public static class PlayerUtils
 {
-    public static void BroadcastText(string text, byte r, byte g, byte b, bool localized = false)
+    public static void BroadcastText(string text, byte r, byte g, byte b, params object?[] args)
     {
         foreach (PlayerEntity plr in EntityTrackers.Players)
         {
             if (plr.Active)
             {
-                string msg = localized && plr.User != null ? Localization.Get(text, plr.User.Messages.Language) : text;
+                string msg = string.Format(null,
+                    Localization.Get(text, plr.User?.Messages.Language ?? AmethystSession.Profile.DefaultLanguage), args);
 
                 plr.SendText(msg, r, g, b);
             }
         }
     }
 
-    public static void BroadcastText(string text, NetColor color, bool localized = false) => BroadcastText(text, color.R, color.G, color.B, localized);
+    public static void BroadcastText(string text, NetColor color, params object?[] args) => BroadcastText(text, color.R, color.G, color.B, args);
 
     public static void BroadcastPacketBytes(byte[] packetBytes, int ignore = -1)
     {

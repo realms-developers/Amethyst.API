@@ -27,20 +27,12 @@ public sealed partial class PlayerEntity : IServerEntity
 
     public void SendText(string text, Color color) => SendText(text, color.R, color.G, color.B);
 
-    public void SendPacketBytes(byte[] data)
-    {
-        _client.Send(data);
-    }
+    public void SendPacketBytes(byte[] data) => _client.Send(data);
 
-    public void SendPacketBytes(byte[] data, int offset, int count)
-    {
-        _client.Send(data, offset, count);
-    }
+    public void SendPacketBytes(byte[] data, int offset, int count) => _client.Send(data, offset, count);
 
-    public void SendRectangle(int x, int y, byte width, byte height, TileChangeType changeType = TileChangeType.None)
-    {
+    public void SendRectangle(int x, int y, byte width, byte height, TileChangeType changeType = TileChangeType.None) =>
         NetMessage.SendTileSquare(Index, x, y, width, height, changeType);
-    }
 
     public void SendMassTiles(int startX, int startY, int endX, int endY)
     {
