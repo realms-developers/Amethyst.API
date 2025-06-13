@@ -68,8 +68,6 @@ public sealed class PluginsRepository : IExtensionRepository
                 _results.Add(errorResult);
                 results.Add(errorResult);
 
-                AmethystLog.System.Warning(nameof(PluginsRepository),
-                    $"Plugin {Path.GetFileName(file)} is not allowed by the repository ruler.");
                 continue;
             }
 

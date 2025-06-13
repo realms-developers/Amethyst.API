@@ -18,20 +18,13 @@ public sealed class PluginExtensionHandler(PluginExtension extension) : IExtensi
             return new ExtensionHandleResult(Extension.LoadIdentifier, ExtensionResult.ExternalError, "Extension already loaded.");
         }
 
-        if (Extension.Repository.Ruler.IsExtensionAllowed(Extension.Metadata.Name))
-        {
-            ExtensionHandleResult result = Extension.PluginInstance.RequestLoad();
-            IsInitialized = true;
+        ExtensionHandleResult result = Extension.PluginInstance.RequestLoad();
+        IsInitialized = true;
 
-            HookRegistry.GetHook<PluginInitializeArgs>()
-                .Invoke(new PluginInitializeArgs(Extension.PluginInstance, result));
+        HookRegistry.GetHook<PluginInitializeArgs>()
+            .Invoke(new PluginInitializeArgs(Extension.PluginInstance, result));
 
-            return result;
-        }
-
-        Unload();
-
-        return new ExtensionHandleResult(Extension.LoadIdentifier, ExtensionResult.NotAllowed, "Plugin is not allowed to be loaded.");
+        return result;
     }
 
     public ExtensionHandleResult Unload()
