@@ -15,8 +15,6 @@ public sealed class CharactersConfiguration
     public string? MongoDatabaseName { get; set; }
     public string MongoCollectionName { get; set; } = "CharactersCollection";
 
-    public bool EnableCaching { get; set; } = true;
-
     public List<NetItem> DefaultItems { get; set; } =
     [
         new NetItem(ItemID.CopperShortsword, 1, 0),
