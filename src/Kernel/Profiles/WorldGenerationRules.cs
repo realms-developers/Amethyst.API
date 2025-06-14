@@ -1,4 +1,4 @@
-namespace Amethyst.Infrastructure.Profiles;
+namespace Amethyst.Kernel.Profiles;
 
 public sealed class WorldGenerationRules
 {

@@ -1,7 +1,7 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Console;
 
-namespace Amethyst.Kernel.Console;
+namespace Amethyst.Kernel.CLI;
 
 internal static class ConsoleHooks
 {

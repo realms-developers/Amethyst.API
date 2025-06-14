@@ -12,6 +12,8 @@ using Amethyst.Systems.Users.Players.Suspension;
 using Amethyst.Systems.Users.Common.Permissions;
 using Amethyst.Systems.Users.Players.Commands;
 using Amethyst.Systems.Users.Artificial.Commands;
+using Amethyst.Systems.Users.Players.Requests;
+using Amethyst.Systems.Users.Artificial.Requests;
 
 namespace Amethyst.Systems.Users;
 
@@ -33,13 +35,15 @@ public static class UsersOrganizer
         new PlayerPermissionBuilder(),
         new PlayerExtensionBuilder(),
         new PlayerSuspensionBuilder(),
-        new PlayerCommandBuilder());
+        new PlayerCommandBuilder(),
+        new PlayerRequestsBuilder());
 
     public static ArtificialUsersService ArtificialUsers { get; } = new ArtificialUsersService(
         new ArtificialMessageBuilder(),
         new ArtificialPermissionBuilder(),
         new ArtificialExtensionBuilder(),
-        new ArtificialCommandBuilder());
+        new ArtificialCommandBuilder(),
+        new ArtificialRequestsBuilder());
 
     public static IAmethystUser ConsoleUser { get; }
 }

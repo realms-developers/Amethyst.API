@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Loader;
-using Amethyst.Infrastructure.Kernel;
+using Amethyst.Kernel.Kernel;
 
 namespace Amethyst.Extensions.Modules;
 

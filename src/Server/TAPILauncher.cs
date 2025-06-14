@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Amethyst.Extensions;
 using Amethyst.Kernel;
-using Amethyst.Kernel.Console;
+using Amethyst.Kernel.CLI;
 using Amethyst.Network;
 using Amethyst.Server.World;
 using Amethyst.Systems.Console;
