@@ -2,7 +2,7 @@ namespace Amethyst.Systems.Users.Base.Requests;
 
 public sealed class UserRequest<TContext> where TContext : class
 {
-    internal UserRequest(string name, int index, TContext ctx, bool autoRemove = true, RequestCallback<TContext>? accepted = null, RequestCallback<TContext>? rejected = null, RequestCallback<TContext>? cancelled = null)
+    internal UserRequest(string name, int index, TContext ctx, TimeSpan? removeIn, bool autoRemove = true, RequestCallback<TContext>? accepted = null, RequestCallback<TContext>? rejected = null, RequestCallback<TContext>? cancelled = null)
     {
         Name = name;
         Index = index;
@@ -11,6 +11,22 @@ public sealed class UserRequest<TContext> where TContext : class
         RejectedCallback = rejected;
         CancelledCallback = cancelled;
         AutoRemove = autoRemove;
+
+        if (removeIn != null)
+        {
+            DisposeTimer = new Timer(state =>
+            {
+                if (AutoRemove && RemoveCallback != null)
+                {
+                    RemoveCallback(this);
+                }
+            }, null, removeIn.Value, Timeout.InfiniteTimeSpan);
+
+            DisposeCallback = () =>
+            {
+                DisposeTimer.Dispose();
+            };
+        }
     }
 
     public string Name { get; }
@@ -27,7 +43,9 @@ public sealed class UserRequest<TContext> where TContext : class
     public bool IsAccepted { get; private set; }
     public bool IsRejected { get; private set; }
 
+    internal Timer? DisposeTimer { get; private set; }
     internal Action<object>? RemoveCallback { get; set; }
+    internal Action? DisposeCallback { get; set; }
 
     public bool Accept(TContext? ctx = null)
     {
@@ -79,9 +97,9 @@ public sealed class UserRequest<TContext> where TContext : class
             {
                 callback(this, Context);
 
-                if (AutoRemove)
+                if (AutoRemove && RemoveCallback != null)
                 {
-                    RemoveCallback?.Invoke(this);
+                    RemoveCallback(this);
                 }
 
                 return true;

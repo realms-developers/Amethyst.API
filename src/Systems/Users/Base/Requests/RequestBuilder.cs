@@ -9,6 +9,7 @@ public sealed class RequestBuilder<TContext> where TContext : class
     private RequestCallback<TContext>? _acceptedCallback;
     private RequestCallback<TContext>? _rejectedCallback;
     private RequestCallback<TContext>? _cancelledCallback;
+    private TimeSpan? _removeIn;
 
     public RequestBuilder(string name, int index, TContext context)
     {
@@ -20,6 +21,12 @@ public sealed class RequestBuilder<TContext> where TContext : class
     public RequestBuilder<TContext> WithAutoRemove(bool value)
     {
         _autoRemove = value;
+        return this;
+    }
+
+    public RequestBuilder<TContext> WithRemoveIn(TimeSpan removeIn)
+    {
+        _removeIn = removeIn;
         return this;
     }
 
@@ -43,7 +50,7 @@ public sealed class RequestBuilder<TContext> where TContext : class
 
     public UserRequest<TContext> Build()
     {
-        return new UserRequest<TContext>(_name, _index, _context, _autoRemove,
+        return new UserRequest<TContext>(_name, _index, _context, _removeIn, _autoRemove,
             _acceptedCallback, _rejectedCallback, _cancelledCallback);
     }
 }
