@@ -52,7 +52,7 @@ internal sealed class NetworkPatcher : NetMessage
             num = remoteClient;
         }
 
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(512); // Ensure we have enough space for the packet
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(2048); // Ensure we have enough space for the packet
 
         var writer = new FastPacketWriter((byte)msgType, buffer);
         switch (msgType)
