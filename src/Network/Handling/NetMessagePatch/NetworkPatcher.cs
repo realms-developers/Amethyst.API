@@ -35,7 +35,7 @@ internal sealed class NetworkPatcher : NetMessage
     }
     public static unsafe void SendDataTask(int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
     {
-        if (msgType == 7)
+        if (msgType == 7 || msgType == 9)
         {
             return;
         }
