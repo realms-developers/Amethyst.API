@@ -39,7 +39,14 @@ public sealed partial class PlayerEntity : IServerEntity
     {
         RequestSendSection(Netplay.GetSectionX((int)x / 16), Netplay.GetSectionY((int)y / 16));
 
-        NetMessage.SendData(65, -1, -1, NetworkText.Empty, Index, x, y);
+        PlayerOrEntityTeleport packet = new()
+        {
+            TargetPosition = new NetVector2(x, y),
+            EntityIndex = (byte)Index
+        };
+
+        byte[] data = PlayerOrEntityTeleportPacket.Serialize(packet);
+        PlayerUtils.BroadcastPacketBytes(data, -1);
     }
 
     public void TeleportTile(int x, int y) => Teleport(x * 16, y * 16);

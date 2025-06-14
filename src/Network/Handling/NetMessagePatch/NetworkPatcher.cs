@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Amethyst.Network.Handling.Packets.Handshake;
 using Terraria.DataStructures;
 using Terraria.GameContent.Tile_Entities;
+using System.Buffers;
 
 namespace Amethyst.Network.Handling.NetMessagePatch;
 
@@ -21,8 +22,6 @@ internal sealed class NetworkPatcher : NetMessage
 
     private static void SendDataPatched(On.Terraria.NetMessage.orig_SendData orig, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
     {
-        Task.Run(() =>
-        {
             try
             {
                 SendDataTask(msgType, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7);
@@ -31,7 +30,6 @@ internal sealed class NetworkPatcher : NetMessage
             {
                 AmethystLog.Network.Error(nameof(NetworkPatcher), $"Failed to send data packet: {ex}");
             }
-        });
     }
     public static unsafe void SendDataTask(int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
     {
@@ -54,7 +52,9 @@ internal sealed class NetworkPatcher : NetMessage
             num = remoteClient;
         }
 
-        var writer = new FastPacketWriter((byte)msgType, 512);
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(512); // Ensure we have enough space for the packet
+
+        var writer = new FastPacketWriter((byte)msgType, buffer);
         switch (msgType)
         {
             case 1:
@@ -1283,6 +1283,12 @@ internal sealed class NetworkPatcher : NetMessage
                 SendPacket(packet, remoteClient, ignoreClient);
                 break;
         }
+
+        packet = null!;
+
+        writer.Dispose();
+
+        ArrayPool<byte>.Shared.Return(buffer);
     }
 
     private static void SendPacket(byte[] data, int remote, int ignore, Predicate<PlayerEntity>? filter = null)

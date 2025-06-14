@@ -61,14 +61,7 @@ public sealed class CommonRequestProvider : IRequestProvider
             throw new ArgumentException("Request name cannot be null or whitespace.", nameof(request));
         }
 
-        if (!_requests.TryRemove($"{request.Index}$_{request.Name}", out _))
-        {
-            AmethystLog.System.Warning($"CommonRequestProvider", $"Failed to remove request {request.Name} at index {request.Index}. Request not found.");
-        }
-        else
-        {
-            AmethystLog.System.Info($"CommonRequestProvider", $"Request {request.Name} at index {request.Index} removed successfully.");
-        }
+        _requests.TryRemove($"{request.Index}$_{request.Name}", out _);
     }
 
     public void RemoveRequests(string name)
@@ -84,14 +77,7 @@ public sealed class CommonRequestProvider : IRequestProvider
 
         foreach (var key in keysToRemove)
         {
-            if (_requests.TryRemove(key, out _))
-            {
-                AmethystLog.System.Info($"CommonRequestProvider", $"Request {name} removed successfully.");
-            }
-            else
-            {
-                AmethystLog.System.Warning($"CommonRequestProvider", $"Failed to remove request {name}. Request not found.");
-            }
+            _requests.TryRemove(key, out _);
         }
     }
 

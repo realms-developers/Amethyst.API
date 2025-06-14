@@ -1,6 +1,8 @@
 #pragma warning disable CA1051
 // Terraria.BitsByte
 
+using Terraria;
+
 namespace Amethyst.Network.Structures;
 
 public struct NetBitsByte
@@ -28,4 +30,10 @@ public struct NetBitsByte
 
     public static implicit operator NetBitsByte(byte byteValue)
         => new() { ByteValue = byteValue };
+
+    public static implicit operator BitsByte(NetBitsByte bitsBytes)
+        => (BitsByte)bitsBytes.ByteValue;
+
+    public static implicit operator NetBitsByte(BitsByte bb)
+        => new() { ByteValue = bb.value };
 }

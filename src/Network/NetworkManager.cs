@@ -106,6 +106,7 @@ public static class NetworkManager
             return;
         }
 
+        Main.rand ??= new();
         try
         {
             bool ignore = false;
