@@ -18,7 +18,7 @@ public sealed class UserRequest<TContext> where TContext : class
             {
                 if (AutoRemove && RemoveCallback != null)
                 {
-                    RemoveCallback(this);
+                    RemoveCallback();
                 }
             }, null, removeIn.Value, Timeout.InfiniteTimeSpan);
 
@@ -48,7 +48,7 @@ public sealed class UserRequest<TContext> where TContext : class
     public bool IsRejected { get; private set; }
 
     internal Timer? DisposeTimer { get; private set; }
-    internal Action<object>? RemoveCallback { get; set; }
+    internal Action? RemoveCallback { get; set; }
     internal Action? DisposeCallback { get; set; }
 
     public bool Accept(TContext? ctx = null)
@@ -103,7 +103,7 @@ public sealed class UserRequest<TContext> where TContext : class
 
                 if (AutoRemove && RemoveCallback != null)
                 {
-                    RemoveCallback(this);
+                    RemoveCallback();
                 }
 
                 return true;

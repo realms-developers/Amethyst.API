@@ -45,6 +45,7 @@ public sealed class CommonRequestProvider : IRequestProvider
             throw new ArgumentException("Request name cannot be null or whitespace.", nameof(request));
         }
 
+        request.RemoveCallback = () => _requests.TryRemove($"{request.Index}$_{request.Name}", out _);
         _requests.AddOrUpdate($"{request.Index}$_{request.Name}", request, (key, oldValue) => request);
     }
 
