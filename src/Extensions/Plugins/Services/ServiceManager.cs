@@ -48,11 +48,27 @@ public sealed class ServiceManager
         }
     }
 
+    internal void PostLoadAllServices()
+    {
+        foreach (IPluginService service in _services.Values)
+        {
+            service.OnPluginPostLoad();
+        }
+    }
+
     internal void UnloadAllServices()
     {
         foreach (IPluginService service in _services.Values)
         {
             service.OnPluginUnload();
+        }
+    }
+
+    internal void PostUnloadAllServices()
+    {
+        foreach (IPluginService service in _services.Values)
+        {
+            service.OnPluginPostUnload();
         }
     }
 }

@@ -16,6 +16,10 @@ public sealed class CommandsService : IPluginService
 
     public void OnPluginLoad()
     {
+    }
+
+    public void OnPluginPostLoad()
+    {
         ImportUtility.ImportFrom(BaseInstance.Root.Assembly, BaseInstance.Root.LoadIdentifier);
     }
 
@@ -31,5 +35,9 @@ public sealed class CommandsService : IPluginService
                 }
             }
         }
+    }
+
+    public void OnPluginPostUnload()
+    {
     }
 }

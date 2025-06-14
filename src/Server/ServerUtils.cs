@@ -1,5 +1,5 @@
 using System.Net;
-using Amethyst.Infrastructure.Profiles;
+using Amethyst.Kernel.Profiles;
 using Amethyst.Kernel;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;

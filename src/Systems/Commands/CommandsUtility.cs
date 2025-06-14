@@ -57,8 +57,7 @@ public static class CommandsUtility
             return Array.Empty<string>();
         }
 
-        List<string> args = new();
-        args.Add("");
+        List<string> args = [""];
         int index = 0;
 
         bool blockSpace = false;

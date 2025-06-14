@@ -2,7 +2,7 @@ namespace Amethyst.Network.Handling.Base;
 
 public static class HandlerManager
 {
-    private static readonly List<INetworkHandler> Handlers = new();
+    private static readonly List<INetworkHandler> Handlers = [];
 
     public static void RegisterHandler(INetworkHandler handler)
     {

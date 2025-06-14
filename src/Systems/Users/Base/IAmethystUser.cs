@@ -4,6 +4,7 @@ using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Users.Base.Suspension;
 using Amethyst.Systems.Users.Base.Commands;
+using Amethyst.Systems.Users.Base.Requests;
 
 namespace Amethyst.Systems.Users.Base;
 
@@ -18,6 +19,8 @@ public interface IAmethystUser
     IExtensionProvider Extensions { get; }
 
     ICommandProvider Commands { get; }
+
+    IRequestProvider Requests { get; }
 
     ICharacterProvider? Character { get; }
 

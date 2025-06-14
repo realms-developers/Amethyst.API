@@ -5,7 +5,7 @@ namespace Amethyst.Systems.Users.Artificial.Extensions;
 
 public sealed class ArtificialExtensionsProvider : IExtensionProvider
 {
-    private readonly Dictionary<string, IUserExtension> _extensions = new();
+    private readonly Dictionary<string, IUserExtension> _extensions = [];
 
     public void AddExtension(IUserExtension extension)
     {

@@ -27,7 +27,7 @@ internal static class ImportUtility
 
     internal static void ImportFrom(Assembly assembly, Guid identifier)
     {
-        foreach (Type type in assembly.GetTypes())
+        foreach (Type type in assembly.GetExportedTypes())
         {
             ImportFromType(type, identifier);
         }

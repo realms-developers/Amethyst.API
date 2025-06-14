@@ -1,4 +1,5 @@
 using Amethyst.Network;
+using Amethyst.Network.Structures;
 using Amethyst.Network.Utilities;
 using Amethyst.Server.Entities.Base;
 using Microsoft.Xna.Framework;
@@ -11,11 +12,10 @@ public sealed partial class PlayerEntity : IServerEntity
 {
     public void SendText(string text, byte r, byte g, byte b)
     {
-        FastPacketWriter writer = new(82, 1024);
+        FastPacketWriter writer = new(82, 3 + sizeof(ushort) + 5 + text.Length*2);
         writer.WriteUInt16(1);
         writer.WriteByte(255);
-        writer.WriteByte(0);
-        writer.WriteString(text);
+        writer.WriteNetText(new NetText(0, text, null));
         writer.WriteByte(r);
         writer.WriteByte(g);
         writer.WriteByte(b);
@@ -25,22 +25,14 @@ public sealed partial class PlayerEntity : IServerEntity
         writer.Dispose();
     }
 
-    public void SendText(string text, Color color) => SendText(text, color.R, color.G, color.B);
+    public void SendText(string text, NetColor color) => SendText(text, color.R, color.G, color.B);
 
-    public void SendPacketBytes(byte[] data)
-    {
-        _client.Send(data);
-    }
+    public void SendPacketBytes(byte[] data) => _client.Send(data);
 
-    public void SendPacketBytes(byte[] data, int offset, int count)
-    {
-        _client.Send(data, offset, count);
-    }
+    public void SendPacketBytes(byte[] data, int offset, int count) => _client.Send(data, offset, count);
 
-    public void SendRectangle(int x, int y, byte width, byte height, TileChangeType changeType = TileChangeType.None)
-    {
+    public void SendRectangle(int x, int y, byte width, byte height, TileChangeType changeType = TileChangeType.None) =>
         NetMessage.SendTileSquare(Index, x, y, width, height, changeType);
-    }
 
     public void SendMassTiles(int startX, int startY, int endX, int endY)
     {

@@ -5,8 +5,8 @@ namespace Amethyst.Network.Engine.Packets;
 
 internal sealed class PacketProvider<TPacket>
 {
-    internal List<PacketHook<TPacket>> _securityHandlers = new();
-    internal List<PacketHook<TPacket>> _handlers = new();
+    internal List<PacketHook<TPacket>> _securityHandlers = [];
+    internal List<PacketHook<TPacket>> _handlers = [];
     internal PacketHook<TPacket>? _mainHandler;
     internal bool _wasHooked;
     internal IPacket<TPacket> _packet = null!;

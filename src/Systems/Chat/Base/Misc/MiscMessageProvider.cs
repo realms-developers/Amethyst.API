@@ -12,7 +12,7 @@ public sealed class MiscMessageProvider<T> where T : class
     public IMiscMessageRenderer<T>? Renderer { get; private set; }
     public IReadOnlyDictionary<string, IMiscOutput<T>> Outputs => _outputsInternal;
 
-    private readonly Dictionary<string, IMiscOutput<T>> _outputsInternal = new();
+    private readonly Dictionary<string, IMiscOutput<T>> _outputsInternal = [];
 
     public void Invoke(T ctx)
     {

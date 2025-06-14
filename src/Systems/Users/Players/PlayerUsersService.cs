@@ -3,6 +3,7 @@ using Amethyst.Systems.Users.Base.Commands;
 using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Permissions;
+using Amethyst.Systems.Users.Base.Requests;
 using Amethyst.Systems.Users.Base.Suspension;
 
 namespace Amethyst.Systems.Users.Players;
@@ -11,7 +12,8 @@ public sealed class PlayersUsersService(IProviderBuilder<IMessageProvider> messa
     IProviderBuilder<IPermissionProvider> permissionBuilder,
     IProviderBuilder<IExtensionProvider> extensionBuilder,
     IProviderBuilder<ISuspensionProvider> suspensionBuilder,
-    IProviderBuilder<ICommandProvider> commandBuilder) : IUsersService<PlayerUser, PlayerUserMetadata>
+    IProviderBuilder<ICommandProvider> commandBuilder,
+    IProviderBuilder<IRequestProvider> requestBuilder) : IUsersService<PlayerUser, PlayerUserMetadata>
 {
     public IProviderBuilder<IMessageProvider> MessageProviderBuilder { get; set; } = messageBuilder;
 
@@ -23,12 +25,15 @@ public sealed class PlayersUsersService(IProviderBuilder<IMessageProvider> messa
 
     public IProviderBuilder<ICommandProvider> CommandProviderBuilder { get; set; } = commandBuilder;
 
+    public IProviderBuilder<IRequestProvider> RequestProviderBuilder { get; set; } = requestBuilder;
+
     public PlayerUser CreateUser(PlayerUserMetadata metadata,
         IProviderBuilder<IMessageProvider>? messageBuilder = null,
         IProviderBuilder<IPermissionProvider>? permissionBuilder = null,
         IProviderBuilder<IExtensionProvider>? extensionBuilder = null,
         IProviderBuilder<ISuspensionProvider>? suspensionBuilder = null,
-        IProviderBuilder<ICommandProvider>? commandBuilder = null)
+        IProviderBuilder<ICommandProvider>? commandBuilder = null,
+        IProviderBuilder<IRequestProvider>? requestBuilder = null)
     {
         return new PlayerUser(
             metadata.Name,
@@ -39,6 +44,7 @@ public sealed class PlayersUsersService(IProviderBuilder<IMessageProvider> messa
             permissionBuilder ?? PermissionProviderBuilder,
             extensionBuilder ?? ExtensionProviderBuilder,
             commandBuilder ?? CommandProviderBuilder,
+            requestBuilder ?? RequestProviderBuilder,
             suspensionBuilder ?? SuspensionProviderBuilder
         );
     }

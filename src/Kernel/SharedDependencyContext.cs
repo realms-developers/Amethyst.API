@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace Amethyst.Infrastructure.Kernel;
+namespace Amethyst.Kernel.Kernel;
 
 public sealed class SharedDependencyContext : AssemblyLoadContext
 {

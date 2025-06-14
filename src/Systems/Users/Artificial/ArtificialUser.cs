@@ -4,6 +4,7 @@ using Amethyst.Systems.Users.Base.Commands;
 using Amethyst.Systems.Users.Base.Extensions;
 using Amethyst.Systems.Users.Base.Messages;
 using Amethyst.Systems.Users.Base.Permissions;
+using Amethyst.Systems.Users.Base.Requests;
 using Amethyst.Systems.Users.Base.Suspension;
 
 namespace Amethyst.Systems.Users.Artificial;
@@ -14,6 +15,7 @@ public sealed class ArtificialUser : IAmethystUser
         IProviderBuilder<IPermissionProvider> permissionBuilder,
         IProviderBuilder<IExtensionProvider> extensionBuilder,
         IProviderBuilder<ICommandProvider> commandBuilder,
+        IProviderBuilder<IRequestProvider> requestBuilder,
         IProviderBuilder<ISuspensionProvider>? suspensionBuilder = null)
     {
         Name = name;
@@ -22,6 +24,7 @@ public sealed class ArtificialUser : IAmethystUser
         Extensions = extensionBuilder.BuildFor(this);
         Suspensions = suspensionBuilder?.BuildFor(this);
         Commands = commandBuilder.BuildFor(this);
+        Requests = requestBuilder.BuildFor(this);
     }
 
 
@@ -38,4 +41,6 @@ public sealed class ArtificialUser : IAmethystUser
     public ISuspensionProvider? Suspensions { get; }
 
     public ICommandProvider Commands { get; }
+
+    public IRequestProvider Requests { get; }
 }

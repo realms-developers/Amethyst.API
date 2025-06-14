@@ -40,7 +40,7 @@ public sealed class PluginExtensionHandler(PluginExtension extension) : IExtensi
         HookRegistry.GetHook<PluginDeinitializeArgs>()
             .Invoke(new PluginDeinitializeArgs(Extension.PluginInstance, result));
 
-        Extension.LoadContext.Unload();
+        //Extension.LoadContext.Unload();
 
         return result;
     }

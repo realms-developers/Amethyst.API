@@ -3,7 +3,7 @@ namespace Amethyst.Systems.Commands.Base.Metadata;
 public sealed class CommandSyntax(string defaultCulture)
 {
     private readonly string _defaultCulture = defaultCulture;
-    private readonly Dictionary<string, string[]> _syntax = new();
+    private readonly Dictionary<string, string[]> _syntax = [];
 
     public string[]? this[string culture]
     {

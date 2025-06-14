@@ -16,10 +16,10 @@ public sealed class MessageRenderContext
     public PlayerEntity Player { get; }
     public PlayerMessage Message { get; }
 
-    public Dictionary<string, string> Prefix { get; } = new();
-    public Dictionary<string, string> Name { get; } = new();
-    public Dictionary<string, string> Suffix { get; } = new();
-    public Dictionary<string, string> Text { get; } = new();
+    public Dictionary<string, string> Prefix { get; } = [];
+    public Dictionary<string, string> Name { get; } = [];
+    public Dictionary<string, string> Suffix { get; } = [];
+    public Dictionary<string, string> Text { get; } = [];
     public NetColor Color { get; set; } = new NetColor(255, 255, 255);
 
     public MessageRenderResult Build()

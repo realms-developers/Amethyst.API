@@ -14,12 +14,6 @@ public sealed class PluginsRepositoryRuler : IRepositoryRuler
         _pluginCfg = new(nameof(PluginsConfiguration), new());
 
         _pluginCfg.Load();
-
-        if (_pluginCfg.Data.AllowedPlugins.Count == 0)
-        {
-            AllowExtension("ExamplePlugin1");
-            AllowExtension("ExamplePlugin2");
-        }
     }
 
     public PluginsRepositoryRuler(string identifier)

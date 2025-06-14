@@ -21,7 +21,7 @@ public sealed class MongoCharactersStorage : ICharactersStorage
 
     public MongoModels<MongoCharacterModel> Models { get; }
 
-    public Dictionary<string, MongoCharacterModel> ModelsCache { get; } = new();
+    public Dictionary<string, MongoCharacterModel> ModelsCache { get; } = [];
 
     public ICharacterModel CreateModel(string name)
     {
