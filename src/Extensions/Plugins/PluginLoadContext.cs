@@ -1,4 +1,8 @@
-﻿using System.Reflection;
+﻿// This code is temporarily commented out due to issues with assembly loading in the plugin system.
+
+
+/*
+using System.Reflection;
 using System.Runtime.Loader;
 using Amethyst.Extensions.Modules;
 using Amethyst.Kernel.Kernel;
@@ -39,3 +43,4 @@ public sealed class PluginLoadContext(string pluginPath) : AssemblyLoadContext($
 
     public Assembly LoadPlugin() => LoadFromAssemblyPath(pluginPath);
 }
+*/

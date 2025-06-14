@@ -13,12 +13,6 @@ public sealed class ModulesRepositoryRuler : IRepositoryRuler
     {
         _modulesCfg = new(nameof(ModulesConfiguration), new());
         _modulesCfg.Load();
-
-        if (_modulesCfg.Data.AllowedModules.Count == 0)
-        {
-            AllowExtension("ExampleModule1");
-            AllowExtension("ExampleModule2");
-        }
     }
 
     public ModulesRepositoryRuler(string identifier)

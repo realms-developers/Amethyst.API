@@ -73,8 +73,8 @@ public sealed class PluginsRepository : IExtensionRepository
 
             try
             {
-                var context = new PluginLoadContext(file);
-                Assembly assembly = context.LoadPlugin();
+                //var context = new PluginLoadContext(file);
+                Assembly assembly = Assembly.Load(File.ReadAllBytes(file));
                 PluginInstance? ext = AssemblyUtility.TryCreateExtension<PluginInstance>(
                     assembly, out ExtensionMetadataAttribute? attribute);
 
@@ -86,7 +86,7 @@ public sealed class PluginsRepository : IExtensionRepository
                         attribute.Description,
                         attribute.Version);
 
-                    var plugin = new PluginExtension(metadata, ext, assembly, this, context);
+                    var plugin = new PluginExtension(metadata, ext, assembly, this);//, context);
 
                     plugin.Handler = new PluginExtensionHandler(plugin);
 

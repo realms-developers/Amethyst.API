@@ -25,9 +25,11 @@ public abstract class PluginInstance
     {
         try
         {
+            Services.LoadAllServices();
+
             Load();
 
-            Services.LoadAllServices();
+            Services.PostLoadAllServices();
 
             return new ExtensionHandleResult(Root.LoadIdentifier, ExtensionResult.SuccessOperation, "Plugin loaded successfully.");
         }
@@ -43,9 +45,11 @@ public abstract class PluginInstance
     {
         try
         {
+            Services.UnloadAllServices();
+
             Unload();
 
-            Services.UnloadAllServices();
+            Services.PostUnloadAllServices();
 
             return new ExtensionHandleResult(Root.LoadIdentifier, ExtensionResult.SuccessOperation, "Plugin unloaded successfully.");
         }

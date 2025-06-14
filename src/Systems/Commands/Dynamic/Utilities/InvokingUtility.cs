@@ -13,7 +13,7 @@ internal static class InvokingUtility
             $"Invoker_{method.Name}_{Guid.NewGuid().ToString().Replace("-", "")}",
             typeof(void),
             [typeof(object?[])],
-            method.DeclaringType!.Module, // нужен, если типы internal
+            typeof(InvokingUtility).Module,
             true);
 
         ILGenerator il = dynamicMethod.GetILGenerator();
