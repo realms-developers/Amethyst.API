@@ -470,8 +470,7 @@ public unsafe ref struct FastByteWriter : IDisposable
         _ptr = (byte*)_handle.AddrOfPinnedObject();
         WriteUInt16((ushort)length);
 
-        Array.Resize(ref _buffer, length);
-        return _buffer;
+        return _buffer.AsSpan(0, length).ToArray();
     }
 
     public byte[] BuildNoResize()

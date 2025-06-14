@@ -20,16 +20,21 @@ internal sealed class NetworkPatcher : NetMessage
         On.Terraria.NetMessage.SendData += SendDataPatched;
     }
 
+    private static SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
+    private static byte[] _buffer = new byte[131070];
     private static void SendDataPatched(On.Terraria.NetMessage.orig_SendData orig, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
     {
-            try
-            {
-                SendDataTask(msgType, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7);
-            }
-            catch (Exception ex)
-            {
-                AmethystLog.Network.Error(nameof(NetworkPatcher), $"Failed to send data packet: {ex}");
-            }
+        _semaphoreSlim.Wait();
+        try
+        {
+            SendDataTask(msgType, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7);
+        }
+        catch (Exception ex)
+        {
+            AmethystLog.Network.Error(nameof(NetworkPatcher), $"Failed to send data packet: {ex}");
+        }
+
+        _semaphoreSlim.Release();
     }
     public static unsafe void SendDataTask(int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
     {
@@ -52,9 +57,7 @@ internal sealed class NetworkPatcher : NetMessage
             num = remoteClient;
         }
 
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(2048); // Ensure we have enough space for the packet
-
-        var writer = new FastPacketWriter((byte)msgType, buffer);
+        var writer = new FastPacketWriter((byte)msgType, _buffer);
         switch (msgType)
         {
             case 1:
@@ -1287,8 +1290,6 @@ internal sealed class NetworkPatcher : NetMessage
         packet = null!;
 
         writer.Dispose();
-
-        ArrayPool<byte>.Shared.Return(buffer);
     }
 
     private static void SendPacket(byte[] data, int remote, int ignore, Predicate<PlayerEntity>? filter = null)

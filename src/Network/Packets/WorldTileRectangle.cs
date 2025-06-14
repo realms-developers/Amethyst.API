@@ -42,9 +42,9 @@ public sealed class WorldTileRectanglePacket : IPacket<WorldTileRectangle>
         };
     }
 
-    public static byte[] Serialize(WorldTileRectangle packet)
+    public static unsafe byte[] Serialize(WorldTileRectangle packet)
     {
-        FastPacketWriter writer = new(20, 128);
+        FastPacketWriter writer = new(20, 32 + (packet.SizeX * packet.SizeY * sizeof(NetTile)));
 
         writer.WriteInt16(packet.StartX);
         writer.WriteInt16(packet.StartY);
