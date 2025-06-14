@@ -9,6 +9,7 @@ public sealed class RequestBuilder<TContext> where TContext : class
     private RequestCallback<TContext>? _acceptedCallback;
     private RequestCallback<TContext>? _rejectedCallback;
     private RequestCallback<TContext>? _cancelledCallback;
+    private RequestCallback<TContext>? _timeoutCallback;
     private TimeSpan? _removeIn;
 
     public RequestBuilder(string name, int index, TContext context)
@@ -48,9 +49,19 @@ public sealed class RequestBuilder<TContext> where TContext : class
         return this;
     }
 
+    public RequestBuilder<TContext> WithOnTimeout(RequestCallback<TContext> callback)
+    {
+        if (_removeIn == null)
+        {
+            throw new InvalidOperationException("RemoveIn must be set before setting a timeout callback.");
+        }
+        _timeoutCallback = callback;
+        return this;
+    }
+
     public UserRequest<TContext> Build()
     {
         return new UserRequest<TContext>(_name, _index, _context, _removeIn, _autoRemove,
-            _acceptedCallback, _rejectedCallback, _cancelledCallback);
+            _timeoutCallback, _acceptedCallback, _rejectedCallback, _cancelledCallback);
     }
 }

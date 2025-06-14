@@ -2,7 +2,7 @@ namespace Amethyst.Systems.Users.Base.Requests;
 
 public sealed class UserRequest<TContext> where TContext : class
 {
-    internal UserRequest(string name, int index, TContext ctx, TimeSpan? removeIn, bool autoRemove = true, RequestCallback<TContext>? accepted = null, RequestCallback<TContext>? rejected = null, RequestCallback<TContext>? cancelled = null)
+    internal UserRequest(string name, int index, TContext ctx, TimeSpan? removeIn, bool autoRemove = true, RequestCallback<TContext>? timeout = null, RequestCallback<TContext>? accepted = null, RequestCallback<TContext>? rejected = null, RequestCallback<TContext>? cancelled = null)
     {
         Name = name;
         Index = index;
@@ -24,6 +24,9 @@ public sealed class UserRequest<TContext> where TContext : class
 
             DisposeCallback = () =>
             {
+                if (!IsAccepted && !IsRejected)
+                    TryInvoke(TimeoutCallback);
+
                 DisposeTimer.Dispose();
             };
         }
@@ -39,6 +42,7 @@ public sealed class UserRequest<TContext> where TContext : class
     public RequestCallback<TContext>? AcceptedCallback { get; }
     public RequestCallback<TContext>? RejectedCallback { get; }
     public RequestCallback<TContext>? CancelledCallback { get; }
+    public RequestCallback<TContext>? TimeoutCallback { get; }
 
     public bool IsAccepted { get; private set; }
     public bool IsRejected { get; private set; }
