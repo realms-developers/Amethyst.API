@@ -21,11 +21,13 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
 
         IP = client._socket.RemoteEndPoint?.ToString()?.Split(':')[0] ?? "0.0.0.0";
         UUID = "";
+        HashedUUID = "";
 
         Phase = ConnectionPhase.WaitingProtocol;
 
         Sections = new PlayerSections(this);
     }
+
 
     public ConnectionPhase Phase { get; set; }
     public Player TPlayer => Main.player[Index];
@@ -36,6 +38,7 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
 
     public string IP { get; set; }
     public string UUID { get; set; }
+    public string HashedUUID { get; set; }
 
     public string Protocol { get; internal set; } = "Unknown";
 

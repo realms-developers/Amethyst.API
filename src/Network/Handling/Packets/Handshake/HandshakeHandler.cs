@@ -1,5 +1,6 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
+using Amethyst.Hooks.Context;
 using Amethyst.Kernel;
 using Amethyst.Network.Handling.Base;
 using Amethyst.Network.Packets;
@@ -10,6 +11,8 @@ using Amethyst.Systems.Chat;
 using Amethyst.Systems.Chat.Misc.Context;
 using Amethyst.Systems.Users;
 using Amethyst.Systems.Users.Players;
+using Amethyst.Systems.Users.Telemetry;
+using Amethyst.Text;
 using MongoDB.Driver;
 using Terraria;
 
@@ -119,6 +122,16 @@ public sealed class HandshakeHandler : INetworkHandler
         }
 
         plr.UUID = uuid;
+        plr.HashedUUID = uuid.SelfHash();
+
+        AmethystTelemetry.SaveData(plr);
+
+        HookResult<PlayerIdentifiedArgs> result = HookRegistry.GetHook<PlayerIdentifiedArgs>().Invoke(new PlayerIdentifiedArgs(plr));
+
+        if (result.IsCancelled)
+        {
+            return;
+        }
 
         plr.Phase = ConnectionPhase.WaitingWorldInfoRequest;
 

@@ -15,7 +15,6 @@ public sealed class UserInfoModel : DataModel
     public List<string> UUIDs { get; set; } = new();
     public List<string> IPs { get; set; } = new();
     public List<PlatformType> Platforms { get; set; } = new();
-    public List<UserSessionInfo> Sessions { get; set; } = new();
     public DateTime LastLogin { get; set; }
 
     public bool TryAddUUID(string uuid)
