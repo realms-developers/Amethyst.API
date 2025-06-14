@@ -77,9 +77,15 @@ public sealed class CharactersHandler : INetworkHandler
             return;
         }
 
-        if (plr.User == null || plr.User.Character == null)
+        if (plr.User == null || plr.User.Character == null || plr.Phase != Handshake.ConnectionPhase.Connected)
         {
-            plr.TempLoadoutIndex = packet.LoadoutIndex;
+            plr.TempLoadoutIndex = 0;
+
+            plr.SendPacketBytes(PlayerLoadoutPacket.Serialize(new PlayerLoadout
+            {
+                PlayerIndex = (byte)plr.Index,
+                LoadoutIndex = 0
+            }));
             return;
         }
 
