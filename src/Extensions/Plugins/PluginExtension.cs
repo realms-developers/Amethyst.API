@@ -5,7 +5,7 @@ using Amethyst.Extensions.Base.Repositories;
 
 namespace Amethyst.Extensions.Plugins;
 
-public sealed class PluginExtension(ExtensionMetadata metadata, PluginInstance pluginInstance, Assembly assembly, IExtensionRepository repository/*, PluginLoadContext ctx*/) : IExtension
+public sealed class PluginExtension(ExtensionMetadata metadata, PluginInstance pluginInstance, Assembly assembly, IExtensionRepository repository) : IExtension
 {
     public Guid LoadIdentifier { get; } = Guid.NewGuid();
 
@@ -18,6 +18,4 @@ public sealed class PluginExtension(ExtensionMetadata metadata, PluginInstance p
     public PluginInstance PluginInstance { get; } = pluginInstance;
 
     public Assembly Assembly { get; } = assembly;
-
-    //public PluginLoadContext LoadContext { get; } = ctx;
 }

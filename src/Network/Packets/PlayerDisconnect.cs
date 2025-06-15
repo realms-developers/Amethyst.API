@@ -26,7 +26,7 @@ public sealed class PlayerDisconnectPacket : IPacket<PlayerDisconnect>
 
     public static byte[] Serialize(PlayerDisconnect packet)
     {
-        FastPacketWriter writer = new(2, 128);
+        FastPacketWriter writer = new(2, 16 + packet.Reason.Text.Length * 2);
 
         writer.WriteNetText(packet.Reason);
 
