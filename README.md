@@ -90,12 +90,12 @@ The server will automatically generate the `/data/<profile>` directory and popul
 4. Enable in-game:
    - **Plugin**:
      ```bash
-     plugins setallow MyPlugin.dll
+     plugins allow MyPlugin.dll
      plugins reload
      ```
    - **Module**:
      ```bash
-     modules setallow MyModule.dll
+     modules allow MyModule.dll
      ```
 
 You can also download standard modules and plugins from the [Amethyst.Standard](https://github.com/realms-developers/Amethyst.Standard) repository.

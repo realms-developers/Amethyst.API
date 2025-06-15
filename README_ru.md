@@ -90,12 +90,12 @@ Amethyst динамически загружает конфигурации на
 4. Активируйте в игре:
    - **Плагин**:
      ```bash
-     /plugins setallow MyPlugin.dll
-     /plugins reload
+     plugins allow MyPlugin.dll
+     plugins reload
      ```
    - **Модуль**:
      ```bash
-     /modules setallow MyModule.dll
+     modules allow MyModule.dll
      ```
 
 Вы также можете скачать стандартные модули и плагины из репозитория [Amethyst.Standard](https://github.com/realms-developers/Amethyst.Standard).
