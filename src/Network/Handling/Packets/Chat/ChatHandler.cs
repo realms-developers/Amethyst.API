@@ -1,3 +1,4 @@
+using Amethyst.Kernel;
 using Amethyst.Network.Handling.Base;
 using Amethyst.Network.Utilities;
 using Amethyst.Server.Entities.Players;
@@ -43,14 +44,14 @@ public sealed class ChatHandler : INetworkHandler
             return;
         }
 
-        if (cmd == "Say" && message.StartsWith('/'))
+        if (cmd == "Say" && message.StartsWith(AmethystSession.Profile.CommandPrefix))
         {
             plr.User?.Commands.RunCommand(message);
             return;
         }
         else if (cmd != "Say")
         {
-            plr.User?.Commands.RunCommand($"/{cmd.ToLowerInvariant()}{(message.Length == 0 ? "" : " " + message)}");
+            plr.User?.Commands.RunCommand($"{AmethystSession.Profile.CommandPrefix}{cmd.ToLowerInvariant()}{(message.Length == 0 ? "" : " " + message)}");
             return;
         }
 

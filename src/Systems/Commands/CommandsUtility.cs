@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Amethyst.Kernel;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Base.Metadata;
 using Amethyst.Systems.Users.Base;
@@ -9,7 +10,7 @@ public static class CommandsUtility
 {
     public static CompletedCommandInfo? RunCommand(CommandRepository[] repositories, IAmethystUser user, string commandText)
     {
-        if (commandText.StartsWith('/'))
+        if (commandText.StartsWith(AmethystSession.Profile.CommandPrefix))
         {
             commandText = commandText.Substring(1);
         }

@@ -22,6 +22,8 @@ public sealed class ServerProfile
 
     public int Port { get; set; }
 
+    public char CommandPrefix { get; set; } = '/';
+
     public string DefaultLanguage { get; set; } = "en-US";
 
     public string SavePath => Path.Combine(Environment.CurrentDirectory, "data", "profiles", Name);

@@ -24,6 +24,8 @@ internal static class CommandConfiguration
             ["--deflang", "-deflang"],
             "Set default server language");
 
+        Option<string> commandPrefixOption = CreateCommandPrefixOption();
+
         Option<int> genEvilOption = CreateGenEvilOption();
 
         Option<int> genGameModeOption = CreateGenGameModeOption();
@@ -62,6 +64,7 @@ internal static class CommandConfiguration
         // Add options individually
         rootCommand.AddOption(profileOption);
         rootCommand.AddOption(languageOption);
+        rootCommand.AddOption(commandPrefixOption);
         rootCommand.AddOption(genEvilOption);
         rootCommand.AddOption(genGameModeOption);
         rootCommand.AddOption(genWidthOption);
@@ -91,6 +94,12 @@ internal static class CommandConfiguration
                 {
                     AmethystKernel.Profile.DefaultLanguage = value;
                     //ModernConsole.WriteLine($"$!bDefault server language set to: '{value}'.");
+                });
+
+                HandleOptionWithProfile(context, commandPrefixOption, value =>
+                {
+                    AmethystKernel.Profile.CommandPrefix = value[0];
+                    //ModernConsole.WriteLine($"$!bCommand prefix set to: '{value[0]}'.");
                 });
 
                 HandleOptionWithProfile(context, genEvilOption, value =>
@@ -199,6 +208,25 @@ internal static class CommandConfiguration
     }
 
     #region Create methods
+
+    private static Option<string> CreateCommandPrefixOption()
+    {
+        Option<string> option = new(
+            ["--cmdprefix", "-cmdprefix"],
+            description: "Set command prefix character",
+            getDefaultValue: () => "/");
+
+        option.AddValidator(result =>
+        {
+            string value = result.GetValueOrDefault<string>() ?? "";
+            if (string.IsNullOrEmpty(value) || value.Length != 1)
+            {
+                result.ErrorMessage = "Command prefix must be exactly one character";
+            }
+        });
+
+        return option;
+    }
 
     private static Option<int> CreateGenEvilOption()
     {

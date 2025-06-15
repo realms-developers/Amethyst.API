@@ -67,7 +67,8 @@ public static class BasicCommands
                 .SelectMany(repo => repo.RegisteredCommands)
                 .Where(WhereExpression)
                 .Select(p =>
-                $"[c/51db99:/{p.Metadata.Names.First()}]{(p.Metadata.Syntax?[ctx.Messages.Language] != null ? $" {string.Join(' ', p.Metadata.Syntax[ctx.Messages.Language]!)}" : "")} - {Localization.Get(p.Metadata.Description, user.Messages.Language)}"));
+                $"[c/51db99:{AmethystSession.Profile.CommandPrefix}{p.Metadata.Names.First()}]{(p.Metadata.Syntax?[ctx.Messages.Language] != null ?
+                $" {string.Join(' ', p.Metadata.Syntax[ctx.Messages.Language]!)}" : "")} - {Localization.Get(p.Metadata.Description, user.Messages.Language)}"));
 
         ctx.Messages.ReplyPage(pages, "amethyst.basic.availableCommands", null, null, false, page);
     }
@@ -90,7 +91,9 @@ public static class BasicCommands
                 .SelectMany(repo => repo.RegisteredCommands)
                 .Where(WhereExpression)
                 .Select(p =>
-                $"[c/51db99:/{p.Metadata.Names.First()}]{(p.Metadata.Syntax?[ctx.Messages.Language] != null ? $" {string.Join(' ', p.Metadata.Syntax[ctx.Messages.Language]!)}" : "")}"), 5);
+                $"[c/51db99:{AmethystSession.Profile.CommandPrefix}{p.Metadata.Names.First()}]{(p.Metadata.Syntax?[ctx.Messages.Language] != null ?
+                $" {string.Join(' ', p.Metadata.Syntax[ctx.Messages.Language]!)}" : "")}"), 5);
+
         //.Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")}"));
 
         ctx.Messages.ReplyPage(pages, "amethyst.basic.availableCommands", null, null, false, page);

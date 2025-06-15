@@ -28,7 +28,7 @@ internal static class ConsoleHooks
 
             var commandArgs = new ConsoleCommandArgs(input);
 
-            if (commandArgs.Command.StartsWith('/'))
+            if (commandArgs.Command.StartsWith(AmethystSession.Profile.CommandPrefix))
             {
                 commandArgs.Command = commandArgs.Command[1..];
             }

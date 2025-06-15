@@ -1,3 +1,4 @@
+using Amethyst.Kernel;
 using Amethyst.Systems.Commands;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Base.Metadata;
@@ -40,7 +41,7 @@ public static class CommandManagementCommands
             return;
         }
 
-        PagesCollection collection = PagesCollection.AsListPage(repo.RegisteredCommands.Select(c => '/' + c.Metadata.Names.First() ?? "<without_name>"), 80);
+        PagesCollection collection = PagesCollection.AsListPage(repo.RegisteredCommands.Select(c => AmethystSession.Profile.CommandPrefix + c.Metadata.Names.First() ?? "<without_name>"), 80);
         if (collection.Pages.Count == 0)
         {
             ctx.Messages.ReplyError("amethyst.commandManagement.noCommandsInRepository", repositoryName);
@@ -62,7 +63,7 @@ public static class CommandManagementCommands
             ICommand? command = repo.GetCommand(commandName);
             if (command != null)
             {
-                ctx.Messages.ReplySuccess("amethyst.commandManagement.commandInfo", '/' + command.Metadata.Names.First() ?? "<without_name>");
+                ctx.Messages.ReplySuccess("amethyst.commandManagement.commandInfo", AmethystSession.Profile.CommandPrefix + command.Metadata.Names.First() ?? "<without_name>");
                 ctx.Messages.ReplyInfo("amethyst.commandManagement.commandDescription", command.Metadata.Description);
                 if (command.Metadata.Syntax != null && command.Metadata.Syntax[ctx.Messages.Language] != null)
                 {
