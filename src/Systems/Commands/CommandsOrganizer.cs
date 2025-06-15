@@ -5,10 +5,7 @@ namespace Amethyst.Systems.Commands;
 
 public static class CommandsOrganizer
 {
-    static CommandsOrganizer()
-    {
-        ParsingNode.Initialize();
-    }
+    static CommandsOrganizer() => ParsingNode.Initialize();
 
     public static IReadOnlyList<CommandRepository> Repositories => _repositories.Values.ToList().AsReadOnly();
 
@@ -23,7 +20,7 @@ public static class CommandsOrganizer
         { "debug", new CommandRepository("debug") }
     };
 
-    private static readonly string[] _defRepos = { "shared", "root", "debug" };
+    private static readonly string[] _defRepos = ["shared", "root", "debug"];
 
     public static void AddRepository(CommandRepository repository)
     {

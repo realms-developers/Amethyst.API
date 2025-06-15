@@ -3,13 +3,13 @@ using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Base.Result;
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Utility;
-using Amethyst.Kernel.Kernel;
 using Amethyst.Kernel.Profiles;
-using Amethyst.Kernel.CLI;
 using Amethyst.Server;
 using Amethyst.Systems.Characters;
 using Amethyst.Systems.Commands.Dynamic.Utilities;
 using Amethyst.Text;
+using Amethyst.Kernel.Console;
+using Amethyst.Hooks.Base;
 
 namespace Amethyst.Kernel;
 

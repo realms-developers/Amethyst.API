@@ -2,12 +2,7 @@ namespace Amethyst.Kernel.Profiles;
 
 public sealed class ServerProfile
 {
-    internal ServerProfile(string name)
-    {
-        Name = name;
-        DefaultLanguage = "en-US";
-        GenerationRules = new WorldGenerationRules();
-    }
+    internal ServerProfile(string name) => Name = name;
 
     public string Name { get; }
 
@@ -27,9 +22,9 @@ public sealed class ServerProfile
 
     public int Port { get; set; }
 
-    public string DefaultLanguage { get; set; }
+    public string DefaultLanguage { get; set; } = "en-US";
 
     public string SavePath => Path.Combine(Environment.CurrentDirectory, "data", "profiles", Name);
 
-    public WorldGenerationRules GenerationRules { get; set; }
+    public WorldGenerationRules GenerationRules { get; set; } = new();
 }

@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.Localization;
 
-namespace Amethyst.Network.Handling.Packets.Signs;
+namespace Amethyst.Network.Handling.Packets.Chests;
 
 public sealed class ChestsHandler : INetworkHandler
 {

@@ -1,5 +1,6 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Chat;
+using Amethyst.Hooks.Base;
 using Microsoft.Xna.Framework;
 using Terraria.Localization;
 
@@ -20,7 +21,7 @@ public static class ChatModHooks
     private static void ChatHelperBroadcastChatMessageAs(On.Terraria.Chat.ChatHelper.orig_BroadcastChatMessageAs orig, byte messageAuthor, NetworkText text, Color color, int excludedPlayer)
     {
         var args = new BroadcastTextArgs(text, color, excludedPlayer, messageAuthor);
-        Amethyst.Hooks.Context.HookResult<BroadcastTextArgs>? result = (HookRegistry.GetHook<BroadcastTextArgs>()?.Invoke(args)) ?? throw new InvalidOperationException("No hook found for BroadcastTextArgs.");
+        HookResult<BroadcastTextArgs>? result = (HookRegistry.GetHook<BroadcastTextArgs>()?.Invoke(args)) ?? throw new InvalidOperationException("No hook found for BroadcastTextArgs.");
         if (result.IsCancelled == true)
         {
             return;

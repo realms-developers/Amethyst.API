@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
 using Amethyst.Extensions.Modules;
-using Amethyst.Kernel.Kernel;
+using Amethyst.Kernel;
 
 namespace Amethyst.Extensions.Plugins;
 

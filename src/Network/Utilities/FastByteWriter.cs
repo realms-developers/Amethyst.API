@@ -60,7 +60,7 @@ public unsafe ref struct FastByteWriter : IDisposable
 
         if (value.Mode != 0)
         {
-            value.Substitutions ??= Array.Empty<NetText>();
+            value.Substitutions ??= [];
 
             WriteByte((byte)value.Substitutions.Length);
             foreach (NetText substitution in value.Substitutions)

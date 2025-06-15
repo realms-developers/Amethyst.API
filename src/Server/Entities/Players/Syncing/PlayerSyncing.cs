@@ -1,7 +1,7 @@
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Systems.Characters.Base;
-using Amethyst.Systems.Characters.Base.Enums;
+using Amethyst.Systems.Characters.Enums;
 
 namespace Amethyst.Server.Entities.Players.Syncing;
 

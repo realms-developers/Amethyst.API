@@ -336,7 +336,7 @@ public static class CommandManagementCommands
                     return;
                 }
 
-                command.Metadata = command.Metadata with { Names = command.Metadata.Names.Append(newName).ToArray() };
+                command.Metadata = command.Metadata with { Names = [.. command.Metadata.Names, newName] };
                 ctx.Messages.ReplySuccess("amethyst.commandManagement.commandNameAdded", commandName, newName);
                 return;
             }
@@ -363,7 +363,7 @@ public static class CommandManagementCommands
                     return;
                 }
 
-                command.Metadata = command.Metadata with { Names = command.Metadata.Names.Where(n => n != nameToRemove).ToArray() };
+                command.Metadata = command.Metadata with { Names = [.. command.Metadata.Names.Where(n => n != nameToRemove)] };
                 ctx.Messages.ReplySuccess("amethyst.commandManagement.commandNameRemoved", commandName, nameToRemove);
                 return;
             }

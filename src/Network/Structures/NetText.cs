@@ -23,7 +23,7 @@ public struct NetText
     {
         return new NetworkText(netText.Text, (NetworkText.Mode)netText.Mode)
         {
-            _substitutions = netText.Substitutions != null ? netText.Substitutions.Select(s => (NetworkText)s).ToArray() : Array.Empty<NetworkText>()
+            _substitutions = netText.Substitutions != null ? [.. netText.Substitutions.Select(s => (NetworkText)s)] : []
         };
     }
 

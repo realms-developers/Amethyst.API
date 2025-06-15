@@ -1,6 +1,6 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
-using Amethyst.Hooks.Context;
+using Amethyst.Hooks.Base;
 using Amethyst.Network;
 using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Server.Entities.Base;

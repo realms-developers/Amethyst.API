@@ -73,7 +73,6 @@ public sealed class PluginsRepository : IExtensionRepository
 
             try
             {
-                //Assembly assembly = Assembly.Load(File.ReadAllBytes(file));
                 Assembly assembly = SharedPluginLoadContext.Instance.LoadPlugin(file);
                 PluginInstance? ext = AssemblyUtility.TryCreateExtension<PluginInstance>(
                     assembly, out ExtensionMetadataAttribute? attribute);
@@ -86,7 +85,7 @@ public sealed class PluginsRepository : IExtensionRepository
                         attribute.Description,
                         attribute.Version);
 
-                    var plugin = new PluginExtension(metadata, ext, assembly, this);//, context);
+                    var plugin = new PluginExtension(metadata, ext, assembly, this);
 
                     plugin.Handler = new PluginExtensionHandler(plugin);
 
@@ -100,7 +99,7 @@ public sealed class PluginsRepository : IExtensionRepository
                 }
                 else
                 {
-                    ExtensionHandleResult result = new ExtensionHandleResult(
+                    ExtensionHandleResult result = new(
                         Guid.Empty,
                         ExtensionResult.ExternalError,
                         $"Failed to create plugin instance from {file}");
@@ -111,7 +110,7 @@ public sealed class PluginsRepository : IExtensionRepository
             }
             catch (Exception ex)
             {
-                ExtensionHandleResult result = new ExtensionHandleResult(
+                ExtensionHandleResult result = new(
                     Guid.Empty,
                     ExtensionResult.InternalError,
                     $"Error loading plugin from {file}: {ex.Message}");
@@ -147,7 +146,7 @@ public sealed class PluginsRepository : IExtensionRepository
             }
             catch (Exception ex)
             {
-                ExtensionHandleResult result = new ExtensionHandleResult(
+                ExtensionHandleResult result = new(
                     ext.LoadIdentifier,
                     ExtensionResult.InternalError,
                     $"Error unloading {ext.Metadata.Name}: {ex.Message}");

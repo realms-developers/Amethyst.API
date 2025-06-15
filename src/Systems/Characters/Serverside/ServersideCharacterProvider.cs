@@ -1,8 +1,8 @@
 using Amethyst.Network;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
-using Amethyst.Systems.Characters.Base.Enums;
 using Amethyst.Systems.Characters.Base.Interactions;
+using Amethyst.Systems.Characters.Enums;
 using Amethyst.Systems.Characters.Utilities;
 using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Players;

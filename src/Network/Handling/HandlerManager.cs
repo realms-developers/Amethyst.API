@@ -1,4 +1,6 @@
-namespace Amethyst.Network.Handling.Base;
+using Amethyst.Network.Handling.Base;
+
+namespace Amethyst.Network.Handling;
 
 public static class HandlerManager
 {

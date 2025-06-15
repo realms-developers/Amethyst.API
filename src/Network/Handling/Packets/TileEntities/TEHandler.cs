@@ -52,7 +52,7 @@ public sealed class TEHandler : INetworkHandler
             bool isDye = packet.SlotIndex >= 2;
             int slot = isDye ? packet.SlotIndex - 2 : packet.SlotIndex;
 
-            Item item = new Item();
+            Item item = new();
             item.SetDefaults(packet.ItemType);
             item.stack = packet.ItemStack;
             item.Prefix(packet.ItemPrefix);
@@ -86,7 +86,7 @@ public sealed class TEHandler : INetworkHandler
             bool isDye = packet.SlotIndex >= 8;
             int slot = isDye ? packet.SlotIndex - 8 : packet.SlotIndex;
 
-            Item item = new Item();
+            Item item = new();
             item.SetDefaults(packet.ItemType);
             item.stack = packet.ItemStack;
             item.Prefix(packet.ItemPrefix);
@@ -150,7 +150,7 @@ public sealed class TEHandler : INetworkHandler
 		else
 		{
             var stream = reader.StreamOpen();
-            BinaryReader breader = new BinaryReader(stream);
+            BinaryReader breader = new(stream);
 			TileEntity tileEntity = TileEntity.Read(breader, networkSend: true);
             breader.Dispose();
             reader.StreamClose(stream);

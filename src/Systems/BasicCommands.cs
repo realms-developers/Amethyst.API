@@ -1,5 +1,6 @@
 using Amethyst.Kernel;
 using Amethyst.Server.Entities.Players;
+using Amethyst.Systems.Commands;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Base.Metadata;
 using Amethyst.Systems.Commands.Dynamic.Attributes;
@@ -9,7 +10,7 @@ using Amethyst.Systems.Users.Players;
 using Amethyst.Text;
 using Terraria.IO;
 
-namespace Amethyst.Systems.Commands;
+namespace Amethyst.Systems;
 
 public static class BasicCommands
 {

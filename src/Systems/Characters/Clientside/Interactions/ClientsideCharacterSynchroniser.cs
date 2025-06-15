@@ -1,12 +1,12 @@
 using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters.Base;
-using Amethyst.Systems.Characters.Base.Enums;
 using Amethyst.Systems.Characters.Base.Interactions;
 using Amethyst.Systems.Characters.Utilities;
 using Amethyst.Systems.Users.Players;
 using Terraria;
 using Amethyst.Network.Packets;
+using Amethyst.Systems.Characters.Enums;
 
 namespace Amethyst.Systems.Characters.Clientside.Interactions;
 

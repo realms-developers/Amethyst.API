@@ -1,5 +1,6 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
+using Amethyst.Hooks.Base;
 using Amethyst.Network.Engine;
 using Amethyst.Network.Enums;
 using Amethyst.Network.Handling.Packets.Handshake;
@@ -17,28 +18,22 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
         Index = index;
         _client = client;
 
-        Name = "";
-
         IP = client._socket.RemoteEndPoint?.ToString()?.Split(':')[0] ?? "0.0.0.0";
-        UUID = "";
-        HashedUUID = "";
-
-        Phase = ConnectionPhase.WaitingProtocol;
 
         Sections = new PlayerSections(this);
     }
 
 
-    public ConnectionPhase Phase { get; set; }
+    public ConnectionPhase Phase { get; set; } = ConnectionPhase.WaitingProtocol;
     public Player TPlayer => Main.player[Index];
     public int Index { get; }
     public bool Active => Phase != ConnectionPhase.Disconnected;
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public PlayerSections Sections { get; }
 
     public string IP { get; set; }
-    public string UUID { get; set; }
-    public string HashedUUID { get; set; }
+    public string UUID { get; set; } = string.Empty;
+    public string HashedUUID { get; set; } = string.Empty;
 
     public string Protocol { get; internal set; } = "Unknown";
 
@@ -51,7 +46,7 @@ public sealed partial class PlayerEntity : IServerEntity, IDisposable
 
     public void SetUser(PlayerUser? user)
     {
-        Amethyst.Hooks.Context.HookResult<PlayerSetUserArgs>? result = (HookRegistry.GetHook<PlayerSetUserArgs>()
+        HookResult<PlayerSetUserArgs>? result = (HookRegistry.GetHook<PlayerSetUserArgs>()
             ?.Invoke(new PlayerSetUserArgs(this, User, user))) ?? throw new InvalidOperationException("PlayerSetUserArgs hook not found.");
 
         if (result.IsCancelled == true)

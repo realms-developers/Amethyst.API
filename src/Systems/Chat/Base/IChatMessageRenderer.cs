@@ -1,6 +1,6 @@
 using Amethyst.Systems.Chat.Base.Models;
 
-namespace Amethyst.Server.Systems.Chat.Base;
+namespace Amethyst.Systems.Chat.Base;
 
 public interface IChatMessageRenderer
 {

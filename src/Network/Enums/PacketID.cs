@@ -1,4 +1,4 @@
-namespace Amethyst.Enums;
+namespace Amethyst.Network.Enums;
 
 public enum PacketID : byte
 {

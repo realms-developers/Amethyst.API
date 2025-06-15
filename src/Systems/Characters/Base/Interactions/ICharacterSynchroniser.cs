@@ -1,4 +1,4 @@
-using Amethyst.Systems.Characters.Base.Enums;
+using Amethyst.Systems.Characters.Enums;
 
 namespace Amethyst.Systems.Characters.Base.Interactions;
 

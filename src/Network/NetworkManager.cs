@@ -6,7 +6,6 @@ using Amethyst.Network.Engine.Delegates;
 using Amethyst.Network.Engine.Packets;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Network.Packets;
-using Amethyst.Network.Handling.Base;
 using Amethyst.Network.Handling.Packets.Characters;
 using Amethyst.Network.Handling.Packets.Chat;
 using Amethyst.Network.Handling.Packets.Handshake;
@@ -23,6 +22,7 @@ using Amethyst.Network.Handling.Packets.Projectiles;
 using Amethyst.Network.Handling.Packets.World;
 using Amethyst.Network.Handling.Packets.TileEntities;
 using Amethyst.Network.Handling.Packets.NetModules;
+using Amethyst.Network.Handling;
 
 namespace Amethyst.Network;
 
@@ -186,7 +186,7 @@ public static class NetworkManager
         ArgumentNullException.ThrowIfNull(handler);
         OverlapHandlers.Add(handler);
 
-        _InvokeOverlapHandlers = OverlapHandlers.ToArray();
+        _InvokeOverlapHandlers = [.. OverlapHandlers];
     }
 
     public static void RemoveOverlapHandler(PacketInvokeHandler handler)
@@ -194,7 +194,7 @@ public static class NetworkManager
         ArgumentNullException.ThrowIfNull(handler);
         OverlapHandlers.Remove(handler);
 
-        _InvokeOverlapHandlers = OverlapHandlers.ToArray();
+        _InvokeOverlapHandlers = [.. OverlapHandlers];
     }
 
     public static void AddDirectHandler(int packetType, PacketInvokeHandler handler)
@@ -209,7 +209,7 @@ public static class NetworkManager
         }
         DirectHandlers[packetType]!.Add(handler);
 
-        _InvokeHandlers[packetType] = DirectHandlers[packetType]!.ToArray();
+        _InvokeHandlers[packetType] = [.. DirectHandlers[packetType]!];
     }
 
     public static void RemoveDirectHandler(int packetType, PacketInvokeHandler handler)
@@ -222,7 +222,7 @@ public static class NetworkManager
         }
         DirectHandlers[packetType]!.Remove(handler);
 
-        _InvokeHandlers[packetType] = DirectHandlers[packetType]!.ToArray();
+        _InvokeHandlers[packetType] = [.. DirectHandlers[packetType]!];
     }
 
     public static void AddHandler<TPacket>(PacketHook<TPacket> hook, int priority = 0)

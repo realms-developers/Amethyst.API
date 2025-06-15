@@ -1,4 +1,4 @@
-namespace Amethyst.Systems.Characters.Base.Enums;
+namespace Amethyst.Systems.Characters.Enums;
 
 public enum PlayerColorType
 {

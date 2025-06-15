@@ -134,7 +134,7 @@ internal static class InvokingUtility
             }
         }
 
-        return args.ToArray();
+        return [.. args];
     }
 
 }

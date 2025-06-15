@@ -1,4 +1,4 @@
-namespace Amethyst.Hooks.Context;
+namespace Amethyst.Hooks.Base;
 
 public sealed class HookResult<TArgs>
 {

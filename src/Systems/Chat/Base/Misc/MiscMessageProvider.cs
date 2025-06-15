@@ -1,6 +1,6 @@
-using Amethyst.Systems.Chat.Misc.Base;
+using Amethyst.Systems.Chat.Base.Misc.Base;
 
-namespace Amethyst.Systems.Chat.Misc;
+namespace Amethyst.Systems.Chat.Base.Misc;
 
 public sealed class MiscMessageProvider<T> where T : class
 {

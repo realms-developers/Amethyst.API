@@ -70,10 +70,12 @@ internal static class ImportUtility
             string? permission = method.GetCustomAttribute<CommandPermissionAttribute>()?.Permission;
 
             CommandRepositoryAttribute? repoAttr = method.GetCustomAttribute<CommandRepositoryAttribute>();
-            CommandRepository repo = repoAttr == null ? CommandsOrganizer.Shared :
-                                        CommandsOrganizer.GetRepository(repoAttr.Repository) ?? CommandsOrganizer.Shared;
+
+            CommandRepository repo = (repoAttr != null && CommandsOrganizer.GetRepository(repoAttr.Repository) is CommandRepository r)
+                         ? r : CommandsOrganizer.Shared;
 
             CommandSyntax? syntax = null;
+
             foreach (CommandSyntaxAttribute syntaxAttr in method.GetCustomAttributes<CommandSyntaxAttribute>())
             {
                 syntax ??= new CommandSyntax(syntaxAttr.Culture);

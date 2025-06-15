@@ -1,8 +1,7 @@
 using Amethyst.Server.Entities.Players;
-using Amethyst.Storages;
 using Amethyst.Systems.Characters.Base;
-using Amethyst.Systems.Characters.Base.Enums;
 using Amethyst.Systems.Characters.Base.Factories;
+using Amethyst.Systems.Characters.Enums;
 using Amethyst.Systems.Characters.Utilities;
 
 namespace Amethyst.Systems.Characters.Serverside.Factories;

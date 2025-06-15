@@ -55,7 +55,7 @@ public sealed class NetModulesHandler : INetworkHandler
 
             case 2: // map ping
                 NetVector2 position = reader.ReadNetVector2();
-                FastPacketWriter writer = new FastPacketWriter(82, new byte[3 + sizeof(NetVector2) + sizeof(ushort)]);
+                FastPacketWriter writer = new(82, new byte[3 + sizeof(NetVector2) + sizeof(ushort)]);
                 writer.WriteUInt16(2);
                 writer.WriteNetVector2(position);
 
@@ -82,7 +82,7 @@ public sealed class NetModulesHandler : INetworkHandler
                 binaryReader.Dispose();
                 reader.StreamClose(stream);
 
-                FastPacketWriter writer2 = new FastPacketWriter(82, reader.Length);
+                FastPacketWriter writer2 = new(82, reader.Length);
                 writer2.WriteByteSpan(rawPacket.Slice(3, reader.Length - 3));
                 byte[] data = writer2.BuildNoResize();
 

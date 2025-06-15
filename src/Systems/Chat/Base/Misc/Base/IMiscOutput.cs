@@ -1,4 +1,4 @@
-namespace Amethyst.Systems.Chat.Misc.Base;
+namespace Amethyst.Systems.Chat.Base.Misc.Base;
 
 public interface IMiscOutput<T>
 {

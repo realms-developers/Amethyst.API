@@ -1,4 +1,4 @@
-namespace Amethyst.Systems.Users.Base;
+namespace Amethyst.Systems.Users.Base.Permissions;
 
 public enum PermissionType
 {

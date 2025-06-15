@@ -1,11 +1,9 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
-using Amethyst.Kernel.Kernel;
 using Amethyst.Kernel.Profiles;
-using Amethyst.Kernel.CLI;
 
-namespace Amethyst.Kernel.CLI.LaunchConfiguration;
+namespace Amethyst.Kernel.Console;
 
 internal static class CommandConfiguration
 {

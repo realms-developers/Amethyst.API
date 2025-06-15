@@ -150,7 +150,7 @@ public static partial class PacketSendingUtility
             BackgroundCaveStyle2 = (byte)Main.caveBackStyle[1],
             BackgroundCaveStyle3 = (byte)Main.caveBackStyle[2],
 
-            TreeTops = WorldGen.TreeTops._variations.Select(p => (byte)p).ToArray(),
+            TreeTops = [.. WorldGen.TreeTops._variations.Select(p => (byte)p)],
 
             MaxRaining = Main.maxRaining,
 

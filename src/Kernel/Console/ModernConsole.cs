@@ -1,6 +1,6 @@
 using Amethyst.Logging;
 
-namespace Amethyst.Kernel.CLI;
+namespace Amethyst.Kernel.Console;
 
 public static class ModernConsole
 {

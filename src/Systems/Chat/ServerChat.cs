@@ -1,9 +1,8 @@
 using Amethyst.Server.Entities.Players;
-using Amethyst.Server.Systems.Chat.Base;
 using Amethyst.Systems.Chat.Base;
+using Amethyst.Systems.Chat.Base.Misc;
+using Amethyst.Systems.Chat.Base.Misc.Context;
 using Amethyst.Systems.Chat.Base.Models;
-using Amethyst.Systems.Chat.Misc;
-using Amethyst.Systems.Chat.Misc.Context;
 using Amethyst.Systems.Chat.Primitive.Misc;
 
 namespace Amethyst.Systems.Chat;

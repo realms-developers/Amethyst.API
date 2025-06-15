@@ -17,11 +17,14 @@ public static class CommandsUtility
         foreach (CommandRepository repository in repositories)
         {
             ICommand? command = repository.FindCommand(commandText, out string remainingText);
+
             if (command != null)
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
+
                 RunCommand(command, user, remainingText);
                 stopwatch.Stop();
+
                 return new CompletedCommandInfo(command, remainingText, stopwatch.Elapsed, DateTimeOffset.Now);
             }
         }
@@ -29,6 +32,7 @@ public static class CommandsUtility
         user.Messages.ReplyError("commands.commandNotFound");
         return null;
     }
+
     public static void RunCommand(ICommand command, IAmethystUser user, string args)
     {
         try
@@ -45,8 +49,8 @@ public static class CommandsUtility
         {
             user.Messages.ReplyError("commands.error_tellDevelopers");
 
-            AmethystLog.System.Info($"Commands<{user.Name}>", $"");
-            AmethystLog.System.Error($"Commands<{user.Name}>", $"Error while executing command: {ex.ToString()}");
+            AmethystLog.System.Info($"Commands<{user.Name}>", string.Empty);
+            AmethystLog.System.Error($"Commands<{user.Name}>", $"Error while executing command: {ex}");
         }
     }
 
@@ -54,7 +58,7 @@ public static class CommandsUtility
     {
         if (text.Length == 0)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         List<string> args = [""];
@@ -85,6 +89,6 @@ public static class CommandsUtility
             }
         }
 
-        return args.ToArray();
+        return [.. args];
     }
 }

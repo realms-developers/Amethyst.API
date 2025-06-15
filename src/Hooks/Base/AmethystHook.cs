@@ -1,6 +1,4 @@
-using Amethyst.Hooks.Context;
-
-namespace Amethyst.Hooks;
+namespace Amethyst.Hooks.Base;
 
 public sealed class AmethystHook<TArgs>(string name, bool canBeCancelled, bool canBeModified, bool cancelByError = false)
 {
@@ -25,7 +23,7 @@ public sealed class AmethystHook<TArgs>(string name, bool canBeCancelled, bool c
         }
 
         _handlers.Add(handler);
-        _ivkHandlers = _handlers.ToArray();
+        _ivkHandlers = [.. _handlers];
     }
 
     public void Unregister(HookHandler<TArgs> handler)
@@ -33,7 +31,7 @@ public sealed class AmethystHook<TArgs>(string name, bool canBeCancelled, bool c
         ArgumentNullException.ThrowIfNull(handler);
 
         _handlers.Remove(handler);
-        _ivkHandlers = _handlers.ToArray();
+        _ivkHandlers = [.. _handlers];
     }
 
     public HookResult<TArgs> Invoke(TArgs args)

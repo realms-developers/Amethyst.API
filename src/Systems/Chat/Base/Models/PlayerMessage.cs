@@ -1,7 +1,7 @@
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Users.Base.Permissions;
 
-namespace Amethyst.Systems.Chat;
+namespace Amethyst.Systems.Chat.Base.Models;
 
 public sealed class PlayerMessage(PlayerEntity player, string message, DateTimeOffset timestamp)
 {

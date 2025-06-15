@@ -2,7 +2,7 @@ using Amethyst.Network.Structures;
 using Amethyst.Storages.Config;
 using Terraria.ID;
 
-namespace Amethyst.Storages;
+namespace Amethyst.Systems.Characters;
 
 public sealed class CharactersConfiguration
 {

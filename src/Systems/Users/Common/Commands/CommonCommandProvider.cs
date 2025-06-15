@@ -65,7 +65,7 @@ public sealed class CommonCommandProvider : ICommandProvider, IDisposable
         _commandQueue.Add(() =>
         {
             return CommandsUtility.RunCommand(
-                CommandsOrganizer.Repositories.Where(repo => Repositories.Contains(repo.Name)).ToArray(),
+                [.. CommandsOrganizer.Repositories.Where(repo => Repositories.Contains(repo.Name))],
                 User,
                 commandText
             );

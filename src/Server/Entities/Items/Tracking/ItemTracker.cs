@@ -2,7 +2,7 @@ using System.Collections;
 using Amethyst.Server.Entities.Base;
 using Terraria;
 
-namespace Amethyst.Server.Entities.Items;
+namespace Amethyst.Server.Entities.Items.Tracking;
 
 public sealed class ItemTracker : IEntityTracker<ItemEntity>
 {

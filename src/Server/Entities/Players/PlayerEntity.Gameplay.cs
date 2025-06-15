@@ -1,4 +1,4 @@
-using Amethyst.Enums;
+using Amethyst.Network.Enums;
 using Amethyst.Network.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Server.Entities.Base;

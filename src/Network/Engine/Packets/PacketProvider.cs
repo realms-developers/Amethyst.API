@@ -51,13 +51,13 @@ internal sealed class PacketProvider<TPacket>
         _handlers.Add(handler);
         _handlers.Sort((x, y) => priority.CompareTo(0));
 
-        _ivkHandlers = _handlers.ToArray();
+        _ivkHandlers = [.. _handlers];
     }
     internal void UnregisterHandler(PacketHook<TPacket> handler)
     {
         _handlers.Remove(handler);
 
-        _ivkHandlers = _handlers.ToArray();
+        _ivkHandlers = [.. _handlers];
     }
 
     internal void RegisterSecurityHandler(PacketHook<TPacket> handler, int priority = 0)
@@ -70,13 +70,13 @@ internal sealed class PacketProvider<TPacket>
         _securityHandlers.Add(handler);
         _securityHandlers.Sort((x, y) => priority.CompareTo(0));
 
-        _ivkSecurityHandlers = _securityHandlers.ToArray();
+        _ivkSecurityHandlers = [.. _securityHandlers];
     }
     internal void UnregisterSecurityHandler(PacketHook<TPacket> handler)
     {
         _securityHandlers.Remove(handler);
 
-        _ivkSecurityHandlers = _securityHandlers.ToArray();
+        _ivkSecurityHandlers = [.. _securityHandlers];
     }
 
     internal void Invoke(PlayerEntity plr, ReadOnlySpan<byte> data, ref bool ignore)

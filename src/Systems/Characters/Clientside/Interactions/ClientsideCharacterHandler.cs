@@ -4,7 +4,7 @@ using Amethyst.Systems.Characters.Base;
 using Amethyst.Systems.Characters.Base.Interactions;
 using Amethyst.Systems.Users.Players;
 using Amethyst.Network.Packets;
-using Amethyst.Systems.Characters.Base.Enums;
+using Amethyst.Systems.Characters.Enums;
 
 namespace Amethyst.Systems.Characters.Clientside.Interactions;
 

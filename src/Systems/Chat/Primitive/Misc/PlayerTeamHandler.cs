@@ -1,6 +1,6 @@
 using Amethyst.Server.Entities.Players;
-using Amethyst.Systems.Chat.Misc.Base;
-using Amethyst.Systems.Chat.Misc.Context;
+using Amethyst.Systems.Chat.Base.Misc.Base;
+using Amethyst.Systems.Chat.Base.Misc.Context;
 
 namespace Amethyst.Systems.Chat.Primitive.Misc;
 

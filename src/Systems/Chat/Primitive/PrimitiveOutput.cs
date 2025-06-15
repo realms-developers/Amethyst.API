@@ -3,7 +3,7 @@ using Amethyst.Systems.Chat.Base;
 using Amethyst.Systems.Chat.Base.Models;
 using Amethyst.Text;
 
-namespace Amethyst.Systems.Chat;
+namespace Amethyst.Systems.Chat.Primitive;
 
 public sealed class PrimitiveOutput : IChatMessageOutput
 {

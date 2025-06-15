@@ -1,5 +1,5 @@
 using Amethyst.Network.Structures;
-using Amethyst.Systems.Characters.Base.Enums;
+using Amethyst.Systems.Characters.Enums;
 
 namespace Amethyst.Systems.Characters.Base;
 

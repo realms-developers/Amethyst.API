@@ -1,10 +1,8 @@
 using System.CommandLine;
-using Amethyst.Kernel.CLI.LaunchConfiguration;
+using Amethyst.Kernel.Console;
 using Amethyst.Kernel.Profiles;
-using Amethyst.Kernel;
-using Amethyst.Kernel.CLI;
 
-namespace Amethyst.Kernel.Kernel;
+namespace Amethyst.Kernel;
 
 internal static class AmethystKernel
 {

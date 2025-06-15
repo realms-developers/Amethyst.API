@@ -42,7 +42,7 @@ public unsafe ref struct FastPacketWriter : IDisposable
 
     public FastPacketWriter(byte packetType, byte* bytePointer)
     {
-        _buffer = Array.Empty<byte>();
+        _buffer = [];
 
         _startPos = (nint)bytePointer;
         _ptr = bytePointer + 2;
@@ -73,7 +73,7 @@ public unsafe ref struct FastPacketWriter : IDisposable
 
         if (value.Mode != 0)
         {
-            value.Substitutions ??= Array.Empty<NetText>();
+            value.Substitutions ??= [];
 
             WriteByte((byte)value.Substitutions.Length);
             foreach (NetText substitution in value.Substitutions)

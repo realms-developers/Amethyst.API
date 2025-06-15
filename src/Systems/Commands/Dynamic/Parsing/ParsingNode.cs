@@ -158,7 +158,7 @@ public static class ParsingNode
 
         System.Reflection.MethodInfo? tryParseMethod = type.GetMethod(
             "TryParse",
-            new[] { typeof(string), type.MakeByRefType() }
+            [typeof(string), type.MakeByRefType()]
         );
 
         Label lblParseSuccess = il.DefineLabel();

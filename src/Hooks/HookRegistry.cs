@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Amethyst.Hooks.Autoloading;
+using Amethyst.Hooks.Base;
 using Amethyst.Server.Hooks;
 
 namespace Amethyst.Hooks;

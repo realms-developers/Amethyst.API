@@ -1,6 +1,6 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Console;
-using Amethyst.Hooks.Context;
+using Amethyst.Hooks.Base;
 using Amethyst.Systems.Users;
 
 namespace Amethyst.Systems.Console;

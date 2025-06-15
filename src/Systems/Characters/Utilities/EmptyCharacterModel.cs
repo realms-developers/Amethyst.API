@@ -1,6 +1,6 @@
 using Amethyst.Network.Structures;
 using Amethyst.Systems.Characters.Base;
-using Amethyst.Systems.Characters.Base.Enums;
+using Amethyst.Systems.Characters.Enums;
 using Amethyst.Systems.Characters.Storages.MongoDB;
 
 namespace Amethyst.Systems.Characters.Utilities;

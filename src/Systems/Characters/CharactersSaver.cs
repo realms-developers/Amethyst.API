@@ -43,7 +43,7 @@ public static class CharactersSaver
         }
         catch (Exception ex)
         {
-            AmethystLog.System.Error(nameof(CharactersSaver), $"Auto-save failed: {ex.ToString()}");
+            AmethystLog.System.Error(nameof(CharactersSaver), $"Auto-save failed: {ex}");
         }
     }
 }

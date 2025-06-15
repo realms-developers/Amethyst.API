@@ -1,7 +1,7 @@
-using Amethyst.Server.Systems.Chat.Base;
+using Amethyst.Systems.Chat.Base;
 using Amethyst.Systems.Chat.Base.Models;
 
-namespace Amethyst.Systems.Chat;
+namespace Amethyst.Systems.Chat.Primitive;
 
 public sealed class PrimitiveRenderer : IChatMessageRenderer
 {
