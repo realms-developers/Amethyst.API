@@ -26,19 +26,34 @@ public sealed class SharedPluginLoadContext : AssemblyLoadContext
 
     protected override Assembly? Load(AssemblyName assemblyName)
     {
-        // 1. Try shared dependencies first
+        // 1. First, check if the assembly is already loaded in the default context
+        // This helps ensure we use the same version that Assembly.Load() would use
+        try
+        {
+            Assembly defaultAssembly = Default.LoadFromAssemblyName(assemblyName);
+            if (defaultAssembly != null)
+            {
+                return defaultAssembly;
+            }
+        }
+        catch
+        {
+            // If default context can't load it, continue with our custom logic
+        }
+
+        // 2. Try shared dependencies
         if (SharedDependencyContext.Instance.LoadFromAssemblyName(assemblyName) is { } sharedAssembly)
         {
             return sharedAssembly;
         }
 
-        // 2. Try modules
+        // 3. Try modules
         if (ModuleLoadContext.Instance.LoadFromAssemblyName(assemblyName) is { } moduleAssembly)
         {
             return moduleAssembly;
         }
 
-        // 3. Try all plugin resolvers
+        // 4. Try all plugin resolvers
         foreach (AssemblyDependencyResolver resolver in _resolvers.Values)
         {
             string? assemblyPath = resolver.ResolveAssemblyToPath(assemblyName);
@@ -48,6 +63,7 @@ public sealed class SharedPluginLoadContext : AssemblyLoadContext
             }
         }
 
+        // 5. As a last resort, try the default context's resolution
         return null;
     }
 
