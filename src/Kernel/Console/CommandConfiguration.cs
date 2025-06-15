@@ -13,7 +13,7 @@ internal static class CommandConfiguration
 
         // 1. Profile Command (Required)
         Option<string> profileOption = new(
-            ["--profile", "-profile"],
+            ["--profile", "-profile", "-p"],
             "Load server profile")
         {
             IsRequired = true
@@ -33,7 +33,7 @@ internal static class CommandConfiguration
         Option<int> genHeightOption = CreateGenHeightOption();
 
         Option<string> worldPathOption = new(
-            ["--worldpath", "-worldpath"],
+            ["--worldpath", "-worldpath", "-w"],
             "Set world path to load");
 
         Option<bool> worldRecreateOption = new(
@@ -44,7 +44,7 @@ internal static class CommandConfiguration
         Option<int> netSlotsOption = CreateNetSlotsOption();
 
         Option<bool> debugOption = new(
-            ["--debugmode", "-debugmode", "-debug", "--debug"],
+            ["--debugmode", "-debugmode", "-debug", "--debug", "-d"],
             "Enable debug mode");
 
         Option<bool> sscOption = new(
