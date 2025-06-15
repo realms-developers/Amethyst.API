@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>10.2.3</AssemblyVersion>
-    <Version>10.2.3</Version>
+    <AssemblyVersion>10.2.4</AssemblyVersion>
+    <Version>10.2.4</Version>
     <Title>Amethyst</Title>
     <Product>Amethyst</Product>
     <Description>Amethyst is a modern, high-performance API for Terraria servers, offering complete control and customization over every aspect of your server.</Description>
