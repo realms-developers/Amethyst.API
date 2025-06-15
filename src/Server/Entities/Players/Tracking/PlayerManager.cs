@@ -1,11 +1,10 @@
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Hooks.Base;
-using Amethyst.Network;
 using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Server.Entities.Base;
 using Amethyst.Systems.Chat;
-using Amethyst.Systems.Chat.Misc.Context;
+using Amethyst.Systems.Chat.Base.Misc.Context;
 using Terraria;
 
 namespace Amethyst.Server.Entities.Players.Tracking;

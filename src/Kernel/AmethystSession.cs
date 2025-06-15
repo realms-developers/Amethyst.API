@@ -3,22 +3,19 @@ using Amethyst.Extensions.Base;
 using Amethyst.Extensions.Base.Result;
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Utility;
+using Amethyst.Hooks.Base;
+using Amethyst.Kernel.Console;
 using Amethyst.Kernel.Profiles;
 using Amethyst.Server;
 using Amethyst.Systems.Characters;
 using Amethyst.Systems.Commands.Dynamic.Utilities;
 using Amethyst.Text;
-using Amethyst.Kernel.Console;
-using Amethyst.Hooks.Base;
 
 namespace Amethyst.Kernel;
 
 public static class AmethystSession
 {
-    static AmethystSession()
-    {
-        Profile = AmethystKernel.Profile!;
-    }
+    static AmethystSession() => Profile = AmethystKernel.Profile!;
 
     public static ServerProfile Profile { get; }
 

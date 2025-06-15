@@ -1,28 +1,29 @@
 using System.Net;
 using Amethyst.Kernel;
-using Amethyst.Server.Entities;
 using Amethyst.Network.Engine;
 using Amethyst.Network.Engine.Delegates;
 using Amethyst.Network.Engine.Packets;
-using Amethyst.Server.Entities.Players;
-using Amethyst.Network.Packets;
+using Amethyst.Network.Handling;
+using Amethyst.Network.Handling.Mechanism.Sections;
+using Amethyst.Network.Handling.NetMessagePatch;
 using Amethyst.Network.Handling.Packets.Characters;
 using Amethyst.Network.Handling.Packets.Chat;
+using Amethyst.Network.Handling.Packets.Chests;
 using Amethyst.Network.Handling.Packets.Handshake;
-using Amethyst.Network.Handling.Packets.Platform;
-using Amethyst.Network.Handling.Mechanism.Sections;
-using Amethyst.Network.Handling.Packets.Players;
-using Amethyst.Network.Handling.Packets.Other;
-using Terraria;
 using Amethyst.Network.Handling.Packets.Items;
-using Amethyst.Network.Handling.NetMessagePatch;
-using Amethyst.Network.Handling.Packets.NPCs;
-using Amethyst.Network.Handling.Packets.Signs;
-using Amethyst.Network.Handling.Packets.Projectiles;
-using Amethyst.Network.Handling.Packets.World;
-using Amethyst.Network.Handling.Packets.TileEntities;
 using Amethyst.Network.Handling.Packets.NetModules;
-using Amethyst.Network.Handling;
+using Amethyst.Network.Handling.Packets.NPCs;
+using Amethyst.Network.Handling.Packets.Other;
+using Amethyst.Network.Handling.Packets.Platform;
+using Amethyst.Network.Handling.Packets.Players;
+using Amethyst.Network.Handling.Packets.Projectiles;
+using Amethyst.Network.Handling.Packets.Signs;
+using Amethyst.Network.Handling.Packets.TileEntities;
+using Amethyst.Network.Handling.Packets.World;
+using Amethyst.Network.Packets;
+using Amethyst.Server.Entities;
+using Amethyst.Server.Entities.Players;
+using Terraria;
 
 namespace Amethyst.Network;
 
@@ -41,8 +42,8 @@ public static class NetworkManager
     internal static List<PacketInvokeHandler>?[] DirectHandlers = new List<PacketInvokeHandler>?[256];
     internal static List<PacketInvokeHandler> OverlapHandlers = [];
 
-    private static readonly PacketInvokeHandler[][] _InvokeHandlers = new PacketInvokeHandler[256][];
-    private static PacketInvokeHandler[] _InvokeOverlapHandlers = [];
+    private static readonly PacketInvokeHandler[][] _invokeHandlers = new PacketInvokeHandler[256][];
+    private static PacketInvokeHandler[] _invokeOverlapHandlers = [];
 
     internal static AmethystTcpServer? TcpServer;
 
@@ -71,9 +72,9 @@ public static class NetworkManager
     {
         RegisterPacketHandlers();
 
-        for (int i = 0; i < _InvokeHandlers.Length; i++)
+        for (int i = 0; i < _invokeHandlers.Length; i++)
         {
-            _InvokeHandlers[i] = [];
+            _invokeHandlers[i] = [];
         }
 
         NetworkPatcher.Initialize();
@@ -112,11 +113,11 @@ public static class NetworkManager
             bool ignore = false;
             byte packetId = data[2];
 
-            if (_InvokeOverlapHandlers.Length > 0)
+            if (_invokeOverlapHandlers.Length > 0)
             {
-                for (int i = 0; i < _InvokeOverlapHandlers.Length; i++)
+                for (int i = 0; i < _invokeOverlapHandlers.Length; i++)
                 {
-                    PacketInvokeHandler handler = _InvokeOverlapHandlers[i];
+                    PacketInvokeHandler handler = _invokeOverlapHandlers[i];
                     handler(EntityTrackers.Players[client._index], data, ref ignore);
 
                     if (ignore)
@@ -126,7 +127,7 @@ public static class NetworkManager
                 }
             }
 
-            PacketInvokeHandler[] directHandlers = _InvokeHandlers[packetId];
+            PacketInvokeHandler[] directHandlers = _invokeHandlers[packetId];
             if (directHandlers != null && directHandlers.Length > 0)
             {
                 for (int i = 0; i < directHandlers.Length; i++)
@@ -161,7 +162,7 @@ public static class NetworkManager
         foreach (Type type in typeof(NetworkManager).Assembly.GetTypes())
         {
             if (type.Namespace != "Amethyst.Network.Packets"
-                || type.GetInterfaces().Any(p => p.Name.StartsWith("IPacket"))
+                || type.GetInterfaces().Any(p => p.Name.StartsWith("IPacket", StringComparison.InvariantCulture))
                 || type.Assembly.GetType($"{type.FullName}Packet") == null)
             {
                 continue;
@@ -186,7 +187,7 @@ public static class NetworkManager
         ArgumentNullException.ThrowIfNull(handler);
         OverlapHandlers.Add(handler);
 
-        _InvokeOverlapHandlers = [.. OverlapHandlers];
+        _invokeOverlapHandlers = [.. OverlapHandlers];
     }
 
     public static void RemoveOverlapHandler(PacketInvokeHandler handler)
@@ -194,7 +195,7 @@ public static class NetworkManager
         ArgumentNullException.ThrowIfNull(handler);
         OverlapHandlers.Remove(handler);
 
-        _InvokeOverlapHandlers = [.. OverlapHandlers];
+        _invokeOverlapHandlers = [.. OverlapHandlers];
     }
 
     public static void AddDirectHandler(int packetType, PacketInvokeHandler handler)
@@ -209,7 +210,7 @@ public static class NetworkManager
         }
         DirectHandlers[packetType]!.Add(handler);
 
-        _InvokeHandlers[packetType] = [.. DirectHandlers[packetType]!];
+        _invokeHandlers[packetType] = [.. DirectHandlers[packetType]!];
     }
 
     public static void RemoveDirectHandler(int packetType, PacketInvokeHandler handler)
@@ -222,7 +223,7 @@ public static class NetworkManager
         }
         DirectHandlers[packetType]!.Remove(handler);
 
-        _InvokeHandlers[packetType] = [.. DirectHandlers[packetType]!];
+        _invokeHandlers[packetType] = [.. DirectHandlers[packetType]!];
     }
 
     public static void AddHandler<TPacket>(PacketHook<TPacket> hook, int priority = 0)

@@ -8,7 +8,7 @@ using Amethyst.Network.Structures;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Chat;
-using Amethyst.Systems.Chat.Misc.Context;
+using Amethyst.Systems.Chat.Base.Misc.Context;
 using Amethyst.Systems.Users;
 using Amethyst.Systems.Users.Players;
 using Amethyst.Systems.Users.Telemetry;
@@ -162,11 +162,11 @@ public sealed class HandshakeHandler : INetworkHandler
         foreach (string banword in cfg.NicknameBanwords)
         {
             if (name.Contains(banword, StringComparison.OrdinalIgnoreCase))
-        {
-            plr.Kick("network.bannedNickname");
-            AmethystLog.Network.Error(nameof(HandshakeHandler), $"Player #{plr.Index} tried to connect with a banned nickname: {name}");
-            return;
-        }
+            {
+                plr.Kick("network.bannedNickname");
+                AmethystLog.Network.Error(nameof(HandshakeHandler), $"Player #{plr.Index} tried to connect with a banned nickname: {name}");
+                return;
+            }
         }
 
         IEnumerable<char> invalidChars = name.ToLowerInvariant().Where(c => !cfg.NicknameFilter.Contains(c));

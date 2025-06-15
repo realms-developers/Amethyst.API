@@ -103,7 +103,7 @@ public static class BasicCommands
     [CommandRepository("root")]
     [CommandSyntax("en-US", "<player>")]
     [CommandSyntax("ru-RU", "<игрок>")]
-    public static void GiveRoot(IAmethystUser user, CommandInvokeContext ctx, PlayerEntity player)
+    public static void GiveRoot(IAmethystUser _, CommandInvokeContext ctx, PlayerEntity player)
     {
         PlayerUser? plrUser = player.User;
         if (plrUser == null)
@@ -175,12 +175,12 @@ public static class BasicCommands
     [Command(["exit"], "commands.desc.shutdown")]
     [CommandSyntax("en-US", "-f(orce)")]
     [CommandRepository("root")]
-    public static void Exit(IAmethystUser user, CommandInvokeContext ctx, string? args = null)
+    public static void Exit(IAmethystUser _, CommandInvokeContext __, string? args = null)
         => AmethystSession.Launcher.StopServer(args?.Contains("-f") == true || args?.Contains("-force") == true);
 
     [Command(["save"], "commands.desc.save")]
     [CommandRepository("root")]
-    public static void Save(IAmethystUser user, CommandInvokeContext ctx)
+    public static void Save(IAmethystUser _, CommandInvokeContext __)
         => WorldFile.SaveWorld();
 
     [Command(["lang ru"], "Установить русский язык.")]

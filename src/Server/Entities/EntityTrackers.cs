@@ -1,5 +1,6 @@
 using Amethyst.Server.Entities.Base;
 using Amethyst.Server.Entities.Items;
+using Amethyst.Server.Entities.Items.Tracking;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Server.Entities.Players.Tracking;
 

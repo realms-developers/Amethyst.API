@@ -15,7 +15,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.repositories")]
     [CommandSyntax("en-US", "[page]")]
     [CommandSyntax("ru-RU", "[страница]")]
-    public static void CommandRepositories(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
+    public static void CommandRepositories(IAmethystUser _, CommandInvokeContext ctx, int page = 0)
     {
         PagesCollection collection = PagesCollection.AsListPage(CommandsOrganizer.Repositories.Select(p => p.Name), 80);
         if (collection.Pages.Count == 0)
@@ -32,7 +32,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.repositoryCommands")]
     [CommandSyntax("en-US", "<repository name>", "[page]")]
     [CommandSyntax("ru-RU", "<имя репозитория>", "[страница]")]
-    public static void CommandRepositoryCommands(IAmethystUser user, CommandInvokeContext ctx, string repositoryName, int page = 0)
+    public static void CommandRepositoryCommands(IAmethystUser _, CommandInvokeContext ctx, string repositoryName, int page = 0)
     {
         CommandRepository? repo = CommandsOrganizer.GetRepository(repositoryName);
         if (repo is null)
@@ -56,7 +56,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.info")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
-    public static void CommandInfo(IAmethystUser user, CommandInvokeContext ctx, string commandName)
+    public static void CommandInfo(IAmethystUser _, CommandInvokeContext ctx, string commandName)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -187,7 +187,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.setDisabled")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
-    public static void CommandSetDisabled(IAmethystUser user, CommandInvokeContext ctx, string commandName)
+    public static void CommandSetDisabled(IAmethystUser _, CommandInvokeContext ctx, string commandName)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -214,7 +214,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.setEnabled")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
-    public static void CommandSetEnabled(IAmethystUser user, CommandInvokeContext ctx, string commandName)
+    public static void CommandSetEnabled(IAmethystUser _, CommandInvokeContext ctx, string commandName)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -241,7 +241,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.setHidden")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
-    public static void CommandSetHidden(IAmethystUser user, CommandInvokeContext ctx, string commandName)
+    public static void CommandSetHidden(IAmethystUser _, CommandInvokeContext ctx, string commandName)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -268,7 +268,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.setShown")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
-    public static void CommandSetShown(IAmethystUser user, CommandInvokeContext ctx, string commandName)
+    public static void CommandSetShown(IAmethystUser _, CommandInvokeContext ctx, string commandName)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -295,7 +295,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.setPermission")]
     [CommandSyntax("en-US", "<command name>", "[permission]")]
     [CommandSyntax("ru-RU", "<имя команды>", "[разрешение]")]
-    public static void CommandSetPermission(IAmethystUser user, CommandInvokeContext ctx, string commandName, string? permission = null)
+    public static void CommandSetPermission(IAmethystUser _, CommandInvokeContext ctx, string commandName, string? permission = null)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -324,7 +324,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.addName")]
     [CommandSyntax("en-US", "<command name>", "<new name>")]
     [CommandSyntax("ru-RU", "<имя команды>", "<новое имя>")]
-    public static void CommandAddName(IAmethystUser user, CommandInvokeContext ctx, string commandName, string newName)
+    public static void CommandAddName(IAmethystUser _, CommandInvokeContext ctx, string commandName, string newName)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -351,7 +351,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.removeName")]
     [CommandSyntax("en-US", "<command name>", "<name to remove>")]
     [CommandSyntax("ru-RU", "<имя команды>", "<имя для удаления>")]
-    public static void CommandRemoveName(IAmethystUser user, CommandInvokeContext ctx, string commandName, string nameToRemove)
+    public static void CommandRemoveName(IAmethystUser _, CommandInvokeContext ctx, string commandName, string nameToRemove)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -378,7 +378,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.renameCommand")]
     [CommandSyntax("en-US", "<command name>", "<new name>")]
     [CommandSyntax("ru-RU", "<имя команды>", "<новое имя>")]
-    public static void CommandRenameCommand(IAmethystUser user, CommandInvokeContext ctx, string commandName, string newName)
+    public static void CommandRenameCommand(IAmethystUser _, CommandInvokeContext ctx, string commandName, string newName)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
@@ -405,7 +405,7 @@ public static class CommandManagementCommands
     [CommandPermission("amethyst.commandManagement.commandNames")]
     [CommandSyntax("en-US", "<command name>")]
     [CommandSyntax("ru-RU", "<имя команды>")]
-    public static void CommandNames(IAmethystUser user, CommandInvokeContext ctx, string commandName)
+    public static void CommandNames(IAmethystUser _, CommandInvokeContext ctx, string commandName)
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
