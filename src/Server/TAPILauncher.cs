@@ -35,7 +35,6 @@ public sealed class TAPILauncher : IServerLauncher
     {
         using var main = new Main();
 
-        NetworkManager.Initialize();
         LaunchInitializer.LoadParameters(main);
         LanguageManager.Instance.SetLanguage(GameCulture.DefaultCulture);
         Lang.InitializeLegacyLocalization();
