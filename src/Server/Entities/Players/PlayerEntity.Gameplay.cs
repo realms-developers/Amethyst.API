@@ -196,7 +196,7 @@ public sealed partial class PlayerEntity : IServerEntity
         return projIndex.Value;
     }
 
-    public void SendStatusText(string text, bool padding)
+    public void SendStatusText(string text, bool padding = false)
     {
         if (padding)
         {
@@ -209,10 +209,10 @@ public sealed partial class PlayerEntity : IServerEntity
     public void SendStatusText(NetText text)
         => NetMessage.SendData(9, Index, -1, text);
 
-    public void CreateCombatText(string text, NetColor color, NetVector2? position, bool broadcast = true)
+    public void CreateCombatText(string text, NetColor color, NetVector2? position = null, bool broadcast = true)
         => CreateCombatText(new NetText() { Mode = 0, Text = text }, color, position, broadcast);
 
-    public void CreateCombatText(NetText text, NetColor color, NetVector2? position, bool broadcast = true)
+    public void CreateCombatText(NetText text, NetColor color, NetVector2? position = null, bool broadcast = true)
     {
         position ??= Position with { Y = Position.Y - 32f };
 
