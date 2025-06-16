@@ -246,7 +246,7 @@ public sealed class NPCsHandler : INetworkHandler
             return;
         }
 
-        npc.AddBuff(packet.BuffTime, packet.BuffType, true);
+        npc.AddBuff(packet.BuffType, packet.BuffTime, true);
 
         NetMessage.TrySendData(54, -1, -1, NetworkText.Empty, packet.NPCIndex);
     }
