@@ -2,6 +2,12 @@
 **/[Oo]bj/
 **/[Bb]in/
 
+# Ignore all JSON files in localization subfolders
+/localization/*/*.json
+
+# But keep files that start with the language name and include ".amethyst."
+!/localization/*/*amethyst*.json
+
 # .NET
 
 ## A streamlined .gitignore for modern .NET projects
