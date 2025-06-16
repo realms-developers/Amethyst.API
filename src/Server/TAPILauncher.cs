@@ -115,45 +115,39 @@ public sealed class TAPILauncher : IServerLauncher
                 num7 += totalMilliseconds - num6;
                 stopwatch.Reset();
                 stopwatch.Start();
-                if (Netplay.HasClients || AmethystSession.Profile.ForceUpdate)
+                
+                if (AmethystSession.Profile.DebugMode)
                 {
                     tpsCounter++;
-                    if (AmethystSession.Profile.DebugMode)
-                    {
-                        updateSw.Start();
-                        Main.instance.Update(new GameTime());
-                        updateSw.Stop();
+                    updateSw.Start();
+                    Main.instance.Update(new GameTime());
+                    updateSw.Stop();
 
-                        timings.Add(updateSw.Elapsed.TotalMilliseconds);
-                        updateSw.Reset();
-                        tpsTimer ??= new Timer(_ =>
+                    timings.Add(updateSw.Elapsed.TotalMilliseconds);
+                    updateSw.Reset();
+                    tpsTimer ??= new Timer(_ =>
+                    {
+                        int tps = Interlocked.Exchange(ref tpsCounter, 0);
+                        TPS = tps;
+
+                        if (!AmethystSession.Profile.DisableFrameDebug)
                         {
-                            int tps = Interlocked.Exchange(ref tpsCounter, 0);
-                            TPS = tps;
+                            IOrderedEnumerable<double> ordered = timings.OrderBy(p => p);
 
-                            if (!AmethystSession.Profile.DisableFrameDebug)
+                            double totalMs = 0;
+                            foreach (double ms in ordered)
                             {
-                                IOrderedEnumerable<double> ordered = timings.OrderBy(p => p);
-
-                                double totalMs = 0;
-                                foreach (double ms in ordered)
-                                {
-                                    totalMs += ms;
-                                }
-                                AmethystLog.Main.Debug("TAPI", $"TPS: {tps} Game Update: [Min-Max range: {Math.Ceiling(ordered.First())}-{Math.Ceiling(ordered.Last())}ms] average: {Math.Ceiling(totalMs / 180)}ms, total: {(int)totalMs}ms");
+                                totalMs += ms;
                             }
+                            AmethystLog.Main.Debug("TAPI", $"TPS: {tps} Game Update: [Min-Max range: {Math.Ceiling(ordered.First())}-{Math.Ceiling(ordered.Last())}ms] average: {Math.Ceiling(totalMs / 180)}ms, total: {(int)totalMs}ms");
+                        }
 
-                            timings.Clear();
-                        }, null, 1000, 1000);
-                    }
-                    else
-                    {
-                        Main.instance.Update(new GameTime());
-                    }
+                        timings.Clear();
+                    }, null, 1000, 1000);
                 }
-                else if (Main.saveTime.IsRunning)
+                else
                 {
-                    Main.saveTime.Stop();
+                    Main.instance.Update(new GameTime());
                 }
                 // if (Main.OnTickForThirdPartySoftwareOnly != null)
                 // {
