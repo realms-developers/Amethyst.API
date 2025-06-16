@@ -25,6 +25,8 @@ public static class AmethystSession
     {
         Launcher.Initialize();
 
+        NetworkManager.Initialize();
+
         ExtensionsOrganizer.LoadModules();
         ExtensionsOrganizer.LoadPlugins();
 
