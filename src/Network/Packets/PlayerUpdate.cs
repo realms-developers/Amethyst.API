@@ -5,6 +5,7 @@
 using Amethyst.Network.Engine.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Network.Utilities;
+using Terraria;
 
 namespace Amethyst.Network.Packets;
 
@@ -15,54 +16,6 @@ public sealed class PlayerUpdatePacket : IPacket<PlayerUpdate>
     public static PlayerUpdate Deserialize(ReadOnlySpan<byte> data, int offset = 0)
     {
         FastPacketReader reader = new(data, offset);
-
-        /*
-            				Player player10 = Main.player[num138];
-				BitsByte bitsByte7 = reader.ReadByte();
-				BitsByte bitsByte8 = reader.ReadByte();
-				BitsByte bitsByte9 = reader.ReadByte();
-				BitsByte bitsByte10 = reader.ReadByte();
-				player10.controlUp = bitsByte7[0];
-				player10.controlDown = bitsByte7[1];
-				player10.controlLeft = bitsByte7[2];
-				player10.controlRight = bitsByte7[3];
-				player10.controlJump = bitsByte7[4];
-				player10.controlUseItem = bitsByte7[5];
-				player10.direction = (bitsByte7[6] ? 1 : (-1));
-				if (bitsByte8[0])
-				{
-					player10.pulley = true;
-					player10.pulleyDir = (byte)((!bitsByte8[1]) ? 1u : 2u);
-				}
-				else
-				{
-					player10.pulley = false;
-				}
-				player10.vortexStealthActive = bitsByte8[3];
-				player10.gravDir = (bitsByte8[4] ? 1 : (-1));
-				player10.TryTogglingShield(bitsByte8[5]);
-				player10.ghost = bitsByte8[6];
-				player10.selectedItem = reader.ReadByte();
-				player10.position = reader.ReadVector2();
-				if (bitsByte8[2])
-				{
-					player10.velocity = reader.ReadVector2();
-				}
-				else
-				{
-					player10.velocity = Vector2.Zero;
-				}
-				if (bitsByte9[6])
-				{
-					player10.PotionOfReturnOriginalUsePosition = reader.ReadVector2();
-					player10.PotionOfReturnHomePosition = reader.ReadVector2();
-				}
-				else
-				{
-					player10.PotionOfReturnOriginalUsePosition = null;
-					player10.PotionOfReturnHomePosition = null;
-				}
-        */
 
         byte PlayerIndex = reader.ReadByte();
         byte Flags = reader.ReadByte();

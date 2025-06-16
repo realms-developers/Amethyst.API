@@ -20,8 +20,11 @@ public sealed partial class PlayerEntity : IServerEntity
     public ref int Mana => ref TPlayer.statMana;
     public ref int MaxMana => ref TPlayer.statManaMax;
 
+    public ref int SelectedItem => ref TPlayer.selectedItem;
     public ref Vector2 Position => ref TPlayer.position;
     public ref Vector2 Velocity => ref TPlayer.velocity;
+    public ref Vector2? PotionOfReturnOriginal => ref TPlayer.PotionOfReturnOriginalUsePosition;
+    public ref Vector2? PotionOfReturnHome => ref TPlayer.PotionOfReturnHomePosition;
 
     public ref Item HeldItem => ref TPlayer.inventory[TPlayer.selectedItem];
 

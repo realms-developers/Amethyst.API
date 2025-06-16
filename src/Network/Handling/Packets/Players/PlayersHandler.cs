@@ -466,6 +466,49 @@ public sealed class PlayersHandler : INetworkHandler
 
         plr.PlayerUpdateInfo = packet;
 
+        Player tplr = plr.TPlayer;
+        NetBitsByte bb1 = packet.Flags;
+        NetBitsByte bb2 = packet.Flags;
+        NetBitsByte bb3 = packet.Flags;
+        NetBitsByte bb4 = packet.Flags;
+        tplr.controlUp = bb1[0];
+        tplr.controlDown = bb1[1];
+        tplr.controlLeft = bb1[2];
+        tplr.controlRight = bb1[3];
+        tplr.controlJump = bb1[4];
+        tplr.controlUseItem = bb1[5];
+        tplr.direction = (bb1[6] ? 1 : (-1));
+        if (bb2[0])
+		{
+			tplr.pulley = true;
+			tplr.pulleyDir = (byte)((!bb2[1]) ? 1u : 2u);
+		}
+		else
+		{
+			tplr.pulley = false;
+        }
+        tplr.vortexStealthActive = bb2[3];
+        tplr.gravDir = (bb2[4] ? 1 : (-1));
+        tplr.TryTogglingShield(bb2[5]);
+        tplr.ghost = bb2[6];
+
+        tplr.tryKeepingHoveringUp = bb3[0];
+        tplr.IsVoidVaultEnabled = bb3[1];
+        tplr.sitting.isSitting = bb3[2];
+        tplr.downedDD2EventAnyDifficulty = bb3[3];
+        tplr.isPettingAnimal = bb3[4];
+        tplr.isTheAnimalBeingPetSmall = bb3[5];
+        tplr.tryKeepingHoveringDown = bb3[7];
+        tplr.sleeping.SetIsSleepingAndAdjustPlayerRotation(tplr, bb4[0]);
+        tplr.autoReuseAllWeapons = bb4[1];
+        tplr.controlDownHold = bb4[2];
+        tplr.isOperatingAnotherEntity = bb4[3];
+        tplr.controlUseTile = bb4[4];
+
+        plr.SelectedItem = packet.SelectedItem;
+        plr.PotionOfReturnHome = packet.PotionHomePosition;
+        plr.PotionOfReturnOriginal = packet.PotionOriginalPosition;
+
         if (HandlersConfiguration.Instance.SyncPlayers)
         {
             PacketSendingUtility.ExcludeBroadcastConnected(plr.Index, PlayerUpdatePacket.Serialize(packet)); // Serialize, because rawPacket can be shitty
