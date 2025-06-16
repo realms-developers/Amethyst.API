@@ -50,7 +50,10 @@ public static class AmethystSession
 
     private static void PrintWelcome()
     {
-        System.Console.Clear();
+        if (!Profile.DebugMode)
+        {
+            System.Console.Clear();
+        }
 
         ModernConsole.WriteLine(@"
 $!b$m      __                   _   _               _
