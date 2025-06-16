@@ -6,6 +6,7 @@ using Amethyst.Hooks.Args.Utility;
 using Amethyst.Hooks.Base;
 using Amethyst.Kernel.Console;
 using Amethyst.Kernel.Profiles;
+using Amethyst.Network;
 using Amethyst.Server;
 using Amethyst.Systems.Characters;
 using Amethyst.Systems.Commands.Dynamic.Utilities;
