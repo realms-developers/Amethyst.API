@@ -73,7 +73,7 @@ public sealed class PluginsRepository : IExtensionRepository
 
             try
             {
-                Assembly assembly = SharedPluginLoadContext.Instance.LoadPlugin(file);
+                Assembly assembly = Assembly.Load(File.ReadAllBytes(file));
                 PluginInstance? ext = AssemblyUtility.TryCreateExtension<PluginInstance>(
                     assembly, out ExtensionMetadataAttribute? attribute);
 

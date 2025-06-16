@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.Reflection;
 using Amethyst.Kernel.Console;
 using Amethyst.Kernel.Profiles;
 
@@ -10,7 +11,12 @@ internal static class AmethystKernel
 
     public static void Main(string[] args)
     {
-        SharedDependencyContext.Instance.PreloadAllDependencies();
+        AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+        {
+            string assemblyName = new AssemblyName(args.Name).Name + ".dll";
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "deps", assemblyName);
+            return File.Exists(path) ? Assembly.LoadFile(path) : null;
+        };
 
         ConsoleHooks.AttachHooks();
         RootCommand rootCommand = CommandConfiguration.BuildRootCommand();

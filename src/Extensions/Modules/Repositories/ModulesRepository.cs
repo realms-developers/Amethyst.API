@@ -71,7 +71,7 @@ public sealed class ModulesRepository : IExtensionRepository
                 continue;
             }
 
-            Assembly assembly = ModuleLoadContext.Instance.LoadFromAssemblyPath(file);
+            Assembly assembly = Assembly.LoadFrom(Path.Combine(Directory.GetCurrentDirectory(), file)); // Still needs the full path to load
             Type? ext = AssemblyUtility.TryFindExtensionType(assembly, out ExtensionMetadataAttribute? attribute);
 
             if (ext != null)
@@ -112,6 +112,8 @@ public sealed class ModulesRepository : IExtensionRepository
                 results.Add(errorResult);
             }
         }
+
+        _state = ExtensionState.Initialized;
 
         return results;
     }
