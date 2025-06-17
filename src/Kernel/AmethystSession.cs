@@ -56,9 +56,8 @@ public static class AmethystSession
         if (!Profile.DebugMode)
         {
             System.Console.Clear();
-        }
 
-        ModernConsole.WriteLine(@"
+            ModernConsole.WriteLine(@"
 $!b$m      __                   _   _               _
 $!b$m     / /_ _ _ __ ___   ___| |_| |__  _   _ ___| |_
 $!b$m    / / _` | '_ ` _ \ / _ \ __| '_ \| | | / __| __|
@@ -66,16 +65,15 @@ $!b$m _ / / (_| | | | | | |  __/ |_| | | | |_| \__ \ |_
 $!b$m(_)_/ \__,_|_| |_| |_|\___|\__|_| |_|\__, |___/\__|
 $!b$m                                     |___/         ");
 
-        ModernConsole.WriteLine($"\n🛡️  $!b$mAmethyst v{typeof(AmethystSession).Assembly.GetName().Version} $!r$!bis distributed under the MIT License.");
-        ModernConsole.WriteLine($"🛡️  You are free to use, modify and distribute the code, provided that the author is attributed.");
+            ModernConsole.WriteLine($"\n🛡️  $!b$mAmethyst v{typeof(AmethystSession).Assembly.GetName().Version} $!bis distributed under the MIT License.");
+            ModernConsole.WriteLine($"🛡️  You are free to use, modify and distribute the code, provided that the author is attributed.");
 
-        ModernConsole.WriteLine($"\n💾 Server with profile $!d$m'$!r$m{Profile.Name}$!d'$!r runs in {(Profile.DebugMode ? "$!b$rDebug" : "$!b$!gDefault")} $!rmode.");
-
-        if (Profile.DebugMode)
+            ModernConsole.WriteLine($"\n🛡️  Repository: $!b$mhttps://github.com/realms-developers/Amethyst.API");
+        }
+        else
         {
-            ModernConsole.WriteLine("❗ $rThis means that more data needed for development will be logged to the console.");
-            ModernConsole.WriteLine("❗ $rDebug-mode also provides $!b/groot $!r$rcommand that gives all permissions to player.");
-            ModernConsole.WriteLine("❗ $r$!bDo not use this mode on public servers!");
+            ModernConsole.WriteLine($"\n🛡️  $!b$mAmethyst v{typeof(AmethystSession).Assembly.GetName().Version}");
+            ModernConsole.WriteLine($"❗ $rDebug-mode provides $!b/groot $!r$rcommand that gives all permissions to player.");
         }
 
         IReadOnlyDictionary<IExtension, ExtensionHandleResult> loadedMod = ExtensionsOrganizer.Modules.Repositories
