@@ -28,7 +28,7 @@ public sealed class TEHandler : INetworkHandler
 
     private void OnTryPlaceItemWeaponsRack(PlayerEntity plr, ref TETryPlaceItemWeaponsRack packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != ConnectionPhase.Connected)
+        if (plr.Phase != ConnectionPhase.Connected || !(packet.X, packet.Y).IsInWorld())
             return;
 
         TEWeaponsRack.TryPlacing(packet.X, packet.Y, packet.ItemType, packet.ItemPrefix, packet.ItemStack);
@@ -36,7 +36,7 @@ public sealed class TEHandler : INetworkHandler
 
     private void OnTryPlaceItemItemFrame(PlayerEntity plr, ref TETryPlaceItemItemFrame packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != ConnectionPhase.Connected)
+        if (plr.Phase != ConnectionPhase.Connected || !(packet.X, packet.Y).IsInWorld())
             return;
 
         TEItemFrame.TryPlacing(packet.X, packet.Y, packet.ItemType, packet.ItemPrefix, packet.ItemStack);
@@ -70,7 +70,7 @@ public sealed class TEHandler : INetworkHandler
 
     private void OnTryPlaceItemFoodPlatter(PlayerEntity plr, ref TETryPlaceItemFoodPlatter packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != ConnectionPhase.Connected)
+        if (plr.Phase != ConnectionPhase.Connected || !(packet.X, packet.Y).IsInWorld())
             return;
 
         TEFoodPlatter.TryPlacing(packet.X, packet.Y, packet.ItemType, packet.ItemPrefix, packet.ItemStack);
@@ -104,7 +104,7 @@ public sealed class TEHandler : INetworkHandler
 
     private void OnPlaceEntity(PlayerEntity plr, ref TEPlaceEntity packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
     {
-        if (plr.Phase != ConnectionPhase.Connected)
+        if (plr.Phase != ConnectionPhase.Connected || !(packet.X, packet.Y).IsInWorld())
             return;
 
         if (WorldGen.InWorld(packet.X, packet.Y) && !TileEntity.ByPosition.ContainsKey(new Point16(packet.X, packet.Y)))
@@ -154,6 +154,11 @@ public sealed class TEHandler : INetworkHandler
 			TileEntity tileEntity = TileEntity.Read(breader, networkSend: true);
             breader.Dispose();
             reader.StreamClose(stream);
+
+            if (!(tileEntity.Position.X, tileEntity.Position.Y).IsInWorld())
+            {
+                return;
+            }
 
 			tileEntity.ID = num67;
 			TileEntity.ByID[tileEntity.ID] = tileEntity;

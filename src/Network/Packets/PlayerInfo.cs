@@ -5,6 +5,7 @@
 using Amethyst.Network.Engine.Packets;
 using Amethyst.Network.Structures;
 using Amethyst.Network.Utilities;
+using Terraria;
 
 namespace Amethyst.Network.Packets;
 
@@ -21,7 +22,12 @@ public sealed class PlayerInfoPacket : IPacket<PlayerInfo>
         byte HairID = reader.ReadByte();
         string Name = reader.ReadString();
         byte HairDyeID = reader.ReadByte();
-        bool[] AccessoryVisiblity = reader.ReadBooleanArray(10);
+        bool[] AccessoryVisiblity = new bool[10];
+        ushort num = reader.ReadUInt16();
+        for (int i = 0; i < AccessoryVisiblity.Length; i++)
+        {
+            AccessoryVisiblity[i] = (num & (1 << i)) != 0;
+        }
         byte MiscVisiblity = reader.ReadByte();
         NetColor HairColor = reader.ReadNetColor();
         NetColor SkinColor = reader.ReadNetColor();
@@ -65,7 +71,16 @@ public sealed class PlayerInfoPacket : IPacket<PlayerInfo>
         writer.WriteByte(packet.HairID);
         writer.WriteString(packet.Name);
         writer.WriteByte(packet.HairDyeID);
-        writer.WriteBooleanArray(packet.AccessoryVisiblity);
+        ushort num = 0;
+        for (int i = 0; i < packet.AccessoryVisiblity.Length; i++)
+        {
+            if (packet.AccessoryVisiblity[i])
+            {
+                num |= (ushort)(1 << i);
+            }
+        }
+
+        writer.WriteUInt16(num);
         writer.WriteByte(packet.MiscVisiblity);
         writer.WriteNetColor(packet.HairColor);
         writer.WriteNetColor(packet.SkinColor);
