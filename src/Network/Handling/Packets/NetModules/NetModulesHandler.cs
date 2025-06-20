@@ -32,29 +32,33 @@ public sealed class NetModulesHandler : INetworkHandler
 
         switch (packet.NetModuleType)
         {
-            case 0: // liquids
-                if (plr.User.Permissions.HasPermission("world.liquids") != PermissionAccess.HasPermission)
-                    return;
+            // case 0: // liquids
+            //     if (plr.User.Permissions.HasPermission("world.liquids") != PermissionAccess.HasPermission)
+            //         return;
 
-                int num = reader.ReadUInt16();
-                for (int i = 0; i < num; i++)
-                {
-                    int num2 = reader.ReadInt32();
-                    byte liquid = reader.ReadByte();
-                    byte liquidType = reader.ReadByte();
-                    int num3 = (num2 >> 16) & 0xFFFF;
-                    int num4 = num2 & 0xFFFF;
-                    Tile tile = Main.tile[num3, num4];
-                    if (tile != null)
-                    {
-                        tile.liquid = liquid;
-                        tile.liquidType(liquidType);
-                    }
-                }
-                break;
+            //     int num = reader.ReadUInt16();
+            //     for (int i = 0; i < num; i++)
+            //     {
+            //         int num2 = reader.ReadInt32();
+            //         byte liquid = reader.ReadByte();
+            //         byte liquidType = reader.ReadByte();
+            //         int num3 = (num2 >> 16) & 0xFFFF;
+            //         int num4 = num2 & 0xFFFF;
+            //         Tile tile = Main.tile[num3, num4];
+            //         if (tile != null)
+            //         {
+            //             tile.liquid = liquid;
+            //             tile.liquidType(liquidType);
+            //         }
+            //     }
+            //     break;
 
             case 2: // map ping
                 NetVector2 position = reader.ReadNetVector2();
+                if (position.X < 0 || position.Y < 0 || position.X >= Main.maxTilesX * 16 || position.Y >= Main.maxTilesY * 16)
+                {
+                    return; // Invalid position
+                }
                 FastPacketWriter writer = new(82, new byte[3 + sizeof(NetVector2) + sizeof(ushort)]);
                 writer.WriteUInt16(2);
                 writer.WriteNetVector2(position);
@@ -67,6 +71,11 @@ public sealed class NetModulesHandler : INetworkHandler
                 {
                     TeleportPylonInfo info = default;
                     info.PositionInTiles = new(reader.ReadInt16(), reader.ReadInt16());
+                    if (info.PositionInTiles.X < 0 || info.PositionInTiles.Y < 0 ||
+                        info.PositionInTiles.X >= Main.maxTilesX || info.PositionInTiles.Y >= Main.maxTilesY)
+                    {
+                        return; // Invalid position
+                    }
                     info.TypeOfPylon = (TeleportPylonType)reader.ReadByte();
                     Main.PylonSystem.HandleTeleportRequest(info, plr.Index);
                 }
@@ -81,6 +90,13 @@ public sealed class NetModulesHandler : INetworkHandler
                 settings.DeserializeFrom(binaryReader);
                 binaryReader.Dispose();
                 reader.StreamClose(stream);
+
+                if (settings.PositionInWorld.X < 0 || settings.PositionInWorld.Y < 0 ||
+                    settings.PositionInWorld.X >= Main.maxTilesX * 16 ||
+                    settings.PositionInWorld.Y >= Main.maxTilesY * 16)
+                {
+                    return; // Invalid position
+                }
 
                 FastPacketWriter writer2 = new(82, reader.Length);
                 writer2.WriteByteSpan(rawPacket.Slice(3, reader.Length - 3));
