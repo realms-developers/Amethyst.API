@@ -47,7 +47,5 @@
     <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
     <PackageReference Include="MySql.Data" Version="*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="9.0.5" />
   </ItemGroup>
 </Project>
