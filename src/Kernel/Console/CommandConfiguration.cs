@@ -35,11 +35,11 @@ internal static class CommandConfiguration
         Option<int> genHeightOption = CreateGenHeightOption();
 
         Option<string> worldPathOption = new(
-            ["--worldpath", "-worldpath", "-w"],
+            ["--worldpath", "-worldpath", "-wp"],
             "Set world path to load");
 
         Option<bool> worldRecreateOption = new(
-            ["--worldrecreate", "-worldrecreate"],
+            ["--worldrecreate", "-worldrecreate", "-wr"],
             "Recreate world");
 
         Option<int> netPortOption = CreateNetPortOption();
