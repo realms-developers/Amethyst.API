@@ -27,7 +27,7 @@ public sealed class CommandsService : IPluginService
     {
         foreach (CommandRepository repo in CommandsOrganizer.Repositories)
         {
-            foreach (ICommand command in repo.RegisteredCommands)
+            foreach (ICommand command in repo.RegisteredCommands.ToList()) // LOL BLYAT EXCEPTION
             {
                 if (command is DynamicCommand dynamicCommand && dynamicCommand.LoadIdentifier == BaseInstance.Root.LoadIdentifier)
                 {
