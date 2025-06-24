@@ -85,7 +85,7 @@ public sealed class HandshakeHandler : INetworkHandler
 
         plr.SendPacketBytes(PacketSendingUtility.CreateWorldInfoPacket());
 
-        // TODO: sync invasion
+        Main.SyncAnInvasion(plr.Index);
 
         plr.Phase = ConnectionPhase.WaitingSectionRequest;
     }
