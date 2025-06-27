@@ -169,11 +169,12 @@ public sealed class WorldHandler : INetworkHandler
             return;
 
         bool shouldSendTileSquare = false;
+        bool fail = packet.Type == 1;
 
         switch (packet.Action)
         {
             case 0:
-                WorldGen.KillTile(packet.TileX, packet.TileY, packet.Flags == 1);
+                WorldGen.KillTile(packet.TileX, packet.TileY, fail);
                 if (Main.netMode == 1 && packet.Flags != 1)
                     HitTile.ClearAllTilesAtThisLocation(packet.TileX, packet.TileY);
                 break;
@@ -186,13 +187,13 @@ public sealed class WorldHandler : INetworkHandler
                     break;
                 }
             case 2:
-                WorldGen.KillWall(packet.TileX, packet.TileY, packet.Flags == 1);
+                WorldGen.KillWall(packet.TileX, packet.TileY, fail);
                 break;
             case 3:
                 WorldGen.PlaceWall(packet.TileX, packet.TileY, packet.Type);
                 break;
             case 4:
-                WorldGen.KillTile(packet.TileX, packet.TileY, packet.Flags == 1, effectOnly: false, noItem: true);
+                WorldGen.KillTile(packet.TileX, packet.TileY, fail, effectOnly: false, noItem: true);
                 break;
             case 5:
                 WorldGen.PlaceWire(packet.TileX, packet.TileY);
@@ -245,7 +246,7 @@ public sealed class WorldHandler : INetworkHandler
                 return;
             case 20:
                 int prevType = Main.tile[packet.TileX, packet.TileY].type;
-                WorldGen.KillTile(packet.TileX, packet.TileY, packet.Flags == 1);
+                WorldGen.KillTile(packet.TileX, packet.TileY, fail);
                 packet.Type = (short)((Main.tile[packet.TileX, packet.TileY].active() && Main.tile[packet.TileX, packet.TileY].type == prevType) ? 1 : 0);
 
                 NetMessage.TrySendData(17, -1, -1, NetworkText.Empty, packet.Action, packet.TileX, packet.TileY, packet.Type, packet.Flags);
