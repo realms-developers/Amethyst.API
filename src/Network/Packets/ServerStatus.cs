@@ -30,7 +30,7 @@ public sealed class ServerStatusPacket : IPacket<ServerStatus>
 
     public static byte[] Serialize(ServerStatus packet)
     {
-        FastPacketWriter writer = new(9, 128);
+        FastPacketWriter writer = new(9, packet.StatusText.Text.Length * 2 + 10);
 
         writer.WriteInt32(packet.StatusMax);
         writer.WriteNetText(packet.StatusText);
