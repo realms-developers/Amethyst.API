@@ -211,7 +211,7 @@ public sealed partial class PlayerEntity : IServerEntity
         ServerStatus status = new ServerStatus()
         {
             StatusText = text,
-            StatusFlags = 0,
+            StatusFlags = 3,
         };
 
         SendPacketBytes(ServerStatusPacket.Serialize(status));
