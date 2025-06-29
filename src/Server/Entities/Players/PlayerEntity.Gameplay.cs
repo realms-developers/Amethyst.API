@@ -207,7 +207,15 @@ public sealed partial class PlayerEntity : IServerEntity
     }
 
     public void SendStatusText(NetText text)
-        => NetMessage.SendData(9, Index, -1, text);
+    {
+        ServerStatus status = new ServerStatus()
+        {
+            StatusText = text,
+            StatusFlags = 0,
+        };
+
+        SendPacketBytes(ServerStatusPacket.Serialize(status));
+    }
 
     public void CreateCombatText(string text, NetColor color, NetVector2? position = null, bool broadcast = true)
         => CreateCombatText(new NetText() { Mode = 0, Text = text }, color, position, broadcast);
