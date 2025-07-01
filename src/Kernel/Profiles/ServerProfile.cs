@@ -28,5 +28,7 @@ public sealed class ServerProfile
 
     public string SavePath => Path.Combine(Environment.CurrentDirectory, "data", "profiles", Name);
 
+    public string LogPath => Path.Combine(Environment.CurrentDirectory, "data", "logging", Name);
+
     public WorldGenerationRules GenerationRules { get; set; } = new();
 }

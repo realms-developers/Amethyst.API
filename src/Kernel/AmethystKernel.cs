@@ -37,6 +37,11 @@ internal static class AmethystKernel
             Directory.CreateDirectory(profile.SavePath);
         }
 
+        if (!Directory.Exists(profile.LogPath))
+        {
+            Directory.CreateDirectory(profile.LogPath);
+        }
+
         AppDomain.CurrentDomain.FirstChanceException += (sender, ex) =>
         {
             if (ex.Exception is OperationCanceledException || ex.Exception is ObjectDisposedException)

@@ -41,9 +41,6 @@ public sealed class TAPILauncher : IServerLauncher
 
         Localization.Items.Initialize();
 
-        // On.Terraria.Netplay.StartBroadCasting += (orig) => {};
-        // On.Terraria.Netplay.StopBroadCasting += (orig) => {};
-
         ServerTask();
     }
 
