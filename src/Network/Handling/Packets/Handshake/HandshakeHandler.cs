@@ -33,10 +33,27 @@ public sealed class HandshakeHandler : INetworkHandler
 
         NetworkManager.AddHandler<PlayerInfo>(OnPlayerInfo);
         NetworkManager.AddHandler<PlayerSpawn>(OnPlayerSpawn);
+
+        HookRegistry.GetHook<PlayerTrackerRemoveArgs>()
+            .Register(OnPlayerLeft);
+    }
+
+    private void OnPlayerLeft(in PlayerTrackerRemoveArgs args, HookResult<PlayerTrackerRemoveArgs> result)
+    {
+        byte[] packet = PlayerActivePacket.Serialize(new PlayerActive()
+        {
+            PlayerIndex = (byte)args.Player.Index,
+            State = false
+        });
+
+        PlayerUtils.BroadcastPacketBytes(packet, -1);
     }
 
     public void Unload()
     {
+        HookRegistry.GetHook<PlayerTrackerRemoveArgs>()
+            .Unregister(OnPlayerLeft);
+
         NetworkManager.RemoveHandler<PlayerConnectRequest>(OnPlayerConnectRequest);
         NetworkManager.RemoveHandler<PlayerUUID>(OnPlayerUUID);
         NetworkManager.RemoveHandler<PlayerRequestWorldInfo>(OnPlayerRequestWorldInfo);
