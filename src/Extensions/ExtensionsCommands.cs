@@ -89,8 +89,8 @@ public static class ExtensionsCommands
             return;
         }
 
-        ExtensionsOrganizer.LoadPlugins();
         ExtensionsOrganizer.UnloadPlugins();
+        ExtensionsOrganizer.LoadPlugins();
 
         ctx.Messages.ReplySuccess("amethyst.extensions.pluginsRequestedReload");
     }
