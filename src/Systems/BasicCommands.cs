@@ -33,7 +33,7 @@ public static class BasicCommands
     [CommandSyntax("ru-RU", "[дополнительные аргументы]")]
     public static void RepeatLastCommand(IAmethystUser user, CommandInvokeContext ctx)
     {
-        CompletedCommandInfo? lastcmd = user.Commands.History.FirstOrDefault(p => !p.Command.Metadata.Names.Any(p => p == "!!" || p == "="));
+        CompletedCommandInfo? lastcmd = user.Commands.History.LastOrDefault(p => !p.Command.Metadata.Names.Any(p => p == "!!" || p == "="));
         if (lastcmd == null)
         {
             ctx.Messages.ReplyError("amethyst.basic.noLastCommand");
