@@ -87,7 +87,7 @@ public static class BasicCommands
                    (p.Metadata.Permission == null || user.Permissions.HasPermission(p.Metadata.Permission) == Users.Base.Permissions.PermissionAccess.HasPermission);
         }
 
-        var pages = PagesCollection.AsPage(CommandsOrganizer.Repositories.Where(p => user.Commands.Repositories.Contains(p.Name))
+        var pages = PagesCollection.AsListPage(CommandsOrganizer.Repositories.Where(p => user.Commands.Repositories.Contains(p.Name))
                 .SelectMany(repo => repo.RegisteredCommands)
                 .Where(WhereExpression)
                 .Select(p =>
