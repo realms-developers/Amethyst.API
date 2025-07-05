@@ -92,7 +92,7 @@ public static class BasicCommands
                 .Where(WhereExpression)
                 .Select(p =>
                 $"[c/51db99:{AmethystSession.Profile.CommandPrefix}{p.Metadata.Names.First()}]{(p.Metadata.Syntax?[ctx.Messages.Language] != null ?
-                $" {string.Join(' ', p.Metadata.Syntax[ctx.Messages.Language]!)}" : "")}"), 5);
+                $" {string.Join(' ', p.Metadata.Syntax[ctx.Messages.Language]!)}" : "")}"));
 
         //.Select(p => $"[c/51db99:/{p.Data.Name}]{(p.Data.Syntax != null ? $" {string.Join(' ', p.Data.Syntax)}" : "")}"));
 
