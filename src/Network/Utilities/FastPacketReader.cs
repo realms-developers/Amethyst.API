@@ -37,9 +37,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public NetColor ReadNetColor()
     {
-        int value = Unsafe.Read<int>(_ptr);
-        _ptr += 4;
-        return new NetColor(value);
+        byte r = *_ptr;
+        byte g = *(_ptr + 1);
+        byte b = *(_ptr + 1);
+        _ptr += 3;
+        return new NetColor(r, g, b);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
