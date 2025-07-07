@@ -135,12 +135,15 @@ public sealed class ServersideCharacterSynchroniser : ICharacterSynchroniser
             HairID = model.Hair,
             HairDyeID = model.HairDye,
             SkinVariant = model.SkinVariant,
+
+            EyeColor = model.Colors[(byte)PlayerColorType.EyesColor],
             HairColor = model.Colors[(byte)PlayerColorType.HairColor],
             SkinColor = model.Colors[(byte)PlayerColorType.SkinColor],
             ShirtColor = model.Colors[(byte)PlayerColorType.ShirtColor],
             UnderShirtColor = model.Colors[(byte)PlayerColorType.UnderShirtColor],
             PantsColor = model.Colors[(byte)PlayerColorType.PantsColor],
             ShoeColor = model.Colors[(byte)PlayerColorType.ShoesColor],
+
             AccessoryVisiblity = model.HideAccessories ?? new bool[10],
             MiscVisiblity = model.HideMisc,
             Flags = (byte)model.Info1,

@@ -62,7 +62,7 @@ public unsafe ref struct FastPacketWriter : IDisposable
     public void WriteNetColor(NetColor value)
     {
         Unsafe.Write(_ptr, value.ToPackedValue());
-        _ptr += 4;
+        _ptr += 3;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

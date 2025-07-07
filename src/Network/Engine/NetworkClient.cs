@@ -16,11 +16,7 @@ internal sealed class NetworkClient : IDisposable
     internal int _received;
     internal BlockingCollection<byte[]> _handleQueue = new(new ConcurrentQueue<byte[]>());
     internal CancellationTokenSource _tokenSrc = new();
-#pragma warning disable CS0169
-    private readonly byte _prevPacket;
-    private readonly int _prevPacketCount;
-#pragma warning restore CS0169
-    // TODO: what?! vxlhat needs to fix
+    
     internal NetworkClient(int index, Socket socket, byte[] buffer)
     {
         _index = index;
@@ -136,18 +132,6 @@ internal sealed class NetworkClient : IDisposable
                 return false;
             }
 
-            // if (_prevPacket != _dataBuffer[2])
-            // {
-            //     _prevPacket = _dataBuffer[2];
-            //     _prevPacketCount = 0;
-            //     AmethystLog.Network.Debug(nameof(NetworkClient), $"Received packet: {_dataBuffer[2]} from client #{_index}, left: {_received - length}, recv: {_received}, len: {length}");
-            // }
-            // else
-            // {
-            //     _prevPacketCount++;
-            //     AmethystLog.Network.Debug(nameof(NetworkClient), $"Received packet: {_dataBuffer[2]} ({_prevPacketCount}) from client #{_index}, left: {_received - length}, recv: {_received}, len: {length}");
-            // }
-
             if (_received < length)
             {
                 // not enough data to read the full packet
@@ -164,17 +148,7 @@ internal sealed class NetworkClient : IDisposable
 
         return true;
     }
-
-    // private void ShiftBuffer(int length)
-    // {
-    //     if (_received - length > 0)
-    //     {
-    //         Buffer.BlockCopy(_dataBuffer, length, _dataBuffer, 0, _received - length);
-    //     }
-    //     _received -= length;
-    //     Array.Clear(_dataBuffer, _received, _dataBuffer.Length - _received);
-    // }
-
+    
     private bool _disposed;
     public void Dispose()
     {
