@@ -9,6 +9,7 @@ using Amethyst.Network.Handling.NetMessagePatch;
 using Amethyst.Network.Handling.Packets.Characters;
 using Amethyst.Network.Handling.Packets.Chat;
 using Amethyst.Network.Handling.Packets.Chests;
+using Amethyst.Network.Handling.Packets.Events;
 using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Network.Handling.Packets.Items;
 using Amethyst.Network.Handling.Packets.NetModules;
@@ -94,6 +95,7 @@ public static class NetworkManager
         HandlerManager.RegisterHandler(new WorldHandler());
         HandlerManager.RegisterHandler(new TEHandler());
         HandlerManager.RegisterHandler(new NetModulesHandler());
+        HandlerManager.RegisterHandler(new EventsHandler());
 
         TcpServer = new AmethystTcpServer(IPAddress.Any, AmethystSession.Profile.Port);
         Task.Run(TcpServer.Start);
