@@ -49,8 +49,11 @@ internal static class AmethystKernel
                 return;
             }
 
-            AmethystLog.Startup.Error(nameof(AmethystKernel), "Caught first-chance exception:");
-            AmethystLog.Startup.Error(nameof(AmethystKernel), ex.Exception.ToString() ?? "No data");
+            if (Profile.DebugMode)
+            {
+                AmethystLog.Startup.Error(nameof(AmethystKernel), "Caught first-chance exception:");
+                AmethystLog.Startup.Error(nameof(AmethystKernel), ex.Exception.ToString() ?? "No data");
+            }
         };
         AppDomain.CurrentDomain.UnhandledException += (sender, ex) =>
         {
