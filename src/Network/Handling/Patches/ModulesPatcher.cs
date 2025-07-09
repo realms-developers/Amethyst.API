@@ -17,7 +17,7 @@ public static class ModulesPatcher
             if (AllowedModules.Contains(packet.Id))
             {
                 packet.ShrinkToFit();
-                PlayerUtils.BroadcastPacketBytes(packet.Buffer.Data, plrIndex);
+                PlayerUtils.BroadcastPacketBytes(packet.Buffer.Data, 0, packet.Length, plrIndex);
             }
         };
 
@@ -26,7 +26,7 @@ public static class ModulesPatcher
             if (AllowedModules.Contains(packet.Id) && cond(plrIndex))
             {
                 packet.ShrinkToFit();
-                PlayerUtils.BroadcastPacketBytes(packet.Buffer.Data, plrIndex);
+                PlayerUtils.BroadcastPacketBytes(packet.Buffer.Data, 0, packet.Length, plrIndex);
             }
         };
 
@@ -35,7 +35,7 @@ public static class ModulesPatcher
             if (AllowedModules.Contains(packet.Id))
             {
                 packet.ShrinkToFit();
-                EntityTrackers.Players[plrIndex]?.SendPacketBytes(packet.Buffer.Data);
+                EntityTrackers.Players[plrIndex]?.SendPacketBytes(packet.Buffer.Data, 0, packet.Length);
             }
         };
 
@@ -52,7 +52,7 @@ public static class ModulesPatcher
                     
                     NetPacket packet = NetLiquidModule.SerializeForPlayer(plr.Index);
                     packet.ShrinkToFit();
-                    plr.SendPacketBytes(packet.Buffer.Data);
+                    plr.SendPacketBytes(packet.Buffer.Data, 0, packet.Length);
                 }
             }
         };

@@ -31,4 +31,15 @@ public static class PlayerUtils
             }
         }
     }
+
+    public static void BroadcastPacketBytes(byte[] packetBytes, int offset, int length, int ignore = -1)
+    {
+        foreach (PlayerEntity plr in EntityTrackers.Players)
+        {
+            if (plr.Active && plr.Index != ignore)
+            {
+                plr.SendPacketBytes(packetBytes, offset, length);
+            }
+        }
+    }
 }
