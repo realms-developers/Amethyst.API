@@ -15,6 +15,7 @@ public static class ModulesPatcher
         {
             if (AllowedModules.Contains(packet.Id))
             {
+                packet.ShrinkToFit();
                 PlayerUtils.BroadcastPacketBytes(packet.Buffer.Data, plrIndex);
             }
         };
