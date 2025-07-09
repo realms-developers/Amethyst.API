@@ -88,6 +88,15 @@ public sealed class ServersideCharacterHandler : ICharacterHandler
             return;
         }
 
+        // DR Studios, when normal mutliplayer on terraria mobile?
+        NetItem curItem = Provider.CurrentModel.Slots[packet.SlotIndex];
+        if (curItem.ID == packet.ItemID &&
+            curItem.Prefix == packet.ItemPrefix &&
+            curItem.Stack == packet.ItemStack)
+        {
+            return;
+        }
+        
         NetItem item = new()
         {
             ID = packet.ItemID,
