@@ -23,7 +23,7 @@ public sealed class SectionHandler : INetworkHandler
     private void HandleSecondTick(in SecondTickArgs args, HookResult<SecondTickArgs> result)
     {
         _tickCount++;
-        if (_tickCount < 5)
+        if (_tickCount < 3)
         {
             return;
         }

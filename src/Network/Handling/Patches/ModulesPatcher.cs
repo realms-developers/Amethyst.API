@@ -5,7 +5,7 @@ namespace Amethyst.API.Network.Handling.Patches;
 
 public static class ModulesPatcher
 {
-    public static HashSet<int> AllowedModules { get; } = [ 1 ];
+    public static HashSet<int> AllowedModules { get; } = [ 0 ];
 
     internal static unsafe void Initialize()
     {
