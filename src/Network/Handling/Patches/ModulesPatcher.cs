@@ -1,3 +1,4 @@
+using Amethyst.Network.Handling.Packets.Handshake;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Terraria.GameContent.NetModules;
@@ -44,6 +45,11 @@ public static class ModulesPatcher
             {
                 foreach (PlayerEntity plr in EntityTrackers.Players)
                 {
+                    if (plr.Phase != ConnectionPhase.Connected)
+                    {
+                        continue;
+                    }
+                    
                     NetPacket packet = NetLiquidModule.SerializeForPlayer(plr.Index);
                     packet.ShrinkToFit();
                     plr.SendPacketBytes(packet.Buffer.Data);
