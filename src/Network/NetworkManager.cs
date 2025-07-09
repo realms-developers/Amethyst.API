@@ -1,4 +1,5 @@
 using System.Net;
+using Amethyst.API.Network.Handling.Patches;
 using Amethyst.Kernel;
 using Amethyst.Network.Engine;
 using Amethyst.Network.Engine.Delegates;
@@ -78,7 +79,8 @@ public static class NetworkManager
             _invokeHandlers[i] = [];
         }
 
-        NetworkPatcher.Initialize();
+        NetMessagePatcher.Initialize();
+        ModulesPatcher.Initialize();
 
         HandlerManager.RegisterHandler(new HandshakeHandler());
         HandlerManager.RegisterHandler(new CharactersHandler());

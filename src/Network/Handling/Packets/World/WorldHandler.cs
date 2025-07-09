@@ -269,7 +269,7 @@ public sealed class WorldHandler : INetworkHandler
         }
         else if ((packet.Action != 1 && packet.Action != 21) || !TileID.Sets.Falling[packet.Type] || Main.tile[packet.TileX, packet.TileY].active())
         {
-            NetMessage.TrySendData(17, -1, plr.Index, NetworkText.Empty, packet.Action, packet.TileX, packet.TileY, packet.Type, packet.Flags);
+            PlayerUtils.BroadcastPacketBytes(WorldTileInteractPacket.Serialize(packet));
         }
     }
 
@@ -293,7 +293,7 @@ public sealed class WorldHandler : INetworkHandler
             WorldGen.paintWall(packet.TileX, packet.TileY, packet.PaintType);
         }
 
-        NetMessage.TrySendData(64, -1, plr.Index, NetworkText.Empty, packet.TileX, packet.TileY, packet.IsCoating, packet.PaintType);
+        PlayerUtils.BroadcastPacketBytes(WorldPaintWallPacket.Serialize(packet));
     }
 
     private void OnWorldPaintTile(PlayerEntity plr, ref WorldPaintTile packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
@@ -316,7 +316,7 @@ public sealed class WorldHandler : INetworkHandler
             WorldGen.paintTile(packet.TileX, packet.TileY, packet.PaintType);
         }
 
-        NetMessage.TrySendData(65, -1, plr.Index, NetworkText.Empty, packet.TileX, packet.TileY, packet.IsCoating, packet.PaintType);
+        PlayerUtils.BroadcastPacketBytes(WorldPaintTilePacket.Serialize(packet));
     }
 
     private void OnWorldMassWireOperation(PlayerEntity plr, ref WorldMassWireOperation packet, ReadOnlySpan<byte> rawPacket, ref bool ignore)
@@ -351,7 +351,7 @@ public sealed class WorldHandler : INetworkHandler
                 return;
         }
 
-        NetMessage.TrySendData(52, -1, plr.Index, NetworkText.Empty, 0, packet.TargetType, packet.TileX, packet.TileY);
+        PlayerUtils.BroadcastPacketBytes(WorldLockSomethingPacket.Serialize(packet));
         NetMessage.SendTileSquare(-1, packet.TileX, packet.TileY, 2);
     }
 

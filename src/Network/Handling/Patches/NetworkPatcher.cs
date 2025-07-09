@@ -13,7 +13,7 @@ using System.Buffers;
 
 namespace Amethyst.Network.Handling.NetMessagePatch;
 
-internal sealed class NetworkPatcher : NetMessage
+internal sealed class NetMessagePatcher : NetMessage
 {
     internal static unsafe void Initialize()
     {
@@ -31,7 +31,7 @@ internal sealed class NetworkPatcher : NetMessage
         }
         catch (Exception ex)
         {
-            AmethystLog.Network.Error(nameof(NetworkPatcher), $"Failed to send data packet: {ex}");
+            AmethystLog.Network.Error(nameof(NetMessagePatcher), $"Failed to send data packet: {ex}");
         }
 
         _semaphoreSlim.Release();
