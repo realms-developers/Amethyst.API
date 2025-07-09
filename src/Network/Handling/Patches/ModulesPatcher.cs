@@ -1,5 +1,6 @@
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
+using Terraria.GameContent.NetModules;
 
 namespace Amethyst.API.Network.Handling.Patches;
 
@@ -30,6 +31,17 @@ public static class ModulesPatcher
             if (AllowedModules.Contains(packet.Id))
             {
                 EntityTrackers.Players[plrIndex]?.SendPacketBytes(packet.Buffer.Data);
+            }
+        };
+
+        On.Terraria.GameContent.NetModules.NetLiquidModule.PrepareAndSendToEachPlayerSeparately += (orig) =>
+        {
+            if (AllowedModules.Contains(0))
+            {
+                foreach (PlayerEntity plr in EntityTrackers.Players)
+                {
+                    plr.SendPacketBytes(NetLiquidModule.SerializeForPlayer(plr.Index).Buffer.Data);
+                }
             }
         };
     }
