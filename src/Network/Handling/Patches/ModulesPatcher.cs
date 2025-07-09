@@ -1,6 +1,7 @@
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Terraria.GameContent.NetModules;
+using Terraria.Net;
 
 namespace Amethyst.API.Network.Handling.Patches;
 
@@ -22,6 +23,7 @@ public static class ModulesPatcher
         {
             if (AllowedModules.Contains(packet.Id) && cond(plrIndex))
             {
+                packet.ShrinkToFit();
                 PlayerUtils.BroadcastPacketBytes(packet.Buffer.Data, plrIndex);
             }
         };
@@ -30,6 +32,7 @@ public static class ModulesPatcher
         {
             if (AllowedModules.Contains(packet.Id))
             {
+                packet.ShrinkToFit();
                 EntityTrackers.Players[plrIndex]?.SendPacketBytes(packet.Buffer.Data);
             }
         };
@@ -40,7 +43,9 @@ public static class ModulesPatcher
             {
                 foreach (PlayerEntity plr in EntityTrackers.Players)
                 {
-                    plr.SendPacketBytes(NetLiquidModule.SerializeForPlayer(plr.Index).Buffer.Data);
+                    NetPacket packet = NetLiquidModule.SerializeForPlayer(plr.Index);
+                    packet.ShrinkToFit();
+                    plr.SendPacketBytes(packet.Buffer.Data);
                 }
             }
         };
