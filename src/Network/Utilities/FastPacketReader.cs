@@ -24,6 +24,7 @@ public unsafe ref struct FastPacketReader
     {
         _span = span;
         _ptr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span));
+        _endPtr = _ptr + _span.Length;
         _ptr += offset;
     }
 
@@ -32,7 +33,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + sizeof(T) > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(T).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(T).Name);
         }
 
         int size = sizeof(T);
@@ -46,7 +47,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 3 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(NetColor).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(NetColor).Name);
         }
 
         byte r = *_ptr;
@@ -141,7 +142,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 6 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading NetTrackerData.");
+            throw new InvalidOperationException("Buffer overflow while reading NetTrackerData.");
         }
 
         short expectedOwner = ReadInt16();
@@ -161,7 +162,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 1 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(bool).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(bool).Name);
         }
 
         bool value = *_ptr != 0;
@@ -174,7 +175,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading boolean array");
+            throw new InvalidOperationException("Buffer overflow while reading boolean array");
         }
 
         bool[] array = new bool[count];
@@ -192,7 +193,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 1 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(byte).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(byte).Name);
         }
 
         byte value = *_ptr;
@@ -205,7 +206,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading byte array");
+            throw new InvalidOperationException("Buffer overflow while reading byte array");
         }
 
         byte[] array = new byte[count];
@@ -223,7 +224,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 1 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(sbyte).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(sbyte).Name);
         }
 
         sbyte value = (sbyte)*_ptr;
@@ -236,7 +237,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading sbyte array");
+            throw new InvalidOperationException("Buffer overflow while reading sbyte array");
         }
 
         sbyte[] array = new sbyte[count];
@@ -254,7 +255,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 2 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(short).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(short).Name);
         }
 
         short value = Unsafe.Read<short>(_ptr);
@@ -267,7 +268,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count * 2 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading short array");
+            throw new InvalidOperationException("Buffer overflow while reading short array");
         }
 
         short[] array = new short[count];
@@ -285,7 +286,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 2 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(ushort).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(ushort).Name);
         }
 
         ushort value = Unsafe.Read<ushort>(_ptr);
@@ -298,7 +299,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count * 2 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading ushort array");
+            throw new InvalidOperationException("Buffer overflow while reading ushort array");
         }
 
         ushort[] array = new ushort[count];
@@ -316,7 +317,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 4 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(int).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(int).Name);
         }
 
         int value = Unsafe.Read<int>(_ptr);
@@ -329,7 +330,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count * 4 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading int array");
+            throw new InvalidOperationException("Buffer overflow while reading int array");
         }
 
         int[] array = new int[count];
@@ -347,7 +348,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 4 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(uint).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(uint).Name);
         }
 
         uint value = Unsafe.Read<uint>(_ptr);
@@ -360,7 +361,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count * 4 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading uint array");
+            throw new InvalidOperationException("Buffer overflow while reading uint array");
         }
 
         uint[] array = new uint[count];
@@ -378,7 +379,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 8 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(long).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(long).Name);
         }
 
         long value = Unsafe.Read<long>(_ptr);
@@ -391,7 +392,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count * 8 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading long array");
+            throw new InvalidOperationException("Buffer overflow while reading long array");
         }
 
         long[] array = new long[count];
@@ -409,7 +410,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 8 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(ulong).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(ulong).Name);
         }
 
         ulong value = Unsafe.Read<ulong>(_ptr);
@@ -422,7 +423,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count * 8 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading ulong array");
+            throw new InvalidOperationException("Buffer overflow while reading ulong array");
         }
 
         ulong[] array = new ulong[count];
@@ -440,7 +441,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 4 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(float).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(float).Name);
         }
 
         float value = Unsafe.Read<float>(_ptr);
@@ -453,7 +454,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count * 4 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading float array");
+            throw new InvalidOperationException("Buffer overflow while reading float array");
         }
 
         float[] array = new float[count];
@@ -471,7 +472,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + 8 > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(double).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(double).Name);
         }
 
         double value = Unsafe.Read<double>(_ptr);
@@ -484,7 +485,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading double array");
+            throw new InvalidOperationException("Buffer overflow while reading double array");
         }
 
         double[] array = new double[count];
@@ -502,7 +503,7 @@ public unsafe ref struct FastPacketReader
     {
         if (_ptr + count > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading bytes span.");
+            throw new InvalidOperationException("Buffer overflow while reading bytes span.");
         }
 
         ReadOnlySpan<byte> span = new(_ptr, count);
@@ -517,7 +518,7 @@ public unsafe ref struct FastPacketReader
 
         if (_ptr + length > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(string).Name);
+            throw new InvalidOperationException("Buffer overflow while reading value of type " + typeof(string).Name);
         }
 
         if (length <= 0)
@@ -539,7 +540,7 @@ public unsafe ref struct FastPacketReader
 
         if (_ptr >= (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span)) + _span.Length)
         {
-            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading 7-bit encoded integer.");
+            throw new InvalidOperationException("Buffer overflow while reading 7-bit encoded integer.");
         }
 
         do
@@ -571,7 +572,7 @@ public unsafe ref struct FastPacketReader
     {
         if (count < 0 || count > _span.Length - (_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))))
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Count exceeds buffer length.");
+            throw new InvalidOperationException("Count exceeds buffer length.");
         }
 
         _ptr += count;
