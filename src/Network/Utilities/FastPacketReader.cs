@@ -8,6 +8,7 @@ public unsafe ref struct FastPacketReader
 {
     private readonly ReadOnlySpan<byte> _span;
     private byte* _ptr;
+    private byte* _endPtr;
 
     public int Length => (int)(_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span)));
 
@@ -15,6 +16,7 @@ public unsafe ref struct FastPacketReader
     {
         _span = buffer;
         _ptr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span));
+        _endPtr = _ptr + _span.Length;
         _ptr += offset;
     }
 
@@ -28,6 +30,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T Read<T>() where T : unmanaged
     {
+        if (_ptr + sizeof(T) > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(T).Name);
+        }
+
         int size = sizeof(T);
         T value = Unsafe.Read<T>(_ptr);
         _ptr += size;
@@ -37,9 +44,14 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public NetColor ReadNetColor()
     {
+        if (_ptr + 3 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(NetColor).Name);
+        }
+
         byte r = *_ptr;
         byte g = *(_ptr + 1);
-        byte b = *(_ptr + 1);
+        byte b = *(_ptr + 2);
         _ptr += 3;
         return new NetColor(r, g, b);
     }
@@ -69,10 +81,8 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public NetVector2 ReadNetVector2()
     {
-        float x = Unsafe.Read<float>(_ptr);
-        _ptr += 4;
-        float y = Unsafe.Read<float>(_ptr);
-        _ptr += 4;
+        float x = ReadSingle();
+        float y = ReadSingle();
         return new NetVector2(x, y);
     }
 
@@ -93,38 +103,31 @@ public unsafe ref struct FastPacketReader
 
         if (bitsByte[0])
         {
-            sourcePlayerIndex = Unsafe.Read<short>(_ptr);
-            _ptr += 2;
+            sourcePlayerIndex = ReadInt16();
         }
         if (bitsByte[1])
         {
-            sourceNPCIndex = Unsafe.Read<short>(_ptr);
-            _ptr += 2;
+            sourceNPCIndex = ReadInt16();
         }
         if (bitsByte[2])
         {
-            sourceProjectileLocalIndex = Unsafe.Read<short>(_ptr);
-            _ptr += 2;
+            sourceProjectileLocalIndex = ReadInt16();
         }
         if (bitsByte[3])
         {
-            sourceOtherIndex = *_ptr;
-            _ptr++;
+            sourceOtherIndex = ReadByte();
         }
         if (bitsByte[4])
         {
-            sourceProjectileType = Unsafe.Read<short>(_ptr);
-            _ptr += 2;
+            sourceProjectileType = ReadInt16();
         }
         if (bitsByte[5])
         {
-            sourceItemType = Unsafe.Read<short>(_ptr);
-            _ptr += 2;
+            sourceItemType = ReadInt16();
         }
         if (bitsByte[6])
         {
-            sourceItemPrefix = *_ptr;
-            _ptr++;
+            sourceItemPrefix = ReadByte();
         }
         if (bitsByte[7])
         {
@@ -136,6 +139,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public NetTrackerData ReadNetTrackerData()
     {
+        if (_ptr + 6 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading NetTrackerData.");
+        }
+
         short expectedOwner = ReadInt16();
         if (expectedOwner == -1)
         {
@@ -151,6 +159,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool ReadBoolean()
     {
+        if (_ptr + 1 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(bool).Name);
+        }
+
         bool value = *_ptr != 0;
         _ptr++;
         return value;
@@ -159,6 +172,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool[] ReadBooleanArray(int count)
     {
+        if (_ptr + count > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading boolean array");
+        }
+
         bool[] array = new bool[count];
         for (int i = 0; i < count; i++)
         {
@@ -172,6 +190,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public byte ReadByte()
     {
+        if (_ptr + 1 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(byte).Name);
+        }
+
         byte value = *_ptr;
         _ptr++;
         return value;
@@ -180,6 +203,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public byte[] ReadByteArray(int count)
     {
+        if (_ptr + count > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading byte array");
+        }
+
         byte[] array = new byte[count];
         for (int i = 0; i < count; i++)
         {
@@ -193,6 +221,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public sbyte ReadSByte()
     {
+        if (_ptr + 1 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(sbyte).Name);
+        }
+
         sbyte value = (sbyte)*_ptr;
         _ptr++;
         return value;
@@ -201,6 +234,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public sbyte[] ReadSByteArray(int count)
     {
+        if (_ptr + count > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading sbyte array");
+        }
+
         sbyte[] array = new sbyte[count];
         for (int i = 0; i < count; i++)
         {
@@ -214,6 +252,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public short ReadInt16()
     {
+        if (_ptr + 2 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(short).Name);
+        }
+
         short value = Unsafe.Read<short>(_ptr);
         _ptr += 2;
         return value;
@@ -222,6 +265,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public short[] ReadInt16Array(int count)
     {
+        if (_ptr + count * 2 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading short array");
+        }
+
         short[] array = new short[count];
         for (int i = 0; i < count; i++)
         {
@@ -235,6 +283,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ushort ReadUInt16()
     {
+        if (_ptr + 2 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(ushort).Name);
+        }
+
         ushort value = Unsafe.Read<ushort>(_ptr);
         _ptr += 2;
         return value;
@@ -243,6 +296,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ushort[] ReadUInt16Array(int count)
     {
+        if (_ptr + count * 2 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading ushort array");
+        }
+
         ushort[] array = new ushort[count];
         for (int i = 0; i < count; i++)
         {
@@ -256,6 +314,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int ReadInt32()
     {
+        if (_ptr + 4 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(int).Name);
+        }
+
         int value = Unsafe.Read<int>(_ptr);
         _ptr += 4;
         return value;
@@ -264,6 +327,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int[] ReadInt32Array(int count)
     {
+        if (_ptr + count * 4 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading int array");
+        }
+
         int[] array = new int[count];
         for (int i = 0; i < count; i++)
         {
@@ -277,6 +345,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint ReadUInt32()
     {
+        if (_ptr + 4 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(uint).Name);
+        }
+
         uint value = Unsafe.Read<uint>(_ptr);
         _ptr += 4;
         return value;
@@ -285,6 +358,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint[] ReadUInt32Array(int count)
     {
+        if (_ptr + count * 4 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading uint array");
+        }
+
         uint[] array = new uint[count];
         for (int i = 0; i < count; i++)
         {
@@ -298,6 +376,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public long ReadInt64()
     {
+        if (_ptr + 8 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(long).Name);
+        }
+
         long value = Unsafe.Read<long>(_ptr);
         _ptr += 8;
         return value;
@@ -306,6 +389,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public long[] ReadInt64Array(int count)
     {
+        if (_ptr + count * 8 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading long array");
+        }
+
         long[] array = new long[count];
         for (int i = 0; i < count; i++)
         {
@@ -319,6 +407,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ulong ReadUInt64()
     {
+        if (_ptr + 8 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(ulong).Name);
+        }
+
         ulong value = Unsafe.Read<ulong>(_ptr);
         _ptr += 8;
         return value;
@@ -327,6 +420,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ulong[] ReadUInt64Array(int count)
     {
+        if (_ptr + count * 8 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading ulong array");
+        }
+
         ulong[] array = new ulong[count];
         for (int i = 0; i < count; i++)
         {
@@ -340,6 +438,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float ReadSingle()
     {
+        if (_ptr + 4 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(float).Name);
+        }
+
         float value = Unsafe.Read<float>(_ptr);
         _ptr += 4;
         return value;
@@ -348,6 +451,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float[] ReadSingleArray(int count)
     {
+        if (_ptr + count * 4 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading float array");
+        }
+
         float[] array = new float[count];
         for (int i = 0; i < count; i++)
         {
@@ -361,6 +469,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double ReadDouble()
     {
+        if (_ptr + 8 > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(double).Name);
+        }
+
         double value = Unsafe.Read<double>(_ptr);
         _ptr += 8;
         return value;
@@ -369,6 +482,11 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double[] ReadDoubleArray(int count)
     {
+        if (_ptr + count > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading double array");
+        }
+
         double[] array = new double[count];
         for (int i = 0; i < count; i++)
         {
@@ -382,9 +500,9 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ReadOnlySpan<byte> ReadBytesSpan(int count)
     {
-        if (count < 0 || count > _span.Length - (_ptr - (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(_span))))
+        if (_ptr + count > _endPtr)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Count exceeds buffer length.");
+            throw new ArgumentOutOfRangeException(nameof(count), "Buffer overflow while reading bytes span.");
         }
 
         ReadOnlySpan<byte> span = new(_ptr, count);
@@ -396,6 +514,12 @@ public unsafe ref struct FastPacketReader
     public string ReadString()
     {
         int length = Read7BitEncodedInt();
+
+        if (_ptr + length > _endPtr)
+        {
+            throw new ArgumentOutOfRangeException(nameof(_span), "Buffer overflow while reading value of type " + typeof(string).Name);
+        }
+
         if (length <= 0)
         {
             return string.Empty;
