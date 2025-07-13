@@ -91,15 +91,27 @@ internal sealed class NetworkClient : IDisposable
 
     private void OnReceiveCompleted(object? _, SocketAsyncEventArgs e)
     {
-        if (OnReceive(e))
+        if (_disposed)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            return;
+        }
 
-            _prevArgs = e;
-            Receive();
+        try
+        {
+            if (OnReceive(e))
+            {
+                _prevArgs = e;
+                Receive();
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+            // Socket was disposed, ignore
+        }
+        catch (Exception ex)
+        {
+            AmethystLog.Network.Error(nameof(NetworkClient), $"Error while receiving data: {ex}");
+            Dispose();
         }
     }
 

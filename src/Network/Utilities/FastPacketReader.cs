@@ -90,8 +90,7 @@ public unsafe ref struct FastPacketReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public NetDeathReason ReadNetDeathReason()
     {
-        NetBitsByte bitsByte = *_ptr;
-        _ptr++;
+        NetBitsByte bitsByte = ReadByte();
 
         int sourcePlayerIndex = -1;
         int sourceNPCIndex = -1;
