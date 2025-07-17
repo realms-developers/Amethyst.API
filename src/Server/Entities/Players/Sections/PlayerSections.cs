@@ -7,7 +7,7 @@ public sealed class PlayerSections(PlayerEntity player)
     public int SectionX => (int)(Player.Position.X / 16 / 200);
     public int SectionY => (int)(Player.Position.Y / 16 / 150);
 
-    private readonly bool[,] _sentSections = new bool[8401 / 200, 2401 / 200];
+    private readonly bool[,] _sentSections = new bool[8401 / 200, 2401 / 150];
 
     public bool IsValidSection(int sectionX, int sectionY)
     {
